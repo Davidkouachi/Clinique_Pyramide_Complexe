@@ -1,0 +1,19 @@
+/*debut animation appel d'urgence*/
+@keyframes flash-background {
+    0% {
+        background-color: red;
+    }
+
+    50% {
+        background-color: transparent;
+    }
+
+    100% {
+        background-color: red;
+    }
+}
+
+.sidebar-contact {
+    animation: flash-background 1s infinite;
+}
+/*fin animation appel d'urgence*/
