@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
-class User extends Authenticatable
+class user extends Authenticatable
 {
     use HasFactory, Notifiable;
 
@@ -19,6 +19,12 @@ class User extends Authenticatable
     protected $fillable = [
         'name',
         'email',
+        'tel',
+        'tel2',
+        'sexe',
+        'adresse',
+        'role',
+        'role_id',
         'password',
     ];
 
@@ -43,5 +49,10 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    public function roleModel()
+    {
+        return $this->belongsTo(roleModel::class, 'role_id');
     }
 }
