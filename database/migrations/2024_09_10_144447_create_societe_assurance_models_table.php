@@ -11,8 +11,15 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('societe_assurances', function (Blueprint $table) {
+        Schema::create('societes', function (Blueprint $table) {
             $table->id();
+            $table->string('nom')->unique()->index();
+            $table->string('email')->unique();
+            $table->string('fax')->unique();
+            $table->string('tel')->unique();
+            $table->string('tel2')->unique()->nullable();
+            $table->string('adresse');
+            $table->string('responsable');
             $table->timestamps();
         });
     }
@@ -22,6 +29,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('societe_assurances');
+        Schema::dropIfExists('societes');
     }
 };

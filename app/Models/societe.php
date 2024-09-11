@@ -5,19 +5,18 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class lit extends Model
+class societe extends Model
 {
     use HasFactory;
 
     protected $fillable = [
         'id',
-        'code',
-        'type',
-        'chambre_id',
+        'nom',
+        'email',
+        'fax',
+        'tel',
+        'tel2',
+        'adresse',
+        'responsable',
     ];
-
-    public function chambre()
-    {
-        return $this->belongsTo(chambre::class, 'chambre_id');
-    }
 }

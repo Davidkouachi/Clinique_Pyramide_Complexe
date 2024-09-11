@@ -119,6 +119,173 @@
                         </li>
                         <li class="treeview">
                             <a href="#!">
+                                <i class="ri-settings-5-line"></i>
+                                <span class="menu-text">Gestionnaire</span>
+                            </a>
+                            <ul class="treeview-menu">
+                                <li>
+                                    <a href="#!">
+                                        Ajouter
+                                        <i class="ri-arrow-right-s-line"></i>
+                                    </a>
+                                    <ul class="treeview-menu">
+                                        <li>
+                                            <a href="{{route('utilisateur_new')}}">Utilisateur</a>
+                                        </li>
+                                        <li>
+                                            <a href="#!">
+                                                Infirmerie
+                                                <i class="ri-arrow-right-s-line"></i>
+                                            </a>
+                                            <ul class="treeview-menu">
+                                                <li>
+                                                    <a href="#!">
+                                                        Soin
+                                                        <i class="ri-arrow-right-s-line"></i>
+                                                    </a>
+                                                    <ul class="treeview-menu">
+                                                        <li>
+                                                            <a href="#">Type de soin</a>
+                                                        </li>
+                                                        <li>
+                                                            <a href="#">Soin Infirmerie</a>
+                                                        </li>
+                                                    </ul>
+                                                <li>
+                                                    <a href="{{route('chambre_new')}}">Chambre</a>
+                                                </li>
+                                                <li>
+                                                    <a href="{{route('lit_new')}}">lit</a>
+                                                </li>
+                                            </ul>
+                                        </li>
+                                        <li>
+                                            <a href="#!">
+                                                Assurance
+                                                <i class="ri-arrow-right-s-line"></i>
+                                            </a>
+                                            <ul class="treeview-menu">
+                                                <li>
+                                                    <a href="{{route('assurance_new')}}">Assurance</a>
+                                                </li>
+                                                <li>
+                                                    <a href="{{route('produit_new')}}">Produit</a>
+                                                </li>
+                                                <li>
+                                                    <a href="{{route('taux_new')}}">Taux</a>
+                                                </li>
+                                                <li>
+                                                    <a href="{{route('typeproduit_new')}}">Type Produit</a>
+                                                </li>
+                                                <li>
+                                                    <a href="{{route('assureur_new')}}">Assureur</a>
+                                                </li>
+                                                <li>
+                                                    <a href="{{route('societe_new')}}">Société assurer</a>
+                                                </li>
+                                            </ul>
+                                        </li>
+                                        <li>
+                                            <a href="#!">
+                                                Pharmacie
+                                                <i class="ri-arrow-right-s-line"></i>
+                                            </a>
+                                            <ul class="treeview-menu">
+                                                <li>
+                                                    <a href="#">Medicament</a>
+                                                </li>
+                                                <li>
+                                                    <a href="#">Catégorie</a>
+                                                </li>
+                                            </ul>
+                                        </li>
+                                        <li>
+                                            <a href="#!">
+                                                Laboratoire
+                                                <i class="ri-arrow-right-s-line"></i>
+                                            </a>
+                                            <ul class="treeview-menu">
+                                                <li>
+                                                    <a href="#">Examen</a>
+                                                </li>
+                                            </ul>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li>
+                                    <a href="#!">
+                                        Liste
+                                        <i class="ri-arrow-right-s-line"></i>
+                                    </a>
+                                    <ul class="treeview-menu">
+                                        <li>
+                                            <a href="#!">
+                                                Infirmerie
+                                                <i class="ri-arrow-right-s-line"></i>
+                                            </a>
+                                            <ul class="treeview-menu">
+                                                <li>
+                                                    <a href="#">Soin Infirmier</a>
+                                                </li>
+                                                <li>
+                                                    <a href="#">Chambre</a>
+                                                </li>
+                                                <li>
+                                                    <a href="#">lit</a>
+                                                </li>
+                                            </ul>
+                                        </li>
+                                        <li>
+                                            <a href="#!">
+                                                Assurance
+                                                <i class="ri-arrow-right-s-line"></i>
+                                            </a>
+                                            <ul class="treeview-menu">
+                                                <li>
+                                                    <a href="#">Assurance</a>
+                                                </li>
+                                                <li>
+                                                    <a href="#">Assureur</a>
+                                                </li>
+                                                <li>
+                                                    <a href="#">Société assurer</a>
+                                                </li>
+                                                <li>
+                                                    <a href="#">Produit assurance</a>
+                                                </li>
+                                            </ul>
+                                        </li>
+                                        <li>
+                                            <a href="#!">
+                                                Pharmacie
+                                                <i class="ri-arrow-right-s-line"></i>
+                                            </a>
+                                            <ul class="treeview-menu">
+                                                <li>
+                                                    <a href="#">Medicament</a>
+                                                </li>
+                                                <li>
+                                                    <a href="#">Catégorie</a>
+                                                </li>
+                                            </ul>
+                                        </li>
+                                        <li>
+                                            <a href="#!">
+                                                Laboratoire
+                                                <i class="ri-arrow-right-s-line"></i>
+                                            </a>
+                                            <ul class="treeview-menu">
+                                                <li>
+                                                    <a href="#">Examen</a>
+                                                </li>
+                                            </ul>
+                                        </li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </li>
+                        <li class="treeview">
+                            <a href="#!">
                                 <i class="ri-home-5-line"></i>
                                 <span class="menu-text">Acceuil</span>
                             </a>
@@ -351,167 +518,6 @@
                                     <a href="#">
                                         Point de caisse
                                     </a>
-                                </li>
-                            </ul>
-                        </li>
-                        <li class="treeview">
-                            <a href="#!">
-                                <i class="ri-settings-5-line"></i>
-                                <span class="menu-text">Gestionnaire</span>
-                            </a>
-                            <ul class="treeview-menu">
-                                <li>
-                                    <a href="#!">
-                                        Ajouter
-                                        <i class="ri-arrow-right-s-line"></i>
-                                    </a>
-                                    <ul class="treeview-menu">
-                                        <li>
-                                            <a href="{{route('utilisateur_new')}}">Utilisateur</a>
-                                        </li>
-                                        <li>
-                                            <a href="#!">
-                                                Infirmerie
-                                                <i class="ri-arrow-right-s-line"></i>
-                                            </a>
-                                            <ul class="treeview-menu">
-                                                <li>
-                                                    <a href="#!">
-                                                        Soin
-                                                        <i class="ri-arrow-right-s-line"></i>
-                                                    </a>
-                                                    <ul class="treeview-menu">
-                                                        <li>
-                                                            <a href="#">Type de soin</a>
-                                                        </li>
-                                                        <li>
-                                                            <a href="#">Soin Infirmerie</a>
-                                                        </li>
-                                                    </ul>
-                                                <li>
-                                                    <a href="{{route('chambre_new')}}">Chambre</a>
-                                                </li>
-                                                <li>
-                                                    <a href="{{route('lit_new')}}">lit</a>
-                                                </li>
-                                            </ul>
-                                        </li>
-                                        <li>
-                                            <a href="#!">
-                                                Assurance
-                                                <i class="ri-arrow-right-s-line"></i>
-                                            </a>
-                                            <ul class="treeview-menu">
-                                                <li>
-                                                    <a href="{{route('assurance_new')}}">Assurance</a>
-                                                </li>
-                                                <li>
-                                                    <a href="{{route('assureur_new')}}">Assureur</a>
-                                                </li>
-                                                <li>
-                                                    <a href="#">Société assurer</a>
-                                                </li>
-                                                <li>
-                                                    <a href="#">Produit assurance</a>
-                                                </li>
-                                            </ul>
-                                        </li>
-                                        <li>
-                                            <a href="#!">
-                                                Pharmacie
-                                                <i class="ri-arrow-right-s-line"></i>
-                                            </a>
-                                            <ul class="treeview-menu">
-                                                <li>
-                                                    <a href="#">Medicament</a>
-                                                </li>
-                                                <li>
-                                                    <a href="#">Catégorie</a>
-                                                </li>
-                                            </ul>
-                                        </li>
-                                        <li>
-                                            <a href="#!">
-                                                Laboratoire
-                                                <i class="ri-arrow-right-s-line"></i>
-                                            </a>
-                                            <ul class="treeview-menu">
-                                                <li>
-                                                    <a href="#">Examen</a>
-                                                </li>
-                                            </ul>
-                                        </li>
-                                    </ul>
-                                </li>
-                                <li>
-                                    <a href="#!">
-                                        Liste
-                                        <i class="ri-arrow-right-s-line"></i>
-                                    </a>
-                                    <ul class="treeview-menu">
-                                        <li>
-                                            <a href="#!">
-                                                Infirmerie
-                                                <i class="ri-arrow-right-s-line"></i>
-                                            </a>
-                                            <ul class="treeview-menu">
-                                                <li>
-                                                    <a href="#">Soin Infirmier</a>
-                                                </li>
-                                                <li>
-                                                    <a href="#">Chambre</a>
-                                                </li>
-                                                <li>
-                                                    <a href="#">lit</a>
-                                                </li>
-                                            </ul>
-                                        </li>
-                                        <li>
-                                            <a href="#!">
-                                                Assurance
-                                                <i class="ri-arrow-right-s-line"></i>
-                                            </a>
-                                            <ul class="treeview-menu">
-                                                <li>
-                                                    <a href="#">Assurance</a>
-                                                </li>
-                                                <li>
-                                                    <a href="#">Assureur</a>
-                                                </li>
-                                                <li>
-                                                    <a href="#">Société assurer</a>
-                                                </li>
-                                                <li>
-                                                    <a href="#">Produit assurance</a>
-                                                </li>
-                                            </ul>
-                                        </li>
-                                        <li>
-                                            <a href="#!">
-                                                Pharmacie
-                                                <i class="ri-arrow-right-s-line"></i>
-                                            </a>
-                                            <ul class="treeview-menu">
-                                                <li>
-                                                    <a href="#">Medicament</a>
-                                                </li>
-                                                <li>
-                                                    <a href="#">Catégorie</a>
-                                                </li>
-                                            </ul>
-                                        </li>
-                                        <li>
-                                            <a href="#!">
-                                                Laboratoire
-                                                <i class="ri-arrow-right-s-line"></i>
-                                            </a>
-                                            <ul class="treeview-menu">
-                                                <li>
-                                                    <a href="#">Examen</a>
-                                                </li>
-                                            </ul>
-                                        </li>
-                                    </ul>
                                 </li>
                             </ul>
                         </li>

@@ -5,7 +5,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class societe_assurance extends Model
+class taux extends Model
 {
     use HasFactory;
+
+    protected $fillable =[
+        'taux',
+    ];
 }

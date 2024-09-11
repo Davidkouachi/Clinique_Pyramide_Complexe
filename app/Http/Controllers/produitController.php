@@ -16,26 +16,26 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\DB;
 
-use App\Models\User;
+use App\Models\produit;
 
-class utilisateurController extends Controller
+class produitController extends Controller
 {
-    public function utilisateur_new()
+    public function produit_new()
     {
         $today = Carbon::today();
-        $users = user::whereDate('created_at', $today)
+        $prods = produit::whereDate('created_at', $today)
                             ->orderBy('created_at', 'desc')
                             ->get();
 
-        return view('utilisateur.nouveau.utilisateur',['users' => $users]);
+        return view('assurance.nouveau.produit',['prods' => $prods]);
     }
 
-    public function insert_utilisateur(Request $request)
+    public function insert_produit(Request $request)
     {
 
     }
 
-    public function update_utilisateur(Request $request, $id)
+    public function update_produit(Request $request, $id)
     {
 
     }

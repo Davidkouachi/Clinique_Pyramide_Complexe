@@ -16,26 +16,31 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\DB;
 
-use App\Models\User;
+use App\Models\taux;
+use App\Models\produit;
+use App\Models\typeproduit;
 
-class utilisateurController extends Controller
+class typeproduitController extends Controller
 {
-    public function utilisateur_new()
+    public function typeproduit_new()
     {
         $today = Carbon::today();
-        $users = user::whereDate('created_at', $today)
+        $typeproduits = typeproduit::whereDate('created_at', $today)
                             ->orderBy('created_at', 'desc')
                             ->get();
 
-        return view('utilisateur.nouveau.utilisateur',['users' => $users]);
+        $tauxs = taux::all();
+        $produits = produit::all();
+
+        return view('assurance.nouveau.typeproduit',['typeproduits' => $typeproduits,'tauxs' => $tauxs,'produits' => $produits]);
     }
 
-    public function insert_utilisateur(Request $request)
+    public function insert_typeproduit(Request $request)
     {
 
     }
 
-    public function update_utilisateur(Request $request, $id)
+    public function update_typeproduit(Request $request, $id)
     {
 
     }
