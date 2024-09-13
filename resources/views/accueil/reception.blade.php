@@ -21,81 +21,66 @@
 
 <div class="app-body">
     <!-- Row starts -->
+    <div class="row gx-3 ">
+        <div class="col-12 ">
+            <div class="mb-3" >
+                <div class="card-header ">
+                    <h3 class="card-title text-center">
+                        Statistique
+                    </h3>
+                </div>
+            </div>
+        </div>
+    </div>
     <div class="row gx-3">
-        <div class="col-xl-2 col-sm-6 col-12">
-            <div class="card mb-3">
-                <div class="card-body">
-                    <div class="d-flex flex-column align-items-center">
-                        <div class="icon-box md rounded-5 bg-primary mb-3">
-                            <i class="ri-verified-badge-line fs-4 lh-1"></i>
-                        </div>
-                        <h6>Total Patient</h6>
-                        <h2 class="text-primary m-0">639</h2>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-xl-2 col-sm-6 col-12">
-            <div class="card mb-3">
-                <div class="card-body">
-                    <div class="d-flex flex-column align-items-center">
-                        <div class="icon-box md rounded-5 bg-primary mb-3">
-                            <i class="ri-stethoscope-line fs-4 lh-1"></i>
-                        </div>
-                        <h6>Doctors</h6>
-                        <h2 class="text-primary m-0">83</h2>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-xl-2 col-sm-6 col-12">
-            <div class="card mb-3">
-                <div class="card-body">
-                    <div class="d-flex flex-column align-items-center">
-                        <div class="icon-box md rounded-5 bg-primary mb-3">
-                            <i class="ri-psychotherapy-line fs-4 lh-1"></i>
-                        </div>
-                        <h6>Staff</h6>
-                        <h2 class="text-primary m-0">296</h2>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-xl-2 col-sm-6 col-12">
-            <div class="card mb-3">
-                <div class="card-body">
-                    <div class="d-flex flex-column align-items-center">
-                        <div class="icon-box md rounded-5 bg-primary mb-3">
-                            <i class="ri-lungs-line fs-4 lh-1"></i>
-                        </div>
-                        <h6>Operations</h6>
-                        <h2 class="text-primary m-0">49</h2>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-xl-2 col-sm-6 col-12">
-            <div class="card mb-3">
-                <div class="card-body">
-                    <div class="d-flex flex-column align-items-center">
-                        <div class="icon-box md rounded-5 bg-primary mb-3">
-                            <i class="ri-hotel-bed-line fs-4 lh-1"></i>
-                        </div>
-                        <h6>Admitted</h6>
-                        <h2 class="text-primary m-0">372</h2>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-xl-2 col-sm-6 col-12">
+        <div class="col-xl-3 col-sm-6 col-12">
             <div class="card mb-3">
                 <div class="card-body">
                     <div class="d-flex flex-column align-items-center">
                         <div class="icon-box md rounded-5 bg-primary mb-3">
                             <i class="ri-walk-line fs-4 lh-1"></i>
                         </div>
-                        <h6>Discharged</h6>
-                        <h2 class="text-primary m-0">253</h2>
+                        <h6>Total Patient</h6>
+                        <h5 class="text-primary m-0">639</h5>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-3 col-sm-6 col-12">
+            <div class="card mb-3">
+                <div class="card-body">
+                    <div class="d-flex flex-column align-items-center">
+                        <div class="icon-box md rounded-5 bg-success mb-3">
+                            <i class="ri-walk-line fs-4 lh-1"></i>
+                        </div>
+                        <h6>Patient Assurer</h6>
+                        <h5 class="text-primary m-0">296</h5>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-3 col-sm-6 col-12">
+            <div class="card mb-3">
+                <div class="card-body">
+                    <div class="d-flex flex-column align-items-center">
+                        <div class="icon-box md rounded-5 bg-danger mb-3">
+                            <i class="ri-walk-line fs-4 lh-1"></i>
+                        </div>
+                        <h6>Patient non-assurer</h6>
+                        <h5 class="text-primary m-0">49</h5>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-3 col-sm-6 col-12">
+            <div class="card mb-3">
+                <div class="card-body">
+                    <div class="d-flex flex-column align-items-center">
+                        <div class="icon-box md rounded-5 bg-warning mb-3">
+                            <i class="ri-cash-line fs-4 lh-1"></i>
+                        </div>
+                        <h6>Total Consultation</h6>
+                        <h5 class="text-primary m-0">5.733.484 Fcfa</h5>
                     </div>
                 </div>
             </div>
@@ -109,7 +94,10 @@
                 <div class="card-header">
                     <h5 class="card-title">Consultation</h5>
                 </div>
-                <div class="card-body">
+                <div class="p-2" id="div_alert" >
+                    
+                </div>
+                <div class="card-body" style="margin-top: -40px;">
                     <div class="custom-tabs-container">
                         <ul class="nav nav-tabs justify-content-center" id="customTab4" role="tablist">
                             <li class="nav-item" role="presentation">
@@ -128,6 +116,12 @@
                                 <a class="nav-link " id="tab-threeAAA" data-bs-toggle="tab" href="#threeAAA" role="tab" aria-controls="threeAAA" aria-selected="true">
                                     <i class="ri-shake-hands-line me-2"></i>
                                     Nouvelle societe
+                                </a>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <a class="nav-link " id="tab-frewAAA" data-bs-toggle="tab" href="#frewAAA" role="tab" aria-controls="frewAAA" aria-selected="true">
+                                    <i class="ri-shake-hands-line me-2"></i>
+                                    Nouvelle Assurance
                                 </a>
                             </li>
                         </ul>
@@ -152,7 +146,7 @@
                                     </div>
                                     <div class="col-sm-12" id="div_info_patient">
                                     </div>
-                                    <div class="col-sm-12" id="div_info_consul" style="display: block;">
+                                    <div class="col-sm-12" id="div_info_consul" style="display: none;">
                                         <div class="card-header">
                                             <h5 class="card-title text-center">Information consultation</h5>
                                         </div>
@@ -338,8 +332,6 @@
                                             <div class="mb-3">
                                                 <label class="form-label">Société</label>
                                                 <select class="form-select" id="patient_societe_id_new">
-                                                    <option value="0">Select</option>
-                                                    <option value="1">1</option>
                                                 </select>
                                             </div>
                                         </div>
@@ -362,11 +354,67 @@
                                         <div class="mb-3">
                                             <label class="form-label">Nom de la société</label>
                                             <div class="input-group">
-                                                <input name="societe_new" required type="text" class="form-control" id="societe_new" placeholder="Saisie Obligatoire">
+                                                <input type="text" class="form-control" id="societe_new" placeholder="Saisie Obligatoire">
                                                 <button id="btn_eng_societe" class="btn btn-outline-success">
                                                     Enregistrer
                                                 </button>
                                             </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="tab-pane fade" id="frewAAA" role="tabpanel" aria-labelledby="tab-frewAAA">
+                                <div class="card-header">
+                                    <h5 class="card-title">Formulaire Nouvelle Assurance</h5>
+                                </div>
+                                <div class="row gx-3">
+                                    <div class="col-xxl-3 col-lg-4 col-sm-6">
+                                        <div class="mb-3">
+                                            <label class="form-label" for="nom">Nom</label>
+                                            <input name="nom" required type="text" class="form-control" id="nom" placeholder="Nom de l'assurance" oninput="this.value = this.value.toUpperCase()">
+                                        </div>
+                                    </div>
+                                    <div class="col-xxl-3 col-lg-4 col-sm-6">
+                                        <div class="mb-3">
+                                            <label class="form-label" for="email">Email</label>
+                                            <input name="email" required type="email" class="form-control" id="email" placeholder="Email de l'assurance">
+                                        </div>
+                                    </div>
+                                    <div class="col-xxl-3 col-lg-4 col-sm-6">
+                                        <div class="mb-3">
+                                            <label class="form-label" for="tel">Contact</label>
+                                            <input name="tel" required type="tel" class="form-control" id="tel" placeholder="Contact de l'assurance" maxlength="10">
+                                        </div>
+                                    </div>
+                                    <div class="col-xxl-3 col-lg-4 col-sm-6">
+                                        <div class="mb-3">
+                                            <label class="form-label" for="tel2">Contact 2</label>
+                                            <input name="tel2" type="tel" class="form-control" id="tel2" placeholder="Autre contact (facultatif)" maxlength="10">
+                                        </div>
+                                    </div>
+                                    <div class="col-xxl-3 col-lg-4 col-sm-6">
+                                        <div class="mb-3">
+                                            <label class="form-label" for="fax">Fax</label>
+                                            <input name="fax" required type="text" class="form-control" id="fax" placeholder="Fax de l'assurance">
+                                        </div>
+                                    </div>
+                                    <div class="col-xxl-3 col-lg-4 col-sm-6">
+                                        <div class="mb-3">
+                                            <label class="form-label" for="adresse">Adresse</label>
+                                            <input required name="adresse" type="text" class="form-control" id="adresse" placeholder="Adresse de l'assurance">
+                                        </div>
+                                    </div>
+                                    <div class="col-xxl-3 col-lg-4 col-sm-6">
+                                        <div class="mb-3">
+                                            <label class="form-label" for="localisation">Localisation</label>
+                                            <input required name="localisation" type="text" class="form-control" id="localisation" placeholder="Situation géographique de l'assurance">
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-12">
+                                        <div class="d-flex gap-2 justify-content-start">
+                                            <button class="btn btn-success">
+                                                Enregistrer
+                                            </button>
                                         </div>
                                     </div>
                                 </div>
@@ -396,7 +444,7 @@
                                         <th scope="col">Contact</th>
                                         <th scope="col">Code</th>
                                         <th scope="col">Type</th>
-                                        {{-- <th scope="col">Actions</th> --}}
+                                        <th scope="col">Actions</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -410,19 +458,13 @@
                                         <td>Contact</td>
                                         <td>C213</td>
                                         <td>Consultation</td>
-                                        {{-- <td>
+                                        <td>
                                             <div class="d-inline-flex gap-1">
-                                                <a class="btn btn-outline-danger btn-sm rounded-5" data-bs-toggle="modal" data-bs-target="#delRow" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Supprimer">
-                                                  <i class="ri-delete-bin-line"></i>
-                                                </a>
-                                                <a class="btn btn-outline-info btn-sm rounded-5" data-bs-toggle="modal" data-bs-target="#Mmodif{{$value->id}}">
+                                                <a class="btn btn-outline-info btn-sm rounded-5" data-bs-toggle="modal" data-bs-target="#Mmodif">
                                                   <i class="ri-edit-box-line"></i>
                                                 </a>
-                                                <a class="btn btn-outline-warning btn-sm rounded-5" data-bs-toggle="modal" data-bs-target="#Mdetail{{$value->id}}">
-                                                  <i class="ri-eye-line"></i>
-                                                </a>
                                             </div>
-                                        </td> --}}
+                                        </td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -439,5 +481,8 @@
 <script src="{{asset('assets/js/app/js/reception/rech_dossier.js')}}" ></script>
 
 <script src="{{asset('assets/js/app/js/reception/select_taux_patient_new.js')}}" ></script>
+<script src="{{asset('assets/js/app/js/reception/select_societe_patient_new.js')}}" ></script>
+
+<script src="{{asset('assets/js/app/js/reception/eng_societe.js')}}" ></script>
 
 @endsection

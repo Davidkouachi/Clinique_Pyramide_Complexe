@@ -14,12 +14,12 @@ return new class extends Migration
         Schema::create('societes', function (Blueprint $table) {
             $table->id();
             $table->string('nom')->unique()->index();
-            $table->string('email')->unique();
-            $table->string('fax')->unique();
-            $table->string('tel')->unique();
-            $table->string('tel2')->unique()->nullable();
-            $table->string('adresse');
-            $table->string('responsable');
+            // $table->string('email')->unique();
+            // $table->string('fax')->unique();
+            // $table->string('tel')->unique();
+            // $table->string('tel2')->unique()->nullable();
+            // $table->string('adresse');
+            // $table->string('responsable');
             $table->timestamps();
         });
     }

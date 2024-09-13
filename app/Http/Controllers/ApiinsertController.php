@@ -20,17 +20,25 @@ use App\Models\assurance;
 use App\Models\taux;
 use App\Models\societe;
 
-class ApiController extends Controller
+class ApiinsertController extends Controller
 {
-    public function taux_select_patient_new()
+    public function societe_new(Request $request)
     {
-        $taux = taux::all(); // Récupère toutes les assurances
-        return response()->json($taux);
-    }
+        $name = $request->societe;
 
-    public function societe_select_patient_new()
-    {
-        $societe = societe::all(); // Récupère toutes les assurances
-        return response()->json($societe);
+        $verf = societe::where('nom', '=', $request->societe)->first();
+
+        if ($verf) {
+            return response()->json(['warning' => true]);
+        }
+
+        $add = new societe();
+        $add->nom = $request->societe;
+
+        if ($add->save()) {
+            return response()->json(['success' => true]);
+        }
+
+        return response()->json(['error' => true]);
     }
 }
