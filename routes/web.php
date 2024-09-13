@@ -12,8 +12,11 @@ use App\Http\Controllers\chambreController;
 use App\Http\Controllers\litController;
 use App\Http\Controllers\tauxController;
 use App\Http\Controllers\typeproduitController;
+use App\Http\Controllers\receptionController;
 
 Route::get('/', [AccueilController::class, 'index_accueil'])->name('index_accueil');
+
+Route::get('/Réception', [receptionController::class, 'index_reception'])->name('index_reception');
 
 Route::get('/Login', [authController::class, 'login'])->name('login');
 Route::post('/trait_auth', [authController::class, 'trait_auth'])->name('trait_auth');
@@ -64,3 +67,4 @@ Route::post('/update typeproduit/{id}', [typeproduitController::class, 'update_t
 // Route::middleware(['auth'])->group(function () {
 
 // });
+

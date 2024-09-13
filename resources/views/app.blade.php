@@ -10,6 +10,7 @@
     <meta property="og:title" content="Admin Templates - Dashboard Templates">
     <meta property="og:description" content="Marketplace for Bootstrap Admin Dashboards">
     <meta property="og:type" content="Website">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <link rel="shortcut icon" href="{{asset('assets/images/favicon.svg')}}">
     <!-- *************
         ************ CSS Files *************
@@ -114,13 +115,19 @@
                         <li class="">{{-- active current-page --}}
                             <a href="{{route('index_accueil')}}">
                                 <i class="ri-bar-chart-line"></i>
-                                <span class="menu-text">Tableau de bord</span>
+                                <span class="menu-text">Accueil</span>
+                            </a>
+                        </li>
+                        <li class="">{{-- active current-page --}}
+                            <a href="{{route('index_reception')}}">
+                                <i class="ri-bar-chart-line"></i>
+                                <span class="menu-text">Réception</span>
                             </a>
                         </li>
                         <li class="treeview">
                             <a href="#!">
                                 <i class="ri-settings-5-line"></i>
-                                <span class="menu-text">Gestionnaire</span>
+                                <span class="menu-text">Configuration</span>
                             </a>
                             <ul class="treeview-menu">
                                 <li>

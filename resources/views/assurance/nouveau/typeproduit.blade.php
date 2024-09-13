@@ -21,7 +21,7 @@
 
 <div class="app-body">
     <!-- Row starts -->
-    <div class="row justify-content-center">
+    <div class="row justify-content-center align-items-center">
         <div class="col-lg-6 ">
             <div class="card mb-3">
                 <div class="card-header">

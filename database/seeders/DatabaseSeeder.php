@@ -7,6 +7,7 @@ use App\Models\user;
 use Illuminate\Database\Seeder;
 
 use App\Models\role;
+use App\Models\taux;
 
 class DatabaseSeeder extends Seeder
 {
@@ -21,5 +22,10 @@ class DatabaseSeeder extends Seeder
         $role_user =role::create(['nom' => 'UTILISATEUR']);
         $role_medecin =role::create(['nom' => 'MEDECIN']);
         $role_admin =role::create(['nom' => 'ADMINISTRATEUR']);
+
+        for($i = 5; $i <= 100; $i += 5){
+           taux::create(['taux' => $i]); 
+        }
+        
     }
 }
