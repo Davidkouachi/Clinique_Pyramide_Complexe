@@ -159,7 +159,7 @@
                                                         </li>
                                                     </ul>
                                                 <li>
-                                                    <a href="{{route('chambre_new')}}">Chambre</a>
+                                                    <a href="{{route('chambre_new')}}">Chambre & Lit</a>
                                                 </li>
                                                 <li>
                                                     <a href="{{route('lit_new')}}">lit</a>

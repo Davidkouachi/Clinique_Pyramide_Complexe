@@ -13,6 +13,7 @@ class lit extends Model
         'id',
         'code',
         'type',
+        'statut'
         'chambre_id',
     ];
 

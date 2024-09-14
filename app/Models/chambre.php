@@ -13,6 +13,7 @@ class chambre extends Model
         'id',
         'code',
         'nbre_lit',
+        'statut',
         'prix',
     ];
 }

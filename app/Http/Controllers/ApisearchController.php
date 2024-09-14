@@ -20,6 +20,8 @@ use App\Models\assurance;
 use App\Models\taux;
 use App\Models\societe;
 use App\Models\patient;
+use App\Models\chambre;
+use App\Models\lit;
 
 class ApisearchController extends Controller
 {
@@ -42,5 +44,20 @@ class ApisearchController extends Controller
             return response()->json(['existep' => true]);
         }
 
+    }
+
+    public function refresh_num_chambre()
+    {
+        do {
+            // Generate a random 9-digit number
+            $code = random_int(100, 999); // Generates a number between 100000000 and 999999999
+        } while (chambre::where('code', $code)->exists()); // Ensure uniqueness
+
+        if ($code) {
+            return response()->json(['success' => true, 'code' => $code]);
+        }else{
+            return response()->json(['error' => true]);
+        }
+        
     }
 }

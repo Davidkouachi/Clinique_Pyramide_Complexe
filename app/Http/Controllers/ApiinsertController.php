@@ -20,6 +20,8 @@ use App\Models\assurance;
 use App\Models\taux;
 use App\Models\societe;
 use App\Models\patient;
+use App\Models\chambre;
+use App\Models\lit;
 
 class ApiinsertController extends Controller
 {
@@ -164,6 +166,22 @@ class ApiinsertController extends Controller
 
         // Return matricule with prefix
         return $matricule;
+    }
+
+    public function chambre_new(Request $request)
+    {
+        $add = new chambre();
+
+        $add->code = $request->num_chambre;
+        $add->nbre_lit = $request->nbre_lit;
+        $add->prix = $request->prix;
+        $add->statut = 'indisponible';
+
+        if($add->save()){
+            return response()->json(['success' => true]);
+        } else {
+            return response()->json(['error' => true]);
+        }
     }
 
 }

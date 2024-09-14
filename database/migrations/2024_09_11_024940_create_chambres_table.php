@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('code')->index();
             $table->string('nbre_lit')->index();
             $table->string('prix')->index();
+            $table->string('statut')->index();
             $table->timestamps();
         });
     }

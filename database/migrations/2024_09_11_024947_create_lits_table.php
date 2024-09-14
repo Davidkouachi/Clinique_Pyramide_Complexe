@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('code')->index();
             $table->string('type')->index();
+            $table->string('statut')->index();
             $table->unsignedBigInteger('chambre_id');
             $table->foreign('chambre_id')->references('id')->on('chambres')->onDelete('cascade');
             $table->timestamps();
