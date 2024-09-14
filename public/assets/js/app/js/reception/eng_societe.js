@@ -3,10 +3,17 @@ document.addEventListener('DOMContentLoaded', function() {
     document.getElementById("btn_eng_societe").addEventListener("click", function(event) {
         event.preventDefault();
 
+        const societeInput = document.getElementById("societe_new");
+
         var dynamicFields = document.getElementById("div_alert");
         // Remove existing content
         while (dynamicFields.firstChild) {
             dynamicFields.removeChild(dynamicFields.firstChild);
+        }
+
+        if(societeInput.value == ''){
+            showAlert('warning', 'Veuillez saisie le nom de la société SVP.');
+            return false;
         }
 
         var preloader_ch = `
@@ -17,13 +24,10 @@ document.addEventListener('DOMContentLoaded', function() {
         // Add the preloader to the body
         document.body.insertAdjacentHTML('beforeend', preloader_ch);
 
-        const societe_new = document.getElementById("societe_new").value;
-        const societeInput = document.getElementById("societe_new");
-
         $.ajax({
             url: '/api/societe_new',
             method: 'GET',  // Use 'POST' for data creation
-            data: { societe: societe_new },
+            data: { societe: societeInput.value },
             success: function(response) {
                 var preloader = document.getElementById('preloader_ch');
                 if (preloader) {

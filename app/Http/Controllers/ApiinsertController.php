@@ -19,6 +19,7 @@ use Illuminate\Support\Facades\DB;
 use App\Models\assurance;
 use App\Models\taux;
 use App\Models\societe;
+use App\Models\patient;
 
 class ApiinsertController extends Controller
 {
@@ -41,4 +42,128 @@ class ApiinsertController extends Controller
 
         return response()->json(['error' => true]);
     }
+
+    public function assurance_new(Request $request)
+    {
+        $verifications = [
+            'tel' => $request->tel,
+            'tel2' => $request->tel2 ?? null, // Allow tel2 to be null
+            'email' => $request->email,
+            'nom' => $request->nom,
+            'fax' => $request->fax,
+        ];
+
+        $assuranceExist = assurance::where(function($query) use ($verifications) {
+            $query->where('tel', $verifications['tel'])
+                  ->orWhere(function($query) use ($verifications) {
+                      if (!is_null($verifications['tel2'])) {
+                          $query->where('tel2', $verifications['tel2']);
+                      }
+                  })
+                  ->orWhere('email', $verifications['email'])
+                  ->orWhere('nom', $verifications['nom'])
+                  ->orWhere('fax', $verifications['fax']);
+        })->first();
+
+        if ($assuranceExist) {
+            if ($assuranceExist->tel === $verifications['tel'] || (!is_null($verifications['tel2']) && $assuranceExist->tel2 === $verifications['tel2'])) {
+                return response()->json(['tel_existe' => true]);
+            } elseif ($assuranceExist->email === $verifications['email']) {
+                return response()->json(['email_existe' => true]);
+            } elseif ($assuranceExist->nom === $verifications['nom']) {
+                return response()->json(['nom_existe' => true]);
+            } elseif ($assuranceExist->fax === $verifications['fax']) {
+                return response()->json(['fax_existe' => true]);
+            }
+        }
+
+        $add = new assurance();
+        $add->nom = $request->nom;
+        $add->email = $request->email;
+        $add->tel = $request->tel;
+        $add->tel2 = $request->tel2;
+        $add->fax = $request->fax;
+        $add->adresse = $request->adresse;
+
+        if($add->save()){
+            return response()->json(['success' => true]);
+        }else{
+            return response()->json(['error' => true]);
+        }
+    }
+
+    public function patient_new(Request $request)
+    {
+        $verifications = [
+            'tel' => $request->tel,
+            'tel2' => $request->tel2 ?? null, // Allow tel2 to be null
+            'email' => $request->email ?? null,
+            'nom' => $request->nom,
+        ];
+
+        $patientExist = patient::where(function($query) use ($verifications) {
+            $query->where('tel', $verifications['tel'])
+                  ->orWhere(function($query) use ($verifications) {
+                      if (!is_null($verifications['tel2'])) {
+                          $query->where('tel2', $verifications['tel2']);
+                      }
+                  })
+                  ->orWhere(function($query) use ($verifications) {
+                      if (!is_null($verifications['email'])) {
+                          $query->where('email', $verifications['email']);
+                      }
+                  })
+                  ->orWhere(function($query) use ($verifications) {
+                      if (!is_null($verifications['nom'])) {
+                          $query->where('np', $verifications['nom']);
+                      }
+                  });
+        })->first();
+
+        if ($patientExist) {
+            if ($patientExist->tel === $verifications['tel'] || (!is_null($verifications['tel2']) && $patientExist->tel2 === $verifications['tel2'])) {
+                return response()->json(['tel_existe' => true]);
+            } elseif ($patientExist->email === $verifications['email']) {
+                return response()->json(['email_existe' => true]);
+            } elseif ($patientExist->nom === $verifications['nom']) {
+                return response()->json(['nom_existe' => true]);
+            }
+        }
+
+        // Generate a unique matricule
+        $matricule = $this->generateUniqueMatricule();
+        // Create a new record with the unique matricule
+        $add = new patient();
+        $add->matricule = $matricule;
+        $add->np = $request->nom;
+        $add->email = $request->email;
+        $add->tel = $request->tel;
+        $add->tel2 = $request->tel2;
+        $add->assurer = $request->assurer;
+        $add->adresse = $request->adresse;
+
+        if($request->assurer === 'oui'){
+            $add->assurance_id = $request->assurance_id;
+            $add->taux_id = $request->taux_id;
+            $add->societe_id = $request->societe_id;
+        }
+
+        if($add->save()){
+            return response()->json(['success' => true, 'matricule' => $matricule]);
+        } else {
+            return response()->json(['error' => true]);
+        }
+    }
+
+    private function generateUniqueMatricule()
+    {
+        do {
+            // Generate a random 9-digit number
+            $matricule = random_int(100000, 999999); // Generates a number between 100000000 and 999999999
+        } while (patient::where('matricule', $matricule)->exists()); // Ensure uniqueness
+
+        // Return matricule with prefix
+        return $matricule;
+    }
+
 }

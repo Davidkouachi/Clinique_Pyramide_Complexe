@@ -33,4 +33,10 @@ class ApiController extends Controller
         $societe = societe::all(); // Récupère toutes les assurances
         return response()->json($societe);
     }
+
+    public function assurance_select_patient_new()
+    {
+       $assurance = assurance::all(); // Récupère toutes les assurances
+        return response()->json($assurance); 
+    }
 }

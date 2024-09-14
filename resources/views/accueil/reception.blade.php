@@ -41,7 +41,7 @@
                             <i class="ri-walk-line fs-4 lh-1"></i>
                         </div>
                         <h6>Total Patient</h6>
-                        <h5 class="text-primary m-0">639</h5>
+                        <h5 class="text-primary m-0">0</h5>
                     </div>
                 </div>
             </div>
@@ -54,7 +54,7 @@
                             <i class="ri-walk-line fs-4 lh-1"></i>
                         </div>
                         <h6>Patient Assurer</h6>
-                        <h5 class="text-primary m-0">296</h5>
+                        <h5 class="text-primary m-0">0</h5>
                     </div>
                 </div>
             </div>
@@ -67,7 +67,7 @@
                             <i class="ri-walk-line fs-4 lh-1"></i>
                         </div>
                         <h6>Patient non-assurer</h6>
-                        <h5 class="text-primary m-0">49</h5>
+                        <h5 class="text-primary m-0">0</h5>
                     </div>
                 </div>
             </div>
@@ -80,7 +80,7 @@
                             <i class="ri-cash-line fs-4 lh-1"></i>
                         </div>
                         <h6>Total Consultation</h6>
-                        <h5 class="text-primary m-0">5.733.484 Fcfa</h5>
+                        <h5 class="text-primary m-0">0 Fcfa</h5>
                     </div>
                 </div>
             </div>
@@ -136,8 +136,9 @@
                                             <div class="mb-3">
                                                 <label class="form-label">Numéro du dossier</label>
                                                 <div class="input-group">
-                                                    <input name="taux" required type="email" class="form-control" id="taux" placeholder="Email de l'assurance" maxlength="3">
-                                                    <button id="btn_rech_num_dossier" type="submit" class="btn btn-outline-success">
+                                                    <span class="input-group-text">P-</span>
+                                                    <input type="text" class="form-control" id="matricule_patient" placeholder="Saisie Obligatoire" maxlength="6">
+                                                    <button id="btn_rech_num_dossier" class="btn btn-outline-success">
                                                         <i class="ri-search-line"></i>
                                                     </button>
                                                 </div>
@@ -286,7 +287,7 @@
                                     <div class="col-xxl-3 col-lg-4 col-sm-6">
                                         <div class="mb-3">
                                             <label class="form-label">Contact 2</label>
-                                            <input type="tel" class="form-control" id="patient_teel2_new" placeholder="Facultatif" maxlength="10">
+                                            <input type="tel" class="form-control" id="patient_tel2_new" placeholder="facultatif" maxlength="10">
                                         </div>
                                     </div>
                                     <div class="col-xxl-3 col-lg-4 col-sm-6">
@@ -315,8 +316,6 @@
                                             <div class="mb-3">
                                                 <label class="form-label">Assurance</label>
                                                 <select class="form-select" id="patient_assurance_id_new">
-                                                    <option value="0">Select</option>
-                                                    <option value="1">1</option>
                                                 </select>
                                             </div>
                                         </div>
@@ -370,49 +369,43 @@
                                 <div class="row gx-3">
                                     <div class="col-xxl-3 col-lg-4 col-sm-6">
                                         <div class="mb-3">
-                                            <label class="form-label" for="nom">Nom</label>
-                                            <input name="nom" required type="text" class="form-control" id="nom" placeholder="Nom de l'assurance" oninput="this.value = this.value.toUpperCase()">
+                                            <label class="form-label">Nom</label>
+                                            <input type="text" class="form-control" id="nom_assurance_new" placeholder="Saisie Obligatoire" oninput="this.value = this.value.toUpperCase()">
                                         </div>
                                     </div>
                                     <div class="col-xxl-3 col-lg-4 col-sm-6">
                                         <div class="mb-3">
-                                            <label class="form-label" for="email">Email</label>
-                                            <input name="email" required type="email" class="form-control" id="email" placeholder="Email de l'assurance">
+                                            <label class="form-label">Email</label>
+                                            <input required type="email" class="form-control" id="email_assurance_new" placeholder="Saisie Obligatoire">
                                         </div>
                                     </div>
                                     <div class="col-xxl-3 col-lg-4 col-sm-6">
                                         <div class="mb-3">
-                                            <label class="form-label" for="tel">Contact</label>
-                                            <input name="tel" required type="tel" class="form-control" id="tel" placeholder="Contact de l'assurance" maxlength="10">
+                                            <label class="form-label">Contact</label>
+                                            <input type="tel" class="form-control" id="tel_assurance_new" placeholder="Saisie Obligatoire" maxlength="10">
                                         </div>
                                     </div>
                                     <div class="col-xxl-3 col-lg-4 col-sm-6">
                                         <div class="mb-3">
-                                            <label class="form-label" for="tel2">Contact 2</label>
-                                            <input name="tel2" type="tel" class="form-control" id="tel2" placeholder="Autre contact (facultatif)" maxlength="10">
+                                            <label class="form-label">Contact 2</label>
+                                            <input type="tel" class="form-control" id="tel2_assurance_new" placeholder="facultatif" maxlength="10">
                                         </div>
                                     </div>
                                     <div class="col-xxl-3 col-lg-4 col-sm-6">
                                         <div class="mb-3">
-                                            <label class="form-label" for="fax">Fax</label>
-                                            <input name="fax" required type="text" class="form-control" id="fax" placeholder="Fax de l'assurance">
+                                            <label class="form-label" >Fax</label>
+                                            <input type="text" class="form-control" id="fax_assurance_new" placeholder="Saisie Obligatoire">
                                         </div>
                                     </div>
                                     <div class="col-xxl-3 col-lg-4 col-sm-6">
                                         <div class="mb-3">
-                                            <label class="form-label" for="adresse">Adresse</label>
-                                            <input required name="adresse" type="text" class="form-control" id="adresse" placeholder="Adresse de l'assurance">
-                                        </div>
-                                    </div>
-                                    <div class="col-xxl-3 col-lg-4 col-sm-6">
-                                        <div class="mb-3">
-                                            <label class="form-label" for="localisation">Localisation</label>
-                                            <input required name="localisation" type="text" class="form-control" id="localisation" placeholder="Situation géographique de l'assurance">
+                                            <label class="form-label">Adresse</label>
+                                            <input type="text" class="form-control" id="adresse_assurance_new" placeholder="Saisie Obligatoire">
                                         </div>
                                     </div>
                                     <div class="col-sm-12">
                                         <div class="d-flex gap-2 justify-content-start">
-                                            <button class="btn btn-success">
+                                            <button id="btn_eng_assurance" class="btn btn-success">
                                                 Enregistrer
                                             </button>
                                         </div>
@@ -430,7 +423,7 @@
         <div class="col-12">
             <div class="card mb-3">
                 <div class="card-header">
-                    <h5 class="card-title">Patient enregistrées Aujourd'hui</h5>
+                    <h5 class="card-title">Consultation enregistrées Aujourd'hui</h5>
                 </div>
                 <div class="card-body">
                     <div class="table-outer">
@@ -448,7 +441,7 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr>
+                                    {{-- <tr>
                                         <td>1</td>
                                         <td>
                                             <img height="40" width="40" class="rounded-circle" src="assets/images/user8.png">
@@ -465,7 +458,7 @@
                                                 </a>
                                             </div>
                                         </td>
-                                    </tr>
+                                    </tr> --}}
                                 </tbody>
                             </table>
                         </div>
@@ -482,7 +475,11 @@
 
 <script src="{{asset('assets/js/app/js/reception/select_taux_patient_new.js')}}" ></script>
 <script src="{{asset('assets/js/app/js/reception/select_societe_patient_new.js')}}" ></script>
+<script src="{{asset('assets/js/app/js/reception/select_assurance_patient_new.js')}}" ></script>
+<script src="{{asset('assets/js/app/js/reception/liste_patient_day.js')}}" ></script>
 
 <script src="{{asset('assets/js/app/js/reception/eng_societe.js')}}" ></script>
+<script src="{{asset('assets/js/app/js/reception/eng_assurance.js')}}" ></script>
+<script src="{{asset('assets/js/app/js/reception/eng_patient.js')}}" ></script>
 
 @endsection

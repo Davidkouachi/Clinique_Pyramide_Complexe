@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('tel2')->nullable();
             $table->string('fax')->unique();
             $table->string('adresse');
-            $table->string('localisation');
+            // $table->string('localisation');
             $table->timestamps();
         });
     }

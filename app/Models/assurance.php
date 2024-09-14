@@ -17,6 +17,5 @@ class assurance extends Model
         'tel2',
         'fax',
         'adresse',
-        'localisation',
     ];
 }
