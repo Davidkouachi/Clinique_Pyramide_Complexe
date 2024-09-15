@@ -1,6 +1,6 @@
 @extends('app')
 
-@section('titre', 'Nouvelle Assurance')
+@section('titre', 'Nouvel Utilisateur')
 
 @section('info_page')
 <div class="app-hero-header d-flex align-items-center">
@@ -27,20 +27,19 @@
                 <div class="card-header">
                     <h5 class="card-title">Formulaire Nouvel Utilisateur</h5>
                 </div>
-                <form class="card-body" id="form_utilisateur" method="post" action="{{route('insert_utilisateur')}}" >
-                    @csrf
+                <div class="card-body" >
                     <!-- Row starts -->
                     <div class="row gx-3">
                         <div class="col-xxl-3 col-lg-4 col-sm-6">
                             <div class="mb-3">
-                                <label class="form-label" for="nom">Nom et Prénoms</label>
-                                <input name="name" required type="text" class="form-control" id="nom" placeholder="Saisie Obligatoire" oninput="this.value = this.value.toUpperCase()">
+                                <label class="form-label">Nom et Prénoms</label>
+                                <input type="text" class="form-control" id="nom" placeholder="Saisie Obligatoire" oninput="this.value = this.value.toUpperCase()">
                             </div>
                         </div>
                         <div class="col-xxl-3 col-lg-4 col-sm-6">
                             <div class="mb-3">
-                                <label class="form-label" for="sexe">Sexe</label>
-                                <select name="sexe" class="form-select" id="sexe">
+                                <label class="form-label">Sexe</label>
+                                <select class="form-select" id="sexe">
                                     <option value="">Selectionner</option>
                                     <option value="M">Homme</option>
                                     <option value="Mme">Femme</option>
@@ -49,90 +48,87 @@
                         </div>
                         <div class="col-xxl-3 col-lg-4 col-sm-6">
                             <div class="mb-3">
-                                <label class="form-label" for="email">Email</label>
-                                <input name="email" required type="email" class="form-control" id="email" placeholder="Saisie Obligatoire">
+                                <label class="form-label">Email</label>
+                                <input type="email" class="form-control" id="email" placeholder="Saisie Obligatoire">
                             </div>
                         </div>
                         <div class="col-xxl-3 col-lg-4 col-sm-6">
                             <div class="mb-3">
-                                <label class="form-label" for="tel">Contact</label>
-                                <input name="tel" required type="tel" class="form-control" id="tel" placeholder="Saisie Obligatoire" maxlength="10">
+                                <label class="form-label">Contact</label>
+                                <input type="tel" class="form-control" id="tel" placeholder="Saisie Obligatoire" maxlength="10">
                             </div>
                         </div>
                         <div class="col-xxl-3 col-lg-4 col-sm-6">
                             <div class="mb-3">
-                                <label class="form-label" for="tel2">Contact 2</label>
-                                <input name="tel2" type="tel" class="form-control" id="tel2" placeholder="Autre contact (facultatif)" maxlength="10">
+                                <label class="form-label">Contact 2</label>
+                                <input type="tel" class="form-control" id="tel2" placeholder="facultatif" maxlength="10">
                             </div>
                         </div>
                         <div class="col-xxl-3 col-lg-4 col-sm-6">
                             <div class="mb-3">
                                 <label class="form-label" for="adresse">Adresse</label>
-                                <input required name="adresse" type="text" class="form-control" id="adresse" placeholder="Saisie Obligatoire">
+                                <input type="text" class="form-control" id="adresse" placeholder="Saisie Obligatoire">
+                            </div>
+                        </div>
+                        <div class="col-xxl-3 col-lg-4 col-sm-6">
+                            <div class="mb-3">
+                                <label class="form-label">Profil</label>
+                                <select class="form-select" id="role_id">
+                                </select>
                             </div>
                         </div>
                         <div class="col-sm-12">
                             <div class="d-flex gap-2 justify-content-start">
-                                <button type="reset" class="btn btn-outline-danger">
-                                    Rémise à zéro
-                                </button>
-                                <button type="submit" class="btn btn-success">
+                                <button id="btn_eng" class="btn btn-success">
                                     Enregistrer
                                 </button>
                             </div>
                         </div>
                     </div>
                     <!-- Row ends -->
-                </form>
+                </div>
             </div>
         </div>
         <div class="col-12">
             <div class="card mb-3">
-                <div class="card-header">
-                    <h5 class="card-title">Assurance enregistrées Aujourd'hui</h5>
+                <div class="card-header d-flex align-items-center justify-content-between">
+                    <h5 class="card-title">
+                        Liste des Type d'actes
+                    </h5>
+                    <a id="btn_refresh_table" class="btn btn-outline-info ms-auto">
+                        <i class="ri-loop-left-line"></i>
+                    </a>
                 </div>
                 <div class="card-body">
-                    <div class="table-outer">
+                    <div id="div_alert_table" >
+                    
+                    </div>
+                    <div class="table-outer" id="div_Table" style="display: none;">
                         <div class="table-responsive">
-                            <table class="table align-middle table-hover m-0 truncate">
+                            <table class="table align-middle table-hover m-0 truncate" id="Table">
                                 <thead>
                                     <tr>
                                         <th scope="col">N°</th>
-                                        <th scope="col">Nom et Prénoms</th>
-                                        <th scope="col">Email</th>
-                                        <th scope="col">Contact</th>
-                                        <th scope="col">Adresse</th>
+                                        <th scope="col">Type</th>
+                                        <th scope="col">Acte</th>
+                                        <th scope="col">Prix</th>
                                         <th scope="col">Actions</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach($users as $key => $value)
-                                    <tr>
-                                        <td>{{$key+1}}</td>
-                                        <td>
-                                            <img height="40" width="40" class="rounded-circle" src="assets/images/user8.png" alt="Bootstrap Gallery">
-                                            {{$value->sexe.'. '.$value->name}}
-                                        </td>
-                                        <td>{{$value->email}}</td>
-                                        <td>{{$value->tel}}</td>
-                                        <td>{{$value->adresse}}</td>
-                                        <td>
-                                            <div class="d-inline-flex gap-1">
-                                                <a class="btn btn-outline-danger btn-sm rounded-5" data-bs-toggle="modal" data-bs-target="#delRow" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Supprimer">
-                                                  <i class="ri-delete-bin-line"></i>
-                                                </a>
-                                                <a class="btn btn-outline-info btn-sm rounded-5" data-bs-toggle="modal" data-bs-target="#Mmodif{{$value->id}}">
-                                                  <i class="ri-edit-box-line"></i>
-                                                </a>
-                                                <a class="btn btn-outline-warning btn-sm rounded-5" data-bs-toggle="modal" data-bs-target="#Mdetail{{$value->id}}">
-                                                  <i class="ri-eye-line"></i>
-                                                </a>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    @endforeach
                                 </tbody>
                             </table>
+                        </div>
+                    </div>
+                    <div id="message_Table" style="display: none;">
+                        <p class="text-center" >
+                            Aucun Type Acte n'a été enregistrer
+                        </p>
+                    </div>
+                    <div id="div_Table_loader" style="display: none;">
+                        <div class="d-flex justify-content-center align-items-center">
+                            <div class="spinner-border text-warning me-2" role="status" aria-hidden="true"></div>
+                            <strong>Chargement des données...</strong>
                         </div>
                     </div>
                 </div>
@@ -142,191 +138,510 @@
     <!-- Row ends -->
 </div>
 
-<script src="{{asset('assets/js/app/js/nouveau/utilisateur.js')}}" ></script>
-<script src="{{asset('assets/js/app/js/modifier/utilisateur.js')}}" ></script>
-
-<div class="modal fade" id="delRow" tabindex="-1" aria-labelledby="delRowLabel" aria-modal="true" role="dialog">
+<div class="modal fade" id="Mdelete" tabindex="-1" aria-labelledby="delRowLabel" aria-modal="true" role="dialog">
     <div class="modal-dialog modal-sm modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="delRowLabel">
-                    Confirm
+                    Confirmation
                 </h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                Are you sure you want to delete the department?
+                Voulez-vous vraiment supprimé ce Type d'acte
+                <input type="hidden" id="Iddelete">
             </div>
             <div class="modal-footer">
                 <div class="d-flex justify-content-end gap-2">
-                    <a class="btn btn-secondary" data-bs-dismiss="modal" aria-label="Close">No</a>
-                    <a class="btn btn-danger" data-bs-dismiss="modal" aria-label="Close">Yes</a>
+                    <a class="btn btn-secondary" data-bs-dismiss="modal" aria-label="Close">Non</a>
+                    <button id="deleteBtn" class="btn btn-danger" data-bs-dismiss="modal" aria-label="Close">Oui</button>
                 </div>
             </div>
         </div>
     </div>
 </div>
 
-@foreach($users as $value)
-<div class="modal fade" id="Mdetail{{$value->id}}" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-md">
+<div class="modal fade" id="Mmodif" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">
-                    Détail Utilisateur
-                </h5>
+                <h5 class="modal-title" id="exampleModalLabel">Modifier Lit</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <div class="row gx-3">
-                    <div class="col-12 text-center">
-                        <div class="mb-3">
-                            <h5 class="card-title">Nom et Prénoms : </h5>
-                            <label class="form-label" for="nom">{{$value->sexe.'. '.$value->name}}</label>
+                <form id="updateForm">
+                    <div class="mb-3" id="alert_update">
+                        
+                    </div>
+                    <input type="hidden" id="Id"> <!-- Hidden field for the room's ID -->
+                    <div class="mb-3">
+                        <label class="form-label">Spécialité / Type Acte</label>
+                        <input type="text" class="form-control" id="nomModif" oninput="this.value = this.value.toUpperCase()">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Acte</label>
+                        <select class="form-select" id="acte_id_modif"></select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Prix</label>
+                        <div class="input-group">
+                            <input type="tel" class="form-control" id="prixModif" placeholder="Saisie Obligatoire">
+                            <span class="input-group-text">Fcfa</span>
                         </div>
                     </div>
-                    <div class="col-12 text-center">
-                        <div class="mb-3">
-                            <h5 class="card-title">Email : </h5>
-                            <label class="form-label" for="nom">{{$value->email}}</label>
-                        </div>
-                    </div>
-                    <div class="col-12 text-center">
-                        <div class="mb-3">
-                            <h5 class="card-title">Contact : </h5>
-                            <label class="form-label" for="nom">{{'+225 '.$value->tel}}</label>
-                        </div>
-                    </div>
-                    @if(!empty($value->tel2))
-                    <div class="col-12 text-center">
-                        <div class="mb-3">
-                            <h5 class="card-title">Contact 2 : </h5>
-                            <label class="form-label" for="nom">{{'+225 '.$value->tel2}}</label>
-                        </div>
-                    </div>
-                    @endif
-                    <div class="col-12 text-center">
-                        <div class="mb-3">
-                            <h5 class="card-title">Adresse : </h5>
-                            <label class="form-label" for="nom">{{$value->adresse}}</label>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">
-                    Fermer
-                </button>
-            </div>
-        </div>
-    </div>
-</div>
-@endforeach
-
-@foreach($users as $value)
-<div class="modal fade" id="Mmodif{{$value->id}}" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-xl">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">
-                    Mise à jour
-                </h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <form class="card-body" id="form_utilisateur_modifier" method="post" action="{{route('update_utilisateur',$value->id)}}" >
-                    @csrf
-                    <!-- Row starts -->
-                    <div class="row gx-3">
-                        <div class="col-xxl-3 col-lg-4 col-sm-6">
-                            <div class="mb-3">
-                                <label class="form-label" for="name_modif">Nom et Prénoms</label>
-                                <input name="name_modif" required type="text" class="form-control" id="name_modif" placeholder="Saisie Obligatoire" oninput="this.value = this.value.toUpperCase()" value="{{$value->name}}" >
-                            </div>
-                        </div>
-                        <div class="col-xxl-3 col-lg-4 col-sm-6">
-                            <div class="mb-3">
-                                <label class="form-label" for="sexe_modif">Sexe</label>
-                                <select name="sexe_modif" required class="form-select" id="sexe_modif">
-                                    <option value="">Selectionner</option>
-                                    <option @if($value->sexe === 'M') selected @endif value="M">Homme</option>
-                                    <option @if($value->sexe === 'Mme') selected @endif value="Mme">Femme</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col-xxl-3 col-lg-4 col-sm-6">
-                            <div class="mb-3">
-                                <label class="form-label" for="email_modif">Email</label>
-                                <input name="email_modif" required type="email" class="form-control" id="email_modif" placeholder="Saisie Obligatoire" value="{{$value->email}}">
-                            </div>
-                        </div>
-                        <div class="col-xxl-3 col-lg-4 col-sm-6">
-                            <div class="mb-3">
-                                <label class="form-label" for="tel_modif">Contact</label>
-                                <input name="tel_modif" required type="tel_modif" class="form-control" id="tel_modif" placeholder="Saisie Obligatoire" maxlength="10" value="{{$value->tel}}">
-                            </div>
-                        </div>
-                        <div class="col-xxl-3 col-lg-4 col-sm-6">
-                            <div class="mb-3">
-                                <label class="form-label" for="tel2_modif">Contact 2</label>
-                                <input name="tel2_modif" type="tel_modif" class="form-control" id="tel2_modif" placeholder="(facultatif)" maxlength="10" value="{{$value->tel2}}">
-                            </div>
-                        </div>
-                        <div class="col-xxl-3 col-lg-4 col-sm-6">
-                            <div class="mb-3">
-                                <label class="form-label" for="adresse_modif">Adresse</label>
-                                <input required name="adresse_modif" type="text" class="form-control" id="adresse_modif" placeholder="Saisie Obligatoire" value="{{$value->adresse}}">
-                            </div>
-                        </div>
-                        <div class="col-sm-12">
-                            <div class="d-flex gap-2 justify-content-end">
-                                <a type="reset" class="btn btn-outline-danger" data-bs-dismiss="modal">
-                                   Fermer
-                                </a>
-                                <button type="submit" class="btn btn-success">
-                                    Enregistrer
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- Row ends -->
                 </form>
             </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+                <button type="button" class="btn btn-primary" id="updateBtn">Mettre à jour</button>
+            </div>
         </div>
     </div>
 </div>
-@endforeach
-
 
 <script>
-    var inputElement = document.getElementById('tel');
-    inputElement.addEventListener('input', function() {
-        // Supprimer tout sauf les chiffres
-        this.value = this.value.replace(/[^0-9]/g, '');
-    });
-</script>
+    document.addEventListener('DOMContentLoaded', function() {
 
-<script>
-    var inputElement = document.getElementById('tel2');
-    inputElement.addEventListener('input', function() {
-        // Supprimer tout sauf les chiffres
-        this.value = this.value.replace(/[^0-9]/g, '');
-    });
-</script>
+        select();
+        select_modif();
+        list();
 
-<script>
-    var inputElement = document.getElementById('tel_modif');
-    inputElement.addEventListener('input', function() {
-        // Supprimer tout sauf les chiffres
-        this.value = this.value.replace(/[^0-9]/g, '');
-    });
-</script>
+        document.getElementById("btn_eng").addEventListener("click", eng);
+        document.getElementById("btn_refresh_table").addEventListener("click", list);
+        document.getElementById("updateBtn").addEventListener("click", updatee);
+        document.getElementById("deleteBtn").addEventListener("click", deletee);
 
-<script>
-    var inputElement = document.getElementById('tel2_modif');
-    inputElement.addEventListener('input', function() {
-        // Supprimer tout sauf les chiffres
-        this.value = this.value.replace(/[^0-9]/g, '');
+        document.getElementById('prix').addEventListener('input', function() {
+            this.value = formatPrice(this.value);
+        });
+        document.getElementById('prix').addEventListener('keypress', function(event) {
+            const key = event.key;
+            if (isNaN(key)) {
+                event.preventDefault();
+            }
+        });
+
+        document.getElementById('prixModif').addEventListener('input', function() {
+            this.value = formatPrice(this.value);
+        });
+        document.getElementById('prixModif').addEventListener('keypress', function(event) {
+            const key = event.key;
+            if (isNaN(key)) {
+                event.preventDefault();
+            }
+        });
+
+        function formatPrice(input) {
+            // Supprimer tous les points existants
+            input = input.replace(/\./g, '');
+            // Formater le prix avec des points
+            return input.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+        }
+
+        function select() {
+            const selectElement = document.getElementById('acte_id');
+
+            // Clear existing options
+            selectElement.innerHTML = '';
+
+            const defaultOption = document.createElement('option');
+            defaultOption.value = '';
+            defaultOption.textContent = 'Sélectionner un Acte';
+            selectElement.appendChild(defaultOption);
+
+            $.ajax({
+                url: '/api/list_acte',
+                method: 'GET',
+                success: function(response) {
+                    data = response.acte;
+                    data.forEach(acte => {
+                        const option = document.createElement('option');
+                        option.value = acte.id; // Ensure 'id' is the correct key
+                        option.textContent = acte.nom; // Ensure 'nom' is the correct key
+                        selectElement.appendChild(option);
+                    });
+                },
+                error: function() {
+                    // showAlert('danger', 'Impossible de generer le code automatiquement');
+                }
+            });
+        }
+
+        function select_modif() {
+            const selectElement = document.getElementById('acte_id_modif');
+
+            // Clear existing options
+            selectElement.innerHTML = '';
+
+            $.ajax({
+                url: '/api/list_acte',
+                method: 'GET',
+                success: function(response) {
+                    data = response.acte;
+                    data.forEach(acte => {
+                        const option = document.createElement('option');
+                        option.value = acte.id; // Ensure 'id' is the correct key
+                        option.textContent = acte.nom; // Ensure 'nom' is the correct key
+                        selectElement.appendChild(option);
+                    });
+                },
+                error: function() {
+                    // showAlert('danger', 'Impossible de generer le code automatiquement');
+                }
+            });
+        }
+
+        function showAlert(type, message) {
+
+            var dynamicFields = document.getElementById("div_alert");
+            // Remove existing content
+            while (dynamicFields.firstChild) {
+                dynamicFields.removeChild(dynamicFields.firstChild);
+            }
+
+            var groupe = document.createElement("div");
+            groupe.className = `alert bg-${type} text-white alert-dismissible fade show`;
+            groupe.innerHTML = `
+                ${message}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>   
+            `;
+            document.getElementById("div_alert").appendChild(groupe);
+
+            setTimeout(function() {
+                groupe.classList.remove("show");
+                groupe.classList.add("fade");
+                setTimeout(function() {
+                    groupe.remove();
+                }, 150); // Time for the fade effect to complete
+            }, 3000);
+        }
+
+        function showAlertUpdate(type, message) {
+
+            var dynamicFields = document.getElementById("alert_update");
+            // Remove existing content
+            while (dynamicFields.firstChild) {
+                dynamicFields.removeChild(dynamicFields.firstChild);
+            }
+
+            var groupe = document.createElement("div");
+            groupe.className = `alert bg-${type} text-white alert-dismissible fade show`;
+            groupe.innerHTML = `
+                ${message}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>   
+            `;
+            document.getElementById("alert_update").appendChild(groupe);
+
+            setTimeout(function() {
+                groupe.classList.remove("show");
+                groupe.classList.add("fade");
+                setTimeout(function() {
+                    groupe.remove();
+                }, 150); // Time for the fade effect to complete
+            }, 3000);
+        }
+
+        function showAlertList(type, message) {
+
+            var dynamicFields = document.getElementById("div_alert_table");
+            // Remove existing content
+            while (dynamicFields.firstChild) {
+                dynamicFields.removeChild(dynamicFields.firstChild);
+            }
+
+            var groupe = document.createElement("div");
+            groupe.className = `alert bg-${type} text-white alert-dismissible fade show`;
+            groupe.innerHTML = `
+                ${message}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>   
+            `;
+            document.getElementById("div_alert_table").appendChild(groupe);
+
+            setTimeout(function() {
+                groupe.classList.remove("show");
+                groupe.classList.add("fade");
+                setTimeout(function() {
+                    groupe.remove();
+                }, 150); // Time for the fade effect to complete
+            }, 3000);
+        }
+
+        function eng() {
+
+            const acte_id = document.getElementById("acte_id");
+            const nom_acte = document.getElementById("nom_acte");
+            const prix = document.getElementById("prix");
+
+            var dynamicFields = document.getElementById("div_alert");
+            // Remove existing content
+            while (dynamicFields.firstChild) {
+                dynamicFields.removeChild(dynamicFields.firstChild);
+            }
+
+            if(!acte_id.value.trim() || !nom_acte.value.trim() || !prix.value.trim()){
+                showAlert('warning', 'Veuillez remplir tous les champs SVP.');
+                return false;
+            }
+
+            var preloader_ch = `
+                <div id="preloader_ch">
+                    <div class="spinner_preloader_ch"></div>
+                </div>
+            `;
+            // Add the preloader to the body
+            document.body.insertAdjacentHTML('beforeend', preloader_ch);
+
+            $.ajax({
+                url: '/api/typeacte_cons_new',
+                method: 'GET',  // Use 'POST' for data creation
+                data: { id: acte_id.value, nom: nom_acte.value, prix: prix.value },
+                success: function(response) {
+                    var preloader = document.getElementById('preloader_ch');
+                    if (preloader) {
+                        preloader.remove();
+                    }
+
+                    if (response.success) {
+                        showAlert('success', 'Opération éffectuée.');
+                    } else if (response.error) {
+                        showAlert('danger', 'Une erreur est survenue lors de l\'enregistrement.');
+                    }
+
+                    acte_id.value = '';
+                    nom_acte.value = '';
+                    prix.value = '';
+
+                    select_modif();
+                    select();
+                    list();
+                },
+                error: function() {
+                    var preloader = document.getElementById('preloader_ch');
+                    if (preloader) {
+                        preloader.remove();
+                    }
+
+                    showAlert('danger', 'Une erreur est survenue lors de l\'enregistrement.');
+                    
+                    acte_id.value = '';
+                    nom_acte.value = '';
+                    prix.value = '';
+                    
+                    select_modif();
+                    select();
+                    list();
+                }
+            });
+        }
+
+        function list() {
+
+            const tableBody = document.querySelector('#Table tbody'); // Target the specific table by id
+            const messageDiv = document.getElementById('message_Table');
+            const tableDiv = document.getElementById('div_Table'); // The message div
+            const loaderDiv = document.getElementById('div_Table_loader');
+
+            messageDiv.style.display = 'none';
+            tableDiv.style.display = 'none';
+            loaderDiv.style.display = 'block';
+
+            // Fetch data from the API
+            fetch('/api/list_typeacte') // API endpoint
+                .then(response => response.json())
+                .then(data => {
+                    // Access the 'chambre' array from the API response
+                    const typeactes = data.typeacte;
+
+                    // Clear any existing rows in the table body
+                    tableBody.innerHTML = '';
+
+                    if (typeactes.length > 0) {
+
+                        loaderDiv.style.display = 'none';
+                        messageDiv.style.display = 'none';
+                        tableDiv.style.display = 'block';
+
+                        // Loop through each item in the chambre array
+                        typeactes.forEach((item, index) => {
+                            // Create a new row
+                            const row = document.createElement('tr');
+                            // Create and append cells to the row based on your table's structure
+                            row.innerHTML = `
+                                <td>${index + 1}</td>
+                                <td>${item.nom}</td>
+                                <td>${item.acte}</td>
+                                <td>${item.prix} Fcfa</td>
+                                <td>
+                                    <div class="d-inline-flex gap-1">
+                                        <a class="btn btn-outline-info btn-sm rounded-5" data-bs-toggle="modal" data-bs-target="#Mmodif" id="edit-${item.id}">
+                                            <i class="ri-edit-box-line"></i>
+                                        </a>
+                                        <a class="btn btn-outline-danger btn-sm rounded-5" data-bs-toggle="modal" data-bs-target="#Mdelete" id="delete-${item.id}">
+                                            <i class="ri-delete-bin-line"></i>
+                                        </a>
+                                    </div>
+                                </td>
+                            `;
+                            // Append the row to the table body
+                            tableBody.appendChild(row);
+
+                            // Add event listener to the edit button to open the modal with pre-filled data
+                            document.getElementById(`edit-${item.id}`).addEventListener('click', () =>
+                            {
+                                // Set the values in the modal form
+                                document.getElementById('Id').value = item.id;
+                                document.getElementById('nomModif').value = item.nom;
+                                document.getElementById('prixModif').value = item.prix;
+
+                                const modifActeSelect = document.getElementById('acte_id_modif');
+                                const typeeOptions = modifActeSelect.options;
+
+                                // Loop through the options to find the matching value
+                                for (let i = 0; i < typeeOptions.length; i++) {
+                                    if (String(typeeOptions[i].value) === String(item.acte_id)) {
+                                        typeeOptions[i].selected = true; // Set the matching option as selected
+                                        break; // Stop the loop once a match is found
+                                    }
+                                }
+                            });
+
+                            // Add event listener to the edit button to open the modal with pre-filled data
+                            document.getElementById(`delete-${item.id}`).addEventListener('click', () => {
+                                // Set the values in the modal form
+                                document.getElementById('Iddelete').value = item.id;
+                            });
+
+                        });
+                    } else {
+                        loaderDiv.style.display = 'none';
+                        messageDiv.style.display = 'block';
+                        tableDiv.style.display = 'none';
+                    }
+                })
+                .catch(error => {
+                    console.error('Erreur lors du chargement des données:', error);
+                    // Hide the table and show the error message in case of failure
+                    loaderDiv.style.display = 'none';
+                    messageDiv.style.display = 'block';
+                    tableDiv.style.display = 'none';
+                });
+        }
+
+        function updatee() {
+
+            const id = document.getElementById('Id').value;
+            const nomModif = document.getElementById('nomModif').value;
+            const acte_id_modif = document.getElementById('acte_id_modif').value;
+            const prixModif = document.getElementById('prixModif').value;
+
+
+            var dynamicFields = document.getElementById("alert_update");
+            // Remove existing content
+            while (dynamicFields.firstChild) {
+                dynamicFields.removeChild(dynamicFields.firstChild);
+            }
+
+            if(!nomModif.trim() || !acte_id_modif.trim() || !prixModif.trim()){
+                showAlertUpdate('warning', 'Veuillez remplir tous les champs SVP.');
+                return false;
+            }
+
+            var modal = bootstrap.Modal.getInstance(document.getElementById('Mmodif'));
+            modal.hide();
+
+            var preloader_ch = `
+                <div id="preloader_ch">
+                    <div class="spinner_preloader_ch"></div>
+                </div>
+            `;
+            // Add the preloader to the body
+            document.body.insertAdjacentHTML('beforeend', preloader_ch);
+
+            $.ajax({
+                url: '/api/update_typeacte/'+id,
+                method: 'GET',  // Use 'POST' for data creation
+                // headers: {
+                //     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'), // Include CSRF token if required
+                //     'Content-Type': 'application/json',  // Ensure JSON request
+                // },
+                data: { type: nomModif, acte_id: acte_id_modif, prix: prixModif,},
+                // data: JSON.stringify({
+                //     nbre_lit: nbreLit,
+                //     prix: prix,
+                // }),
+                success: function(response) {
+                    var preloader = document.getElementById('preloader_ch');
+                    if (preloader) {
+                        preloader.remove();
+                    }
+
+                    showAlertList('success', 'Type acte mise à jour avec succès.');
+            
+                    list();
+                    select();
+                    select_modif();
+                },
+                error: function() {
+                    var preloader = document.getElementById('preloader_ch');
+                    if (preloader) {
+                        preloader.remove();
+                    }
+
+                    showAlertList('error', 'Erreur lors de la mise à jour.');
+                }
+            });
+        }
+
+        function deletee() {
+
+            const id = document.getElementById('Iddelete').value;
+
+            var modal = bootstrap.Modal.getInstance(document.getElementById('Mdelete'));
+            modal.hide();
+
+            var preloader_ch = `
+                <div id="preloader_ch">
+                    <div class="spinner_preloader_ch"></div>
+                </div>
+            `;
+            // Add the preloader to the body
+            document.body.insertAdjacentHTML('beforeend', preloader_ch);
+
+            $.ajax({
+                url: '/api/delete_typeacte/'+id,
+                method: 'GET',  // Use 'POST' for data creation
+                // headers: {
+                //     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'), // Include CSRF token if required
+                //     'Content-Type': 'application/json',  // Ensure JSON request
+                // },
+                // data: { nbre_lit: nbreLit, prix: prix},
+                // data: JSON.stringify({
+                //     nbre_lit: nbreLit,
+                //     prix: prix,
+                // }),
+                success: function(response) {
+                    var preloader = document.getElementById('preloader_ch');
+                    if (preloader) {
+                        preloader.remove();
+                    }
+
+                    showAlertList('success', 'Chambre supprimer avec succès.');
+                    
+                    list();
+                    select();
+                    select_modif();
+                },
+                error: function() {
+                    var preloader = document.getElementById('preloader_ch');
+                    if (preloader) {
+                        preloader.remove();
+                    }
+
+                    showAlertList('error', 'Erreur lors de la suppression de la chambre.');
+                }
+            });
+        }
+
     });
 </script>
 

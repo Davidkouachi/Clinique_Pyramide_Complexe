@@ -22,6 +22,8 @@ use App\Models\societe;
 use App\Models\patient;
 use App\Models\chambre;
 use App\Models\lit;
+use App\Models\acte;
+use App\Models\typeacte;
 
 class ApisearchController extends Controller
 {
@@ -80,5 +82,12 @@ class ApisearchController extends Controller
         $list = chambre::all();
 
         return response()->json(['list' => $list]); 
+    }
+
+    public function select_acte()
+    {
+        $acte = acte::all();
+
+        return response()->json(['acte' => $acte]); 
     }
 }

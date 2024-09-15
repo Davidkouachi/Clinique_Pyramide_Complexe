@@ -1,6 +1,6 @@
 @extends('app')
 
-@section('titre', 'Nouvelle Assurance')
+@section('titre', 'Nouveau Type acte')
 
 @section('info_page')
 <div class="app-hero-header d-flex align-items-center">
@@ -11,7 +11,7 @@
             <a href="{{route('index_accueil')}}">Espace Santé</a>
         </li>
         <li class="breadcrumb-item text-primary" aria-current="page">
-            Nouveau Lit
+            Nouveau Type Acte
         </li>
     </ol>
 </div>
@@ -25,7 +25,7 @@
         <div class="col-12">
             <div class="card mb-3">
                 <div class="card-header">
-                    <h5 class="card-title">Formulaire Nouveau Lit</h5>
+                    <h5 class="card-title">Formulaire Nouveau Type Acte</h5>
                 </div>
                 <div class="card-body" >
                     <!-- Row starts -->
@@ -44,22 +44,22 @@
                                 <label class="form-label">
                                     Spécielité / Type acte
                                 </label>
-                                <input type="text" class="form-control" id="nom" placeholder="Saisie Obligatoire" oninput="this.value = this.value.toUpperCase()">
+                                <input type="text" class="form-control" id="nom_acte" placeholder="Saisie Obligatoire" oninput="this.value = this.value.toUpperCase()">
                             </div>
                         </div>
                         <div class="col-xxl-3 col-lg-4 col-sm-6">
                             <div class="mb-3">
-                                <label class="form-label" for="prix">Prix</label>
+                                <label class="form-label">Prix</label>
                                 <div class="input-group">
-                                <input type="tel" class="form-control" id="prix" placeholder="Saisie Obligatoire">
-                                <span class="input-group-text">Fcfa</span>
+                                    <input type="tel" class="form-control" id="prix" placeholder="Saisie Obligatoire">
+                                    <span class="input-group-text">Fcfa</span>
                                 </div>
                             </div>
                         </div>
                         <div class="col-sm-12">
                             <div class="mb-3">
                                 <div class="d-flex gap-2 justify-content-start">
-                                    <button id="btn_eng_lit" class="btn btn-success">
+                                    <button id="btn_eng" class="btn btn-success">
                                         Enregistrer
                                     </button>
                                 </div>
@@ -78,9 +78,9 @@
             <div class="card mb-3">
                 <div class="card-header d-flex align-items-center justify-content-between">
                     <h5 class="card-title">
-                        Lits enregistrées Aujourd'hui
+                        Liste des Type d'actes
                     </h5>
-                    <a id="btn_refresh_table_day" class="btn btn-outline-info ms-auto">
+                    <a id="btn_refresh_table" class="btn btn-outline-info ms-auto">
                         <i class="ri-loop-left-line"></i>
                     </a>
                 </div>
@@ -90,15 +90,13 @@
                     </div>
                     <div class="table-outer" id="div_Table" style="display: none;">
                         <div class="table-responsive">
-                            <table class="table align-middle table-hover m-0 truncate" id="Table">
+                            <table class="table align-middle table-hover m-0 truncate" id="Table" >
                                 <thead>
                                     <tr>
                                         <th scope="col">N°</th>
-                                        <th scope="col">Numéro</th>
-                                        <th scope="col">Catégorie</th>
-                                        <th scope="col">Numéro chambre</th>
+                                        <th scope="col">Type</th>
+                                        <th scope="col">Acte</th>
                                         <th scope="col">Prix</th>
-                                        <th scope="col">Statut</th>
                                         <th scope="col">Actions</th>
                                     </tr>
                                 </thead>
@@ -135,7 +133,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                Voulez-vous vraiment supprimé cette chambre
+                Voulez-vous vraiment supprimé ce Type d'acte
                 <input type="hidden" id="Iddelete">
             </div>
             <div class="modal-footer">
@@ -156,32 +154,31 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form id="updateLitForm">
+                <form id="updateForm">
                     <div class="mb-3" id="alert_update">
                         
                     </div>
-                    <input type="hidden" id="litId"> <!-- Hidden field for the room's ID -->
+                    <input type="hidden" id="Id"> <!-- Hidden field for the room's ID -->
                     <div class="mb-3">
-                        <label for="chambreCode" class="form-label">Numéro</label>
-                        <div class="input-group">
-                            <span class="input-group-text">Spécialité / Type Acte</span>
-                            <input type="text" class="form-control" id="nomModif" oninput="this.value = this.value.toUpperCase()">
-                        </div>
+                        <label class="form-label">Spécialité / Type Acte</label>
+                        <input type="text" class="form-control" id="nomModif" oninput="this.value = this.value.toUpperCase()">
                     </div>
-                    <div class="col-xxl-3 col-lg-4 col-sm-6">
-                        <div class="mb-3">
-                            <label class="form-label" for="prix">Prix</label>
-                            <div class="input-group">
-                                <input type="tel" class="form-control" id="prixModif" placeholder="Saisie Obligatoire">
-                                <span class="input-group-text">Fcfa</span>
-                            </div>
+                    <div class="mb-3">
+                        <label class="form-label">Acte</label>
+                        <select class="form-select" id="acte_id_modif"></select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Prix</label>
+                        <div class="input-group">
+                            <input type="tel" class="form-control" id="prixModif" placeholder="Saisie Obligatoire">
+                            <span class="input-group-text">Fcfa</span>
                         </div>
                     </div>
                 </form>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
-                <button type="button" class="btn btn-primary" id="updateLitBtn">Mettre à jour</button>
+                <button type="button" class="btn btn-primary" id="updateBtn">Mettre à jour</button>
             </div>
         </div>
     </div>
@@ -190,37 +187,86 @@
 <script>
     document.addEventListener('DOMContentLoaded', function() {
 
-        refresh_num();
-        select()
+        select();
+        select_modif();
         list();
 
-        document.getElementById("btn_search_num").addEventListener("click", refresh_num);
-        document.getElementById("btn_eng_lit").addEventListener("click", eng_lit);
+        document.getElementById("btn_eng").addEventListener("click", eng);
+        document.getElementById("btn_refresh_table").addEventListener("click", list);
+        document.getElementById("updateBtn").addEventListener("click", updatee);
+        document.getElementById("deleteBtn").addEventListener("click", deletee);
 
-        document.getElementById("btn_refresh_table_day").addEventListener("click", list_lit);
-        document.getElementById("updateLitBtn").addEventListener("click", update_lit);
-        document.getElementById("deleteLitBtn").addEventListener("click", delete_lit);
+        document.getElementById('prix').addEventListener('input', function() {
+            this.value = formatPrice(this.value);
+        });
+        document.getElementById('prix').addEventListener('keypress', function(event) {
+            const key = event.key;
+            if (isNaN(key)) {
+                event.preventDefault();
+            }
+        });
+
+        document.getElementById('prixModif').addEventListener('input', function() {
+            this.value = formatPrice(this.value);
+        });
+        document.getElementById('prixModif').addEventListener('keypress', function(event) {
+            const key = event.key;
+            if (isNaN(key)) {
+                event.preventDefault();
+            }
+        });
+
+        function formatPrice(input) {
+            // Supprimer tous les points existants
+            input = input.replace(/\./g, '');
+            // Formater le prix avec des points
+            return input.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+        }
 
         function select() {
-            const selectElement = document.getElementById('chambre_id');
+            const selectElement = document.getElementById('acte_id');
 
             // Clear existing options
             selectElement.innerHTML = '';
 
             const defaultOption = document.createElement('option');
             defaultOption.value = '';
-            defaultOption.textContent = 'Sélectionner une Chambre';
+            defaultOption.textContent = 'Sélectionner un Acte';
             selectElement.appendChild(defaultOption);
 
             $.ajax({
-                url: '/api/list_chambre',
+                url: '/api/list_acte',
                 method: 'GET',
                 success: function(response) {
-                    data = response.list;
-                    data.forEach(list => {
+                    data = response.acte;
+                    data.forEach(acte => {
                         const option = document.createElement('option');
-                        option.value = list.id; // Ensure 'id' is the correct key
-                        option.textContent = 'CH-'+list.code; // Ensure 'nom' is the correct key
+                        option.value = acte.id; // Ensure 'id' is the correct key
+                        option.textContent = acte.nom; // Ensure 'nom' is the correct key
+                        selectElement.appendChild(option);
+                    });
+                },
+                error: function() {
+                    // showAlert('danger', 'Impossible de generer le code automatiquement');
+                }
+            });
+        }
+
+        function select_modif() {
+            const selectElement = document.getElementById('acte_id_modif');
+
+            // Clear existing options
+            selectElement.innerHTML = '';
+
+            $.ajax({
+                url: '/api/list_acte',
+                method: 'GET',
+                success: function(response) {
+                    data = response.acte;
+                    data.forEach(acte => {
+                        const option = document.createElement('option');
+                        option.value = acte.id; // Ensure 'id' is the correct key
+                        option.textContent = acte.nom; // Ensure 'nom' is the correct key
                         selectElement.appendChild(option);
                     });
                 },
@@ -305,11 +351,11 @@
             }, 3000);
         }
 
-        function eng_lit() {
+        function eng() {
 
-            const num_lit = document.getElementById("num_lit");
-            const type = document.getElementById("type");
-            const chambre_id = document.getElementById("chambre_id");
+            const acte_id = document.getElementById("acte_id");
+            const nom_acte = document.getElementById("nom_acte");
+            const prix = document.getElementById("prix");
 
             var dynamicFields = document.getElementById("div_alert");
             // Remove existing content
@@ -317,7 +363,7 @@
                 dynamicFields.removeChild(dynamicFields.firstChild);
             }
 
-            if(!num_lit.value.trim() || !type.value.trim() || !chambre_id.value.trim()){
+            if(!acte_id.value.trim() || !nom_acte.value.trim() || !prix.value.trim()){
                 showAlert('warning', 'Veuillez remplir tous les champs SVP.');
                 return false;
             }
@@ -331,9 +377,9 @@
             document.body.insertAdjacentHTML('beforeend', preloader_ch);
 
             $.ajax({
-                url: '/api/lit_new',
+                url: '/api/typeacte_cons_new',
                 method: 'GET',  // Use 'POST' for data creation
-                data: { num_lit: num_lit.value, type: type.value, chambre_id: chambre_id.value },
+                data: { id: acte_id.value, nom: nom_acte.value, prix: prix.value },
                 success: function(response) {
                     var preloader = document.getElementById('preloader_ch');
                     if (preloader) {
@@ -341,18 +387,18 @@
                     }
 
                     if (response.success) {
-                        showAlert('success', 'Lit Enregistrée.');
+                        showAlert('success', 'Opération éffectuée.');
                     } else if (response.error) {
                         showAlert('danger', 'Une erreur est survenue lors de l\'enregistrement.');
                     }
 
-                    num_lit.value = '';
-                    type.value = '';
-                    chambre_id.value = '';
+                    acte_id.value = '';
+                    nom_acte.value = '';
+                    prix.value = '';
 
-                    refresh_num();
-            
-                    list_lit();
+                    select_modif();
+                    select();
+                    list();
                 },
                 error: function() {
                     var preloader = document.getElementById('preloader_ch');
@@ -362,23 +408,22 @@
 
                     showAlert('danger', 'Une erreur est survenue lors de l\'enregistrement.');
                     
-                    num_lit.value = '';
-                    type.value = '';
-                    chambre_id.value = '';
+                    acte_id.value = '';
+                    nom_acte.value = '';
+                    prix.value = '';
                     
-                    refresh_num();
-            
-                    list_lit();
+                    select_modif();
+                    select();
+                    list();
                 }
             });
-
         }
 
-        function list_lit() {
+        function list() {
 
-            const tableBody = document.querySelector('#Table_lit_day tbody'); // Target the specific table by id
-            const messageDiv = document.getElementById('message_Table_lit_day');
-            const tableDiv = document.getElementById('div_Table_lit_day'); // The message div
+            const tableBody = document.querySelector('#Table tbody'); // Target the specific table by id
+            const messageDiv = document.getElementById('message_Table');
+            const tableDiv = document.getElementById('div_Table'); // The message div
             const loaderDiv = document.getElementById('div_Table_loader');
 
             messageDiv.style.display = 'none';
@@ -386,37 +431,31 @@
             loaderDiv.style.display = 'block';
 
             // Fetch data from the API
-            fetch('/api/list_lit_day') // API endpoint
+            fetch('/api/list_typeacte') // API endpoint
                 .then(response => response.json())
                 .then(data => {
                     // Access the 'chambre' array from the API response
-                    const lits = data.lit;
+                    const typeactes = data.typeacte;
 
                     // Clear any existing rows in the table body
                     tableBody.innerHTML = '';
 
-                    if (lits.length > 0) {
+                    if (typeactes.length > 0) {
 
                         loaderDiv.style.display = 'none';
                         messageDiv.style.display = 'none';
                         tableDiv.style.display = 'block';
 
                         // Loop through each item in the chambre array
-                        lits.forEach((item, index) => {
+                        typeactes.forEach((item, index) => {
                             // Create a new row
                             const row = document.createElement('tr');
                             // Create and append cells to the row based on your table's structure
                             row.innerHTML = `
                                 <td>${index + 1}</td>
-                                <td>Lit-${item.code}</td>
-                                <td>${item.type}</td>
-                                <td>CH-${item.code_ch}</td>
+                                <td>${item.nom}</td>
+                                <td>${item.acte}</td>
                                 <td>${item.prix} Fcfa</td>
-                                <td>
-                                    ${item.statut === 'indisponible' ? 
-                                        `<span class="badge bg-danger">${item.statut}</span>` : 
-                                        `<span class="badge bg-success">${item.statut}</span>`}
-                                </td>
                                 <td>
                                     <div class="d-inline-flex gap-1">
                                         <a class="btn btn-outline-info btn-sm rounded-5" data-bs-toggle="modal" data-bs-target="#Mmodif" id="edit-${item.id}">
@@ -432,18 +471,20 @@
                             tableBody.appendChild(row);
 
                             // Add event listener to the edit button to open the modal with pre-filled data
-                            document.getElementById(`edit-${item.id}`).addEventListener('click', () => {
+                            document.getElementById(`edit-${item.id}`).addEventListener('click', () =>
+                            {
                                 // Set the values in the modal form
-                                document.getElementById('litId').value = item.id;
-                                document.getElementById('litCode').value = item.code;
+                                document.getElementById('Id').value = item.id;
+                                document.getElementById('nomModif').value = item.nom;
+                                document.getElementById('prixModif').value = item.prix;
 
-                                const litTypeSelect = document.getElementById('typeLit');
-                                const typeOptions = litTypeSelect.options;
+                                const modifActeSelect = document.getElementById('acte_id_modif');
+                                const typeeOptions = modifActeSelect.options;
 
                                 // Loop through the options to find the matching value
-                                for (let i = 0; i < typeOptions.length; i++) {
-                                    if (typeOptions[i].value === item.type) { // Replace 'item.type_lit' with the correct field from your data
-                                        typeOptions[i].selected = true; // Set the matching option as selected
+                                for (let i = 0; i < typeeOptions.length; i++) {
+                                    if (String(typeeOptions[i].value) === String(item.acte_id)) {
+                                        typeeOptions[i].selected = true; // Set the matching option as selected
                                         break; // Stop the loop once a match is found
                                     }
                                 }
@@ -452,7 +493,7 @@
                             // Add event listener to the edit button to open the modal with pre-filled data
                             document.getElementById(`delete-${item.id}`).addEventListener('click', () => {
                                 // Set the values in the modal form
-                                document.getElementById('litIddelete').value = item.id;
+                                document.getElementById('Iddelete').value = item.id;
                             });
 
                         });
@@ -471,10 +512,13 @@
                 });
         }
 
-        function update_lit() {
+        function updatee() {
 
-            const id = document.getElementById('litId').value;
-            const typeLit = document.getElementById('typeLit').value;
+            const id = document.getElementById('Id').value;
+            const nomModif = document.getElementById('nomModif').value;
+            const acte_id_modif = document.getElementById('acte_id_modif').value;
+            const prixModif = document.getElementById('prixModif').value;
+
 
             var dynamicFields = document.getElementById("alert_update");
             // Remove existing content
@@ -482,7 +526,7 @@
                 dynamicFields.removeChild(dynamicFields.firstChild);
             }
 
-            if(!typeLit.trim()){
+            if(!nomModif.trim() || !acte_id_modif.trim() || !prixModif.trim()){
                 showAlertUpdate('warning', 'Veuillez remplir tous les champs SVP.');
                 return false;
             }
@@ -499,13 +543,13 @@
             document.body.insertAdjacentHTML('beforeend', preloader_ch);
 
             $.ajax({
-                url: '/api/update_lit/'+id,
+                url: '/api/update_typeacte/'+id,
                 method: 'GET',  // Use 'POST' for data creation
                 // headers: {
                 //     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'), // Include CSRF token if required
                 //     'Content-Type': 'application/json',  // Ensure JSON request
                 // },
-                data: { typeLit: typeLit},
+                data: { type: nomModif, acte_id: acte_id_modif, prix: prixModif,},
                 // data: JSON.stringify({
                 //     nbre_lit: nbreLit,
                 //     prix: prix,
@@ -516,11 +560,11 @@
                         preloader.remove();
                     }
 
-                    showAlertList('success', 'Lit mise à jour avec succès.');
-
-                    refresh_num();
+                    showAlertList('success', 'Type acte mise à jour avec succès.');
             
-                    list_lit();
+                    list();
+                    select();
+                    select_modif();
                 },
                 error: function() {
                     var preloader = document.getElementById('preloader_ch');
@@ -528,14 +572,14 @@
                         preloader.remove();
                     }
 
-                    showAlertList('error', 'Erreur lors de la mise à jour de la chambre.');
+                    showAlertList('error', 'Erreur lors de la mise à jour.');
                 }
             });
         }
 
-        function delete_lit() {
+        function deletee() {
 
-            const id = document.getElementById('litIddelete').value;
+            const id = document.getElementById('Iddelete').value;
 
             var modal = bootstrap.Modal.getInstance(document.getElementById('Mdelete'));
             modal.hide();
@@ -549,7 +593,7 @@
             document.body.insertAdjacentHTML('beforeend', preloader_ch);
 
             $.ajax({
-                url: '/api/delete_lit/'+id,
+                url: '/api/delete_typeacte/'+id,
                 method: 'GET',  // Use 'POST' for data creation
                 // headers: {
                 //     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'), // Include CSRF token if required
@@ -568,9 +612,9 @@
 
                     showAlertList('success', 'Chambre supprimer avec succès.');
                     
-                    refresh_num();
-            
-                    list_lit();
+                    list();
+                    select();
+                    select_modif();
                 },
                 error: function() {
                     var preloader = document.getElementById('preloader_ch');

@@ -23,6 +23,7 @@ use App\Models\patient;
 use App\Models\chambre;
 use App\Models\lit;
 use App\Models\acte;
+use App\Models\typeacte;
 
 class ApilistController extends Controller
 {
@@ -51,6 +52,16 @@ class ApilistController extends Controller
         $acte = acte::all();
 
         return response()->json(['acte' => $acte]);
+    }
+
+    public function list_typeacte()
+    {
+        $typeacte = typeacte::join('actes', 'actes.id', '=', 'typeactes.acte_id')
+                        ->orderBy('typeactes.created_at', 'desc')
+                        ->select('typeactes.*', 'actes.nom as acte',)
+                        ->get();
+
+        return response()->json(['typeacte' => $typeacte]);
     }
 
 }

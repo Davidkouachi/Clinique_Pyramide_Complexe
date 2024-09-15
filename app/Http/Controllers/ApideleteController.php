@@ -23,6 +23,7 @@ use App\Models\patient;
 use App\Models\chambre;
 use App\Models\lit;
 use App\Models\acte;
+use App\Models\typeacte;
 
 class ApideleteController extends Controller
 {
@@ -61,6 +62,21 @@ class ApideleteController extends Controller
     public function delete_acte($id)
     {
         $put = acte::find($id);
+
+        if ($put) {
+            if ($put->delete()) {
+                return response()->json(['success' => true]);
+            }else{
+                return response()->json(['error' => true]);
+            }
+        }
+
+        return response()->json(['error' => true]);
+    }
+
+    public function delete_typeacte($id)
+    {
+        $put = typeacte::find($id);
 
         if ($put) {
             if ($put->delete()) {

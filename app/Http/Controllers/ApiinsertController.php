@@ -23,6 +23,7 @@ use App\Models\patient;
 use App\Models\chambre;
 use App\Models\lit;
 use App\Models\acte;
+use App\Models\typeacte;
 
 class ApiinsertController extends Controller
 {
@@ -211,6 +212,26 @@ class ApiinsertController extends Controller
 
         $add = new acte();
         $add->nom = $request->nom;
+
+        if($add->save()){
+            return response()->json(['success' => true]);
+        } else {
+            return response()->json(['error' => true]);
+        }
+    }
+
+    public function typeacte_cons_new(Request $request)
+    {
+        $verf = typeacte::where('nom', '=', $request->nom)->first();
+
+        if ($verf) {
+            return response()->json(['existe' => true]);
+        }
+
+        $add = new typeacte();
+        $add->nom = $request->nom;
+        $add->prix = $request->prix;
+        $add->acte_id = $request->id;
 
         if($add->save()){
             return response()->json(['success' => true]);

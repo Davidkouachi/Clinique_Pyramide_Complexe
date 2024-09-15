@@ -23,6 +23,7 @@ use App\Models\patient;
 use App\Models\chambre;
 use App\Models\lit;
 use App\Models\acte;
+use App\Models\typeacte;
 
 class ApiupdateController extends Controller
 {
@@ -71,6 +72,26 @@ class ApiupdateController extends Controller
 
         if ($put) {
             $put->nom = $request->nom;
+
+            if ($put->save()) {
+                return response()->json(['success' => true]);
+            }else{
+                return response()->json(['error' => true]);
+            }
+
+        }
+
+        return response()->json(['error' => true]);
+    }
+
+    public function update_typeacte(Request $request, $id)
+    {
+        $put = typeacte::find($id);
+
+        if ($put) {
+            $put->nom = $request->type;
+            $put->prix = $request->prix;
+            $put->acte_id = $request->acte_id;
 
             if ($put->save()) {
                 return response()->json(['success' => true]);
