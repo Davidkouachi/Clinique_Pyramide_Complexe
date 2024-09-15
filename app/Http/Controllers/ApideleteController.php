@@ -22,6 +22,7 @@ use App\Models\societe;
 use App\Models\patient;
 use App\Models\chambre;
 use App\Models\lit;
+use App\Models\acte;
 
 class ApideleteController extends Controller
 {
@@ -39,5 +40,36 @@ class ApideleteController extends Controller
 
         return response()->json(['error' => true]);
 
+    }
+
+    public function delete_lit($id)
+    {
+        $put = lit::find($id);
+
+        if ($put) {
+            if ($put->delete()) {
+                return response()->json(['success' => true]);
+            }else{
+                return response()->json(['error' => true]);
+            }
+        }
+
+        return response()->json(['error' => true]);
+
+    }
+
+    public function delete_acte($id)
+    {
+        $put = acte::find($id);
+
+        if ($put) {
+            if ($put->delete()) {
+                return response()->json(['success' => true]);
+            }else{
+                return response()->json(['error' => true]);
+            }
+        }
+
+        return response()->json(['error' => true]);
     }
 }

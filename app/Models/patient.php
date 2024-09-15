@@ -20,6 +20,7 @@ class patient extends Model
         'assurance_id',
         'taux_id',
         'societe_id',
+        'societe_id',
     ];
 
     public function assurance()

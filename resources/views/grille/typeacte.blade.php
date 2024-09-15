@@ -33,38 +33,27 @@
                         <div class="col-xxl-3 col-lg-4 col-sm-6">
                             <div class="mb-3">
                                 <label class="form-label">
-                                    Numéro du lit
+                                    Acte
                                 </label>
+                                <select class="form-select" id="acte_id">
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-xxl-3 col-lg-4 col-sm-6">
+                            <div class="mb-3">
+                                <label class="form-label">
+                                    Spécielité / Type acte
+                                </label>
+                                <input type="text" class="form-control" id="nom" placeholder="Saisie Obligatoire" oninput="this.value = this.value.toUpperCase()">
+                            </div>
+                        </div>
+                        <div class="col-xxl-3 col-lg-4 col-sm-6">
+                            <div class="mb-3">
+                                <label class="form-label" for="prix">Prix</label>
                                 <div class="input-group">
-                                    <span class="input-group-text">Lit-</span>
-                                    <input type="text" class="form-control" id="num_lit" placeholder="Saisie Obligatoire" maxlength="6">
-                                    <a id="btn_search_num" class="btn btn-success">
-                                        <i class="ri-loop-left-line"></i>
-                                    </a>
+                                <input type="tel" class="form-control" id="prix" placeholder="Saisie Obligatoire">
+                                <span class="input-group-text">Fcfa</span>
                                 </div>
-                            </div>
-                        </div>
-                        <div class="col-xxl-3 col-lg-4 col-sm-6">
-                            <div class="mb-3">
-                                <label class="form-label">
-                                    Type
-                                </label>
-                                <select class="form-select" id="type">
-                                    <option value="">Selectionner</option>
-                                    <option value="Enfant">Enfant</option>
-                                    <option value="Adulte">Adulte</option>
-                                    <option value="Berceau">Berceau</option>
-                                    <option value="Autre">Autre</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col-xxl-3 col-lg-4 col-sm-6">
-                            <div class="mb-3">
-                                <label class="form-label">
-                                    Chambre
-                                </label>
-                                <select class="form-select" id="chambre_id">
-                                </select>
                             </div>
                         </div>
                         <div class="col-sm-12">
@@ -99,9 +88,9 @@
                     <div id="div_alert_table" >
                     
                     </div>
-                    <div class="table-outer" id="div_Table_lit_day" style="display: none;">
+                    <div class="table-outer" id="div_Table" style="display: none;">
                         <div class="table-responsive">
-                            <table class="table align-middle table-hover m-0 truncate" id="Table_lit_day">
+                            <table class="table align-middle table-hover m-0 truncate" id="Table">
                                 <thead>
                                     <tr>
                                         <th scope="col">N°</th>
@@ -118,9 +107,9 @@
                             </table>
                         </div>
                     </div>
-                    <div id="message_Table_lit_day" style="display: none;">
+                    <div id="message_Table" style="display: none;">
                         <p class="text-center" >
-                            Aucun Lit n'a été enregistrer aujourd'hui
+                            Aucun Type Acte n'a été enregistrer
                         </p>
                     </div>
                     <div id="div_Table_loader" style="display: none;">
@@ -147,12 +136,12 @@
             </div>
             <div class="modal-body">
                 Voulez-vous vraiment supprimé cette chambre
-                <input type="hidden" id="litIddelete">
+                <input type="hidden" id="Iddelete">
             </div>
             <div class="modal-footer">
                 <div class="d-flex justify-content-end gap-2">
                     <a class="btn btn-secondary" data-bs-dismiss="modal" aria-label="Close">Non</a>
-                    <button id="deleteLitBtn" class="btn btn-danger" data-bs-dismiss="modal" aria-label="Close">Oui</button>
+                    <button id="deleteBtn" class="btn btn-danger" data-bs-dismiss="modal" aria-label="Close">Oui</button>
                 </div>
             </div>
         </div>
@@ -175,19 +164,18 @@
                     <div class="mb-3">
                         <label for="chambreCode" class="form-label">Numéro</label>
                         <div class="input-group">
-                            <span class="input-group-text">Lit-</span>
-                            <input type="text" class="form-control" id="litCode" readonly>
+                            <span class="input-group-text">Spécialité / Type Acte</span>
+                            <input type="text" class="form-control" id="nomModif" oninput="this.value = this.value.toUpperCase()">
                         </div>
                     </div>
-                    <div class="mb-3">
-                        <label class="form-label">Type</label>
-                        <select class="form-select" id="typeLit">
-                            <option value="">Selectionner</option>
-                            <option value="Enfant">Enfant</option>
-                            <option value="Adulte">Adulte</option>
-                            <option value="Berceau">Berceau</option>
-                            <option value="Autre">Autre</option>
-                        </select>
+                    <div class="col-xxl-3 col-lg-4 col-sm-6">
+                        <div class="mb-3">
+                            <label class="form-label" for="prix">Prix</label>
+                            <div class="input-group">
+                                <input type="tel" class="form-control" id="prixModif" placeholder="Saisie Obligatoire">
+                                <span class="input-group-text">Fcfa</span>
+                            </div>
+                        </div>
                     </div>
                 </form>
             </div>
@@ -203,8 +191,8 @@
     document.addEventListener('DOMContentLoaded', function() {
 
         refresh_num();
-        select_lit();
-        list_lit();
+        select()
+        list();
 
         document.getElementById("btn_search_num").addEventListener("click", refresh_num);
         document.getElementById("btn_eng_lit").addEventListener("click", eng_lit);
@@ -213,24 +201,7 @@
         document.getElementById("updateLitBtn").addEventListener("click", update_lit);
         document.getElementById("deleteLitBtn").addEventListener("click", delete_lit);
 
-        function refresh_num(){
-
-            var num_lit = document.getElementById('num_lit');
-
-            $.ajax({
-                url: '/api/refresh_num_lit',
-                method: 'GET',
-                success: function(response) {
-                    // showAlert('success', 'Code générer avec succès');
-                    num_lit.value = response.code;
-                },
-                error: function() {
-                    // showAlert('danger', 'Impossible de generer le code automatiquement');
-                }
-            });
-        }
-
-        function select_lit() {
+        function select() {
             const selectElement = document.getElementById('chambre_id');
 
             // Clear existing options
@@ -380,7 +351,7 @@
                     chambre_id.value = '';
 
                     refresh_num();
-                    select_lit();
+            
                     list_lit();
                 },
                 error: function() {
@@ -396,7 +367,7 @@
                     chambre_id.value = '';
                     
                     refresh_num();
-                    select_lit();
+            
                     list_lit();
                 }
             });
@@ -548,7 +519,7 @@
                     showAlertList('success', 'Lit mise à jour avec succès.');
 
                     refresh_num();
-                    select_lit();
+            
                     list_lit();
                 },
                 error: function() {
@@ -598,7 +569,7 @@
                     showAlertList('success', 'Chambre supprimer avec succès.');
                     
                     refresh_num();
-                    select_lit();
+            
                     list_lit();
                 },
                 error: function() {

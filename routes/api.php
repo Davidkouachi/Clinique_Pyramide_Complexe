@@ -28,21 +28,35 @@ Route::get('/societe_new', [ApiinsertController::class, 'societe_new']);
 Route::get('/assurance_new', [ApiinsertController::class, 'assurance_new']);
 Route::get('/patient_new', [ApiinsertController::class, 'patient_new']);
 Route::get('/chambre_new', [ApiinsertController::class, 'chambre_new']);
+Route::get('/lit_new', [ApiinsertController::class, 'lit_new']);
+Route::get('/motif_cons_new', [ApiinsertController::class, 'motif_cons_new']);
 // insert debut
 
 // search debut
 Route::get('/rech_patient', [ApisearchController::class, 'rech_patient']);
 Route::get('/refresh_num_chambre', [ApisearchController::class, 'refresh_num_chambre']);
+Route::get('/refresh_num_lit', [ApisearchController::class, 'refresh_num_lit']);
+Route::get('/list_chambre', [ApisearchController::class, 'list_chambre']);
 // search debut
 
 // liste day debut
 Route::get('/list_chambre_day', [ApilistController::class, 'list_chambre_day']);
+Route::get('/list_lit_day', [ApilistController::class, 'list_lit_day']);
+Route::get('/list_acte', [ApilistController::class, 'list_lit_day']);
 // liste day debut
 
-// update day debut
+// update debut
 Route::get('/update_chambre/{id}', [ApiupdateController::class, 'update_chambre']);
-// update day debut
+Route::get('/update_lit/{id}', [ApiupdateController::class, 'update_lit']);
+Route::get('/update_acte/{id}', [ApiupdateController::class, 'update_acte']);
+// update debut
 
-// delete day debut
+// delete debut
 Route::get('/delete_chambre/{id}', [ApideleteController::class, 'delete_chambre']);
-// delete day debut
+Route::get('/delete_lit/{id}', [ApideleteController::class, 'delete_lit']);
+Route::get('/delete_acte/{id}', [ApideleteController::class, 'delete_acte']);
+// delete debut
+
+// liste debut
+Route::get('/list_acte', [ApilistController::class, 'list_acte']);
+// liste debut

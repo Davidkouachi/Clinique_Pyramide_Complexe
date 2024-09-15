@@ -18,10 +18,18 @@ class DatabaseSeeder extends Seeder
     {
         // User::factory(10)->create();
 
-        $role_patient =role::create(['nom' => 'PATIENT']);
-        $role_user =role::create(['nom' => 'UTILISATEUR']);
-        $role_medecin =role::create(['nom' => 'MEDECIN']);
-        $role_admin =role::create(['nom' => 'ADMINISTRATEUR']);
+        $role_patient = role::create(['nom' => 'PATIENT']);
+        $role_medecin = role::create(['nom' => 'MEDECIN']);
+        $role_admin = role::create(['nom' => 'ADMINISTRATEUR']);
+        $role_receptionist = role::create(['nom' => 'RECEPTIONNISTE']);
+        $role_lab_technician = role::create(['nom' => 'LABORANTIN']);
+        $role_cashier = role::create(['nom' => 'CAISSIER']);
+        $role_pharmacist = role::create(['nom' => 'PHARMACIEN']);
+        $role_nurse = role::create(['nom' => 'INFIRMIER']);
+        $role_medical_director = role::create(['nom' => 'DIRECTEUR MEDICAL']);
+        $role_accountant = role::create(['nom' => 'COMPTABLE']);
+        $role_archivist = role::create(['nom' => 'ARCHIVISTE']);
+
 
         for($i = 5; $i <= 100; $i += 5){
            taux::create(['taux' => $i]); 

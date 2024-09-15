@@ -289,6 +289,12 @@
                                         </li>
                                     </ul>
                                 </li>
+                                <li>
+                                    <a href="{{route('acte_new')}}">Acte</a>
+                                </li>
+                                <li>
+                                    <a href="{{route('typeacte_new')}}">Type acte</a>
+                                </li>
                             </ul>
                         </li>
                         <li class="treeview">

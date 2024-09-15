@@ -79,15 +79,13 @@
         </div>
         <div class="col-12">
             <div class="card mb-3">
-                <div class="card-header">
-                    <h5 class="card-title">Assurance enregistrées Aujourd'hui</h5>
-                </div>
-                <div class="card-header row gx-3 bg-transparent" >
-                    <div class="col" >
-                        <button class="btn btn-outline-info" id="btn_refresh_table_day" >
-                            <i class="ri-loop-left-line"></i>
-                        </button>
-                    </div>
+                <div class="card-header d-flex align-items-center justify-content-between">
+                    <h5 class="card-title">
+                        Chambre enregistrées Aujourd'hui
+                    </h5>
+                    <a id="btn_refresh_table_day" class="btn btn-outline-info ms-auto">
+                        <i class="ri-loop-left-line"></i>
+                    </a>
                 </div>
                 <div class="card-body">
                     <div id="div_alert" >
@@ -161,6 +159,9 @@
             </div>
             <div class="modal-body">
                 <form id="updateChambreForm">
+                    <div class="mb-3" id="alert_update">
+                        
+                    </div>
                     <input type="hidden" id="chambreId"> <!-- Hidden field for the room's ID -->
                     <div class="mb-3">
                         <label for="chambreCode" class="form-label">Numéro</label>
@@ -170,8 +171,13 @@
                         </div>
                     </div>
                     <div class="mb-3">
-                        <label for="chambreLit" class="form-label">Nombre de lits</label>
-                        <input type="tel" class="form-control" id="chambreLit">
+                        <label class="form-label">Numero de lit</label>
+                        <select class="form-select" id="chambreLit">
+                            <option value="">Selectionner</option>
+                            @for($i = 1; $i <= 20; $i++)
+                            <option value="{{$i}}">{{$i}}</option>
+                            @endfor
+                        </select>
                     </div>
                     <div class="mb-3">
                         <label for="chambrePrix" class="form-label">Prix</label>
@@ -189,8 +195,6 @@
         </div>
     </div>
 </div>
-
-
 
 {{-- <script src="{{asset('assets/js/app/js/nouveau/chambre.js')}}" ></script>
 <script src="{{asset('assets/js/app/js/modifier/chambre.js')}}" ></script> --}}
@@ -259,6 +263,31 @@
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>   
             `;
             document.getElementById("div_alert").appendChild(groupe);
+
+            setTimeout(function() {
+                groupe.classList.remove("show");
+                groupe.classList.add("fade");
+                setTimeout(function() {
+                    groupe.remove();
+                }, 150); // Time for the fade effect to complete
+            }, 3000);
+        }
+
+        function showAlertUpdate(type, message) {
+
+            var dynamicFields = document.getElementById("alert_update");
+            // Remove existing content
+            while (dynamicFields.firstChild) {
+                dynamicFields.removeChild(dynamicFields.firstChild);
+            }
+
+            var groupe = document.createElement("div");
+            groupe.className = `alert bg-${type} text-white alert-dismissible fade show`;
+            groupe.innerHTML = `
+                ${message}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>   
+            `;
+            document.getElementById("alert_update").appendChild(groupe);
 
             setTimeout(function() {
                 groupe.classList.remove("show");
@@ -380,7 +409,11 @@
                                 <td>CH-${item.code}</td>
                                 <td>${item.nbre_lit}</td>
                                 <td>${item.prix} Fcfa</td>
-                                <td>${item.statut}</td>
+                                <td>
+                                    ${item.statut === 'indisponible' ? 
+                                        `<span class="badge bg-danger">${item.statut}</span>` : 
+                                        `<span class="badge bg-success">${item.statut}</span>`}
+                                </td>
                                 <td>
                                     <div class="d-inline-flex gap-1">
                                         <a class="btn btn-outline-info btn-sm rounded-5" data-bs-toggle="modal" data-bs-target="#Mmodif" id="edit-${item.id}">
@@ -400,7 +433,18 @@
                                 // Set the values in the modal form
                                 document.getElementById('chambreId').value = item.id;
                                 document.getElementById('chambreCode').value = item.code;
-                                document.getElementById('chambreLit').value = item.nbre_lit;
+
+                                // Set the correct value in the 'chambreLit' select dropdown
+                                const chambreLitSelect = document.getElementById('chambreLit');
+                                const options = chambreLitSelect.options;
+                                for (let i = 1; i <= options.length; i++) {
+                                    if (options[i].value == item.nbre_lit) {
+                                        options[i].selected = true;
+                                        break;
+                                    }
+                                }
+
+                                // Set the price value
                                 document.getElementById('chambrePrix').value = item.prix;
                             });
 
@@ -431,6 +475,17 @@
             const id = document.getElementById('chambreId').value;
             const nbreLit = document.getElementById('chambreLit').value;
             const prix = document.getElementById('chambrePrix').value;
+
+            var dynamicFields = document.getElementById("alert_update");
+            // Remove existing content
+            while (dynamicFields.firstChild) {
+                dynamicFields.removeChild(dynamicFields.firstChild);
+            }
+
+            if(!nbreLit.trim() || !prix.trim()){
+                showAlertUpdate('warning', 'Veuillez remplir tous les champs SVP.');
+                return false;
+            }
 
             var modal = bootstrap.Modal.getInstance(document.getElementById('Mmodif'));
             modal.hide();

@@ -22,6 +22,7 @@ use App\Models\societe;
 use App\Models\patient;
 use App\Models\chambre;
 use App\Models\lit;
+use App\Models\acte;
 
 class ApiinsertController extends Controller
 {
@@ -176,6 +177,40 @@ class ApiinsertController extends Controller
         $add->nbre_lit = $request->nbre_lit;
         $add->prix = $request->prix;
         $add->statut = 'indisponible';
+
+        if($add->save()){
+            return response()->json(['success' => true]);
+        } else {
+            return response()->json(['error' => true]);
+        }
+    }
+
+    public function lit_new(Request $request)
+    {
+        $add = new lit();
+
+        $add->code = $request->num_lit;
+        $add->type = $request->type;
+        $add->chambre_id = $request->chambre_id;
+        $add->statut = 'disponible';
+
+        if($add->save()){
+            return response()->json(['success' => true]);
+        } else {
+            return response()->json(['error' => true]);
+        }
+    }
+
+    public function motif_cons_new(Request $request)
+    {
+        $verf = acte::where('nom', '=', $request->nom)->first();
+
+        if ($verf) {
+            return response()->json(['existe' => true]);
+        }
+
+        $add = new acte();
+        $add->nom = $request->nom;
 
         if($add->save()){
             return response()->json(['success' => true]);

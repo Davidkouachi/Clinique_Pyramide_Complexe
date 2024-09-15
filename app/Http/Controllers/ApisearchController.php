@@ -60,4 +60,25 @@ class ApisearchController extends Controller
         }
         
     }
+
+    public function refresh_num_lit()
+    {
+        do {
+            // Generate a random 9-digit number
+            $code = random_int(100, 999); // Generates a number between 100000000 and 999999999
+        } while (chambre::where('code', $code)->exists()); // Ensure uniqueness
+
+        if ($code) {
+            return response()->json(['success' => true, 'code' => $code]);
+        }else{
+            return response()->json(['error' => true]);
+        }  
+    }
+
+    public function list_chambre()
+    {
+        $list = chambre::all();
+
+        return response()->json(['list' => $list]); 
+    }
 }

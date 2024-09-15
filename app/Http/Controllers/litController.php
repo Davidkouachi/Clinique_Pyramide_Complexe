@@ -23,17 +23,7 @@ class litController extends Controller
 {
     public function lit_new()
     {
-        $today = Carbon::today();
-        $lits = lit::join('chambres', 'chambres.id', 'lits.chambre_id')
-                    ->whereDate('lits.created_at', $today)
-                    ->orderBy('lits.created_at', 'desc')
-                    ->select('lits.*', 'chambres.code as code_chambre', 'chambres.prix as prix_chambre')
-                    
-                    ->get();
-
-        $chams = chambre::all();
-
-        return view('infirmerie.nouveau.lit',['lits' => $lits, 'chams' => $chams]);
+        return view('infirmerie.nouveau.lit');
     }
 
     public function insert_lit(Request $request)

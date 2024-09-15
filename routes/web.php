@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Controller;
 use App\Http\Controllers\AccueilController;
 use App\Http\Controllers\assuranceController;
 use App\Http\Controllers\assureurController;
@@ -59,6 +60,9 @@ Route::post('/update produit/{id}', [produitController::class, 'update_produit']
 Route::get('/Nouvel Type Produit', [typeproduitController::class, 'typeproduit_new'])->name('typeproduit_new');
 Route::post('/insert typeproduit', [typeproduitController::class, 'insert_typeproduit'])->name('insert_typeproduit');
 Route::post('/update typeproduit/{id}', [typeproduitController::class, 'update_typeproduit'])->name('update_typeproduit');
+
+Route::get('/Acte', [Controller::class, 'acte_new'])->name('acte_new');
+Route::get('/Type Acte', [Controller::class, 'typeacte_new'])->name('typeacte_new');
 
 // Route::middleware(['role:ADMINISTRATEUR'])->group(function () {
 

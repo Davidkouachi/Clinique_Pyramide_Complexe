@@ -2,7 +2,15 @@
 
 namespace App\Http\Controllers;
 
-abstract class Controller
+class Controller
 {
-    //
+    public function acte_new()
+    {
+        return view('grille.acte');
+    }
+
+    public function typeacte_new()
+    {
+        return view('grille.typeacte');
+    }
 }

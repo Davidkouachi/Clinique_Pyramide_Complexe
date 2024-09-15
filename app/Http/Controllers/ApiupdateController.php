@@ -22,6 +22,7 @@ use App\Models\societe;
 use App\Models\patient;
 use App\Models\chambre;
 use App\Models\lit;
+use App\Models\acte;
 
 class ApiupdateController extends Controller
 {
@@ -43,5 +44,42 @@ class ApiupdateController extends Controller
 
         return response()->json(['error' => true]);
 
+    }
+
+    public function update_lit(Request $request, $id)
+    {
+        $put = lit::find($id);
+
+        if ($put) {
+            $put->type = $request->typeLit;
+
+            if ($put->save()) {
+                return response()->json(['success' => true]);
+            }else{
+                return response()->json(['error' => true]);
+            }
+
+        }
+
+        return response()->json(['error' => true]);
+
+    }
+
+    public function update_acte(Request $request, $id)
+    {
+        $put = acte::find($id);
+
+        if ($put) {
+            $put->nom = $request->nom;
+
+            if ($put->save()) {
+                return response()->json(['success' => true]);
+            }else{
+                return response()->json(['error' => true]);
+            }
+
+        }
+
+        return response()->json(['error' => true]);
     }
 }
