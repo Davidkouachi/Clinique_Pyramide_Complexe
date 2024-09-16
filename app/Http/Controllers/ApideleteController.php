@@ -24,6 +24,9 @@ use App\Models\chambre;
 use App\Models\lit;
 use App\Models\acte;
 use App\Models\typeacte;
+use App\Models\user;
+use App\Models\typemedecin;
+use App\Models\role;
 
 class ApideleteController extends Controller
 {
@@ -84,6 +87,22 @@ class ApideleteController extends Controller
             }else{
                 return response()->json(['error' => true]);
             }
+        }
+
+        return response()->json(['error' => true]);
+    }
+
+    public function delete_medecin($id)
+    {
+        $put1 = user::find($id);
+        $put2 = typemedecin::where('user_id', '=', $id)->first();
+
+        if ($put1 && $put2) {
+            // Perform deletion
+            $put2->delete(); // Delete related typemedecin entry
+            $put1->delete(); // Delete user entry
+
+            return response()->json(['success' => true]);
         }
 
         return response()->json(['error' => true]);

@@ -56,11 +56,6 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }
 
-        if (phone.value.length !== 10 || (phone2.value !== '' && phone2.value.length !== 10)) {
-            showAlert('warning', 'Contact incomplet.');
-            return false;
-        }
-
         var dynamicFields = document.getElementById("div_alert");
         // Remove existing content
         while (dynamicFields.firstChild) {

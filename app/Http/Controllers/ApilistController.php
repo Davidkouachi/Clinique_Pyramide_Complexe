@@ -24,6 +24,9 @@ use App\Models\chambre;
 use App\Models\lit;
 use App\Models\acte;
 use App\Models\typeacte;
+use App\Models\typemedecin;
+use App\Models\user;
+use App\Models\role;
 
 class ApilistController extends Controller
 {
@@ -64,4 +67,24 @@ class ApilistController extends Controller
         return response()->json(['typeacte' => $typeacte]);
     }
 
+    public function list_medecin()
+    {
+        $role = role::where('nom', '=', 'MEDECIN')->first();
+
+        if ($role) {
+            // Join `users` with `typemedecins` and `typeactes`
+            $medecin = user::join('typemedecins', 'typemedecins.user_id', '=', 'users.id')
+                            ->join('typeactes', 'typemedecins.typeacte_id', '=', 'typeactes.id')
+                            ->where('users.role_id', '=', $role->id)
+                            ->orderBy('users.created_at', 'desc')
+                            ->select(
+                                'users.*', 
+                                'typeactes.nom as typeacte', 
+                                'typemedecins.typeacte_id as typeacte_id'
+                            )
+                            ->get();
+
+            return response()->json(['medecin' => $medecin]);
+        }
+    }
 }

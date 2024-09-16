@@ -29,10 +29,6 @@ Route::post('/insert assurance', [assuranceController::class, 'insert_assurance'
 Route::post('/update assurance/{id}', [assuranceController::class, 'update_assurance'])->name('update_assurance');
 
 
-Route::get('/Nouvel Utilisateur', [utilisateurController::class, 'utilisateur_new'])->name('utilisateur_new');
-Route::post('/insert utilisateur', [utilisateurController::class, 'insert_utilisateur'])->name('insert_utilisateur');
-Route::post('/update utilisateur/{id}', [utilisateurController::class, 'update_utilisateur'])->name('update_utilisateur');
-
 Route::get('/Nouvel Assureur', [assureurController::class, 'assureur_new'])->name('assureur_new');
 Route::post('/insert assureur', [assureurController::class, 'insert_assureur'])->name('insert_assureur');
 Route::post('/update assureur/{id}', [assureurController::class, 'update_assureur'])->name('update_assureur');
@@ -63,6 +59,7 @@ Route::post('/update typeproduit/{id}', [typeproduitController::class, 'update_t
 
 Route::get('/Acte', [Controller::class, 'acte_new'])->name('acte_new');
 Route::get('/Type Acte', [Controller::class, 'typeacte_new'])->name('typeacte_new');
+Route::get('/Nouvel Medecin', [utilisateurController::class, 'medecin_new'])->name('medecin_new');
 
 // Route::middleware(['role:ADMINISTRATEUR'])->group(function () {
 

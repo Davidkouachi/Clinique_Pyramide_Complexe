@@ -11,7 +11,7 @@
             <a href="{{route('index_accueil')}}">Espace Santé</a>
         </li>
         <li class="breadcrumb-item text-primary" aria-current="page">
-            Nouvel Utilisateur
+            Nouveau Medecin
         </li>
     </ol>
 </div>
@@ -25,7 +25,7 @@
         <div class="col-12">
             <div class="card mb-3">
                 <div class="card-header">
-                    <h5 class="card-title">Formulaire Nouvel Utilisateur</h5>
+                    <h5 class="card-title">Formulaire Nouveau Medecin</h5>
                 </div>
                 <div class="card-body" >
                     <!-- Row starts -->
@@ -72,16 +72,21 @@
                         </div>
                         <div class="col-xxl-3 col-lg-4 col-sm-6">
                             <div class="mb-3">
-                                <label class="form-label">Profil</label>
-                                <select class="form-select" id="role_id">
+                                <label class="form-label">Spécialité</label>
+                                <select class="form-select" id="typeacte_id">
                                 </select>
                             </div>
                         </div>
                         <div class="col-sm-12">
-                            <div class="d-flex gap-2 justify-content-start">
+                            <div class="mb-3 d-flex gap-2 justify-content-start">
                                 <button id="btn_eng" class="btn btn-success">
                                     Enregistrer
                                 </button>
+                            </div>
+                        </div>
+                        <div class="col-sm-12" >
+                            <div class="mb-3" >
+                                <div id="div_alert" ></div>
                             </div>
                         </div>
                     </div>
@@ -93,7 +98,7 @@
             <div class="card mb-3">
                 <div class="card-header d-flex align-items-center justify-content-between">
                     <h5 class="card-title">
-                        Liste des Type d'actes
+                        Liste des Utilisateurs
                     </h5>
                     <a id="btn_refresh_table" class="btn btn-outline-info ms-auto">
                         <i class="ri-loop-left-line"></i>
@@ -109,9 +114,12 @@
                                 <thead>
                                     <tr>
                                         <th scope="col">N°</th>
-                                        <th scope="col">Type</th>
-                                        <th scope="col">Acte</th>
-                                        <th scope="col">Prix</th>
+                                        <th scope="col">Nom et Prénoms</th>
+                                        <th scope="col">Email</th>
+                                        <th scope="col">Matricule</th>
+                                        <th scope="col">Specialité</th>
+                                        <th scope="col">contact</th>
+                                        <th scope="col">Adresse</th>
                                         <th scope="col">Actions</th>
                                     </tr>
                                 </thead>
@@ -122,7 +130,7 @@
                     </div>
                     <div id="message_Table" style="display: none;">
                         <p class="text-center" >
-                            Aucun Type Acte n'a été enregistrer
+                            Aucun Medecin n'a été enregistrer
                         </p>
                     </div>
                     <div id="div_Table_loader" style="display: none;">
@@ -148,7 +156,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                Voulez-vous vraiment supprimé ce Type d'acte
+                Voulez-vous vraiment supprimé ce Utilisateur
                 <input type="hidden" id="Iddelete">
             </div>
             <div class="modal-footer">
@@ -165,7 +173,7 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Modifier Lit</h5>
+                <h5 class="modal-title" id="exampleModalLabel">Modifier un Utilisateur</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
@@ -173,21 +181,37 @@
                     <div class="mb-3" id="alert_update">
                         
                     </div>
-                    <input type="hidden" id="Id"> <!-- Hidden field for the room's ID -->
+                    <input type="hidden" id="Id">
                     <div class="mb-3">
-                        <label class="form-label">Spécialité / Type Acte</label>
-                        <input type="text" class="form-control" id="nomModif" oninput="this.value = this.value.toUpperCase()">
+                        <label class="form-label">Nom et Prénoms</label>
+                        <input type="text" class="form-control" id="nomModif" placeholder="Saisie Obligatoire" oninput="this.value = this.value.toUpperCase()">
                     </div>
                     <div class="mb-3">
-                        <label class="form-label">Acte</label>
-                        <select class="form-select" id="acte_id_modif"></select>
+                        <label class="form-label">Sexe</label>
+                        <select class="form-select" id="sexeModif">
+                            <option value="M">Homme</option>
+                            <option value="Mme">Femme</option>
+                        </select>
                     </div>
                     <div class="mb-3">
-                        <label class="form-label">Prix</label>
-                        <div class="input-group">
-                            <input type="tel" class="form-control" id="prixModif" placeholder="Saisie Obligatoire">
-                            <span class="input-group-text">Fcfa</span>
-                        </div>
+                        <label class="form-label">Email</label>
+                        <input type="email" class="form-control" id="emailModif" placeholder="Saisie Obligatoire">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Contact</label>
+                        <input type="tel" class="form-control" id="telModif" placeholder="Saisie Obligatoire" maxlength="10">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Contact 2</label>
+                        <input type="tel" class="form-control" id="tel2Modif" placeholder="facultatif" maxlength="10">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Adresse</label>
+                        <input type="text" class="form-control" id="adresseModif" placeholder="Saisie Obligatoire">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Specialité</label>
+                        <select class="form-select" id="typeacte_idModif"></select>
                     </div>
                 </form>
             </div>
@@ -211,53 +235,35 @@
         document.getElementById("updateBtn").addEventListener("click", updatee);
         document.getElementById("deleteBtn").addEventListener("click", deletee);
 
-        document.getElementById('prix').addEventListener('input', function() {
-            this.value = formatPrice(this.value);
-        });
-        document.getElementById('prix').addEventListener('keypress', function(event) {
-            const key = event.key;
-            if (isNaN(key)) {
-                event.preventDefault();
-            }
+        var inputs = ['tel', 'tel2', 'telModif', 'tel2Modif']; // Array of element IDs
+        inputs.forEach(function(id) {
+            var inputElement = document.getElementById(id); // Get each element by its ID
+            inputElement.addEventListener('input', function() {
+                this.value = this.value.replace(/[^0-9]/g, ''); // Allow only numbers
+            });
         });
 
-        document.getElementById('prixModif').addEventListener('input', function() {
-            this.value = formatPrice(this.value);
-        });
-        document.getElementById('prixModif').addEventListener('keypress', function(event) {
-            const key = event.key;
-            if (isNaN(key)) {
-                event.preventDefault();
-            }
-        });
-
-        function formatPrice(input) {
-            // Supprimer tous les points existants
-            input = input.replace(/\./g, '');
-            // Formater le prix avec des points
-            return input.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
-        }
 
         function select() {
-            const selectElement = document.getElementById('acte_id');
+            const selectElement = document.getElementById('typeacte_id');
 
             // Clear existing options
             selectElement.innerHTML = '';
 
             const defaultOption = document.createElement('option');
             defaultOption.value = '';
-            defaultOption.textContent = 'Sélectionner un Acte';
+            defaultOption.textContent = 'Sélectionner une spécialité';
             selectElement.appendChild(defaultOption);
 
             $.ajax({
-                url: '/api/list_acte',
+                url: '/api/select_specialite',
                 method: 'GET',
                 success: function(response) {
-                    data = response.acte;
-                    data.forEach(acte => {
+                    data = response.typeacte;
+                    data.forEach(typeacte => {
                         const option = document.createElement('option');
-                        option.value = acte.id; // Ensure 'id' is the correct key
-                        option.textContent = acte.nom; // Ensure 'nom' is the correct key
+                        option.value = typeacte.id; // Ensure 'id' is the correct key
+                        option.textContent = typeacte.nom; // Ensure 'nom' is the correct key
                         selectElement.appendChild(option);
                     });
                 },
@@ -268,20 +274,20 @@
         }
 
         function select_modif() {
-            const selectElement = document.getElementById('acte_id_modif');
+            const selectElement = document.getElementById('typeacte_idModif');
 
             // Clear existing options
             selectElement.innerHTML = '';
 
             $.ajax({
-                url: '/api/list_acte',
+                url: '/api/select_specialite',
                 method: 'GET',
                 success: function(response) {
-                    data = response.acte;
-                    data.forEach(acte => {
+                    data = response.typeacte;
+                    data.forEach(typeacte => {
                         const option = document.createElement('option');
-                        option.value = acte.id; // Ensure 'id' is the correct key
-                        option.textContent = acte.nom; // Ensure 'nom' is the correct key
+                        option.value = typeacte.id; // Ensure 'id' is the correct key
+                        option.textContent = typeacte.nom; // Ensure 'nom' is the correct key
                         selectElement.appendChild(option);
                     });
                 },
@@ -368,18 +374,33 @@
 
         function eng() {
 
-            const acte_id = document.getElementById("acte_id");
-            const nom_acte = document.getElementById("nom_acte");
-            const prix = document.getElementById("prix");
-
+            const nom = document.getElementById("nom");
+            const email = document.getElementById("email");
+            const tel = document.getElementById("tel");
+            const tel2 = document.getElementById("tel2");
+            const sexe = document.getElementById("sexe");
+            const adresse = document.getElementById("adresse");
+            const typeacte_id = document.getElementById("typeacte_id");
+            
             var dynamicFields = document.getElementById("div_alert");
             // Remove existing content
             while (dynamicFields.firstChild) {
                 dynamicFields.removeChild(dynamicFields.firstChild);
             }
 
-            if(!acte_id.value.trim() || !nom_acte.value.trim() || !prix.value.trim()){
+            if (!nom.value.trim() || !email.value.trim() || !tel.value.trim() || !sexe.value.trim() || !adresse.value.trim() || !typeacte_id.value.trim()) {
                 showAlert('warning', 'Veuillez remplir tous les champs SVP.');
+                return false;
+            }
+
+            var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email.value.trim())) { 
+                showAlert('warning', 'Email incorrect.');
+                return false;
+            }
+
+            if (tel.value.length !== 10 || (tel2.value.trim() && tel2.value.length !== 10)) {
+                showAlert('warning', 'Contact incomplet.');
                 return false;
             }
 
@@ -392,24 +413,34 @@
             document.body.insertAdjacentHTML('beforeend', preloader_ch);
 
             $.ajax({
-                url: '/api/typeacte_cons_new',
+                url: '/api/new_medecin',
                 method: 'GET',  // Use 'POST' for data creation
-                data: { id: acte_id.value, nom: nom_acte.value, prix: prix.value },
+                data: { nom: nom.value, email: email.value, tel: tel.value, tel2: tel2.value || null, adresse: adresse.value, sexe: sexe.value, typeacte_id: typeacte_id.value },
                 success: function(response) {
                     var preloader = document.getElementById('preloader_ch');
                     if (preloader) {
                         preloader.remove();
                     }
 
-                    if (response.success) {
-                        showAlert('success', 'Opération éffectuée.');
+                    if (response.tel_existe) {
+                        showAlert('warning', 'Ce numéro de téléphone appartient déjà a un utilisateur.');
+                    }else if (response.email_existe) {
+                        showAlert('warning', 'Cet email appartient déjà a un utilisateur.');
+                    }else if (response.nom_existe) {
+                        showAlert('warning', 'Cet utilisateur existe déjà.');
+                    } else if (response.success) {
+                        showAlert('success', 'utilisateur Enregistrée.');
                     } else if (response.error) {
                         showAlert('danger', 'Une erreur est survenue lors de l\'enregistrement.');
                     }
 
-                    acte_id.value = '';
-                    nom_acte.value = '';
-                    prix.value = '';
+                    nom.value = '';
+                    email.value = '';
+                    tel.value = '';
+                    tel2.value = '';
+                    adresse.value = '';
+                    sexe.value = '';
+                    typeacte_id.value = '';
 
                     select_modif();
                     select();
@@ -423,9 +454,13 @@
 
                     showAlert('danger', 'Une erreur est survenue lors de l\'enregistrement.');
                     
-                    acte_id.value = '';
-                    nom_acte.value = '';
-                    prix.value = '';
+                    nom.value = '';
+                    email.value = '';
+                    tel.value = '';
+                    tel2.value = '';
+                    adresse.value = '';
+                    sexe.value = '';
+                    typeacte_id.value = '';
                     
                     select_modif();
                     select();
@@ -436,7 +471,7 @@
 
         function list() {
 
-            const tableBody = document.querySelector('#Table tbody'); // Target the specific table by id
+            const tableBody = document.querySelector('#Table tbody');
             const messageDiv = document.getElementById('message_Table');
             const tableDiv = document.getElementById('div_Table'); // The message div
             const loaderDiv = document.getElementById('div_Table_loader');
@@ -446,31 +481,34 @@
             loaderDiv.style.display = 'block';
 
             // Fetch data from the API
-            fetch('/api/list_typeacte') // API endpoint
+            fetch('/api/list_medecin') // API endpoint
                 .then(response => response.json())
                 .then(data => {
                     // Access the 'chambre' array from the API response
-                    const typeactes = data.typeacte;
+                    const medecins = data.medecin;
 
                     // Clear any existing rows in the table body
                     tableBody.innerHTML = '';
 
-                    if (typeactes.length > 0) {
+                    if (medecins.length > 0) {
 
                         loaderDiv.style.display = 'none';
                         messageDiv.style.display = 'none';
                         tableDiv.style.display = 'block';
 
                         // Loop through each item in the chambre array
-                        typeactes.forEach((item, index) => {
+                        medecins.forEach((item, index) => {
                             // Create a new row
                             const row = document.createElement('tr');
                             // Create and append cells to the row based on your table's structure
                             row.innerHTML = `
                                 <td>${index + 1}</td>
-                                <td>${item.nom}</td>
-                                <td>${item.acte}</td>
-                                <td>${item.prix} Fcfa</td>
+                                <td>${item.sexe}.${item.name}</td>
+                                <td>${item.email}</td>
+                                <td>${item.matricule}</td>
+                                <td>${item.typeacte}</td>
+                                <td>+225 ${item.tel}</td>
+                                <td>${item.adresse}</td>
                                 <td>
                                     <div class="d-inline-flex gap-1">
                                         <a class="btn btn-outline-info btn-sm rounded-5" data-bs-toggle="modal" data-bs-target="#Mmodif" id="edit-${item.id}">
@@ -490,16 +528,28 @@
                             {
                                 // Set the values in the modal form
                                 document.getElementById('Id').value = item.id;
-                                document.getElementById('nomModif').value = item.nom;
-                                document.getElementById('prixModif').value = item.prix;
+                                document.getElementById('nomModif').value = item.name;
+                                document.getElementById('emailModif').value = item.email;
+                                document.getElementById('telModif').value = item.tel;
+                                document.getElementById('tel2Modif').value = item.tel2;
+                                document.getElementById('adresseModif').value = item.adresse;
 
-                                const modifActeSelect = document.getElementById('acte_id_modif');
-                                const typeeOptions = modifActeSelect.options;
-
+                                const modifSexeSelect = document.getElementById('sexeModif');
+                                const typeeOptions = modifSexeSelect.options;
                                 // Loop through the options to find the matching value
                                 for (let i = 0; i < typeeOptions.length; i++) {
-                                    if (String(typeeOptions[i].value) === String(item.acte_id)) {
+                                    if (String(typeeOptions[i].value) === String(item.sexe)) {
                                         typeeOptions[i].selected = true; // Set the matching option as selected
+                                        break; // Stop the loop once a match is found
+                                    }
+                                }
+
+                                const modifActeSelect = document.getElementById('typeacte_idModif');
+                                const typeOptions = modifActeSelect.options;
+                                // Loop through the options to find the matching value
+                                for (let i = 0; i < typeOptions.length; i++) {
+                                    if (String(typeOptions[i].value) === String(item.typeacte_id)) {
+                                        typeOptions[i].selected = true; // Set the matching option as selected
                                         break; // Stop the loop once a match is found
                                     }
                                 }
@@ -528,21 +578,36 @@
         }
 
         function updatee() {
-
-            const id = document.getElementById('Id').value;
-            const nomModif = document.getElementById('nomModif').value;
-            const acte_id_modif = document.getElementById('acte_id_modif').value;
-            const prixModif = document.getElementById('prixModif').value;
-
+            const id = document.getElementById("Id").value;
+            const nom = document.getElementById("nomModif");
+            const email = document.getElementById("emailModif");
+            const tel = document.getElementById("telModif");
+            const tel2 = document.getElementById("tel2Modif");
+            const sexe = document.getElementById("sexeModif");
+            const adresse = document.getElementById("adresseModif");
+            const typeacte_id = document.getElementById("typeacte_idModif");
 
             var dynamicFields = document.getElementById("alert_update");
-            // Remove existing content
             while (dynamicFields.firstChild) {
                 dynamicFields.removeChild(dynamicFields.firstChild);
             }
 
-            if(!nomModif.trim() || !acte_id_modif.trim() || !prixModif.trim()){
+            // Field validation
+            if (!nom.value.trim() || !email.value.trim() || !tel.value.trim() || !sexe.value.trim() || !adresse.value.trim() || !typeacte_id.value.trim()) {
                 showAlertUpdate('warning', 'Veuillez remplir tous les champs SVP.');
+                return false;
+            }
+
+            // Email validation
+            var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email.value.trim())) {
+                showAlertUpdate('warning', 'Email incorrect.');
+                return false;
+            }
+
+            // Phone validation
+            if (tel.value.length !== 10 || (tel2.value !== '' && tel2.value.length !== 10)) {
+                showAlertUpdate('warning', 'Contact incomplet.');
                 return false;
             }
 
@@ -554,43 +619,48 @@
                     <div class="spinner_preloader_ch"></div>
                 </div>
             `;
-            // Add the preloader to the body
             document.body.insertAdjacentHTML('beforeend', preloader_ch);
 
             $.ajax({
-                url: '/api/update_typeacte/'+id,
-                method: 'GET',  // Use 'POST' for data creation
-                // headers: {
-                //     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'), // Include CSRF token if required
-                //     'Content-Type': 'application/json',  // Ensure JSON request
-                // },
-                data: { type: nomModif, acte_id: acte_id_modif, prix: prixModif,},
-                // data: JSON.stringify({
-                //     nbre_lit: nbreLit,
-                //     prix: prix,
-                // }),
+                url: '/api/update_medecin/' + id,
+                method: 'GET', // Corrected to 'PUT'
+                data: {
+                    nom: nom.value, 
+                    email: email.value, 
+                    tel: tel.value, 
+                    tel2: tel2.value || null, 
+                    adresse: adresse.value, 
+                    sexe: sexe.value, 
+                    typeacte_id: typeacte_id.value
+                },
                 success: function(response) {
-                    var preloader = document.getElementById('preloader_ch');
-                    if (preloader) {
-                        preloader.remove();
+
+                    document.getElementById('preloader_ch').remove();
+
+                    if (response.tel_existe) {
+                        showAlertList('warning', 'Ce numéro de téléphone appartient déjà à un utilisateur.');
+                    } else if (response.email_existe) {
+                        showAlertList('warning', 'Cet email appartient déjà à un utilisateur.');
+                    } else if (response.nom_existe) {
+                        showAlertList('warning', 'Cet utilisateur existe déjà.');
+                    } else if (response.success) {
+                        showAlertList('success', 'Utilisateur mis à jour avec succès.');
+                    } else if (response.error) {
+                        showAlertList('danger', 'Une erreur est survenue lors de la mise à jour.');
                     }
 
-                    showAlertList('success', 'Type acte mise à jour avec succès.');
-            
+                    // Refresh the list or any UI components
                     list();
                     select();
                     select_modif();
                 },
                 error: function() {
-                    var preloader = document.getElementById('preloader_ch');
-                    if (preloader) {
-                        preloader.remove();
-                    }
-
-                    showAlertList('error', 'Erreur lors de la mise à jour.');
+                    document.getElementById('preloader_ch').remove();
+                    showAlertList('danger', 'Erreur lors de la mise à jour.');
                 }
             });
         }
+
 
         function deletee() {
 
@@ -608,7 +678,7 @@
             document.body.insertAdjacentHTML('beforeend', preloader_ch);
 
             $.ajax({
-                url: '/api/delete_typeacte/'+id,
+                url: '/api/delete_medecin/'+id,
                 method: 'GET',  // Use 'POST' for data creation
                 // headers: {
                 //     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'), // Include CSRF token if required

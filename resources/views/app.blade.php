@@ -137,7 +137,7 @@
                                     </a>
                                     <ul class="treeview-menu">
                                         <li>
-                                            <a href="{{route('utilisateur_new')}}">Utilisateur</a>
+                                            <a href="{{route('medecin_new')}}">Utilisateur</a>
                                         </li>
                                         <li>
                                             <a href="#!">

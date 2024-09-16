@@ -20,23 +20,8 @@ use App\Models\User;
 
 class utilisateurController extends Controller
 {
-    public function utilisateur_new()
+    public function medecin_new()
     {
-        $today = Carbon::today();
-        $users = user::whereDate('created_at', $today)
-                            ->orderBy('created_at', 'desc')
-                            ->get();
-
-        return view('utilisateur.nouveau.utilisateur',['users' => $users]);
-    }
-
-    public function insert_utilisateur(Request $request)
-    {
-
-    }
-
-    public function update_utilisateur(Request $request, $id)
-    {
-
+        return view('utilisateur.nouveau.medecin');
     }
 }

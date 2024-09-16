@@ -24,6 +24,9 @@ use App\Models\chambre;
 use App\Models\lit;
 use App\Models\acte;
 use App\Models\typeacte;
+use App\Models\user;
+use App\Models\role;
+use App\Models\typemedecin;
 
 class ApiinsertController extends Controller
 {
@@ -238,6 +241,85 @@ class ApiinsertController extends Controller
         } else {
             return response()->json(['error' => true]);
         }
+    }
+
+    public function new_medecin(Request $request)
+    {
+        $verifications = [
+            'tel' => $request->tel,
+            'tel2' => $request->tel2 ?? null, // Allow tel2 to be null
+            'email' => $request->email ?? null,
+            'nom' => $request->nom,
+        ];
+
+        $role = role::where('nom', '=', 'MEDECIN')->first();
+
+        $Exist = user::where(function($query) use ($verifications) {
+            $query->where('tel', $verifications['tel'])
+                  ->orWhere(function($query) use ($verifications) {
+                      if (!is_null($verifications['tel2'])) {
+                          $query->where('tel2', $verifications['tel2']);
+                      }
+                  })
+                  ->orWhere(function($query) use ($verifications) {
+                      if (!is_null($verifications['email'])) {
+                          $query->where('email', $verifications['email']);
+                      }
+                  })
+                  ->orWhere(function($query) use ($verifications) {
+                      if (!is_null($verifications['nom'])) {
+                          $query->where('name', $verifications['nom']);
+                      }
+                  });
+        })->first();
+
+        if ($Exist) {
+            if ($Exist->tel === $verifications['tel'] || (!is_null($verifications['tel2']) && $Exist->tel2 === $verifications['tel2'])) {
+                return response()->json(['tel_existe' => true]);
+            } elseif ($Exist->email === $verifications['email']) {
+                return response()->json(['email_existe' => true]);
+            } elseif ($Exist->nom === $verifications['nom']) {
+                return response()->json(['nom_existe' => true]);
+            }
+        }
+
+        DB::beginTransaction();
+
+        $matricule = $this->generateUniqueMatricule();
+
+        $add = new user();
+        $add->name = $request->nom;
+        $add->email = $request->email;
+        $add->sexe = $request->sexe;
+        $add->tel = $request->tel;
+        $add->tel2 = $request->tel2;
+        $add->adresse = $request->adresse;
+        $add->matricule = 'M-'.$matricule;
+        $add->role_id = $role->id;
+        $add->role = $role->nom;
+
+        try {
+
+            if (!$add->save()) {
+                return response()->json(['error' => true]);
+            }
+
+            $type = new typemedecin();
+            $type->typeacte_id = $request->typeacte_id;
+            $type->user_id = $add->id;
+
+            if (!$type->save()) {
+                return response()->json(['error' => true]);
+            }
+
+            DB::commit();
+            return response()->json(['success' => true]);
+            
+        } catch (Exception $e) {
+            DB::rollback();
+            return response()->json(['error' => true]);
+        }
+
     }
 
 }

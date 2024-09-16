@@ -16,11 +16,12 @@ return new class extends Migration
             $table->string('name')->index();
             $table->string('email')->unique()->index();
             $table->timestamp('email_verified_at')->nullable();
-            $table->string('password');
+            $table->string('password')->nullable();
             $table->string('tel')->unique()->index();
             $table->string('tel2')->nullable();
             $table->string('sexe')->index();
             $table->string('adresse');
+            $table->string('matricule');
             $table->string('role')->index();
             $table->unsignedBigInteger('role_id');
             $table->foreign('role_id')->references('id')->on('roles')->onDelete('cascade');

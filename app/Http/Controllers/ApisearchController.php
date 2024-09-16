@@ -24,6 +24,7 @@ use App\Models\chambre;
 use App\Models\lit;
 use App\Models\acte;
 use App\Models\typeacte;
+use App\Models\role;
 
 class ApisearchController extends Controller
 {
@@ -90,4 +91,21 @@ class ApisearchController extends Controller
 
         return response()->json(['acte' => $acte]); 
     }
+
+    public function select_specialite()
+    {
+        $acte = acte::where('nom', '=', 'CONSULTATION')->first();
+
+        $typeacte = typeacte::where('acte_id', '=', $acte->id )->get();
+
+        return response()->json(['typeacte' => $typeacte]); 
+    }
+
+    public function select_typeacte($id)
+    {
+        $typeacte = typeacte::where('acte_id', '=', $id)->get();
+
+        return response()->json(['typeacte' => $typeacte]); 
+    }
+
 }
