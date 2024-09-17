@@ -27,6 +27,8 @@ use App\Models\typeacte;
 use App\Models\typemedecin;
 use App\Models\user;
 use App\Models\role;
+use App\Models\consultation;
+use App\Models\detailconsultation;
 
 class ApilistController extends Controller
 {
@@ -87,4 +89,28 @@ class ApilistController extends Controller
             return response()->json(['medecin' => $medecin]);
         }
     }
+
+    public function list_cons_day()
+{
+    $today = Carbon::today();
+
+    $consultation = consultation::join('patients', 'patients.id', '=', 'consultations.patient_id')
+                                ->leftJoin('users', 'users.id', '=', 'consultations.user_id')
+                                ->join('detailconsultations', 'detailconsultations.consultation_id', '=', 'consultations.id')
+                                ->select(
+                                    'consultations.*', 
+                                    'users.name as name', 
+                                    'users.tel as tel', 
+                                    'users.tel2 as tel2', 
+                                    'detailconsultations.motif as motif', 
+                                    'detailconsultations.type_motif as type_motif', 
+                                    'patients.matricule as matricule'
+                                )
+                                ->whereDate('consultations.created_at', '=', $today)
+                                ->orderBy('consultations.created_at', 'desc')
+                                ->get();
+    
+    return response()->json(['consultation' => $consultation]);
+}
+
 }

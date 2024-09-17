@@ -41,7 +41,7 @@
                             <i class="ri-walk-line fs-4 lh-1"></i>
                         </div>
                         <h6>Total Patient</h6>
-                        <h5 class="text-primary m-0">0</h5>
+                        <h5 id="nbre_patient_day" class="text-primary m-0"></h5>
                     </div>
                 </div>
             </div>
@@ -54,7 +54,7 @@
                             <i class="ri-walk-line fs-4 lh-1"></i>
                         </div>
                         <h6>Patient Assurer</h6>
-                        <h5 class="text-primary m-0">0</h5>
+                        <h5 id="nbre_patient_assurer_day" class="text-primary m-0"></h5>
                     </div>
                 </div>
             </div>
@@ -67,7 +67,7 @@
                             <i class="ri-walk-line fs-4 lh-1"></i>
                         </div>
                         <h6>Patient non-assurer</h6>
-                        <h5 class="text-primary m-0">0</h5>
+                        <h5 id="nbre_patient_nassurer_day" class="text-primary m-0"></h5>
                     </div>
                 </div>
             </div>
@@ -80,7 +80,7 @@
                             <i class="ri-cash-line fs-4 lh-1"></i>
                         </div>
                         <h6>Total Consultation</h6>
-                        <h5 class="text-primary m-0">0 Fcfa</h5>
+                        <h5 id="prix_cons_day" class="text-primary m-0"></h5>
                     </div>
                 </div>
             </div>
@@ -92,7 +92,7 @@
         <div class="col-sm-12">
             <div class="card mb-3">
                 <div class="card-header">
-                    <h5 class="card-title">Consultation</h5>
+                    <h5 class="card-title">Réception</h5>
                 </div>
                 <div class="p-2" id="div_alert" >
                     
@@ -128,7 +128,7 @@
                         <div class="tab-content" id="customTabContent">
                             <div class="tab-pane fade active show" id="oneAAA" role="tabpanel" aria-labelledby="tab-oneAAA">
                                 <div class="card-header">
-                                    <h5 class="card-title text-center">Formulaire Nouvelle consultation</h5>
+                                    <h5 class="card-title text-center">Recherche</h5>
                                 </div>
                                 <div class="row gx-3">
                                     <div class="row gx-3 justify-content-center align-items-center" >
@@ -149,15 +149,17 @@
                                     </div>
                                     <div class="col-sm-12" id="div_info_consul" style="display: none;">
                                         <div class="card-header">
-                                            <h5 class="card-title text-center">Information consultation</h5>
+                                            <h5 class="card-title text-center">
+                                                Détails
+                                            </h5>
                                         </div>
                                         <div class="row gx-3">
                                             <div class="col-sm-12">
                                                 <div class="mb-3">
-                                                    <label class="form-label">Période de consultation</label>
+                                                    <label class="form-label">Période</label>
                                                     <div class="m-0">
                                                         <div class="form-check form-check-inline">
-                                                            <input checked class="form-check-input" type="radio" id="jourO" name="periode_consul" value="ouvrable">
+                                                            <input checked class="form-check-input" type="radio" id="jourO" name="periode_consul" value="jour ouvrable">
                                                             <label class="form-check-label" for="jourO">Jour Ouvrable</label>
                                                         </div>
                                                         <div class="form-check form-check-inline">
@@ -165,7 +167,7 @@
                                                             <label class="form-check-label" for="Nuit">Nuit</label>
                                                         </div>
                                                         <div class="form-check form-check-inline">
-                                                            <input class="form-check-input" type="radio" id="jourF" name="periode_consul" value="ferier">
+                                                            <input class="form-check-input" type="radio" id="jourF" name="periode_consul" value="jour ferier">
                                                             <label class="form-check-label" for="jourF">Jour Ferié</label>
                                                         </div>
                                                     </div>
@@ -218,7 +220,7 @@
                                                     <div class="mb-3">
                                                         <div class="input-group">
                                                             <span class="input-group-text">Remise</span>
-                                                            <input type="tel" class="form-control" id="taux_remise" maxlength="3">
+                                                            <input type="tel" class="form-control" id="taux_remise" maxlength="3" value="0">
                                                             <span class="input-group-text">%</span>
                                                         </div>
                                                     </div>
@@ -401,6 +403,9 @@
                         </div>
                     </div>
                 </div>
+                <div class="p-2" id="div_alert_consultation" >
+                    
+                </div>
             </div>
         </div>
     </div>
@@ -408,27 +413,47 @@
     <div class="row gx-3" >
         <div class="col-12">
             <div class="card mb-3">
-                <div class="card-header">
-                    <h5 class="card-title">Consultation enregistrées Aujourd'hui</h5>
+                <div class="card-header d-flex align-items-center justify-content-between">
+                    <h5 class="card-title">
+                        Patient recu Aujourd'hui
+                    </h5>
+                    <a id="btn_refresh_table" class="btn btn-outline-info ms-auto">
+                        <i class="ri-loop-left-line"></i>
+                    </a>
                 </div>
                 <div class="card-body">
-                    <div class="table-outer">
+                    <div id="div_alert_table" >
+                    
+                    </div>
+                    <div class="table-outer" id="div_Table" style="display: none;">
                         <div class="table-responsive">
-                            <table class="table align-middle table-hover m-0 truncate">
+                            <table class="table align-middle table-hover m-0 truncate" id="Table">
                                 <thead>
                                     <tr>
                                         <th scope="col">N°</th>
                                         <th scope="col">Code</th>
-                                        <th scope="col">Nom</th>
+                                        <th scope="col">N° dossier</th>
+                                        <th scope="col">Nom et Prénoms</th>
                                         <th scope="col">Contact</th>
                                         <th scope="col">Motif</th>
                                         <th scope="col">Détail</th>
-                                        <th scope="col">Actions</th>
+                                        <th scope="col">Prix</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                 </tbody>
                             </table>
+                        </div>
+                    </div>
+                    <div id="message_Table" style="display: none;">
+                        <p class="text-center" >
+                            Aucun patient recu aujourd'hui
+                        </p>
+                    </div>
+                    <div id="div_Table_loader" style="display: none;">
+                        <div class="d-flex justify-content-center align-items-center">
+                            <div class="spinner-border text-warning me-2" role="status" aria-hidden="true"></div>
+                            <strong>Chargement des données...</strong>
                         </div>
                     </div>
                 </div>
@@ -438,17 +463,6 @@
 
 </div>
 
-{{-- <script src="{{asset('assets/js/app/js/reception/assurer_info.js')}}" ></script> --}}
-{{-- <script src="{{asset('assets/js/app/js/reception/rech_dossier.js')}}" ></script> --}}
-
-{{-- <script src="{{asset('assets/js/app/js/reception/select_taux_patient_new.js')}}" ></script> --}}
-{{-- <script src="{{asset('assets/js/app/js/reception/select_societe_patient_new.js')}}" ></script> --}}
-{{-- <script src="{{asset('assets/js/app/js/reception/select_assurance_patient_new.js')}}" ></script> --}}
-
-{{-- <script src="{{asset('assets/js/app/js/reception/eng_societe.js')}}" ></script> --}}
-{{-- <script src="{{asset('assets/js/app/js/reception/eng_assurance.js')}}" ></script> --}}
-{{-- <script src="{{asset('assets/js/app/js/reception/eng_patient.js')}}" ></script> --}}
-
 <script>
     document.addEventListener("DOMContentLoaded", function() {
 
@@ -457,6 +471,8 @@
         select_societe_patient();
         select_assurance_patient();
         select_list_acte();
+        list_cons();
+        Statistique();
 
         // ------------------------------------------------------------------
 
@@ -500,6 +516,8 @@
 
         document.getElementById("assurerO").addEventListener("change", divAssurerChange);
         document.getElementById("assurerN").addEventListener("change", divAssurerChange);
+        document.getElementById("btn_eng_consultation").addEventListener("click", eng_consultation);
+        document.getElementById("btn_refresh_table").addEventListener("click", list_cons);
 
         function divAssurerChange() {
             // Vérifier quelle option est sélectionnée
@@ -686,7 +704,6 @@
             dynamicFields.appendChild(groupe);
         }
 
-
         function showAlert(type, message) {
 
             var dynamicFields = document.getElementById("div_alert");
@@ -702,6 +719,56 @@
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>   
             `;
             document.getElementById("div_alert").appendChild(groupe);
+
+            setTimeout(function() {
+                groupe.classList.remove("show");
+                groupe.classList.add("fade");
+                setTimeout(function() {
+                    groupe.remove();
+                }, 150); // Time for the fade effect to complete
+            }, 3000);
+        }
+
+        function showAlertConsultation(type, message) {
+
+            var dynamicFields = document.getElementById("div_alert_consultation");
+            // Remove existing content
+            while (dynamicFields.firstChild) {
+                dynamicFields.removeChild(dynamicFields.firstChild);
+            }
+
+            var groupe = document.createElement("div");
+            groupe.className = `alert bg-${type} text-white alert-dismissible fade show`;
+            groupe.innerHTML = `
+                ${message}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>   
+            `;
+            document.getElementById("div_alert_consultation").appendChild(groupe);
+
+            setTimeout(function() {
+                groupe.classList.remove("show");
+                groupe.classList.add("fade");
+                setTimeout(function() {
+                    groupe.remove();
+                }, 150); // Time for the fade effect to complete
+            }, 3000);
+        }
+
+        function showAlertList(type, message) {
+
+            var dynamicFields = document.getElementById("div_alert_table");
+            // Remove existing content
+            while (dynamicFields.firstChild) {
+                dynamicFields.removeChild(dynamicFields.firstChild);
+            }
+
+            var groupe = document.createElement("div");
+            groupe.className = `alert bg-${type} text-white alert-dismissible fade show`;
+            groupe.innerHTML = `
+                ${message}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>   
+            `;
+            document.getElementById("div_alert_table").appendChild(groupe);
 
             setTimeout(function() {
                 groupe.classList.remove("show");
@@ -867,7 +934,6 @@
             const montant_patient = document.getElementById('montant_patient');
 
             montant_assurance.value = '';
-            taux_remise.value = '';
             montant_total.value = '';
             montant_patient.value = '';
 
@@ -890,7 +956,8 @@
                     url: '/api/select_typeacte/' + acteId,
                     method: 'GET',
                     success: function(response) {
-                        const data = response.typeacte; // Adjust this path based on your actual API response
+                        const data = response.typeacte; 
+
                         if (data && data.length > 0) {
 
                             // Populate the select with the response data
@@ -1178,12 +1245,6 @@
                 }
             }
 
-            var dynamicFields = document.getElementById("div_alert");
-            // Remove existing content
-            while (dynamicFields.firstChild) {
-                dynamicFields.removeChild(dynamicFields.firstChild);
-            }
-
             var preloader_ch = `
                 <div id="preloader_ch">
                     <div class="spinner_preloader_ch"></div>
@@ -1281,6 +1342,177 @@
                     assurerOui.checked = false;
 
                     divAssurer.style.display = "none";
+                }
+            });
+        }
+
+        // ------------------------------------------------------------------
+
+        function eng_consultation()
+        {
+            var num_patient = document.getElementById("matricule_patient");
+            var acte_id = document.getElementById("acte_id");
+            var typeacte_idS = document.getElementById("typeacte_idS");
+            var medecin_id = document.getElementById("medecin_id");
+            var periode = document.querySelector('input[name="periode_consul"]:checked');
+            var montant_assurance = document.getElementById("montant_assurance");
+            var montant_patient = document.getElementById("montant_patient");
+            var taux_remise = document.getElementById("taux_remise");
+            var montant_total = document.getElementById("montant_total");
+
+            var jourO = document.getElementById('jourO');
+            var jourF = document.getElementById('jourF');
+            var nuit = document.getElementById('Nuit');
+
+            if (!num_patient.value.trim() || acte_id.value =='' || typeacte_idS.value =='' || medecin_id.value =='') {
+                showAlertConsultation('warning', 'Tous les champs sont obligatoires.');
+                return false; 
+            }
+
+            var preloader_ch = `
+                <div id="preloader_ch">
+                    <div class="spinner_preloader_ch"></div>
+                </div>
+            `;
+            // Add the preloader to the body
+            document.body.insertAdjacentHTML('beforeend', preloader_ch);
+
+            $.ajax({
+                url: '/api/new_consultation',
+                method: 'GET',  // Use 'POST' for data creation
+                data: {num_patient: num_patient.value, acte_id: acte_id.value, typeacte_id: typeacte_idS.value, user_id: medecin_id.value, periode: periode.value, montant_assurance: montant_assurance.value, montant_patient: montant_patient.value, taux_remise: taux_remise.value, total: montant_total.value},
+                success: function(response) {
+                    var preloader = document.getElementById('preloader_ch');
+                    if (preloader) {
+                        preloader.remove();
+                    }
+                    
+                    if (response.success) {
+                        showAlertConsultation('success', 'Patient Enregistrée.');
+                        list_cons();
+                    } else if (response.error) {
+                        showAlertConsultation('danger', 'Une erreur est survenue lors de l\'enregistrement.');
+                    }
+
+                    jourO.checked = true;
+                    jourF.checked = false;
+                    nuit.checked = false;
+
+                    Statistique();
+
+                    var dynamicFields = document.getElementById("div_info_patient");
+                    // Remove existing content
+                    while (dynamicFields.firstChild) {
+                        dynamicFields.removeChild(dynamicFields.firstChild);
+                    }
+
+                    document.getElementById("div_info_consul").style.display = 'none';
+
+                },
+                error: function() {
+
+                    var preloader = document.getElementById('preloader_ch');
+                    if (preloader) {
+                        preloader.remove();
+                    }
+
+                    showAlertConsultation('danger', 'Une erreur est survenue lors de l\'enregistrement.');
+
+                    jourO.checked = true;
+                    jourF.checked = false;
+                    nuit.checked = false;
+                }
+            });
+        }
+
+        // ------------------------------------------------------------------
+
+        function list_cons() {
+
+            const tableBody = document.querySelector('#Table tbody');
+            const messageDiv = document.getElementById('message_Table');
+            const tableDiv = document.getElementById('div_Table'); // The message div
+            const loaderDiv = document.getElementById('div_Table_loader');
+
+            messageDiv.style.display = 'none';
+            tableDiv.style.display = 'none';
+            loaderDiv.style.display = 'block';
+
+            // Fetch data from the API
+            fetch('/api/list_cons_day') // API endpoint
+                .then(response => response.json())
+                .then(data => {
+                    // Access the 'chambre' array from the API response
+                    const consultations = data.consultation;
+
+                    // Clear any existing rows in the table body
+                    tableBody.innerHTML = '';
+
+                    if (consultations.length > 0) {
+
+                        loaderDiv.style.display = 'none';
+                        messageDiv.style.display = 'none';
+                        tableDiv.style.display = 'block';
+
+                        // Loop through each item in the chambre array
+                        consultations.forEach((item, index) => {
+                            // Create a new row
+                            const row = document.createElement('tr');
+                            // Create and append cells to the row based on your table's structure
+                            row.innerHTML = `
+                                <td>${index + 1}</td>
+                                <td>C-${item.code}</td>
+                                <td>P-${item.matricule}</td>
+                                <td>${item.name}</td>
+                                <td>+225 ${item.tel}</td>
+                                <td>${item.motif}</td>
+                                <td>${item.type_motif}</td>
+                                <td>${item.total}</td>
+                            `;
+                            // Append the row to the table body
+                            tableBody.appendChild(row);
+
+                        });
+                    } else {
+                        loaderDiv.style.display = 'none';
+                        messageDiv.style.display = 'block';
+                        tableDiv.style.display = 'none';
+                    }
+                })
+                .catch(error => {
+                    console.error('Erreur lors du chargement des données:', error);
+                    // Hide the table and show the error message in case of failure
+                    loaderDiv.style.display = 'none';
+                    messageDiv.style.display = 'block';
+                    tableDiv.style.display = 'none';
+                });
+        }
+
+        // ------------------------------------------------------------------
+
+        function Statistique() {
+
+            const nbre_patient_day = document.getElementById("nbre_patient_day");
+            const nbre_patient_assurer_day = document.getElementById("nbre_patient_assurer_day");
+            const nbre_patient_nassurer_day = document.getElementById("nbre_patient_nassurer_day");
+            const prix_cons_day = document.getElementById("prix_cons_day");
+
+            $.ajax({
+                url: '/api/statistique_reception',
+                method: 'GET',
+                success: function(response) {
+                    // Set the text content of each element
+                    nbre_patient_day.textContent = response.nbre_patient_day;
+                    nbre_patient_assurer_day.textContent = response.nbre_patient_assurer_day;
+                    nbre_patient_nassurer_day.textContent = response.nbre_patient_nassurer_day;
+                    prix_cons_day.textContent = formatPrice(response.prix_cons_day.toString()) + ' Fcfa'; // assuming the currency is XOF
+                },
+                error: function() {
+                    // Set default values in case of an error
+                    nbre_patient_day.textContent = '0';
+                    nbre_patient_assurer_day.textContent = '0';
+                    nbre_patient_nassurer_day.textContent = '0';
+                    prix_cons_day.textContent = '0 Fcfa';
                 }
             });
         }

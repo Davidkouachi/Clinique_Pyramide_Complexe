@@ -23,6 +23,7 @@ class user extends Authenticatable
         'tel2',
         'sexe',
         'adresse',
+        'matricule',
         'role',
         'role_id',
         'password',

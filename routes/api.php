@@ -8,7 +8,7 @@ use App\Http\Controllers\ApisearchController;
 use App\Http\Controllers\ApilistController;
 use App\Http\Controllers\ApiupdateController;
 use App\Http\Controllers\ApideleteController;
-
+use App\Http\Controllers\ApistatController;
 // Route::get('/user', function (Request $request) {
 //     return $request->user();
 // })->middleware('auth:sanctum');
@@ -32,6 +32,7 @@ Route::get('/lit_new', [ApiinsertController::class, 'lit_new']);
 Route::get('/motif_cons_new', [ApiinsertController::class, 'motif_cons_new']);
 Route::get('/typeacte_cons_new', [ApiinsertController::class, 'typeacte_cons_new']);
 Route::get('/new_medecin', [ApiinsertController::class, 'new_medecin']);
+Route::get('/new_consultation', [ApiinsertController::class, 'new_consultation']);
 // insert debut
 
 // search debut
@@ -46,6 +47,7 @@ Route::get('/select_typeacte/{id}', [ApisearchController::class, 'select_typeact
 // liste day debut
 Route::get('/list_chambre_day', [ApilistController::class, 'list_chambre_day']);
 Route::get('/list_lit_day', [ApilistController::class, 'list_lit_day']);
+Route::get('/list_cons_day', [ApilistController::class, 'list_cons_day']);
 // liste day debut
 
 // update debut
@@ -70,3 +72,7 @@ Route::get('/list_typeacte', [ApilistController::class, 'list_typeacte']);
 Route::get('/list_user', [ApilistController::class, 'list_user']);
 Route::get('/list_medecin', [ApilistController::class, 'list_medecin']);
 // liste debut
+
+// statistique debut
+Route::get('/statistique_reception', [ApistatController::class, 'statistique_reception']);
+// statistique fin

@@ -27,6 +27,8 @@ use App\Models\typeacte;
 use App\Models\user;
 use App\Models\role;
 use App\Models\typemedecin;
+use App\Models\consultation;
+use App\Models\detailconsultation;
 
 class ApiinsertController extends Controller
 {
@@ -310,6 +312,77 @@ class ApiinsertController extends Controller
 
             if (!$type->save()) {
                 return response()->json(['error' => true]);
+            }
+
+            DB::commit();
+            return response()->json(['success' => true]);
+            
+        } catch (Exception $e) {
+            DB::rollback();
+            return response()->json(['error' => true]);
+        }
+
+    }
+
+    public function new_consultation(Request $request)
+    {
+        $patient = patient::where('matricule', '=', $request->num_patient)->first();
+
+        if (!$patient) {
+            return response()->json(['error' => true]);
+        }
+
+        $typeacte = typeacte::find($request->typeacte_id);
+
+        if (!$typeacte) {
+            return response()->json(['error' => true]);
+        }
+
+        $acte = acte::find($request->acte_id);
+
+        if (!$acte) {
+            return response()->json(['error' => true]);
+        }
+
+        $user = user::find($request->user_id);
+
+        if (!$user) {
+            return response()->json(['error' => true]);
+        }
+
+        $code = $this->generateUniqueMatricule();
+
+        DB::beginTransaction();
+
+        $add = new consultation();
+        $add->patient_id = $patient->id; 
+        $add->user_id = $user->id;
+        $add->matricule_patient = $patient->matricule;
+        $add->code = $code;
+        $add->statut = 'en cours';
+        $add->assurer = $patient->assurer;
+        $add->total = $typeacte->prix;
+        $add->periode = $request->periode;
+
+        try {
+
+            if (!$add->save()) {
+                throw new \Exception('Erreur');
+            }
+
+            $add2 = new detailconsultation();
+            $add2->consultation_id = $add->id;
+            $add2->typeacte_id = $typeacte->id;
+            $add2->part_assurance = $request->montant_assurance;
+            $add2->part_patient = $request->montant_patient;
+            $add2->remise = $request->taux_remise;
+            $add2->motif = $acte->nom;
+            $add2->montant = $typeacte->prix;
+            $add2->type_motif = $typeacte->nom;
+            $add2->libelle = '';
+
+            if (!$add2->save()) {
+                throw new \Exception('Erreur');
             }
 
             DB::commit();
