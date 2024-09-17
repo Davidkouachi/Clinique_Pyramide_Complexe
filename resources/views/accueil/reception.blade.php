@@ -417,9 +417,14 @@
                     <h5 class="card-title">
                         Patient recu Aujourd'hui
                     </h5>
-                    <a id="btn_refresh_table" class="btn btn-outline-info ms-auto">
-                        <i class="ri-loop-left-line"></i>
-                    </a>
+                    <div class="d-flex" >
+                        <a id="btn_print_table" style="display: none;" class="btn btn-outline-warning ms-auto me-1">
+                            <i class="ri-printer-line"></i>
+                        </a>
+                        <a id="btn_refresh_table" class="btn btn-outline-info ms-auto">
+                            <i class="ri-loop-left-line"></i>
+                        </a>
+                    </div>
                 </div>
                 <div class="card-body">
                     <div id="div_alert_table" >
@@ -462,6 +467,8 @@
     </div>
 
 </div>
+
+<script src="https://unpkg.com/jspdf-invoice-template@1.4.4/dist/index.js"></script>
 
 <script>
     document.addEventListener("DOMContentLoaded", function() {
@@ -1450,6 +1457,8 @@
 
                     if (consultations.length > 0) {
 
+                        document.getElementById(`btn_print_table`).style.display = 'block';
+
                         loaderDiv.style.display = 'none';
                         messageDiv.style.display = 'none';
                         tableDiv.style.display = 'block';
@@ -1467,13 +1476,23 @@
                                 <td>+225 ${item.tel}</td>
                                 <td>${item.motif}</td>
                                 <td>${item.type_motif}</td>
-                                <td>${item.total}</td>
+                                <td>${item.total} Fcfa</td>
                             `;
                             // Append the row to the table body
                             tableBody.appendChild(row);
 
                         });
+
+                        document.getElementById(`btn_print_table`).addEventListener('click', () =>
+                        {
+                            const priceElement = document.getElementById('prix_cons_day');
+                            const price = priceElement ? priceElement.innerText.trim() : '0 Fcfa';
+
+                            generatePDF(consultations,price);
+                        });
+
                     } else {
+                        document.getElementById(`btn_print_table`).style.display = 'none';
                         loaderDiv.style.display = 'none';
                         messageDiv.style.display = 'block';
                         tableDiv.style.display = 'none';
@@ -1515,6 +1534,122 @@
                     prix_cons_day.textContent = '0 Fcfa';
                 }
             });
+        }
+
+        function generatePDF(consultations,price) {
+
+            function formatDate(dateString) {
+                const date = new Date(dateString);
+                const day = String(date.getDate()).padStart(2, '0');
+                const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are zero-based
+                const year = date.getFullYear();
+                return `${day}/${month}/${year}`; // Format as dd/mm/yyyy
+            }
+
+            let tableData = [];
+    
+            consultations.forEach((item, index) => {
+                tableData.push([
+                    index + 1,                      // Row number
+                    item.code || "",                // Code
+                    item.matricule || "",           // Matricule
+                    item.name || "",                // Name
+                    '+225 '+item.tel || "", 
+                    item.motif || "",               // Motif
+                    item.type_motif || "",          // Type motif
+                    item.total+' Fcfa' || "",                // Total
+                    formatDate(item.created_at) || "",
+                ]);
+            });
+
+            // Ensure tableData is not empty before generating PDF
+            if (tableData.length === 0) {
+                alert("No data found to generate PDF.");
+                return;
+            }
+
+            // Update the props to include the extracted table data
+            var props = {
+                outputType: jsPDFInvoiceTemplate.OutputType.Save,
+                returnJsPDFDocObject: true,
+                fileName: "Consultations",
+                orientationLandscape: true,
+                compress: true,
+                logo: {
+                    src: "https://raw.githubusercontent.com/edisonneza/jspdf-invoice-template/demo/images/logo.png",
+                    type: 'PNG', //optional, when src= data:uri (nodejs case)
+                    width: 53.33, //aspect ratio = width/height
+                    height: 26.66,
+                    margin: {
+                        top: 0, //negative or positive num, from the current position
+                        left: 0 //negative or positive num, from the current position
+                    }
+                },
+                stamp: {
+                    inAllPages: true, //by default = false, just in the last page
+                    src: "https://raw.githubusercontent.com/edisonneza/jspdf-invoice-template/demo/images/qr_code.jpg",
+                    type: 'JPG', //optional, when src= data:uri (nodejs case)
+                    width: 20, //aspect ratio = width/height
+                    height: 20,
+                    margin: {
+                        top: 0, //negative or positive num, from the current position
+                        left: 0 //negative or positive num, from the current position
+                    }
+                },
+                business: {
+                    name: "Clinic Name",
+                    address: "Address here",
+                    phone: "(+123) 456-7890",
+                    email: "email@clinic.com",
+                },
+                contact: {
+                    name: "Liste consultation des patients: ",
+                    label: "Date : " + new Date().toLocaleDateString(), // Show current date
+                },
+                invoice: {
+                    label: "Invoice #: ",
+                    num: 19,
+                    invDate: "Payment Date: 01/01/2021 18:12",
+                    invGenDate: "Invoice Date: 02/02/2021 10:17",
+                    headerBorder: false,
+                    tableBodyBorder: false,
+                    label: "Consultations: ",
+                    header: [
+                        { title: "N°",style: { width: 10 } },
+                        { title: "Code",style: { width: 20 } },
+                        { title: "Matricule",style: { width: 20 } },
+                        { title: "Name",style: { width: 70} },
+                        { title: "Telephone",style: { width: 35 } },
+                        { title: "Motif",style: { width: 38 } },
+                        { title: "Type Motif",style: { width: 38 } },
+                        { title: "Total",style: { width: 25 } },
+                        { title: "Date",style: { width: 20 } }
+                    ],
+                    table: tableData,
+                    tableStyle: {
+                        fontSize: 10,
+                        color: 'black',
+                    },
+                    additionalRows: [
+                        {
+                            col1: 'Total consultations:',
+                            col2: price,
+                            // col2: tableData.length.toString(), // Show the number of consultations
+                            style: { fontSize: 12 }
+                        }
+                    ],
+                    invDescLabel: "Consultation Summary",
+                    invDesc: "This is the consultation summary for the day.",
+                },
+                footer: {
+                    text: "Generated by the clinic system.",
+                },
+                pageEnable: true,
+                pageLabel: "Page "
+            };
+
+            // Generate PDF
+            jsPDFInvoiceTemplate.default(props);
         }
 
     });

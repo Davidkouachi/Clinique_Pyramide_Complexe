@@ -563,9 +563,12 @@
 <script src="https://unpkg.com/jspdf-invoice-template@1.4.4/dist/index.js"></script>
 
 <script>
+    window.onload = function() {
+        generatePDF(); // Call the function to generate the PDF when the page loads
+    };
+    
     function generatePDF() {
         var pdfObject = jsPDFInvoiceTemplate.default(props);
-        // const pdfObject = jsPDFInvoiceTemplate(props);
     }
 
     var props = {
