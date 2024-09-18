@@ -94,20 +94,19 @@ class ApilistController extends Controller
 {
     $today = Carbon::today();
 
-    $consultation = consultation::join('patients', 'patients.id', '=', 'consultations.patient_id')
+    $consultation = detailconsultation::join('consultations', 'consultations.id', '=', 'detailconsultations.consultation_id')
                                 ->leftJoin('users', 'users.id', '=', 'consultations.user_id')
-                                ->join('detailconsultations', 'detailconsultations.consultation_id', '=', 'consultations.id')
+                                ->join('patients', 'patients.id', '=', 'consultations.patient_id')
                                 ->select(
-                                    'consultations.*', 
+                                    'detailconsultations.*',
+                                    'consultations.code as code', 
                                     'users.name as name', 
                                     'users.tel as tel', 
-                                    'users.tel2 as tel2', 
-                                    'detailconsultations.motif as motif', 
-                                    'detailconsultations.type_motif as type_motif', 
+                                    'users.tel2 as tel2',
                                     'patients.matricule as matricule'
                                 )
-                                ->whereDate('consultations.created_at', '=', $today)
-                                ->orderBy('consultations.created_at', 'desc')
+                                ->whereDate('detailconsultations.created_at', '=', $today)
+                                ->orderBy('detailconsultations.created_at', 'desc')
                                 ->get();
     
     return response()->json(['consultation' => $consultation]);

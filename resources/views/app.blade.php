@@ -495,7 +495,7 @@
                                     </a>
                                     <ul class="treeview-menu">
                                         <li>
-                                            <a href="#">Consultation</a>
+                                            <a href="{{route('encaissement')}}">Consultation</a>
                                         </li>
                                         <li>
                                             <a href="#">Bulletin</a>

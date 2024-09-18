@@ -60,6 +60,8 @@ Route::post('/update typeproduit/{id}', [typeproduitController::class, 'update_t
 Route::get('/Acte', [Controller::class, 'acte_new'])->name('acte_new');
 Route::get('/Type Acte', [Controller::class, 'typeacte_new'])->name('typeacte_new');
 Route::get('/Nouvel Medecin', [utilisateurController::class, 'medecin_new'])->name('medecin_new');
+Route::get('/Caisse', [Controller::class, 'encaissement'])->name('encaissement');
+Route::get('/Caisse Détail/{id}', [Controller::class, 'encaissement_detail'])->name('encaissement_detail');
 
 // Route::middleware(['role:ADMINISTRATEUR'])->group(function () {
 

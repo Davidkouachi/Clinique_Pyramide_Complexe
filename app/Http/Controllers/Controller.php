@@ -13,4 +13,14 @@ class Controller
     {
         return view('grille.typeacte');
     }
+
+    public function encaissement()
+    {
+        return view('finance.encaissement');
+    }
+
+    public function encaissement_detail($id)
+    {
+        return view('finance.encaissement_detail');
+    }
 }

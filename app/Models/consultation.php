@@ -14,10 +14,6 @@ class consultation extends Model
         'user_id',
         'matricule_patient',
         'code',
-        'statut',
-        'assurer',
-        'periode',
-        'total',
     ];
 
     public function patient()

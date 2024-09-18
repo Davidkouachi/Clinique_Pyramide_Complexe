@@ -37,12 +37,14 @@ class ApistatController extends Controller
         $today = Carbon::today();
 
         $nbre_patient_day = consultation::whereDate('created_at', '=', $today)->count();
-        $nbre_patient_assurer_day = consultation::where('assurer', '=', 'oui')->whereDate('created_at', '=', $today)->count();
-        $nbre_patient_nassurer_day = consultation::where('assurer', '=', 'non')->whereDate('created_at', '=', $today)->count();
+
+        $nbre_patient_assurer_day = consultation::join('patients', 'patients.id', '=', 'consultations.patient_id')->whereDate('consultations.created_at', '=', $today)->where('patients.assurer', '=', 'oui')->count();
+
+        $nbre_patient_nassurer_day = consultation::join('patients', 'patients.id', '=', 'consultations.patient_id')->whereDate('consultations.created_at', '=', $today)->where('patients.assurer', '=', 'non')->count();
 
         // Get the total sum, ensuring it defaults to 0 if nothing is found
-        $prix_cons_day = consultation::whereDate('created_at', '=', $today)
-            ->select(DB::raw('COALESCE(SUM(REPLACE(total, ".", "") + 0), 0) as total_sum'))
+        $prix_cons_day = detailconsultation::whereDate('created_at', '=', $today)
+            ->select(DB::raw('COALESCE(SUM(REPLACE(montant, ".", "") + 0), 0) as total_sum'))
             ->first();
 
         // If no result or null, default the sum to 0
@@ -54,5 +56,6 @@ class ApistatController extends Controller
             'nbre_patient_nassurer_day' => $nbre_patient_nassurer_day,
             'prix_cons_day' => $total_sum
         ]);
+
     }
 }

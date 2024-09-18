@@ -352,26 +352,35 @@ class ApiinsertController extends Controller
 
         $code = $this->generateUniqueMatricule();
 
+        $today = Carbon::today();
+
         DB::beginTransaction();
 
-        $add = new consultation();
-        $add->patient_id = $patient->id; 
-        $add->user_id = $user->id;
-        $add->matricule_patient = $patient->matricule;
-        $add->code = $code;
-        $add->statut = 'en cours';
-        $add->assurer = $patient->assurer;
-        $add->total = $typeacte->prix;
-        $add->periode = $request->periode;
+        $verf = consultation::whereDate('created_at', '=', $today)->where('patient_id', '=', $patient->id)->first();
 
         try {
 
-            if (!$add->save()) {
-                throw new \Exception('Erreur');
+            if ($verf) {
+
+                $cons_id = $verf->id;
+
+            }else{
+
+                $add = new consultation();
+                $add->patient_id = $patient->id; 
+                $add->user_id = $user->id;
+                $add->matricule_patient = $patient->matricule;
+                $add->code = $code;
+
+                if (!$add->save()) {
+                    throw new \Exception('Erreur');
+                }
+
+                $cons_id = $add->id;
             }
 
             $add2 = new detailconsultation();
-            $add2->consultation_id = $add->id;
+            $add2->consultation_id = $cons_id;
             $add2->typeacte_id = $typeacte->id;
             $add2->part_assurance = $request->montant_assurance;
             $add2->part_patient = $request->montant_patient;
@@ -380,6 +389,7 @@ class ApiinsertController extends Controller
             $add2->montant = $typeacte->prix;
             $add2->type_motif = $typeacte->nom;
             $add2->libelle = '';
+            $add2->periode = $request->periode;
 
             if (!$add2->save()) {
                 throw new \Exception('Erreur');

@@ -15,10 +15,6 @@ return new class extends Migration
             $table->id();
             $table->string('matricule_patient')->index();
             $table->string('code')->index();
-            $table->string('statut');
-            $table->string('assurer');
-            $table->string('total');
-            $table->string('periode');
             $table->unsignedBigInteger('patient_id');
             $table->foreign('patient_id')->references('id')->on('patients')->onDelete('cascade');
             $table->unsignedBigInteger('user_id')->nullable();
