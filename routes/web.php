@@ -62,6 +62,7 @@ Route::get('/Type Acte', [Controller::class, 'typeacte_new'])->name('typeacte_ne
 Route::get('/Nouvel Medecin', [utilisateurController::class, 'medecin_new'])->name('medecin_new');
 Route::get('/Caisse', [Controller::class, 'encaissement'])->name('encaissement');
 Route::get('/Caisse Détail/{id}', [Controller::class, 'encaissement_detail'])->name('encaissement_detail');
+Route::get('/Liste Caisse', [Controller::class, 'liste_caisse'])->name('liste_caisse');
 
 // Route::middleware(['role:ADMINISTRATEUR'])->group(function () {
 

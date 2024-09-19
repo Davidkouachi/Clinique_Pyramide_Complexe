@@ -22,45 +22,11 @@
 <div class="app-body">
     <!-- Row starts -->
     <div class="row justify-content-center">
-        {{-- <div class="col-xxl-4 col-lg-4 col-md-6 col-sm-8">
-            <div class="card mb-3">
-                <div class="card-header">
-                    <h5 class="card-title">Formulaire Nouveau Produit</h5>
-                </div>
-                <div class="card-body" >
-                    <div class="row gx-3">
-                        <div class="col-12">
-                            <div class="mb-3">
-                                <label class="form-label">Numéro Consultation</label>
-                                <div class="input-group">
-                                    <span class="input-group-text">C-</span>
-                                    <input type="text" class="form-control" id="matricule_patient" placeholder="Saisie Obligatoire" maxlength="6">
-                                    <button id="btn_rech_num_dossier" class="btn btn-outline-success">
-                                        <i class="ri-search-line"></i>
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="col-12">
-                            <div class="d-flex gap-2 justify-content-start">
-                                <button type="reset" class="btn btn-outline-danger">
-                                    Rémise à zéro
-                                </button>
-                                <button type="submit" class="btn btn-success">
-                                    Enregistrer
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div> --}}
         <div class="col-12">
             <div class="card mb-3">
                 <div class="card-header d-flex align-items-center justify-content-between">
                     <h5 class="card-title">
-                        Facture non réglée
+                        Liste des Factures
                     </h5>
                     <div class="d-flex" >
                         <a id="btn_print_table" style="display: none;" class="btn btn-outline-warning ms-auto me-1">
@@ -88,6 +54,7 @@
                                         <th scope="col">Part Patient</th>
                                         <th scope="col">Total</th>
                                         <th scope="col">Date de création</th>
+                                        <th scope="col">Statut</th>
                                         <th scope="col">Actions</th>
                                     </tr>
                                 </thead>
@@ -124,6 +91,38 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
+                <div class="row">
+                    <div class="col-xxl-3 col-sm-3 col-12">
+                        <img height="100" width="100" src="{{asset('assets/images/facture.webp')}}" alt="Bootstrap Admin Dashboard" class="img-fluid">
+                    </div>
+                    <div class="col-sm-9 col-12">
+                        <div class="text-end" id="fac_detail">
+                            
+                        </div>
+                    </div>
+                    <div class="col-12 mb-5"></div>
+                </div>
+                {{-- <div class="row justify-content-between">
+                    <div class="col-lg-6 col-12">
+                        <h6 class="fw-semibold">Billed To :</h6>
+                        <p class="m-0">
+                            Hamspire Jordan,<br>
+                            8900 Gilsion Ave,<br>
+                            San Francisco, California(CA), 66789
+                        </p>
+                    </div>
+                    <div class="col-lg-6 col-12">
+                        <div class="text-end">
+                            <h6 class="fw-semibold">Hospital Address :</h6>
+                            <p class="text-end m-0">
+                                Medicare LTD, 76890 St. <br>
+                                5000 thomos Street, Suite 980<br>
+                                Huntsville, Alabama, 87890
+                            </p>
+                        </div>
+                    </div>
+                    <div class="col-12 mb-3"></div>
+                </div> --}}
                 <div class="row">
                     <div class="col-xl-12">
                         <div class="">
@@ -171,56 +170,6 @@
     </div>
 </div>
 
-<div class="modal fade" id="Caisse" tabindex="-1" aria-modal="true" role="dialog">
-    <div class="modal-dialog modal-dialog-centered modal-sm">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalToggleLabel">
-                    Caisse
-                </h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <div class="row gx-3">
-                    <div class="col-12">
-                        <div class="mb-3">
-                            <label class="form-label">A payer</label>
-                            <div class="input-group">
-                                <input readonly type="tel" class="form-control" id="input_montant_payer" placeholder="Saisie Obligatoire">
-                                <span class="input-group-text">Fcfa</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-12">
-                        <div class="mb-3">
-                            <label class="form-label">Montant versé</label>
-                            <div class="input-group">
-                                <input type="tel" class="form-control" id="input_montant_verser" placeholder="Saisie Obligatoire">
-                                <span class="input-group-text">Fcfa</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-12">
-                        <div class="mb-3">
-                            <label class="form-label">Montant Remis</label>
-                            <div class="input-group">
-                                <input readonly type="tel" class="form-control" id="input_montant_remis" placeholder="Saisie Obligatoire">
-                                <span class="input-group-text">Fcfa</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="modal-footer" id="div_btn_valider" style="display: none;">
-                <input type="hidden" id="id_code_fac">
-                <button data-bs-dismiss="modal" class="btn btn-success" id="btn_valider" >
-                    Validé
-                </button>
-            </div>
-        </div>
-    </div>
-</div>
-
 
 {{-- <script src="{{ asset('js/app.js') }}"></script> --}}
 {{-- <script src="https://unpkg.com/jspdf-invoice-template@1.4.4/dist/index.js"></script> --}}
@@ -234,45 +183,6 @@
         list();
 
         document.getElementById("btn_refresh_table").addEventListener("click", list);
-        document.getElementById("btn_valider").addEventListener("click", payer);
-
-        // ->----------------------------
-
-        document.getElementById('input_montant_verser').addEventListener('input', function() {
-            // Nettoyer la valeur entrée en supprimant les caractères non numériques sauf le point
-            const rawValue = this.value.replace(/[^0-9]/g, ''); // Supprimer tous les caractères non numériques
-            
-            // Ajouter des points pour les milliers
-            const formattedValue = formatPrice(rawValue);
-            
-            // Mettre à jour la valeur du champ avec la valeur formatée
-            this.value = formattedValue;
-
-            // Convertir la valeur formatée en nombre pour les calculs
-            const montantPayer = parseFloat(document.getElementById('input_montant_payer').value.replace(/\./g, '')) || 0;
-            const montantVerser = parseFloat(rawValue) || 0;
-
-            // Calculer le montant remis
-            const montantRemis = montantVerser - montantPayer;
-            document.getElementById('input_montant_remis').value = `${formatPrice(montantRemis)}`;
-
-            const btnValider = document.getElementById('div_btn_valider');
-            if (montantRemis >= 0) {
-                btnValider.style.display = 'block';
-            } else {
-                btnValider.style.display = 'none';
-            }
-        });
-
-        document.getElementById('input_montant_verser').addEventListener('keypress', function(event) {
-            // Permettre uniquement les chiffres et le point
-            const key = event.key;
-            if (isNaN(key)) {
-                event.preventDefault();
-            }
-        });
-        
-        // -----------------------------------------
 
         function formatPrice(price) {
 
@@ -346,69 +256,19 @@
             return `${day}/${month}/${year}`; // Format as dd/mm/yyyy
         }
 
-        function payer()
-        {
-            const code_fac = document.getElementById("id_code_fac").value;
-            const montant_verser = document.getElementById("input_montant_verser");
-            const montant_remis = document.getElementById("input_montant_remis");
+        function formatDateHeure(dateString) {
 
-            var preloader_ch = `
-                <div id="preloader_ch">
-                    <div class="spinner_preloader_ch"></div>
-                </div>
-            `;
-            // Add the preloader to the body
-            document.body.insertAdjacentHTML('beforeend', preloader_ch);
+            const date = new Date(dateString);
+                
+            const day = String(date.getDate()).padStart(2, '0');
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const year = date.getFullYear();
 
-            if(!montant_verser.value.trim() || !montant_remis.value.trim()){
-                var preloader = document.getElementById('preloader_ch');
-                if (preloader) {
-                    preloader.remove();
-                }
-                showAlertList('warning', 'Impossible d\'éffectuée le paiement.');
-                return false;
-            }
+            const hours = String(date.getHours()).padStart(2, '0');
+            const minutes = String(date.getMinutes()).padStart(2, '0');
+            const seconds = String(date.getSeconds()).padStart(2, '0');
 
-            $.ajax({
-                url: '/api/facture_payer/' + code_fac,
-                method: 'GET',
-                data: { montant_verser: montant_verser.value, montant_remis: montant_remis.value,},
-                success: function(response) {
-
-                    var preloader = document.getElementById('preloader_ch');
-                    if (preloader) {
-                        preloader.remove();
-                    }
-
-                    if (response.success) {
-
-                        showAlertList('success', 'Paiement éffectuée.');
-
-                        const factures = response.factured;
-                        const price = formatPrice(response.Total.total_sum);
-                        const id = response.ID.code_fac;
-                        const date_fac = response.ID.date_fac;
-                        const statut = response.ID.statut;
-                        const date_paye = response.ID.date_paye;
-
-                        generatePDF(factures,price,id,date_fac,statut,date_paye);
-
-                    } else if (response.error) {
-                        showAlertList('danger', 'Une erreur est survenue lors du paiement.');
-                    }
-
-                    list();
-
-
-                },
-                error: function(xhr, status, error) {
-                    var preloader = document.getElementById('preloader_ch');
-                    if (preloader) {
-                        preloader.remove();
-                    }
-                    showAlertList('danger', 'Une erreur est survenue lors du paiement.');
-                }
-            });
+            return `${day}/${month}/${year} à ${hours}:${minutes}:${seconds}`;
         }
 
         function list() {
@@ -423,7 +283,7 @@
             loaderDiv.style.display = 'block';
 
             // Fetch data from the API
-            fetch('/api/list_facture_inpayer') // API endpoint
+            fetch('/api/list_facture') // API endpoint
                 .then(response => response.json())
                 .then(data => {
                     // Access the 'chambre' array from the API response
@@ -461,10 +321,12 @@
                                 </td>
                                 <td>${formatDate(item.created_at)}</td>
                                 <td>
+                                    <span class="badge ${item.statut === 'payer' ? 'bg-success' : 'bg-danger'}">
+                                        ${item.statut === 'payer' ? 'Réglé' : 'Non Réglé'}
+                                    </span>
+                                </td>
+                                <td>
                                     <div class="d-inline-flex gap-1">
-                                        <a class="btn btn-outline-success btn-sm rounded-5" data-bs-toggle="modal" data-bs-target="#Caisse" id="paye-${item.id}">
-                                            <i class="ri-hand-coin-line"></i>
-                                        </a>
                                         <a class="btn btn-outline-warning btn-sm rounded-5" data-bs-toggle="modal" data-bs-target="#Detail" id="detail-${item.id}">
                                             <i class="ri-eye-line"></i>
                                         </a>
@@ -476,18 +338,6 @@
                             `;
                             // Append the row to the table body
                             tableBody.appendChild(row);
-
-                            document.getElementById(`paye-${item.id}`).addEventListener('click', () =>
-                            {
-                                const payer = document.getElementById('input_montant_payer');
-                                payer.value = `${formatPrice(item?.montant || 0)} Fcfa`;
-
-                                const verser = document.getElementById('input_montant_verser');
-                                verser.value = '';
-                                document.getElementById('input_montant_remis').value = '0 Fcfa';
-
-                                document.getElementById('id_code_fac').value = `${item.code_fac}`;
-                            });
 
                             document.getElementById(`printer-${item.id}`).addEventListener('click', () =>
                             {
@@ -528,7 +378,46 @@
                                         const factureds = data.factured;
                                         const Total = data.Total;
 
-                                        // Clear any existing rows in the table body
+                                        const id = data.ID.code_fac;
+                                        const date_fac = data.ID.date_fac;
+                                        const statutValue = data.ID.statut;
+                                        const date_paye = data.ID.date_paye;
+
+                                        const fac_detail = document.getElementById('fac_detail');
+
+                                        fac_detail.innerHTML = '';
+
+                                        const para = document.createElement('p');
+                                        para.className = "mb-2";
+                                        para.innerHTML = `
+                                            Invoice - <span class="text-primary">${id}</span>
+                                        `;
+                                        fac_detail.appendChild(para);
+
+                                        if (date_paye) {
+                                            const date = document.createElement('p');
+                                            date.className = "mb-2";
+                                            date.innerHTML = `
+                                                Date de paiement ${formatDateHeure(date_paye)}
+                                            `;
+                                            fac_detail.appendChild(date);
+                                        }
+
+                                        const statutElement = document.createElement('span');
+                                        if (statutValue === 'payer') {
+                                            statutElement.className = "badge bg-success";
+                                            statutElement.innerHTML = `
+                                                Facture Réglée
+                                            `;
+                                        } else {
+                                            statutElement.className = "badge bg-danger";
+                                            statutElement.innerHTML = `
+                                                Facture Non Réglée
+                                            `;
+                                        }
+                                        fac_detail.appendChild(statutElement);
+
+    
                                         tableBodyD.innerHTML = '';
 
                                         if (factureds.length > 0) {
@@ -603,6 +492,8 @@
                                             `;
 
                                             tableBodyD.appendChild(row3);
+
+
 
                                         } else {
                                             loaderDivD.style.display = 'none';

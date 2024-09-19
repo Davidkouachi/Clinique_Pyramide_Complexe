@@ -82,6 +82,7 @@ Route::get('/statistique_reception', [ApistatController::class, 'statistique_rec
 
 // List facture debut
 Route::get('/list_facture_inpayer', [ApilistfactureController::class, 'list_facture_inpayer']);
+Route::get('/list_facture', [ApilistfactureController::class, 'list_facture']);
 // List facture fin
 
 // List facture detail debut

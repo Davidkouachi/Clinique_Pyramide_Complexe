@@ -66,7 +66,6 @@ class ApilistfacturedetailController extends Controller
                             )
                             ->first();
 
-
         return response()->json(['factured' => $factured, 'Total' => $Total, 'ID' => $ID]);
     }
 }

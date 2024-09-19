@@ -68,4 +68,40 @@ class ApilistfactureController extends Controller
 
         return response()->json(['facture' => $facture]);
     }
+
+    public function list_facture()
+    {
+        $facture = consultation::join('factures', 'factures.id', '=', 'consultations.facture_id' )
+                            ->join('patients', 'patients.id', '=', 'consultations.patient_id')
+                            ->select(
+                                'consultations.*',
+                                'factures.code as code_fac',
+                                'factures.statut as statut',
+                                'patients.np as name',
+                                'patients.tel as tel',
+                            )
+                            ->orderBy('factures.created_at', 'desc')
+                            ->get();
+
+        foreach ($facture as $value) {
+
+            $part_patient = detailconsultation::where('consultation_id', '=', $value->id)
+                    ->select(DB::raw('COALESCE(SUM(REPLACE(part_patient, ".", "") + 0), 0) as total_sum'))
+                    ->first();
+
+            $part_assurance = detailconsultation::where('consultation_id', '=', $value->id)
+                    ->select(DB::raw('COALESCE(SUM(REPLACE(part_assurance, ".", "") + 0), 0) as total_sum'))
+                    ->first();
+
+            $montant = detailconsultation::where('consultation_id', '=', $value->id)
+                    ->select(DB::raw('COALESCE(SUM(REPLACE(montant, ".", "") + 0), 0) as total_sum'))
+                    ->first();
+
+            $value->part_patient = $part_patient->total_sum ?? 0 ;
+            $value->part_assurance = $part_assurance->total_sum ?? 0 ;
+            $value->montant = $montant->total_sum ?? 0 ;
+        }
+
+        return response()->json(['facture' => $facture]);
+    }
 }

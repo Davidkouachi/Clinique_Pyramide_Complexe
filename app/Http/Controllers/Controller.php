@@ -23,4 +23,9 @@ class Controller
     {
         return view('finance.encaissement_detail');
     }
+
+    public function liste_caisse()
+    {
+        return view('finance.liste_caisse');
+    }
 }
