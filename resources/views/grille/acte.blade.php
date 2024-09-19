@@ -240,7 +240,8 @@
             }, 3000);
         }
 
-        function eng() {
+        function eng() 
+        {
 
             const nom = document.getElementById("nomA");
 
@@ -304,7 +305,6 @@
                     nom.value = '';
                 }
             });
-
         }
 
         function list() {

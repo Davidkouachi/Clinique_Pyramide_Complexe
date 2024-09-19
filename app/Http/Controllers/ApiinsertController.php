@@ -29,6 +29,7 @@ use App\Models\role;
 use App\Models\typemedecin;
 use App\Models\consultation;
 use App\Models\detailconsultation;
+use App\Models\facture;
 
 class ApiinsertController extends Controller
 {
@@ -352,6 +353,8 @@ class ApiinsertController extends Controller
 
         $code = $this->generateUniqueMatricule();
 
+        $codeFac = $this->generateUniqueFacture();
+
         $today = Carbon::today();
 
         DB::beginTransaction();
@@ -366,9 +369,18 @@ class ApiinsertController extends Controller
 
             }else{
 
+                $fac = new facture();
+                $fac->code = $codeFac;
+                $fac->statut = 'impayer';
+
+                if (!$fac->save()) {
+                    throw new \Exception('Erreur');
+                }
+
                 $add = new consultation();
                 $add->patient_id = $patient->id; 
                 $add->user_id = $user->id;
+                $add->facture_id = $fac->id; 
                 $add->matricule_patient = $patient->matricule;
                 $add->code = $code;
 
@@ -403,6 +415,17 @@ class ApiinsertController extends Controller
             return response()->json(['error' => true]);
         }
 
+    }
+
+    private function generateUniqueFacture()
+    {
+        do {
+            // Generate a random 9-digit number
+            $code = time().'_'.random_int(1000, 9999); // Generates a number between 100000000 and 999999999
+        } while (facture::where('code', $code)->exists()); // Ensure uniqueness
+
+        // Return matricule with prefix
+        return $code;
     }
 
 }

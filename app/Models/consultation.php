@@ -12,6 +12,7 @@ class consultation extends Model
     protected $fillable =[
         'patient_id',
         'user_id',
+        'facture_id',
         'matricule_patient',
         'code',
     ];
@@ -24,5 +25,10 @@ class consultation extends Model
     public function user()
     {
         return $this->belongsTo(user::class, 'user_id');
+    }
+
+    public function facture()
+    {
+        return $this->belongsTo(facture::class, 'facture_id');
     }
 }

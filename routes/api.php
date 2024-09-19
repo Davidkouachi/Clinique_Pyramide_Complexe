@@ -9,6 +9,9 @@ use App\Http\Controllers\ApilistController;
 use App\Http\Controllers\ApiupdateController;
 use App\Http\Controllers\ApideleteController;
 use App\Http\Controllers\ApistatController;
+use App\Http\Controllers\ApilistfactureController;
+use App\Http\Controllers\ApilistfacturedetailController;
+use App\Http\Controllers\ApiinsertfactureController;
 // Route::get('/user', function (Request $request) {
 //     return $request->user();
 // })->middleware('auth:sanctum');
@@ -76,3 +79,15 @@ Route::get('/list_medecin', [ApilistController::class, 'list_medecin']);
 // statistique debut
 Route::get('/statistique_reception', [ApistatController::class, 'statistique_reception']);
 // statistique fin
+
+// List facture debut
+Route::get('/list_facture_inpayer', [ApilistfactureController::class, 'list_facture_inpayer']);
+// List facture fin
+
+// List facture detail debut
+Route::get('/list_facture_inpayer_d/{id}', [ApilistfacturedetailController::class, 'list_facture_inpayer_d']);
+// List facture fin
+
+// paiement facture debut
+Route::get('/facture_payer/{code_fac}', [ApiinsertfactureController::class, 'facture_payer']);
+// paiement facture fin

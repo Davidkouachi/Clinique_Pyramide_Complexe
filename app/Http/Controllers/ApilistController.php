@@ -91,25 +91,25 @@ class ApilistController extends Controller
     }
 
     public function list_cons_day()
-{
-    $today = Carbon::today();
+    {
+        $today = Carbon::today();
 
-    $consultation = detailconsultation::join('consultations', 'consultations.id', '=', 'detailconsultations.consultation_id')
-                                ->leftJoin('users', 'users.id', '=', 'consultations.user_id')
-                                ->join('patients', 'patients.id', '=', 'consultations.patient_id')
-                                ->select(
-                                    'detailconsultations.*',
-                                    'consultations.code as code', 
-                                    'users.name as name', 
-                                    'users.tel as tel', 
-                                    'users.tel2 as tel2',
-                                    'patients.matricule as matricule'
-                                )
-                                ->whereDate('detailconsultations.created_at', '=', $today)
-                                ->orderBy('detailconsultations.created_at', 'desc')
-                                ->get();
-    
-    return response()->json(['consultation' => $consultation]);
-}
+        $consultation = detailconsultation::join('consultations', 'consultations.id', '=', 'detailconsultations.consultation_id')
+                                    ->leftJoin('users', 'users.id', '=', 'consultations.user_id')
+                                    ->join('patients', 'patients.id', '=', 'consultations.patient_id')
+                                    ->select(
+                                        'detailconsultations.*',
+                                        'consultations.code as code', 
+                                        'patients.np as name', 
+                                        'users.tel as tel', 
+                                        'users.tel2 as tel2',
+                                        'patients.matricule as matricule'
+                                    )
+                                    ->whereDate('detailconsultations.created_at', '=', $today)
+                                    ->orderBy('detailconsultations.created_at', 'desc')
+                                    ->get();
+        
+        return response()->json(['consultation' => $consultation]);
+    }
 
 }
