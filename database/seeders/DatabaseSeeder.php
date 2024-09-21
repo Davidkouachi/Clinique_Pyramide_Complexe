@@ -2,7 +2,6 @@
 
 namespace Database\Seeders;
 
-use App\Models\user;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -10,6 +9,7 @@ use App\Models\role;
 use App\Models\taux;
 use App\Models\acte;
 use App\Models\typeacte;
+use App\Models\user;
 
 class DatabaseSeeder extends Seeder
 {
@@ -74,6 +74,18 @@ class DatabaseSeeder extends Seeder
         for($i = 5; $i <= 100; $i += 5){
            taux::create(['taux' => $i]); 
         }
+
+        $user = user::create([
+            'name' => 'Test',
+            'email' => 'test@gmail.com',
+            'password' => bcrypt('0000'),
+            'matricule' => 'C1223450',
+            'tel' => '0757803650',
+            'role' => $role_admin->nom,
+            'role_id' => $role_admin->id,
+            'adresse' => 'adresse',
+            'sexe' => 'Mr',
+        ]);
         
     }
 }

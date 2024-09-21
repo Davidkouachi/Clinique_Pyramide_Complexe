@@ -21,6 +21,79 @@
 
 <div class="app-body">
     <!-- Row starts -->
+    <div class="row gx-3">
+        <div class="col-xl-3 col-sm-6 col-12">
+            <div class="card mb-3">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div class="p-2 border border-warning rounded-circle me-3">
+                            <div class="icon-box md bg-warning-subtle rounded-5">
+                                <i class="ri-wallet-3-fill fs-4 text-warning"></i>
+                            </div>
+                        </div>
+                        <div class="d-flex flex-column">
+                            <h5 id="stat_assurance" class="lh-1 text-warning"></h5>
+                            <p class="m-0 text-warning">Part assurance</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-3 col-sm-6 col-12">
+            <div class="card mb-3">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div class="p-2 border border-primary rounded-circle me-3">
+                            <div class="icon-box md bg-primary-subtle rounded-5">
+                                <i class="ri-wallet-3-fill fs-4 text-primary"></i>
+                            </div>
+                        </div>
+                        <div class="d-flex flex-column">
+                            <h5 id="stat_patient" class="lh-1 text-primary"></h5>
+                            <p class="m-0 text-primary">Part Patient</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-3 col-sm-6 col-12">
+            <div class="card mb-3">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div class="p-2 border border-success rounded-circle me-3">
+                            <div class="icon-box md bg-success-subtle rounded-5">
+                                <i class="ri-wallet-3-fill fs-4 text-success"></i>
+                            </div>
+                        </div>
+                        <div class="d-flex flex-column">
+                            <h5 id="stat_total" class="lh-1 text-success"></h5>
+                            <p class="m-0 text-success">Total</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-3 col-sm-6 col-12">
+            <div class="card mb-3">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div class="p-2 border border-dark rounded-circle me-3">
+                            <div class="icon-box md bg-dark-subtle rounded-5">
+                                <i class="ri-survey-line fs-4 text-dark"></i>
+                            </div>
+                        </div>
+                        <div class="d-flex flex-column">
+                            <h5 id="stat_statut_payer" class="lh-1 text-success">
+                            </h5>
+                            <h5 id="stat_statut_impayer" class="lh-1 text-danger">
+                            </h5>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="row justify-content-center">
         <div class="col-12">
             <div class="card mb-3">
@@ -29,6 +102,11 @@
                         Liste des Factures
                     </h5>
                     <div class="d-flex" >
+                        <select class="form-select me-1" id="statut">
+                            <option selected value="tous">Tous</option>
+                            <option value="payer">Réglé</option>
+                            <option value="impayer">Non Réglé</option>
+                        </select>
                         <a id="btn_print_table" style="display: none;" class="btn btn-outline-warning ms-auto me-1">
                             <i class="ri-printer-line"></i>
                         </a>
@@ -52,6 +130,7 @@
                                         <th scope="col">Contact</th>
                                         <th scope="col">Part Assurance</th>
                                         <th scope="col">Part Patient</th>
+                                        <th scope="col">Remise</th>
                                         <th scope="col">Total</th>
                                         <th scope="col">Date de création</th>
                                         <th scope="col">Statut</th>
@@ -74,6 +153,7 @@
                             <strong>Chargement des données...</strong>
                         </div>
                     </div>
+                    <div id="pagination-controls" ></div>
                 </div>
             </div>
         </div>
@@ -102,27 +182,6 @@
                     </div>
                     <div class="col-12 mb-5"></div>
                 </div>
-                {{-- <div class="row justify-content-between">
-                    <div class="col-lg-6 col-12">
-                        <h6 class="fw-semibold">Billed To :</h6>
-                        <p class="m-0">
-                            Hamspire Jordan,<br>
-                            8900 Gilsion Ave,<br>
-                            San Francisco, California(CA), 66789
-                        </p>
-                    </div>
-                    <div class="col-lg-6 col-12">
-                        <div class="text-end">
-                            <h6 class="fw-semibold">Hospital Address :</h6>
-                            <p class="text-end m-0">
-                                Medicare LTD, 76890 St. <br>
-                                5000 thomos Street, Suite 980<br>
-                                Huntsville, Alabama, 87890
-                            </p>
-                        </div>
-                    </div>
-                    <div class="col-12 mb-3"></div>
-                </div> --}}
                 <div class="row">
                     <div class="col-xl-12">
                         <div class="">
@@ -133,14 +192,14 @@
                     
                                         </div>
                                         <div class="table-responsive" id="div_TableD" style="display: none;">
-                                            <table class="table table-bordered" id="TableD">
+                                            <table class="table " id="TableD">
                                                 <thead>
                                                     <tr>
                                                         <th width="100px" >Code</th>
                                                         <th colspan="2">Description</th>
                                                         <th width="120px" >Part Assurance</th>
                                                         <th width="50px" >Taux</th>
-                                                        <th width="50px" >Remise</th>
+                                                        <th width="100px" >Remise</th>
                                                         <th width="120px" >Part Patient</th>
                                                     </tr>
                                                 </thead>
@@ -157,7 +216,7 @@
                                             <div class="d-flex justify-content-center align-items-center">
                                                 <div class="spinner-border text-warning me-2" role="status" aria-hidden="true"></div>
                                                 <strong>Chargement des données...</strong>
-                                            </div>
+                                            </div>Aucune facture trouvée.
                                         </div>
                                     </div>
                                 </div>
@@ -170,7 +229,6 @@
     </div>
 </div>
 
-
 {{-- <script src="{{ asset('js/app.js') }}"></script> --}}
 {{-- <script src="https://unpkg.com/jspdf-invoice-template@1.4.4/dist/index.js"></script> --}}
 <script src="{{asset('assets/js/app/js/jspdfinvoicetemplate/dist/index.js')}}" ></script>
@@ -180,9 +238,11 @@
 <script>
     document.addEventListener("DOMContentLoaded", function() {
 
+        Statistique();
         list();
 
         document.getElementById("btn_refresh_table").addEventListener("click", list);
+        document.getElementById("statut").addEventListener("change", list);
 
         function formatPrice(price) {
 
@@ -271,54 +331,79 @@
             return `${day}/${month}/${year} à ${hours}:${minutes}:${seconds}`;
         }
 
-        function list() {
+        function Statistique() {
 
+            const stat_assurance = document.getElementById("stat_assurance");
+            const stat_patient = document.getElementById("stat_patient");
+            const stat_total = document.getElementById("stat_total");
+
+            const stat_payer = document.getElementById("stat_statut_payer");
+            const stat_impayer = document.getElementById("stat_statut_impayer");
+
+            $.ajax({
+                url: '/api/statistique_caisse',
+                method: 'GET',
+                success: function(response) {
+                    stat_assurance.textContent = formatPrice(response.part_assurance.toString()) + ' Fcfa';
+                    stat_patient.textContent = formatPrice(response.part_patient.toString()) + ' Fcfa';
+                    stat_total.textContent = formatPrice(response.part_total.toString()) + ' Fcfa';
+
+                    stat_payer.textContent = 'Facture réglé : '+ response.payer;
+                    stat_impayer.textContent = 'Facture non-réglé : '+ response.impayer;
+
+                },
+                error: function() {
+                    stat_assurance.textContent = '0 Fcfa';
+                    stat_patient.textContent = '0 Fcfa';
+                    stat_total.textContent = '0 Fcfa';
+                    stat_payer.textContent = 'Facture réglé : 0 ';
+                    stat_impayer.textContent = 'Facture non-réglé : 0 ';
+                }
+            });
+        }
+
+        function list(page = 1) {
             const tableBody = document.querySelector('#Table tbody');
             const messageDiv = document.getElementById('message_Table');
-            const tableDiv = document.getElementById('div_Table'); // The message div
+            const tableDiv = document.getElementById('div_Table');
             const loaderDiv = document.getElementById('div_Table_loader');
 
             messageDiv.style.display = 'none';
             tableDiv.style.display = 'none';
             loaderDiv.style.display = 'block';
 
-            // Fetch data from the API
-            fetch('/api/list_facture') // API endpoint
+            const statut = document.getElementById('statut').value;
+            const url = `/api/list_facture/${statut}?page=${page}`;
+
+            fetch(url)
                 .then(response => response.json())
                 .then(data => {
-                    // Access the 'chambre' array from the API response
-                    const factures = data.facture;
+                    const factures = data.factures || [] ;
+                    const pagination = data.pagination || {};
 
-                    // Clear any existing rows in the table body
+                    const perPage = pagination.per_page || 10;
+                    const currentPage = pagination.current_page || 1;
+
                     tableBody.innerHTML = '';
 
                     if (factures.length > 0) {
-
-                        document.getElementById(`btn_print_table`).style.display = 'block';
+                        document.getElementById('btn_print_table').style.display = 'block';
 
                         loaderDiv.style.display = 'none';
                         messageDiv.style.display = 'none';
                         tableDiv.style.display = 'block';
 
-                        // Loop through each item in the chambre array
                         factures.forEach((item, index) => {
-                            // Create a new row
                             const row = document.createElement('tr');
-                            // Create and append cells to the row based on your table's structure
                             row.innerHTML = `
-                                <td>${index + 1}</td>
+                                <td>${((currentPage - 1) * perPage) + index + 1}</td> 
                                 <td>Fac-${item.code_fac}</td>
                                 <td>${item.name}</td>
                                 <td>+225 ${item.tel}</td>
-                                <td class="text-primary" >
-                                    ${formatPrice(item.part_assurance ?? 0)} Fcfa
-                                </td>
-                                <td class="text-primary" >
-                                    ${formatPrice(item.part_patient ?? 0)} Fcfa
-                                </td>
-                                <td class="text-primary" >
-                                    ${formatPrice(item.montant ?? 0)} Fcfa
-                                </td>
+                                <td class="text-primary">${formatPrice(item.part_assurance ?? 0)} Fcfa</td>
+                                <td class="text-success">${formatPrice(item.part_patient ?? 0)} Fcfa</td>
+                                <td class="text-warning">${formatPrice(item.remise ?? 0)} Fcfa</td>
+                                <td class="text-primary">${formatPrice(item.montant ?? 0)} Fcfa</td>
                                 <td>${formatDate(item.created_at)}</td>
                                 <td>
                                     <span class="badge ${item.statut === 'payer' ? 'bg-success' : 'bg-danger'}">
@@ -336,15 +421,12 @@
                                     </div>
                                 </td>
                             `;
-                            // Append the row to the table body
                             tableBody.appendChild(row);
 
-                            document.getElementById(`printer-${item.id}`).addEventListener('click', () =>
-                            {
-                                fetch(`/api/list_facture_inpayer_d/${item.id}`) // API endpoint
+                            document.getElementById(`printer-${item.id}`).addEventListener('click', () => {
+                                fetch(`/api/list_facture_inpayer_d/${item.id}`)
                                     .then(response => response.json())
                                     .then(data => {
-                                        // Access the 'chambre' array from the API response
                                         const factures = data.factured;
                                         const price = formatPrice(data.Total.total_sum);
                                         const id = data.ID.code_fac;
@@ -352,16 +434,14 @@
                                         const statut = data.ID.statut;
                                         const date_paye = data.ID.date_paye;
 
-                                        generatePDF(factures,price,id,date_fac,statut,date_paye);
-
+                                        generatePDF(factures, price, id, date_fac, statut, date_paye);
                                     })
                                     .catch(error => {
                                         console.error('Erreur lors du chargement des données:', error);
                                     });
                             });
 
-                            document.getElementById(`detail-${item.id}`).addEventListener('click',()=>
-                            {
+                            document.getElementById(`detail-${item.id}`).addEventListener('click', () => {
                                 const tableBodyD = document.querySelector('#TableD tbody');
                                 const messageDivD = document.getElementById('message_TableD');
                                 const tableDivD = document.getElementById('div_TableD');
@@ -371,10 +451,9 @@
                                 tableDivD.style.display = 'none';
                                 loaderDivD.style.display = 'block';
 
-                                fetch(`/api/list_facture_inpayer_d/${item.id}`) // API endpoint
+                                fetch(`/api/list_facture_inpayer_d/${item.id}`)
                                     .then(response => response.json())
                                     .then(data => {
-                                        // Access the 'chambre' array from the API response
                                         const factureds = data.factured;
                                         const Total = data.Total;
 
@@ -384,49 +463,42 @@
                                         const date_paye = data.ID.date_paye;
 
                                         const fac_detail = document.getElementById('fac_detail');
-
                                         fac_detail.innerHTML = '';
 
                                         const para = document.createElement('p');
                                         para.className = "mb-2";
-                                        para.innerHTML = `
-                                            Invoice - <span class="text-primary">${id}</span>
-                                        `;
+                                        para.innerHTML = `Invoice - <span class="text-primary">${id}</span>`;
                                         fac_detail.appendChild(para);
+
+                                        const date0 = document.createElement('p');
+                                        date0.className = "mb-2";
+                                        date0.innerHTML = `Date de création ${formatDateHeure(date_fac)}`;
+                                        fac_detail.appendChild(date0);
 
                                         if (date_paye) {
                                             const date = document.createElement('p');
                                             date.className = "mb-2";
-                                            date.innerHTML = `
-                                                Date de paiement ${formatDateHeure(date_paye)}
-                                            `;
+                                            date.innerHTML = `Date de paiement ${formatDateHeure(date_paye)}`;
                                             fac_detail.appendChild(date);
                                         }
 
                                         const statutElement = document.createElement('span');
                                         if (statutValue === 'payer') {
                                             statutElement.className = "badge bg-success";
-                                            statutElement.innerHTML = `
-                                                Facture Réglée
-                                            `;
+                                            statutElement.innerHTML = `Facture Réglée`;
                                         } else {
                                             statutElement.className = "badge bg-danger";
-                                            statutElement.innerHTML = `
-                                                Facture Non Réglée
-                                            `;
+                                            statutElement.innerHTML = `Facture Non Réglée`;
                                         }
                                         fac_detail.appendChild(statutElement);
 
-    
                                         tableBodyD.innerHTML = '';
 
                                         if (factureds.length > 0) {
-
                                             loaderDivD.style.display = 'none';
                                             messageDivD.style.display = 'none';
                                             tableDivD.style.display = 'block';
 
-                                            // Loop through each item in the chambre array
                                             factureds.forEach((item, index) => {
                                                 // Create a new row
                                                 const row = document.createElement('tr');
@@ -451,11 +523,11 @@
                                                     </td>
                                                     <td>
                                                         <h6 class="text-primary">
-                                                            ${item.remise ?? 0}%
+                                                            ${item.remise ?? 0} Fcfa
                                                         </h6>
                                                     </td>
                                                     <td>
-                                                        <h6 class="text-primary" >
+                                                        <h6 class="text-success" >
                                                             ${item.part_patient} Fcfa
                                                         </h6>
                                                     </td>
@@ -476,56 +548,110 @@
                                             `;
                                             tableBodyD.appendChild(row2);
 
-                                            const row3 = document.createElement('tr');
-                                            row3.innerHTML = `
-                                                <td colspan="7">
-                                                    <h6 class="text-danger">NOTES</h6>
-                                                    <p class="small m-0">
-                                                        We really appreciate your business and if
-                                                        there’s anything else we can do, please.
-                                                        let us know! Also, should you need us to
-                                                        add VAT or anything else to this order,
-                                                        it’s super easy since this is a template,
-                                                        so just ask!
-                                                    </p>
-                                                </td>
-                                            `;
-
-                                            tableBodyD.appendChild(row3);
-
-
-
                                         } else {
-                                            loaderDivD.style.display = 'none';
-                                            messageDivD.style.display = 'block';
                                             tableDivD.style.display = 'none';
+                                            messageDivD.style.display = 'block';
+                                            loaderDivD.style.display = 'none';
+                                            messageDivD.innerHTML = '<p class="text-danger">Aucun détail trouvé.</p>';
                                         }
                                     })
                                     .catch(error => {
                                         console.error('Erreur lors du chargement des données:', error);
-                                        loaderDivD.style.display = 'none';
-                                        messageDivD.style.display = 'block';
-                                        tableDivD.style.display = 'none';
                                     });
-                                
                             });
-
                         });
 
+                        updatePaginationControls(pagination);
                     } else {
-                        document.getElementById(`btn_print_table`).style.display = 'none';
+                        tableDiv.style.display = 'none';
                         loaderDiv.style.display = 'none';
                         messageDiv.style.display = 'block';
-                        tableDiv.style.display = 'none';
                     }
                 })
                 .catch(error => {
                     console.error('Erreur lors du chargement des données:', error);
-                    // Hide the table and show the error message in case of failure
                     loaderDiv.style.display = 'none';
                     messageDiv.style.display = 'block';
-                    tableDiv.style.display = 'none';
                 });
+        }
+
+        function updatePaginationControls(pagination) {
+            const paginationDiv = document.getElementById('pagination-controls');
+            paginationDiv.innerHTML = '';
+
+            // Bootstrap pagination wrapper
+            const paginationWrapper = document.createElement('ul');
+            paginationWrapper.className = 'pagination justify-content-center';
+
+            // Previous button
+            if (pagination.current_page > 1) {
+                const prevButton = document.createElement('li');
+                prevButton.className = 'page-item';
+                prevButton.innerHTML = `<a class="page-link" href="#">Precédent</a>`;
+                prevButton.onclick = () => list(pagination.current_page - 1);
+                paginationWrapper.appendChild(prevButton);
+            } else {
+                // Disable the previous button if on the first page
+                const prevButton = document.createElement('li');
+                prevButton.className = 'page-item disabled';
+                prevButton.innerHTML = `<a class="page-link" href="#">Precédent</a>`;
+                paginationWrapper.appendChild(prevButton);
+            }
+
+            // Page number links (show a few around the current page)
+            const totalPages = pagination.last_page;
+            const currentPage = pagination.current_page;
+            const maxVisiblePages = 5; // Max number of page links to display
+
+            let startPage = Math.max(1, currentPage - Math.floor(maxVisiblePages / 2));
+            let endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
+
+            // Adjust start page if end page exceeds the total pages
+            if (endPage - startPage < maxVisiblePages - 1) {
+                startPage = Math.max(1, endPage - maxVisiblePages + 1);
+            }
+
+            // Loop through pages and create page links
+            for (let i = startPage; i <= endPage; i++) {
+                const pageItem = document.createElement('li');
+                pageItem.className = `page-item ${i === currentPage ? 'active' : ''}`;
+                pageItem.innerHTML = `<a class="page-link" href="#">${i}</a>`;
+                pageItem.onclick = () => list(i);
+                paginationWrapper.appendChild(pageItem);
+            }
+
+            // Ellipsis (...) if not all pages are shown
+            if (endPage < totalPages) {
+                const ellipsis = document.createElement('li');
+                ellipsis.className = 'page-item disabled';
+                ellipsis.innerHTML = `<a class="page-link" href="#">...</a>`;
+                paginationWrapper.appendChild(ellipsis);
+
+                // Add the last page link
+                const lastPageItem = document.createElement('li');
+                lastPageItem.className = `page-item`;
+                lastPageItem.innerHTML = `<a class="page-link" href="#">${totalPages}</a>`;
+                lastPageItem.onclick = () => list(totalPages);
+                paginationWrapper.appendChild(lastPageItem);
+            }
+
+            // Next button
+            if (pagination.current_page < pagination.last_page) {
+                const nextButton = document.createElement('li');
+                nextButton.className = 'page-item';
+                nextButton.innerHTML = `<a class="page-link" href="#">Suivant</a>`;
+                nextButton.onclick = () => list(pagination.current_page + 1);
+                paginationWrapper.appendChild(nextButton);
+            } else {
+                // Disable the next button if on the last page
+                const nextButton = document.createElement('li');
+                nextButton.className = 'page-item disabled';
+                nextButton.innerHTML = `<a class="page-link" href="#">Suivant</a>`;
+                paginationWrapper.appendChild(nextButton);
+            }
+
+            // Append pagination controls to the DOM
+            paginationDiv.appendChild(paginationWrapper);
         }
 
         function generatePDF(factures, price, id, date_fac, statut, date_paye) {
@@ -557,7 +683,7 @@
                     item.nom_acte + ' ' + item.nom_typeacte, // Description (combination of acte and typeacte)
                     item.part_assurance ? item.part_assurance + ' Fcfa' : '0 Fcfa', // Part Assurance with default value
                     item.taux !== null && item.taux !== undefined ? item.taux + '%' : '0%', // Taux with default value
-                    item.remise !== null && item.remise !== undefined ? item.remise + '%' : '0%', // Remise with default value
+                    item.remise !== null && item.remise !== undefined ? item.remise + 'Fcfa' : '0 Fcfa', // Remise with default value
                     item.part_patient ? item.part_patient + ' Fcfa' : '0 Fcfa' // Part Patient with default value
                 ]);
             });
@@ -569,10 +695,10 @@
                 header: [
                     { title: "N°", style: { width: 10 } },
                     { title: "Code", style: { width: 20 } },
-                    { title: "Description", style: { width: 80 } },
+                    { title: "Description", style: { width: 70 } },
                     { title: "Part Assurance", style: { width: 28 } },
                     { title: "Taux", style: { width: 15 } },
-                    { title: "Remise", style: { width: 15 } },
+                    { title: "Remise", style: { width: 25 } },
                     { title: "Part Patient", style: { width: 25 } },
                 ],
                 table: tableData,
@@ -648,8 +774,7 @@
 
             var pdfBlob = pdf.jsPDFDocObject.output('blob');
             var pdfUrl = URL.createObjectURL(pdfBlob);
-            window.open(pdfUrl, '_blank');
-            
+            window.open(pdfUrl, '_blank'); 
         }
 
     });

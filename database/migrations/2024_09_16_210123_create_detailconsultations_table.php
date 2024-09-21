@@ -21,6 +21,7 @@ return new class extends Migration
             $table->string('type_motif');
             $table->text('libelle')->nullable();
             $table->string('periode');
+            $table->string('appliq_remise');
             $table->unsignedBigInteger('typeacte_id');
             $table->foreign('typeacte_id')->references('id')->on('typeactes')->onDelete('cascade');
             $table->unsignedBigInteger('consultation_id');

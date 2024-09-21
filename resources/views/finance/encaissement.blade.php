@@ -86,6 +86,7 @@
                                         <th scope="col">Contact</th>
                                         <th scope="col">Part Assurance</th>
                                         <th scope="col">Part Patient</th>
+                                        <th scope="col">Remise</th>
                                         <th scope="col">Total</th>
                                         <th scope="col">Date de création</th>
                                         <th scope="col">Actions</th>
@@ -141,7 +142,7 @@
                                                         <th colspan="2">Description</th>
                                                         <th width="120px" >Part Assurance</th>
                                                         <th width="50px" >Taux</th>
-                                                        <th width="50px" >Remise</th>
+                                                        <th width="100px" >Remise</th>
                                                         <th width="120px" >Part Patient</th>
                                                     </tr>
                                                 </thead>
@@ -185,10 +186,7 @@
                     <div class="col-12">
                         <div class="mb-3">
                             <label class="form-label">A payer</label>
-                            <div class="input-group">
-                                <input readonly type="tel" class="form-control" id="input_montant_payer" placeholder="Saisie Obligatoire">
-                                <span class="input-group-text">Fcfa</span>
-                            </div>
+                            <input readonly class="form-control" id="input_montant_payer">
                         </div>
                     </div>
                     <div class="col-12">
@@ -391,14 +389,13 @@
                         const statut = response.ID.statut;
                         const date_paye = response.ID.date_paye;
 
+                        list();
+
                         generatePDF(factures,price,id,date_fac,statut,date_paye);
 
                     } else if (response.error) {
                         showAlertList('danger', 'Une erreur est survenue lors du paiement.');
                     }
-
-                    list();
-
 
                 },
                 error: function(xhr, status, error) {
@@ -453,8 +450,11 @@
                                 <td class="text-primary" >
                                     ${formatPrice(item.part_assurance ?? 0)} Fcfa
                                 </td>
-                                <td class="text-primary" >
+                                <td class="text-success" >
                                     ${formatPrice(item.part_patient ?? 0)} Fcfa
+                                </td>
+                                <td class="text-warning" >
+                                    ${formatPrice(item.remise ?? 0)} Fcfa
                                 </td>
                                 <td class="text-primary" >
                                     ${formatPrice(item.montant ?? 0)} Fcfa
@@ -480,7 +480,7 @@
                             document.getElementById(`paye-${item.id}`).addEventListener('click', () =>
                             {
                                 const payer = document.getElementById('input_montant_payer');
-                                payer.value = `${formatPrice(item?.montant || 0)} Fcfa`;
+                                payer.value = `${formatPrice(item?.part_patient || 0)} Fcfa`;
 
                                 const verser = document.getElementById('input_montant_verser');
                                 verser.value = '';
@@ -562,7 +562,7 @@
                                                     </td>
                                                     <td>
                                                         <h6 class="text-primary">
-                                                            ${item.remise ?? 0}%
+                                                            ${item.remise ?? 0} Fcfa
                                                         </h6>
                                                     </td>
                                                     <td>
@@ -666,7 +666,7 @@
                     item.nom_acte + ' ' + item.nom_typeacte, // Description (combination of acte and typeacte)
                     item.part_assurance ? item.part_assurance + ' Fcfa' : '0 Fcfa', // Part Assurance with default value
                     item.taux !== null && item.taux !== undefined ? item.taux + '%' : '0%', // Taux with default value
-                    item.remise !== null && item.remise !== undefined ? item.remise + '%' : '0%', // Remise with default value
+                    item.remise !== null && item.remise !== undefined ? item.remise + 'Fcfa' : '0 Fcfa', // Remise with default value
                     item.part_patient ? item.part_patient + ' Fcfa' : '0 Fcfa' // Part Patient with default value
                 ]);
             });
@@ -678,10 +678,10 @@
                 header: [
                     { title: "N°", style: { width: 10 } },
                     { title: "Code", style: { width: 20 } },
-                    { title: "Description", style: { width: 80 } },
+                    { title: "Description", style: { width: 70 } },
                     { title: "Part Assurance", style: { width: 28 } },
                     { title: "Taux", style: { width: 15 } },
-                    { title: "Remise", style: { width: 15 } },
+                    { title: "Remise", style: { width: 25 } },
                     { title: "Part Patient", style: { width: 25 } },
                 ],
                 table: tableData,

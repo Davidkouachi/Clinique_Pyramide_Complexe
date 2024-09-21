@@ -108,4 +108,10 @@ class ApisearchController extends Controller
         return response()->json(['typeacte' => $typeacte]); 
     }
 
+    public function name_patient()
+    {
+        $name = patient::all();
+        return response()->json(['name' => $name]);
+    }
+
 }

@@ -27,7 +27,7 @@
 
 <body>
     <!-- Loading starts -->
-    <div id="loading-wrapper">
+    {{-- <div id="loading-wrapper">
         <div class='spin-wrapper'>
             <div class='spin'>
                 <div class='inner'></div>
@@ -48,7 +48,7 @@
                 <div class='inner'></div>
             </div>
         </div>
-    </div>
+    </div> --}}
     <!-- Loading ends -->
     <!-- Page wrapper starts -->
     <div class="page-wrapper">
@@ -84,7 +84,7 @@
                     <div class="dropdown-menu dropdown-menu-end shadow-lg">
                         <div class="px-3 py-2">
                             <span class="small">Admin</span>
-                            <h6 class="m-0">James Bruton</h6>
+                            <h6 class="m-0">{{Auth::user()->name}}</h6>
                         </div>
                         <div class="mx-3 my-2 d-grid">
                             <a href="{{route('deconnecter')}}" class="btn btn-danger">Se deconnecté</a>
@@ -104,25 +104,80 @@
                 <div class="sidebar-profile">
                     <img src="{{asset('assets/images/user8.png')}}" class="img-shadow img-3x me-3 rounded-5" alt="Hospital Admin Templates">
                     <div class="m-0">
-                        <h5 class="mb-1 profile-name text-nowrap text-truncate">Nick Gonzalez</h5>
-                        <p class="m-0 small profile-name text-nowrap text-truncate">Dept Admin</p>
+                        <h5 class="mb-1 profile-name text-nowrap text-truncate">{{Auth::user()->name}}</h5>
+                        <p class="m-0 small profile-name text-nowrap text-truncate">{{Auth::user()->email}}</p>
                     </div>
                 </div>
                 <!-- Sidebar profile ends -->
                 <!-- Sidebar menu starts -->
                 <div class="sidebarMenuScroll">
                     <ul class="sidebar-menu">
-                        <li class="">{{-- active current-page --}}
+                        {{-- <li class="">active current-page
                             <a href="{{route('index_accueil')}}">
                                 <i class="ri-bar-chart-line"></i>
                                 <span class="menu-text">Accueil</span>
                             </a>
-                        </li>
+                        </li> --}}
                         <li class="">{{-- active current-page --}}
                             <a href="{{route('index_reception')}}">
                                 <i class="ri-bar-chart-line"></i>
                                 <span class="menu-text">Réception</span>
                             </a>
+                        </li>
+                        <li class="treeview">
+                            <a href="#!">
+                                <i class="ri-settings-5-line"></i>
+                                <span class="menu-text">Caisse</span>
+                            </a>
+                            <ul class="treeview-menu">
+                                <li>
+                                    <a href="#!">
+                                        Encaissement
+                                        <i class="ri-arrow-right-s-line"></i>
+                                    </a>
+                                    <ul class="treeview-menu">
+                                        <li>
+                                            <a href="{{route('encaissement')}}">Caisse</a>
+                                        </li>
+                                        <li>
+                                            <a href="{{route('liste_caisse')}}">Liste</a>
+                                        </li>
+                                        {{-- <li>
+                                            <a href="#">Bulletin</a>
+                                        </li>
+                                        <li>
+                                            <a href="#">Admission</a>
+                                        </li>
+                                        <li>
+                                            <a href="#">Soins infirmier</a>
+                                        </li> --}}
+                                    </ul>
+                                </li>
+                                {{-- <li>
+                                    <a href="#">
+                                        Réimprimer recu
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#!">
+                                        Opération de caisse
+                                        <i class="ri-arrow-right-s-line"></i>
+                                    </a>
+                                    <ul class="treeview-menu">
+                                        <li>
+                                            <a href="#">Sortie d'espèce</a>
+                                        </li>
+                                        <li>
+                                            <a href="#">Liste des sorties</a>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li>
+                                    <a href="#">
+                                        Point de caisse
+                                    </a>
+                                </li> --}}
+                            </ul>
                         </li>
                         <li class="treeview">
                             <a href="#!">
@@ -137,9 +192,9 @@
                                     </a>
                                     <ul class="treeview-menu">
                                         <li>
-                                            <a href="{{route('medecin_new')}}">Utilisateur</a>
+                                            <a href="{{route('medecin_new')}}">Medecin</a>
                                         </li>
-                                        <li>
+                                        {{-- <li>
                                             <a href="#!">
                                                 Infirmerie
                                                 <i class="ri-arrow-right-s-line"></i>
@@ -216,10 +271,10 @@
                                                     <a href="#">Examen</a>
                                                 </li>
                                             </ul>
-                                        </li>
+                                        </li> --}}
                                     </ul>
                                 </li>
-                                <li>
+                                {{-- <li>
                                     <a href="#!">
                                         Liste
                                         <i class="ri-arrow-right-s-line"></i>
@@ -288,7 +343,7 @@
                                             </ul>
                                         </li>
                                     </ul>
-                                </li>
+                                </li> --}}
                                 <li>
                                     <a href="{{route('acte_new')}}">Acte</a>
                                 </li>
@@ -297,7 +352,7 @@
                                 </li>
                             </ul>
                         </li>
-                        <li class="treeview">
+                        {{-- <li class="treeview">
                             <a href="#!">
                                 <i class="ri-home-5-line"></i>
                                 <span class="menu-text">Acceuil</span>
@@ -481,62 +536,7 @@
                                     </ul>
                                 </li>
                             </ul>
-                        </li>
-                        <li class="treeview">
-                            <a href="#!">
-                                <i class="ri-settings-5-line"></i>
-                                <span class="menu-text">Caisse</span>
-                            </a>
-                            <ul class="treeview-menu">
-                                <li>
-                                    <a href="#!">
-                                        Encaissement
-                                        <i class="ri-arrow-right-s-line"></i>
-                                    </a>
-                                    <ul class="treeview-menu">
-                                        <li>
-                                            <a href="{{route('encaissement')}}">Caisse</a>
-                                        </li>
-                                        <li>
-                                            <a href="{{route('liste_caisse')}}">Liste</a>
-                                        </li>
-                                        <li>
-                                            <a href="#">Bulletin</a>
-                                        </li>
-                                        <li>
-                                            <a href="#">Admission</a>
-                                        </li>
-                                        <li>
-                                            <a href="#">Soins infirmier</a>
-                                        </li>
-                                    </ul>
-                                </li>
-                                <li>
-                                    <a href="#">
-                                        Réimprimer recu
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="#!">
-                                        Opération de caisse
-                                        <i class="ri-arrow-right-s-line"></i>
-                                    </a>
-                                    <ul class="treeview-menu">
-                                        <li>
-                                            <a href="#">Sortie d'espèce</a>
-                                        </li>
-                                        <li>
-                                            <a href="#">Liste des sorties</a>
-                                        </li>
-                                    </ul>
-                                </li>
-                                <li>
-                                    <a href="#">
-                                        Point de caisse
-                                    </a>
-                                </li>
-                            </ul>
-                        </li>
+                        </li> --}}
                     </ul>
                 </div>
                 <!-- Sidebar menu ends -->
@@ -585,12 +585,15 @@
     <script src="{{asset('assets/vendor/apex/apexcharts.min.js')}}"></script>
     <script src="{{asset('assets/vendor/apex/custom/home/patients.js')}}"></script>
     <script src="{{asset('assets/vendor/apex/custom/home/treatment.js')}}"></script>
-    {{-- <script src="{{asset('')}}assets/vendor/apex/custom/home/available-beds.js"></script> --}}
     <script src="{{asset('assets/vendor/apex/custom/home/earnings.js')}}"></script>
     <script src="{{asset('assets/vendor/apex/custom/home/gender-age.js')}}"></script>
     <script src="{{asset('assets/vendor/apex/custom/home/claims.js')}}"></script>
     <!-- Custom JS files -->
     <script src="{{asset('assets/js/custom.js')}}"></script>
+
+    {{-- <script src="assets/vendor/datatables/dataTables.min.js"></script>
+    <script src="assets/vendor/datatables/dataTables.bootstrap.min.js"></script>
+    <script src="assets/vendor/datatables/custom/custom-datatables.js"></script> --}}
 
     @if (session('success'))
         <div class="modal fade" id="success" tabindex="-1" aria-hidden="true">

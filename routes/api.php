@@ -12,6 +12,7 @@ use App\Http\Controllers\ApistatController;
 use App\Http\Controllers\ApilistfactureController;
 use App\Http\Controllers\ApilistfacturedetailController;
 use App\Http\Controllers\ApiinsertfactureController;
+
 // Route::get('/user', function (Request $request) {
 //     return $request->user();
 // })->middleware('auth:sanctum');
@@ -45,6 +46,7 @@ Route::get('/refresh_num_lit', [ApisearchController::class, 'refresh_num_lit']);
 Route::get('/list_chambre', [ApisearchController::class, 'list_chambre']);
 Route::get('/select_specialite', [ApisearchController::class, 'select_specialite']);
 Route::get('/select_typeacte/{id}', [ApisearchController::class, 'select_typeacte']);
+Route::get('/name_patient', [ApisearchController::class, 'name_patient']);
 // search debut
 
 // liste day debut
@@ -78,11 +80,13 @@ Route::get('/list_medecin', [ApilistController::class, 'list_medecin']);
 
 // statistique debut
 Route::get('/statistique_reception', [ApistatController::class, 'statistique_reception']);
+Route::get('/statistique_caisse', [ApistatController::class, 'statistique_caisse']);
+Route::get('/statistique_reception_cons', [ApistatController::class, 'statistique_reception_cons']);
 // statistique fin
 
 // List facture debut
 Route::get('/list_facture_inpayer', [ApilistfactureController::class, 'list_facture_inpayer']);
-Route::get('/list_facture', [ApilistfactureController::class, 'list_facture']);
+Route::get('/list_facture/{statut}', [ApilistfactureController::class, 'list_facture']);
 // List facture fin
 
 // List facture detail debut

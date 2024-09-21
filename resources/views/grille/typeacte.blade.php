@@ -42,7 +42,7 @@
                         <div class="col-xxl-3 col-lg-4 col-sm-6">
                             <div class="mb-3">
                                 <label class="form-label">
-                                    Spécielité / Type acte
+                                    Spécialité / Type acte
                                 </label>
                                 <input type="text" class="form-control" id="nom_acte" placeholder="Saisie Obligatoire" oninput="this.value = this.value.toUpperCase()">
                             </div>

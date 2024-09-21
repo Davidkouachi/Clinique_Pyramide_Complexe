@@ -156,10 +156,15 @@ class ApiinsertController extends Controller
             $add->assurance_id = $request->assurance_id;
             $add->taux_id = $request->taux_id;
             $add->societe_id = $request->societe_id;
+
+            $add->datenais = $request->datenais;
+            $add->sexe = $request->sexe;
+            $add->filiation = $request->filiation;
+            $add->matricule_assurance = $request->matricule_assurance;
         }
 
         if($add->save()){
-            return response()->json(['success' => true, 'matricule' => $matricule]);
+            return response()->json(['success' => true, 'matricule' => $matricule, 'name' => $request->nom]);
         } else {
             return response()->json(['error' => true]);
         }
@@ -296,6 +301,7 @@ class ApiinsertController extends Controller
         $add->sexe = $request->sexe;
         $add->tel = $request->tel;
         $add->tel2 = $request->tel2;
+        $add->password = bcrypt('00000');
         $add->adresse = $request->adresse;
         $add->matricule = 'M-'.$matricule;
         $add->role_id = $role->id;
@@ -359,40 +365,29 @@ class ApiinsertController extends Controller
 
         DB::beginTransaction();
 
-        $verf = consultation::whereDate('created_at', '=', $today)->where('patient_id', '=', $patient->id)->first();
-
         try {
 
-            if ($verf) {
+            $fac = new facture();
+            $fac->code = $codeFac;
+            $fac->statut = 'impayer';
 
-                $cons_id = $verf->id;
+            if (!$fac->save()) {
+                throw new \Exception('Erreur');
+            }
 
-            }else{
+            $add = new consultation();
+            $add->patient_id = $patient->id; 
+            $add->user_id = $user->id;
+            $add->facture_id = $fac->id; 
+            $add->matricule_patient = $patient->matricule;
+            $add->code = $code;
 
-                $fac = new facture();
-                $fac->code = $codeFac;
-                $fac->statut = 'impayer';
-
-                if (!$fac->save()) {
-                    throw new \Exception('Erreur');
-                }
-
-                $add = new consultation();
-                $add->patient_id = $patient->id; 
-                $add->user_id = $user->id;
-                $add->facture_id = $fac->id; 
-                $add->matricule_patient = $patient->matricule;
-                $add->code = $code;
-
-                if (!$add->save()) {
-                    throw new \Exception('Erreur');
-                }
-
-                $cons_id = $add->id;
+            if (!$add->save()) {
+                throw new \Exception('Erreur');
             }
 
             $add2 = new detailconsultation();
-            $add2->consultation_id = $cons_id;
+            $add2->consultation_id = $add->id;
             $add2->typeacte_id = $typeacte->id;
             $add2->part_assurance = $request->montant_assurance;
             $add2->part_patient = $request->montant_patient;
@@ -402,6 +397,7 @@ class ApiinsertController extends Controller
             $add2->type_motif = $typeacte->nom;
             $add2->libelle = '';
             $add2->periode = $request->periode;
+            $add2->appliq_remise = $request->appliq_remise;
 
             if (!$add2->save()) {
                 throw new \Exception('Erreur');

@@ -16,7 +16,7 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\DB;
 
-use App\Models\User;
+use App\Models\user;
 
 class utilisateurController extends Controller
 {

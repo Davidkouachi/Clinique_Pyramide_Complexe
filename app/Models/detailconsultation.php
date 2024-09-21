@@ -19,6 +19,7 @@ class detailconsultation extends Model
         'type_motif',
         'libelle',
         'periode',
+        'appliq_remise',
     ];
 
     public function typeacte()

@@ -3,6 +3,7 @@
  * Copyright 2011-2024 The Bootstrap Authors
  * Licensed under MIT (https://github.com/twbs/bootstrap/blob/main/LICENSE)
  */
+
 :root,
 [data-bs-theme=light] {
     --bs-blue: #0d6efd;
@@ -16905,7 +16906,7 @@ input[type=file]::file-selector-button {
 }
 
 .login-bg {
-    background: #0f1115 url(../images/login-bg.jpg) no-repeat;
+    background: #0f1115 url(../images/slide2.jpg) no-repeat;
     background-size: cover;
     background-position: bottom center;
     background-attachment: fixed

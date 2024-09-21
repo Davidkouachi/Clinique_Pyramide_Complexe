@@ -14,11 +14,15 @@ return new class extends Migration
         Schema::create('patients', function (Blueprint $table) {
             $table->id();
             $table->string('np')->index();
-            $table->string('email')->index()->unique();
+            $table->string('email')->index()->unique()->nullable();
             $table->string('tel')->index()->unique();
             $table->string('tel2')->index()->unique()->nullable();
             $table->string('assurer')->index();
             $table->string('matricule')->index()->unique();
+            $table->string('datenais');
+            $table->string('sexe');
+            $table->string('filiation')->index();
+            $table->string('matricule_assurance')->index();
             $table->string('adresse');
             $table->unsignedBigInteger('assurance_id')->nullable();
             $table->foreign('assurance_id')->references('id')->on('assurances')->onDelete('cascade');

@@ -20,106 +20,99 @@
 @section('content')
 
 <div class="app-body">
-    <!-- Row starts -->
-    <div class="row gx-3 ">
-        <div class="col-12 ">
-            <div class="mb-3" >
-                <div class="card-header ">
-                    <h3 class="card-title text-center">
-                        Statistique
-                    </h3>
-                </div>
-            </div>
-        </div>
-    </div>
     <div class="row gx-3">
-        <div class="col-xl-3 col-sm-6 col-12">
-            <div class="card mb-3">
-                <div class="card-body">
-                    <div class="d-flex flex-column align-items-center">
-                        <div class="icon-box md rounded-5 bg-primary mb-3">
-                            <i class="ri-walk-line fs-4 lh-1"></i>
+        <div class="col-sm-12">
+            <div class="card mb-3 bg-2 rounded-2">
+                <div class="card-body mh-230 rounded-2" style="background: rgba(0, 0, 0, 0.7);">
+                    <div class="text-white">
+                        <h6>Bienvenue,</h6>
+                        <h2>{{Auth::user()->sexe.'. '.Auth::user()->name}}</h2>
+                        <h5>Les statistiques d'aujourd'hui.</h5>
+                        <div class="mt-4 row gx-3">
+                            <div class="d-flex align-items-center col-xxl-3 col-lg-4 col-sm-6 col-12 mb-3 ">
+                                <div class="icon-box lg bg-info rounded-5 me-3">
+                                    <i class="ri-walk-line fs-1"></i>
+                                </div>
+                                <div class="d-flex flex-column">
+                                    <h4 id="nbre_patient_day" class="m-0 lh-1"></h4>
+                                    <p class="m-0">Patients</p>
+                                </div>
+                            </div>
+                            <div class="d-flex align-items-center col-xxl-3 col-lg-4 col-sm-6 col-12 mb-3">
+                                <div class="icon-box lg bg-success rounded-5 me-3">
+                                    <i class="ri-walk-line fs-1"></i>
+                                </div>
+                                <div class="d-flex flex-column">
+                                    <h4 id="nbre_patient_assurer_day" class="m-0 lh-1"></h4>
+                                    <p class="m-0">assurer</p>
+                                </div>
+                            </div>
+                            <div class="d-flex align-items-center col-xxl-3 col-lg-4 col-sm-6 col-12 mb-3">
+                                <div class="icon-box lg bg-danger rounded-5 me-3">
+                                    <i class="ri-walk-line fs-1"></i>
+                                </div>
+                                <div class="d-flex flex-column">
+                                    <h4 id="nbre_patient_nassurer_day" class="m-0 lh-1"></h4>
+                                    <p class="m-0">non-assurer</p>
+                                </div>
+                            </div>
+                            <div class="d-flex align-items-center col-xxl-3 col-lg-4 col-sm-6 col-12 mb-3">
+                                <div class="icon-box lg bg-warning rounded-5 me-3">
+                                    <i class="ri-cash-line fs-1"></i>
+                                </div>
+                                <div class="d-flex flex-column">
+                                    <h4 id="prix_cons_day" class="m-0 lh-1"></h4>
+                                    <p class="m-0">Total</p>
+                                </div>
+                            </div>
                         </div>
-                        <h6>Total Patient</h6>
-                        <h5 id="nbre_patient_day" class="text-primary m-0"></h5>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-xl-3 col-sm-6 col-12">
-            <div class="card mb-3">
-                <div class="card-body">
-                    <div class="d-flex flex-column align-items-center">
-                        <div class="icon-box md rounded-5 bg-success mb-3">
-                            <i class="ri-walk-line fs-4 lh-1"></i>
-                        </div>
-                        <h6>Patient Assurer</h6>
-                        <h5 id="nbre_patient_assurer_day" class="text-primary m-0"></h5>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-xl-3 col-sm-6 col-12">
-            <div class="card mb-3">
-                <div class="card-body">
-                    <div class="d-flex flex-column align-items-center">
-                        <div class="icon-box md rounded-5 bg-danger mb-3">
-                            <i class="ri-walk-line fs-4 lh-1"></i>
-                        </div>
-                        <h6>Patient non-assurer</h6>
-                        <h5 id="nbre_patient_nassurer_day" class="text-primary m-0"></h5>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-xl-3 col-sm-6 col-12">
-            <div class="card mb-3">
-                <div class="card-body">
-                    <div class="d-flex flex-column align-items-center">
-                        <div class="icon-box md rounded-5 bg-warning mb-3">
-                            <i class="ri-cash-line fs-4 lh-1"></i>
-                        </div>
-                        <h6>Total Consultation</h6>
-                        <h5 id="prix_cons_day" class="text-primary m-0"></h5>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    <!-- Row ends -->
+
+    <div class="row gx-3 mb-3" id="stat_consultation">
+        <div id="div_Table_loader_Cons" style="display: none;">
+            <div class="d-flex justify-content-center align-items-center">
+                <div class="spinner-border text-warning me-2" role="status" aria-hidden="true"></div>
+                <strong>Chargement des données...</strong>
+            </div>
+        </div>
+    </div>
 
     <div class="row gx-3" >
         <div class="col-sm-12">
             <div class="card mb-3">
-                <div class="card-header">
+                <div class="card-header" hidden >
                     <h5 class="card-title">Réception</h5>
                 </div>
                 <div class="p-2" id="div_alert" >
                     
                 </div>
-                <div class="card-body" style="margin-top: -40px;">
+                <div class="card-body" style="margin-top: -30px;">
                     <div class="custom-tabs-container">
-                        <ul class="nav nav-tabs justify-content-center" id="customTab4" role="tablist">
+                        <ul class="nav nav-tabs justify-content-center bg-primary bg-2" id="customTab4" role="tablist" style="background: rgba(0, 0, 0, 0.7);">
                             <li class="nav-item" role="presentation">
-                                <a class="nav-link active" id="tab-oneAAA" data-bs-toggle="tab" href="#oneAAA" role="tab" aria-controls="oneAAA" aria-selected="false" tabindex="-1">
+                                <a class="nav-link active text-white" id="tab-oneAAA" data-bs-toggle="tab" href="#oneAAA" role="tab" aria-controls="oneAAA" aria-selected="false" tabindex="-1">
                                     <i class="ri-walk-line me-2"></i>
                                     Nouvelle consultation
                                 </a>
                             </li>
                             <li class="nav-item" role="presentation">
-                                <a class="nav-link" id="tab-twoAAA" data-bs-toggle="tab" href="#twoAAA" role="tab" aria-controls="twoAAA" aria-selected="false" tabindex="-1">
+                                <a class="nav-link text-white" id="tab-twoAAA" data-bs-toggle="tab" href="#twoAAA" role="tab" aria-controls="twoAAA" aria-selected="false" tabindex="-1">
                                     <i class="ri-walk-line me-2"></i>
                                     Nouveau patient
                                 </a>
                             </li>
                             <li class="nav-item" role="presentation">
-                                <a class="nav-link " id="tab-threeAAA" data-bs-toggle="tab" href="#threeAAA" role="tab" aria-controls="threeAAA" aria-selected="true">
+                                <a class="nav-link  text-white" id="tab-threeAAA" data-bs-toggle="tab" href="#threeAAA" role="tab" aria-controls="threeAAA" aria-selected="true">
                                     <i class="ri-shake-hands-line me-2"></i>
                                     Nouvelle societe
                                 </a>
                             </li>
                             <li class="nav-item" role="presentation">
-                                <a class="nav-link " id="tab-frewAAA" data-bs-toggle="tab" href="#frewAAA" role="tab" aria-controls="frewAAA" aria-selected="true">
+                                <a class="nav-link  text-white" id="tab-frewAAA" data-bs-toggle="tab" href="#frewAAA" role="tab" aria-controls="frewAAA" aria-selected="true">
                                     <i class="ri-shake-hands-line me-2"></i>
                                     Nouvelle Assurance
                                 </a>
@@ -134,14 +127,17 @@
                                     <div class="row gx-3 justify-content-center align-items-center" >
                                         <div class="col-xxl-3 col-lg-4 col-sm-6">
                                             <div class="mb-3">
-                                                <label class="form-label">Numéro du dossier</label>
+                                                <label class="form-label">
+                                                    Nom du patient
+                                                </label>
                                                 <div class="input-group">
-                                                    <span class="input-group-text">P-</span>
-                                                    <input type="text" class="form-control" id="matricule_patient" placeholder="Saisie Obligatoire" maxlength="6">
-                                                    <button id="btn_rech_num_dossier" class="btn btn-outline-success">
+                                                    <input type="hidden" class="form-control" id="matricule_patient" autocomplete="off">
+                                                    <input type="text" class="form-control" id="name_rech" name="np" placeholder="Saisie Obligatoire" autocomplete="off">
+                                                    <button hidden id="btn_rech_num_dossier" class="btn btn-outline-success">
                                                         <i class="ri-search-line"></i>
                                                     </button>
                                                 </div>
+                                                <div id="suggestions" style="display: none;"></div>
                                             </div>
                                         </div>
                                     </div>
@@ -150,7 +146,7 @@
                                     <div class="col-sm-12" id="div_info_consul" style="display: none;">
                                         <div class="card-header">
                                             <h5 class="card-title text-center">
-                                                Détails
+                                                ACTE A EFFECTUER
                                             </h5>
                                         </div>
                                         <div class="row gx-3">
@@ -173,14 +169,14 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="col-xxl-3 col-lg-4 col-sm-6">
+                                            <div class="col-xxl-3 col-lg-4 col-sm-6" style="display: none;">
                                                 <div class="mb-3">
                                                     <label class="form-label">Motif</label>
                                                     <select class="form-select" id="acte_id">
                                                     </select>
                                                 </div>
                                             </div>
-                                            <div class="col-xxl-3 col-lg-4 col-sm-6" id="div_typeacteS" style="display: none;">
+                                            <div class="col-xxl-3 col-lg-4 col-sm-6" id="div_typeacteS" style="display: block;">
                                                 <div class="mb-3">
                                                     <label class="form-label">Spécialité</label>
                                                     <select class="form-select" id="typeacte_idS">
@@ -203,6 +199,7 @@
                                                         <div class="input-group">
                                                             <span class="input-group-text">Part Assurance</span>
                                                             <input readonly type="tel" class="form-control" id="montant_assurance">
+                                                            <input type="hidden" class="form-control" id="montant_assurance_hidden">
                                                             <span class="input-group-text">Fcfa</span>
                                                         </div>
                                                     </div>
@@ -212,16 +209,8 @@
                                                         <div class="input-group">
                                                             <span class="input-group-text">Part Patient</span>
                                                             <input readonly type="tel" class="form-control" id="montant_patient">
+                                                            <input type="hidden" class="form-control" id="montant_patient_hidden">
                                                             <span class="input-group-text">Fcfa</span>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="col-xxl-3 col-lg-4 col-sm-6">
-                                                    <div class="mb-3">
-                                                        <div class="input-group">
-                                                            <span class="input-group-text">Remise</span>
-                                                            <input type="tel" class="form-control" id="taux_remise" maxlength="3" value="0">
-                                                            <span class="input-group-text">%</span>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -234,7 +223,25 @@
                                                         </div>
                                                     </div>
                                                 </div>
-                                            </div>      
+                                                <div class="col-xxl-3 col-lg-4 col-sm-6" id="div_remise" style="display: none;">
+                                                    <div class="mb-3">
+                                                        <div class="input-group">
+                                                            <span class="input-group-text">Remise</span>
+                                                            <input type="tel" class="form-control" id="taux_remise" value="0">
+                                                            <span class="input-group-text">Fcfa</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-xxl-3 col-lg-4 col-sm-6" id="div_remise_appliq" style="display: none;">
+                                                <div class="mb-3">
+                                                    <label class="form-label">Application de la remise</label>
+                                                    <select class="form-select" id="appliq_remise">
+                                                        <option selected value="patient">Patient</option>
+                                                        <option value="assurance">Assurance</option>
+                                                    </select>
+                                                </div>
+                                            </div>
                                             <div class="col-sm-12">
                                                 <div class="d-flex gap-2 justify-content-start">
                                                     <a href="javascript:location.reload();" class="btn btn-outline-danger">
@@ -258,6 +265,14 @@
                                         <div class="mb-3">
                                             <label class="form-label">Nom et Prénoms</label>
                                             <input type="text" class="form-control" id="patient_np_new" placeholder="Saisie Obligatoire" oninput="this.value = this.value.toUpperCase()">
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-3 col-12">
+                                        <div class="mb-3">
+                                            <label class="form-label">
+                                                Date de naissance
+                                            </label>
+                                            <input type="date" class="form-control" placeholder="Selectionner une date" id="patient_datenaiss_new">
                                         </div>
                                     </div>
                                     <div class="col-xxl-3 col-lg-4 col-sm-6">
@@ -286,25 +301,46 @@
                                     </div>
                                     <div class="col-xxl-3 col-lg-4 col-sm-6">
                                         <div class="mb-3">
+                                            <label class="form-label">Sexe</label>
+                                            <select class="form-select" id="patient_sexe_new">
+                                                <option value="">Selectionner</option>
+                                                <option value="M">Homme</option>
+                                                <option value="Mme">Femme</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-xxl-3 col-lg-4 col-sm-6">
+                                        <div class="mb-3">
                                             <label class="form-label">Assurer</label>
-                                            <div class="m-0">
-                                                <div class="form-check form-check-inline">
-                                                    <input checked class="form-check-input" type="radio" id="assurerO" name="patient_statut_assurer" value="non">
-                                                    <label class="form-check-label" for="assurerO">Non</label>
-                                                </div>
-                                                <div class="form-check form-check-inline">
-                                                    <input class="form-check-input" type="radio" id="assurerN" name="patient_statut_assurer" value="oui">
-                                                    <label class="form-check-label" for="assurerN">Oui</label>
-                                                </div>
-                                            </div>
+                                            <select class="form-select" id="assurer">
+                                                <option selected value="non">Non</option>
+                                                <option value="oui">Oui</option>
+                                            </select>
                                         </div>
                                     </div>
                                     <div class="row gx-3" id="div_assurer" style="display: none;" >
                                         <div class="col-xxl-3 col-lg-4 col-sm-6">
                                             <div class="mb-3">
+                                                <label class="form-label">Filiation</label>
+                                                <select class="form-select" id="patient_filiation_new">
+                                                    <option value="">Selectionner</option>
+                                                    <option value="Adhérent(e)">Adhérent(e)</option>
+                                                    <option value="Bénéficiaire">Bénéficiaire</option>
+                                                    <option value="Conjoint(e)">Conjoint(e)</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-xxl-3 col-lg-4 col-sm-6">
+                                            <div class="mb-3">
                                                 <label class="form-label">Assurance</label>
                                                 <select class="form-select" id="patient_assurance_id_new">
                                                 </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-xxl-3 col-lg-4 col-sm-6">
+                                            <div class="mb-3">
+                                                <label class="form-label">Matricule assurance</label>
+                                                <input type="text" class="form-control" id="patient_matriculeA_new" placeholder="Saisie Obligatoire">
                                             </div>
                                         </div>
                                         <div class="col-xxl-3 col-lg-4 col-sm-6">
@@ -471,17 +507,30 @@
 {{-- <script src="{{ asset('js/app.js') }}"></script> --}}
 {{-- <script src="https://unpkg.com/jspdf-invoice-template@1.4.4/dist/index.js"></script> --}}
 <script src="{{asset('assets/js/app/js/jspdfinvoicetemplate/dist/index.js')}}" ></script>
+<script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
 <script>
     document.addEventListener("DOMContentLoaded", function() {
 
         Statistique();
-        divAssurerChange();
+        Statistique_cons();
+        Name_atient();
         select_taux();
         select_societe_patient();
         select_assurance_patient();
-        select_list_acte();
+        // select_list_acte();
         list_cons();
+
+        // ------------------------------------------------------------------
+
+        document.getElementById("btn_eng_consultation").addEventListener("click", eng_consultation);
+        document.getElementById("btn_refresh_table").addEventListener("click", list_cons);
+        document.getElementById("btn_rech_num_dossier").addEventListener("click", rech_dosier);
+        document.getElementById("acte_id").addEventListener("change", select_list_typeacte);
+        document.getElementById("btn_eng_societe").addEventListener("click", eng_societe);
+        document.getElementById("btn_eng_assurance").addEventListener("click", eng_assurance);
+        document.getElementById("btn_eng_patient").addEventListener("click", eng_patient);
 
         // ------------------------------------------------------------------
 
@@ -504,6 +553,93 @@
             });
         });
 
+        document.getElementById('taux_remise').addEventListener('input', function() {
+            this.value = formatPrice(this.value);
+            if (this.value !== ''){
+                document.getElementById('div_remise_appliq').style.display = 'block';
+            }else{
+                document.getElementById('div_remise_appliq').style.display = 'none';
+            }
+        });
+
+        document.getElementById('typeacte_idS').addEventListener('change', function() {
+            if (this.value !== ''){
+                document.getElementById('div_remise').style.display = 'block';
+            }else{
+                document.getElementById('div_remise').style.display = 'none';
+            }
+        });
+
+        document.getElementById('assurer').addEventListener('change', function() {
+
+            if (this.value == 'oui'){
+                document.getElementById("div_assurer").style.display = "flex";
+            }else{
+                document.getElementById("div_assurer").style.display = "none";
+            }
+
+        });
+
+        document.getElementById('taux_remise').addEventListener('input', function() {
+            // Nettoyer la valeur entrée en supprimant les caractères non numériques sauf le point
+            const rawValue = this.value.replace(/[^0-9]/g, ''); // Supprimer tous les caractères non numériques
+            // Ajouter des points pour les milliers
+            const formattedValue = formatPrice(rawValue);
+            
+            // Mettre à jour la valeur du champ avec la valeur formatée
+            this.value = formattedValue;
+
+            const appliq_remise = document.getElementById('appliq_remise').value;
+
+            if (appliq_remise == 'patient') {
+                // Convertir la valeur formatée en nombre pour les calculs
+                const montant_patient = parseInt(document.getElementById('montant_patient_hidden').value.replace(/\./g, '')) || 0;
+                const remise = parseInt(rawValue) || 0;
+
+                // Calculer le montant remis
+                const montantRemis = montant_patient - remise;
+                document.getElementById('montant_patient').value = formatPriceT(montantRemis);
+            }else{
+                // Convertir la valeur formatée en nombre pour les calculs
+                const montant_assurance = parseInt(document.getElementById('montant_assurance_hidden').value.replace(/\./g, '')) || 0;
+                const remise = parseInt(rawValue) || 0;
+
+                // Calculer le montant remis
+                const montantRemis = montant_assurance - remise;
+                document.getElementById('montant_assurance').value = formatPriceT(montantRemis);
+            }
+
+        });
+
+        document.getElementById('appliq_remise').addEventListener('change', function() {
+
+            document.getElementById('montant_assurance').value = formatPrice(document.getElementById('montant_assurance_hidden').value);
+            document.getElementById('montant_patient').value = formatPrice(document.getElementById('montant_patient_hidden').value);
+
+            // Nettoyer la valeur entrée en supprimant les caractères non numériques sauf le point
+            const rawValue = document.getElementById('taux_remise').value.replace(/[^0-9]/g, ''); // 
+
+            if (this.value == 'patient') {
+                // Convertir la valeur formatée en nombre pour les calculs
+                const montant_patient = parseFloat(document.getElementById('montant_patient_hidden').value.replace(/\./g, '')) || 0;
+                const remise = parseFloat(rawValue) || 0;
+
+                // Calculer le montant remis
+                const montantRemis = montant_patient - remise;
+                document.getElementById('montant_patient').value = formatPriceT(montantRemis);
+            }else{
+                // Convertir la valeur formatée en nombre pour les calculs
+                const montant_assurance = parseFloat(document.getElementById('montant_assurance_hidden').value.replace(/\./g, '')) || 0;
+                const remise = parseFloat(rawValue) || 0;
+
+                // Calculer le montant remis
+                const montantRemis = montant_assurance - remise;
+                document.getElementById('montant_assurance').value = formatPriceT(montantRemis);
+            }
+
+        }); 
+
+
         function formatPrice(input) {
             // Remove all non-numeric characters except the comma
             input = input.replace(/[^\d,]/g, '');
@@ -521,47 +657,90 @@
             return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
         }
 
-        // ------------------------------------------------------------------
+        function formatPriceT(price) {
 
-        document.getElementById("assurerO").addEventListener("change", divAssurerChange);
-        document.getElementById("assurerN").addEventListener("change", divAssurerChange);
-        document.getElementById("btn_eng_consultation").addEventListener("click", eng_consultation);
-        document.getElementById("btn_refresh_table").addEventListener("click", list_cons);
-
-        function divAssurerChange() {
-            // Vérifier quelle option est sélectionnée
-            const assurerO = document.getElementById("assurerO");
-            const assurerN = document.getElementById("assurerN");
-            const divAssurer = document.getElementById("div_assurer");
-
-            if (assurerN.checked) {
-                // Si "Oui" est sélectionné, afficher le div
-                divAssurer.style.display = "flex";
-            } else {
-                // Si "Non" est sélectionné, masquer le div
-                divAssurer.style.display = "none";
+            // Convert to float and round to the nearest whole number
+            let number = Math.round(parseInt(price));
+            if (isNaN(number)) {
+                return '';
             }
+
+            // Format the number with dot as thousands separator
+            return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
         }
 
         // ------------------------------------------------------------------
 
-        document.getElementById("btn_rech_num_dossier").addEventListener("click", rech_dosier);
+        function Name_atient()
+        {
+            $.ajax({
+                url: '/api/name_patient',
+                method: 'GET',
+                success: function(response) {
+                    // Sample data array
+                    const data = response.name;
+
+                    // Elements
+                    const input = document.getElementById('name_rech');
+                    const matricule_patient = document.getElementById('matricule_patient');
+                    const suggestionsDiv = document.getElementById('suggestions');
+
+                    // Event listener for input typing
+                    input.addEventListener('input', function() {
+                        const searchTerm = input.value.toLowerCase();
+                        
+                        // Clear previous suggestions
+                        suggestionsDiv.style.display = 'block';
+                        suggestionsDiv.innerHTML = '';
+
+                        // Filter data based on input
+                        const filteredData = data.filter(item => item.np.toLowerCase().includes(searchTerm));
+
+                        // Display filtered data
+                        filteredData.forEach(item => {
+                            const suggestion = document.createElement('div');
+                            suggestion.innerText = item.np;
+                            suggestion.addEventListener('click', function() {
+                                // Set selected data in the input field
+                                input.value = `${item.np}`;
+                                matricule_patient.value = `${item.matricule}`;
+                                suggestionsDiv.innerHTML = ''; // Clear suggestions
+                                rech_dosier();
+                            });
+                            suggestionsDiv.appendChild(suggestion);
+                        });
+
+                        // Show/hide suggestions based on results
+                        suggestionsDiv.style.display = filteredData.length > 0 ? 'block' : 'none';
+                    });
+
+                    // Hide suggestions when clicking outside
+                    document.addEventListener('click', function(e) {
+                        if (!suggestionsDiv.contains(e.target) && e.target !== input) {
+                            suggestionsDiv.style.display = 'none';
+                        }
+                    });
+                },
+                error: function() {
+                }
+            });
+        }
 
         function rech_dosier()
         {
-            document.getElementById('div_typeacteS').style.display = 'none';
-            document.getElementById('div_medecin').style.display = 'none';
-            document.getElementById('acte_id').value = '';
+            document.getElementById('div_typeacteS').style.display = 'block';
+            document.getElementById('div_medecin').style.display = 'block';
+            document.getElementById('acte_id').value = '1';
 
-            document.getElementById('montant_assurance').value = '';
-            document.getElementById('taux_remise').value = '';
-            document.getElementById('montant_total').value = '';
-            document.getElementById('montant_patient').value = '';
+            document.getElementById('montant_assurance').value = '0';
+            document.getElementById('taux_remise').value = '0';
+            document.getElementById('montant_total').value = '0';
+            document.getElementById('montant_patient').value = '0';
 
             const matricule_patient = document.getElementById("matricule_patient");
 
             if(!matricule_patient.value.trim()){
-                showAlert('warning', 'Veuillez saisie le numéro de dossier du patient.');
+                showAlert('warning', 'Veuillez saisie le nom d\'un du patient.');
                 return false;
             }
 
@@ -592,6 +771,7 @@
                         showAlert('success', 'Patient trouvé.');
                         addGroup(response.patient);
                         document.getElementById("div_info_consul").style.display = 'block';
+                        select_list_typeacte();
                     }
                 },
                 error: function() {
@@ -929,18 +1109,20 @@
             });
         }
 
-        document.getElementById("acte_id").addEventListener("change", select_list_typeacte);
-
         function select_list_typeacte() {
             const divTypeActe = document.getElementById('div_typeacteS'); // The whole div
             const divMedecin = document.getElementById('div_medecin');
             const typeActeSelect = document.getElementById('typeacte_idS');
-            const acteId = document.getElementById("acte_id").value;
+            // const acteId = document.getElementById("acte_id").value;
+            const acteId = '1';
 
             const montant_assurance = document.getElementById('montant_assurance');
             const taux_remise = document.getElementById('taux_remise');
             const montant_total = document.getElementById('montant_total');
             const montant_patient = document.getElementById('montant_patient');
+
+            const montant_patient_hidden = document.getElementById('montant_patient_hidden');
+            const montant_assurance_hidden = document.getElementById('montant_assurance_hidden');
 
             montant_assurance.value = '';
             montant_total.value = '';
@@ -1038,7 +1220,9 @@
 
                 if (tauxFloat === 0) {
                     montant_assurance.value = '0'; // No insurance coverage
-                    montant_patient.value = formatPrice(prixFloat.toString()); // Patient pays full amount
+                    montant_patient.value = formatPrice(prixFloat.toString());
+                    montant_patient_hidden.value = formatPrice(prixFloat.toString());
+                    montant_assurance_hidden.value = '0';
                 } else {
                     // Calculate insurance amount and patient's amount
                     let montantAssurance = (tauxFloat / 100) * prixFloat;
@@ -1047,6 +1231,9 @@
                     // Format the results and assign them
                     montant_assurance.value = formatPrice(montantAssurance.toString());
                     montant_patient.value = formatPrice(montantPatient.toString());
+
+                    montant_patient_hidden.value = formatPrice(montantPatient.toString());
+                    montant_assurance_hidden.value = formatPrice(montantAssurance.toString());
                 }
             } else {
                 montant_total.value = ''; // Clear the field if no valid price
@@ -1054,8 +1241,6 @@
         }
 
         // ------------------------------------------------------------------
-
-        document.getElementById("btn_eng_societe").addEventListener("click", eng_societe);
 
         function eng_societe()
         {
@@ -1111,8 +1296,6 @@
         }
 
         // ------------------------------------------------------------------
-
-        document.getElementById("btn_eng_assurance").addEventListener("click", eng_assurance);
 
         function eng_assurance()
         {
@@ -1209,8 +1392,6 @@
 
         // ------------------------------------------------------------------
 
-        document.getElementById("btn_eng_patient").addEventListener("click", eng_patient);
-
         function eng_patient()
         {
             const divAssurer = document.getElementById("div_assurer");
@@ -1220,16 +1401,18 @@
             var phone = document.getElementById("patient_tel_new");
             var phone2 = document.getElementById("patient_tel2_new");
             var adresse = document.getElementById("patient_adresse_new");
-            var assurer = document.querySelector('input[name="patient_statut_assurer"]:checked');
+            var assurer = document.getElementById('assurer');
 
-            var assurerNon = document.getElementById('assurerN');
-            var assurerOui = document.getElementById('assurerO');
+            var datenais = document.getElementById("patient_datenaiss_new");
+            var sexe = document.getElementById("patient_sexe_new");
+            var filiation = document.getElementById("patient_filiation_new");
+            var matricule_assurance = document.getElementById("patient_matriculeA_new");
 
             var assurance_id = document.getElementById("patient_assurance_id_new");
             var taux_id = document.getElementById("patient_taux_id_new");
             var societe_id = document.getElementById("patient_societe_id_new");
 
-            if (!nom.value.trim() || !phone.value.trim() || !adresse.value.trim()) {
+            if (!nom.value.trim() || !phone.value.trim() || !adresse.value.trim() || !datenais.value.trim() || !sexe.value.trim()) {
                 showAlert('warning', 'Tous les champs sont obligatoires.');
                 return false; 
             }
@@ -1246,10 +1429,10 @@
             }
 
             if (assurer.value == 'oui') {
-                if (assurance_id.value !== '' && taux_id.value !== '' && societe_id.value !== '') {
+                if (assurance_id.value !== '' && taux_id.value !== '' && societe_id.value !== '' || filiation.value !== '' || matricule_assurance.value !== '') {
                     // Do something when all the fields have values
                 } else {
-                    showAlert('warning', 'Veuillez remplir tous les champs relatifs à l\'assurance, taux et société.');
+                    showAlert('warning', 'Veuillez remplir tous les champs relatifs à l\'assurance');
                     return false; // Prevent form submission
                 }
             }
@@ -1267,7 +1450,7 @@
                 method: 'GET',  // Use 'POST' for data creation
                 data: { nom: nom.value, email: email.value || null , tel: phone.value, tel2: phone2.value || null,
                 adresse: adresse.value, assurer: assurer.value, assurance_id: assurance_id.value || null,
-                taux_id: taux_id.value || null, societe_id: societe_id.value || null,},
+                taux_id: taux_id.value || null, societe_id: societe_id.value || null, datenais: datenais.value, sexe: sexe.value, filiation: filiation.value || null, matricule_assurance: matricule_assurance.value || null},
                 success: function(response) {
                     var preloader = document.getElementById('preloader_ch');
                     if (preloader) {
@@ -1292,44 +1475,23 @@
                     phone2.value = '';
                     adresse.value = '';
 
-                    assurerNon.checked = true;
-                    assurerOui.checked = false;
+                    datenais.value = '';
+                    sexe.value = '';
+                    filiation.value = '';
+                    matricule_assurance.value = '';
+
+                    assurer.value = 'non';
 
                     divAssurer.style.display = "none";
 
-                    // document.getElementById("matricule_patient").value = response.matricule;
+                    document.getElementById('name_rech').value = `${response.name}`;
+                    document.getElementById('matricule_patient').value = `${response.matricule}`;
 
-                    var modalHtml = `
-                        <div class="modal fade show" id="Matricule" tabindex="-1" aria-labelledby="exampleModalSmLabel" 
-                        aria-modal="true" role="dialog" style="position: fixed;" data-bs-backdrop="static" 
-                        data-bs-keyboard="false">
-                          <div class="modal-dialog modal-sm">
-                            <div class="modal-content">
-                              <div class="modal-header">
-                                <h5 class="modal-title" id="exampleModalSmLabel">
-                                  Matricule du patient
-                                </h5>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                              </div>
-                              <div class="modal-body">
-                                <p>P-${response.matricule}</p>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                    `;
+                    rech_dosier();
 
-                    // Insert the modal into the DOM
-                    document.body.insertAdjacentHTML('beforeend', modalHtml);
-
-                    // Show the modal
-                    var modal = new bootstrap.Modal(document.getElementById('Matricule'));
-                    modal.show();
-
-                    // Remove the modal from the DOM after it is closed
-                    document.getElementById('Matricule').addEventListener('hidden.bs.modal', function () {
-                        document.getElementById('Matricule').remove();
-                    });
+                    var newConsultationTab = new bootstrap.Tab(document.getElementById('tab-oneAAA'));
+                    newConsultationTab.show();
+                    newConsultationTab.active();
 
                 },
                 error: function() {
@@ -1347,8 +1509,12 @@
                     phone2.value = '';
                     adresse.value = '';
 
-                    assurerNon.checked = true;
-                    assurerOui.checked = false;
+                    datenais.value = '';
+                    sexe.value = '';
+                    filiation.value = '';
+                    matricule_assurance.value = '';
+
+                    assurer.value = 'non';
 
                     divAssurer.style.display = "none";
                 }
@@ -1360,7 +1526,8 @@
         function eng_consultation()
         {
             var num_patient = document.getElementById("matricule_patient");
-            var acte_id = document.getElementById("acte_id");
+            // var acte_id = document.getElementById("acte_id");
+            var acte_id = '1';
             var typeacte_idS = document.getElementById("typeacte_idS");
             var medecin_id = document.getElementById("medecin_id");
             var periode = document.querySelector('input[name="periode_consul"]:checked');
@@ -1373,8 +1540,17 @@
             var jourF = document.getElementById('jourF');
             var nuit = document.getElementById('Nuit');
 
-            if (!num_patient.value.trim() || acte_id.value =='' || typeacte_idS.value =='' || medecin_id.value =='') {
+            if (taux_remise.value == '') {
+                taux_remise.value = '0';
+            }
+
+            if (!num_patient.value.trim() || acte_id =='' || typeacte_idS.value =='' || medecin_id.value =='' || !taux_remise.value.trim()) {
                 showAlertConsultation('warning', 'Tous les champs sont obligatoires.');
+                return false; 
+            }
+
+            if (montant_assurance.value < 0 || montant_patient.value < 0 || taux_remise.value < 0) {
+                showAlertConsultation('warning', 'Veullez vérifier le montant de la remise.');
                 return false; 
             }
 
@@ -1389,7 +1565,7 @@
             $.ajax({
                 url: '/api/new_consultation',
                 method: 'GET',  // Use 'POST' for data creation
-                data: {num_patient: num_patient.value, acte_id: acte_id.value, typeacte_id: typeacte_idS.value, user_id: medecin_id.value, periode: periode.value, montant_assurance: montant_assurance.value, montant_patient: montant_patient.value, taux_remise: taux_remise.value, total: montant_total.value},
+                data: {num_patient: num_patient.value, acte_id: acte_id, typeacte_id: typeacte_idS.value, user_id: medecin_id.value, periode: periode.value, montant_assurance: montant_assurance.value, montant_patient: montant_patient.value, taux_remise: taux_remise.value, total: montant_total.value, appliq_remise: appliq_remise.value},
                 success: function(response) {
                     var preloader = document.getElementById('preloader_ch');
                     if (preloader) {
@@ -1399,6 +1575,8 @@
                     if (response.success) {
                         showAlertConsultation('success', 'Patient Enregistrée.');
                         list_cons();
+                        Statistique();
+                        Statistique_cons();
                     } else if (response.error) {
                         showAlertConsultation('danger', 'Une erreur est survenue lors de l\'enregistrement.');
                     }
@@ -1406,8 +1584,6 @@
                     jourO.checked = true;
                     jourF.checked = false;
                     nuit.checked = false;
-
-                    Statistique();
 
                     var dynamicFields = document.getElementById("div_info_patient");
                     // Remove existing content
@@ -1425,7 +1601,7 @@
                         preloader.remove();
                     }
 
-                    showAlertConsultation('danger', 'Une erreur est survenue lors de l\'enregistrement.');
+                    showAlertConsultation('danger', ' Une erreur est survenue lors de l\'enregistrement.');
 
                     jourO.checked = true;
                     jourF.checked = false;
@@ -1538,9 +1714,96 @@
             });
         }
 
+        function Statistique_cons() {
+
+            document.getElementById("div_Table_loader_Cons").style.display = 'block';
+
+            const stat_consultation = document.getElementById("stat_consultation");
+
+            fetch('/api/statistique_reception_cons') // API endpoint
+                .then(response => response.json())
+                .then(data => {
+                    // Access the 'chambre' array from the API response
+                    const typeactes = data.typeacte;
+                    document.getElementById("div_Table_loader_Cons").style.display = 'none';
+                    // Clear any existing rows in the table body
+                    stat_consultation.innerHTML = '';
+
+                    if (typeactes.length > 0) {
+
+                        // Loop through each item in the chambre array
+                        typeactes.forEach((item, index) => {
+                            // Create a new row
+                            const row = document.createElement('div');
+                            row.className = "col-xl-3 col-sm-6 col-12";
+                            // Create and append cells to the row based on your table's structure
+                            row.innerHTML = `
+                                <div class="card mb-3">
+                                    <div class="card-body">
+                                        <div class="d-flex align-items-center">
+                                            <div class="p-2 border border-primary rounded-circle me-3">
+                                                <div class="icon-box md bg-primary-subtle rounded-5">
+                                                    <i class="ri-stethoscope-line fs-4 text-primary"></i>
+                                                </div>
+                                            </div>
+                                            <div class="d-flex flex-column">
+                                                <h5 class="lh-1">
+                                                    ${item.nom}
+                                                </h5>
+                                                <p class="m-0">
+                                                    ${item.nbre} Consultation(s)
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <div class="d-flex align-items-end justify-content-between mt-1">
+                                            <div class="text-start">
+                                                <p class="mb-0 text-primary">Part Assurance</p>
+                                            </div>
+                                            <div class="text-end">
+                                                <p class="mb-0 text-primary">
+                                                    ${formatPrice(item.part_assurance.toString())} Fcfa
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <div class="d-flex align-items-end justify-content-between mt-1">
+                                            <div class="text-start">
+                                                <p class="mb-0 text-primary">Part Patient</p>
+                                            </div>
+                                            <div class="text-end">
+                                                <p class="mb-0 text-primary">
+                                                    ${formatPrice(item.part_patient.toString())} Fcfa
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <div class="d-flex align-items-end justify-content-between mt-1">
+                                            <div class="text-start">
+                                                <p class="mb-0 text-primary">Montant Total</p>
+                                            </div>
+                                            <div class="text-end">
+                                                <p class="mb-0 text-primary">
+                                                    ${formatPrice(item.total.toString())} Fcfa
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            `;
+                            // Append the row to the table body
+                            stat_consultation.appendChild(row);
+
+                        });
+                    }
+                })
+                .catch(error => {
+                    console.error('Erreur lors du chargement des données:', error);
+                });
+        }
+
         // ------------------------------------------------------------------
 
         function generatePDF(consultations,price) {
+
+            window.jsPDF = window.jspdf.jsPDF;
 
             function formatDate(dateString) {
                 const date = new Date(dateString);
@@ -1555,8 +1818,8 @@
             consultations.forEach((item, index) => {
                 tableData.push([
                     index + 1,                      // Row number
-                    item.code || "",                // Code
-                    item.matricule || "",           // Matricule
+                    'C-'+item.code || "",                // Code
+                    'P-'+item.matricule || "",           // Matricule
                     item.name || "",                // Name
                     '+225 '+item.tel || "", 
                     item.motif || "",               // Motif
@@ -1607,20 +1870,16 @@
                     email: "email@clinic.com",
                 },
                 contact: {
-                    name: "Liste consultation des patients: ",
+                    name: "Liste des consultations: ",
                     label: "Date : " + new Date().toLocaleDateString(), // Show current date
                 },
                 invoice: {
-                    label: "Consultations: ",
-                    num: 19,
-                    invDate: "Payment Date: 01/01/2021 18:12",
-                    invGenDate: "Invoice Date: 02/02/2021 10:17",
                     headerBorder: true,
                     tableBodyBorder: true,
                     header: [
                         { title: "N°", style: { width: 10 } },
-                        { title: "Code", style: { width: 20 } },
-                        { title: "Matricule", style: { width: 20 } },
+                        { title: "N° Cons", style: { width: 20 } },
+                        { title: "N° Dossier", style: { width: 20 } },
                         { title: "Name", style: { width: 65 } },
                         { title: "Telephone", style: { width: 35 } },
                         { title: "Motif", style: { width: 38 } },
@@ -1656,12 +1915,14 @@
                 pageLabel: "Page "
             };
 
-            // Generate PDF
-            jsPDFInvoiceTemplate.default(props);
+            var pdf = jsPDFInvoiceTemplate.default(props);
+
+            var pdfBlob = pdf.jsPDFDocObject.output('blob');
+            var pdfUrl = URL.createObjectURL(pdfBlob);
+            window.open(pdfUrl, '_blank'); 
         }
 
     });
-
 </script>
 
 @endsection

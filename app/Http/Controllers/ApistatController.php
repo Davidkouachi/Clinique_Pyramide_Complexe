@@ -29,6 +29,7 @@ use App\Models\user;
 use App\Models\role;
 use App\Models\consultation;
 use App\Models\detailconsultation;
+use App\Models\facture;
 
 class ApistatController extends Controller
 {
@@ -58,4 +59,58 @@ class ApistatController extends Controller
         ]);
 
     }
+
+    public function statistique_caisse()
+    {
+        // Combine the queries into a single query to improve performance
+        $stats = detailconsultation::select(DB::raw('
+            COALESCE(SUM(REPLACE(montant, ".", "") + 0), 0) as part_total,
+            COALESCE(SUM(REPLACE(part_patient, ".", "") + 0), 0) as part_patient,
+            COALESCE(SUM(REPLACE(part_assurance, ".", "") + 0), 0) as part_assurance
+        '))->first();
+
+        $payer = facture::where('statut', '=', 'payer')->count();
+        $impayer = facture::where('statut', '=', 'impayer')->count();
+
+        // Return the results as JSON
+        return response()->json([
+            'part_total' => $stats->part_total ?? 0,
+            'part_patient' => $stats->part_patient ?? 0,
+            'part_assurance' => $stats->part_assurance ?? 0,
+            'payer' => $payer ?? 0,
+            'impayer' => $impayer ?? 0,
+        ]);
+    }
+
+    public function statistique_reception_cons()
+    {
+        $today = Carbon::today();
+
+        $typeacte = typeacte::join('actes', 'actes.id', '=', 'typeactes.acte_id')
+                            ->where('actes.nom', '=', 'CONSULTATION')
+                            ->select('typeactes.*')
+                            ->get();
+
+        foreach ($typeacte as $value) {
+            $stats = detailconsultation::where('typeacte_id', '=', $value->id)
+                        ->whereDate('created_at', '=', $today)
+                        ->select(DB::raw('
+                            COALESCE(SUM(REPLACE(montant, ".", "") + 0), 0) as part_total,
+                            COALESCE(SUM(REPLACE(part_patient, ".", "") + 0), 0) as part_patient,
+                            COALESCE(SUM(REPLACE(part_assurance, ".", "") + 0), 0) as part_assurance
+                        '))
+                        ->first();
+
+            $nbre = detailconsultation::where('typeacte_id', '=', $value->id)->whereDate('created_at', '=', $today)->count();
+
+            $value->part_patient = $stats->part_patient;
+            $value->part_assurance = $stats->part_assurance;
+            $value->total = $stats->part_total;
+            $value->nbre = $nbre;
+
+        }
+
+        return response()->json(['typeacte' => $typeacte]);
+    }
+
 }
