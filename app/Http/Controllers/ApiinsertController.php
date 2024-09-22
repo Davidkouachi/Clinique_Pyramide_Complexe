@@ -151,14 +151,13 @@ class ApiinsertController extends Controller
         $add->tel2 = $request->tel2;
         $add->assurer = $request->assurer;
         $add->adresse = $request->adresse;
+        $add->datenais = $request->datenais;
+        $add->sexe = $request->sexe;
 
         if($request->assurer === 'oui'){
             $add->assurance_id = $request->assurance_id;
             $add->taux_id = $request->taux_id;
             $add->societe_id = $request->societe_id;
-
-            $add->datenais = $request->datenais;
-            $add->sexe = $request->sexe;
             $add->filiation = $request->filiation;
             $add->matricule_assurance = $request->matricule_assurance;
         }
@@ -333,7 +332,10 @@ class ApiinsertController extends Controller
 
     public function new_consultation(Request $request)
     {
-        $patient = patient::where('matricule', '=', $request->num_patient)->first();
+        $patient = patient::leftjoin('assurances', 'assurances.id', '=', 'patients.assurance_id')
+        ->where('matricule', '=', $request->num_patient)
+        ->select('patients.*', 'assurances.nom as assurance')
+        ->first();
 
         if (!$patient) {
             return response()->json(['error' => true]);
@@ -403,8 +405,10 @@ class ApiinsertController extends Controller
                 throw new \Exception('Erreur');
             }
 
+            $consultation = consultation::find($add->id);
+
             DB::commit();
-            return response()->json(['success' => true]);
+            return response()->json(['success' => true, 'patient' => $patient, 'typeacte' => $typeacte, 'user' => $user, 'consultation' => $consultation]);
             
         } catch (Exception $e) {
             DB::rollback();

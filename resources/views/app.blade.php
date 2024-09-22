@@ -537,6 +537,22 @@
                                 </li>
                             </ul>
                         </li> --}}
+                        <li class="treeview">
+                            <a href="#!">
+                                <i class="ri-settings-5-line"></i>
+                                <span class="menu-text">Pdf</span>
+                            </a>
+                            <ul class="treeview-menu">
+                                <li>
+                                    <a href="{{route('recu_consultation_cr')}}">
+                                        Consultation Compte rendu
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#">Ajouter</a>
+                                </li>
+                            </ul>
+                        </li>
                     </ul>
                 </div>
                 <!-- Sidebar menu ends -->

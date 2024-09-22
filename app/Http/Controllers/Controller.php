@@ -28,4 +28,11 @@ class Controller
     {
         return view('finance.liste_caisse');
     }
+
+    // --------------------------------------------------------
+
+    public function recu_consultation_cr()
+    {
+        return view('pdf.recu');
+    }
 }

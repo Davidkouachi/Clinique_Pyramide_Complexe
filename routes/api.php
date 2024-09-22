@@ -12,6 +12,7 @@ use App\Http\Controllers\ApistatController;
 use App\Http\Controllers\ApilistfactureController;
 use App\Http\Controllers\ApilistfacturedetailController;
 use App\Http\Controllers\ApiinsertfactureController;
+use App\Http\Controllers\ApipdfController;
 
 // Route::get('/user', function (Request $request) {
 //     return $request->user();
@@ -96,3 +97,7 @@ Route::get('/list_facture_inpayer_d/{id}', [ApilistfacturedetailController::clas
 // paiement facture debut
 Route::get('/facture_payer/{code_fac}', [ApiinsertfactureController::class, 'facture_payer']);
 // paiement facture fin
+
+// PDF debut
+Route::get('/fiche_consultation/{code}', [ApipdfController::class, 'fiche_consultation']);
+// PDF fin

@@ -21,8 +21,8 @@ return new class extends Migration
             $table->string('matricule')->index()->unique();
             $table->string('datenais');
             $table->string('sexe');
-            $table->string('filiation')->index();
-            $table->string('matricule_assurance')->index();
+            $table->string('filiation')->index()->nullable();
+            $table->string('matricule_assurance')->index()->nullable();
             $table->string('adresse');
             $table->unsignedBigInteger('assurance_id')->nullable();
             $table->foreign('assurance_id')->references('id')->on('assurances')->onDelete('cascade');

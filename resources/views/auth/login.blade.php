@@ -113,11 +113,6 @@
                 return false;
             }
 
-            // if (!verifierMotDePasse(password)) {
-            //     NioApp.Toast("<h5>Information</h5><p>Le mot de passe doit comporter au moins 8 caractères, une lettre majuscule, une lettre minuscule et un chiffre.</p>", "error", { position: "top-center" });
-            //     return false;
-            // }
-
             var preloader_ch = `
                 <div id="preloader_ch">
                     <div class="spinner_preloader_ch"></div>
@@ -127,7 +122,13 @@
             document.body.insertAdjacentHTML('beforeend', preloader_ch);
 
 
-            this.submit();
+            // Rafraîchir le token CSRF avant de soumettre le formulaire
+            $.get('/refresh_csrf').done(function(data) {
+                // Mettre à jour le token CSRF dans le champ du formulaire
+                document.querySelector('input[name="_token"]').value = data.token;
+                // Soumettre le formulaire
+                this.submit();
+            }.bind(this)); // Utiliser bind pour référencer le contexte correct
 
             // function verifierMotDePasse(motDePasse) {
 

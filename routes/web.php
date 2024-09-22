@@ -18,6 +18,7 @@ use App\Http\Controllers\receptionController;
 
 Route::get('/', [authController::class, 'login'])->name('login');
 Route::post('/trait_login', [authController::class, 'trait_login'])->name('trait_login');
+Route::get('/refresh_csrf', [authController::class, 'refresh_csrf'])->name('refresh_csrf');
 
 Route::middleware(['auth'])->group(function () {
 
@@ -69,6 +70,8 @@ Route::middleware(['auth'])->group(function () {
 	Route::get('/Caisse', [Controller::class, 'encaissement'])->name('encaissement');
 	Route::get('/Caisse Détail/{id}', [Controller::class, 'encaissement_detail'])->name('encaissement_detail');
 	Route::get('/Liste Caisse', [Controller::class, 'liste_caisse'])->name('liste_caisse');
+
+	Route::get('/Recu Consultation/', [Controller::class, 'recu_consultation_cr'])->name('recu_consultation_cr');
 
 // Route::middleware(['role:ADMINISTRATEUR'])->group(function () {
 

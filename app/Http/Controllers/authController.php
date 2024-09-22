@@ -58,12 +58,6 @@ class authController extends Controller
         // Rechercher l'utilisateur par email ou téléphone avant l'authentification
         $user = user::where($fieldType, $login)->first();
 
-        // Vérifier si l'utilisateur existe et s'il est bloqué
-        if ($user && $user->lock === 'oui') {
-            return redirect()->back()->with('error', 'L\'authentification a échoué. Veuillez vérifier vos informations d\'identification et réessayer.');
-
-        }
-
         // Essayer de se connecter avec l'email ou le numéro de téléphone
         if (Auth::attempt([$fieldType => $login, 'password' => $password])) {
 
@@ -75,5 +69,10 @@ class authController extends Controller
 
         return redirect()->back()->withInput($request->only('login'))
             ->with('error', 'L\'authentification a échoué. Veuillez vérifier vos informations d\'identification et réessayer.');
+    }
+
+    public function refresh_csrf()
+    {
+        return response()->json(['token' => csrf_token()]);
     }
 }
