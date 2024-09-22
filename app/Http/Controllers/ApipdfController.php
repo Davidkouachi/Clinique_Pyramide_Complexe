@@ -35,12 +35,27 @@ class ApipdfController extends Controller
 {
     public function fiche_consultation($code)
     {
-        $consultation = consultation::join('detailconsultations', 'detailconsultations.consultation_id', '=', 'consultations.id')->where('consultations.code', '=', $code)->select('consultations.*','detailconsultations.typeacte_id as typeacte_id')->first();
-
-        $patient = patient::leftjoin('assurances', 'assurances.id', '=', 'patients.assurance_id')
-        ->where('patients.id', '=', $consultation->patient_id)
-        ->select('patients.*', 'assurances.nom as assurance')
+        $consultation = consultation::join('detailconsultations', 'detailconsultations.consultation_id', '=', 'consultations.id')
+        ->join('factures', 'factures.id', '=', 'consultations.facture_id')
+        ->where('consultations.code', '=', $code)
+        ->select(
+            'consultations.*',
+            'detailconsultations.typeacte_id as typeacte_id',
+            'detailconsultations.part_assurance as part_assurance',
+            'detailconsultations.part_patient as part_patient',
+            'detailconsultations.remise as remise',
+            'factures.code as code_fac',
+        )
         ->first();
+
+        $patient = patient::leftjoin('assurances', 'assurances.id', '=', 'patients.assurance_id')->leftjoin('tauxes', 'tauxes.id', '=', 'patients.taux_id')
+        ->where('patients.id', '=', $consultation->patient_id)
+        ->select('patients.*', 'assurances.nom as assurance', 'tauxes.taux as taux')
+        ->first();
+
+        if ($patient && $patient->datenais) {
+            $patient->age = Carbon::parse($patient->datenais)->age;
+        }
 
         $user = user::find($consultation->user_id);
 
