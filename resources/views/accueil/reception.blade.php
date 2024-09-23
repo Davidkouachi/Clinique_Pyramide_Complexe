@@ -21,51 +21,66 @@
 
 <div class="app-body">
     <div class="row gx-3">
-        <div class="col-sm-12">
+        <div class="col-xxl-9 col-sm-12">
             <div class="card mb-3 bg-2 rounded-2">
-                <div class="card-body mh-230 rounded-2" style="background: rgba(0, 0, 0, 0.7);">
-                    <div class="text-white">
-                        <h6>Bienvenue,</h6>
-                        <h2>{{Auth::user()->sexe.'. '.Auth::user()->name}}</h2>
-                        <h5>Les statistiques d'aujourd'hui.</h5>
-                        <div class="mt-4 row gx-3">
-                            <div class="d-flex align-items-center col-xxl-3 col-lg-4 col-sm-6 col-12 mb-3 ">
-                                <div class="icon-box lg bg-info rounded-5 me-3">
-                                    <i class="ri-walk-line fs-1"></i>
+                <div class="card-body rounded-2" style="background: rgba(0, 0, 0, 0.7);">
+                    <div class="mh-230">
+                        <div class="text-white">
+                            <h6>Bienvenue,</h6>
+                            <h2>{{Auth::user()->sexe.'. '.Auth::user()->name}}</h2>
+                            <h5>Les statistiques d'aujourd'hui.</h5>
+                            <div class="mt-4 row gx-3">
+                                <div class="d-flex align-items-center col-xxl-3 col-lg-4 col-sm-6 col-12 mb-3 ">
+                                    <div class="icon-box lg bg-info rounded-5 me-3">
+                                        <i class="ri-walk-line fs-1"></i>
+                                    </div>
+                                    <div class="d-flex flex-column">
+                                        <h4 id="nbre_patient_day" class="m-0 lh-1"></h4>
+                                        <p class="m-0">Patients</p>
+                                    </div>
                                 </div>
-                                <div class="d-flex flex-column">
-                                    <h4 id="nbre_patient_day" class="m-0 lh-1"></h4>
-                                    <p class="m-0">Patients</p>
+                                <div class="d-flex align-items-center col-xxl-3 col-lg-4 col-sm-6 col-12 mb-3">
+                                    <div class="icon-box lg bg-success rounded-5 me-3">
+                                        <i class="ri-walk-line fs-1"></i>
+                                    </div>
+                                    <div class="d-flex flex-column">
+                                        <h4 id="nbre_patient_assurer_day" class="m-0 lh-1"></h4>
+                                        <p class="m-0">assurer</p>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="d-flex align-items-center col-xxl-3 col-lg-4 col-sm-6 col-12 mb-3">
-                                <div class="icon-box lg bg-success rounded-5 me-3">
-                                    <i class="ri-walk-line fs-1"></i>
+                                <div class="d-flex align-items-center col-xxl-3 col-lg-4 col-sm-6 col-12 mb-3">
+                                    <div class="icon-box lg bg-danger rounded-5 me-3">
+                                        <i class="ri-walk-line fs-1"></i>
+                                    </div>
+                                    <div class="d-flex flex-column">
+                                        <h4 id="nbre_patient_nassurer_day" class="m-0 lh-1"></h4>
+                                        <p class="m-0">non-assurer</p>
+                                    </div>
                                 </div>
-                                <div class="d-flex flex-column">
-                                    <h4 id="nbre_patient_assurer_day" class="m-0 lh-1"></h4>
-                                    <p class="m-0">assurer</p>
-                                </div>
-                            </div>
-                            <div class="d-flex align-items-center col-xxl-3 col-lg-4 col-sm-6 col-12 mb-3">
-                                <div class="icon-box lg bg-danger rounded-5 me-3">
-                                    <i class="ri-walk-line fs-1"></i>
-                                </div>
-                                <div class="d-flex flex-column">
-                                    <h4 id="nbre_patient_nassurer_day" class="m-0 lh-1"></h4>
-                                    <p class="m-0">non-assurer</p>
-                                </div>
-                            </div>
-                            <div class="d-flex align-items-center col-xxl-3 col-lg-4 col-sm-6 col-12 mb-3">
-                                <div class="icon-box lg bg-warning rounded-5 me-3">
-                                    <i class="ri-cash-line fs-1"></i>
-                                </div>
-                                <div class="d-flex flex-column">
-                                    <h4 id="prix_cons_day" class="m-0 lh-1"></h4>
-                                    <p class="m-0">Total</p>
+                                <div class="d-flex align-items-center col-xxl-3 col-lg-4 col-sm-6 col-12 mb-3">
+                                    <div class="icon-box lg bg-warning rounded-5 me-3">
+                                        <i class="ri-cash-line fs-1"></i>
+                                    </div>
+                                    <div class="d-flex flex-column">
+                                        <h4 id="prix_cons_day" class="m-0 lh-1"></h4>
+                                        <p class="m-0">Total</p>
+                                    </div>
                                 </div>
                             </div>
                         </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xxl-3 col-sm-12">
+            <div class="card mb-3 bg-lime">
+                <div class="card-body">
+                    <div class="mh-230 text-white">
+                        <h5>Activités de la semaine</h5>
+                        <div class="text-body chart-height-md" style="margin-top: -30px;">
+                            <div id="docActivity"></div>
+                        </div>
+                        <div id="consultationComparison" style="margin-top: -10px;" ></div>
                     </div>
                 </div>
             </div>
@@ -94,15 +109,15 @@
                     <div class="custom-tabs-container">
                         <ul class="nav nav-tabs justify-content-center bg-primary bg-2" id="customTab4" role="tablist" style="background: rgba(0, 0, 0, 0.7);">
                             <li class="nav-item" role="presentation">
-                                <a class="nav-link active text-white" id="tab-oneAAA" data-bs-toggle="tab" href="#oneAAA" role="tab" aria-controls="oneAAA" aria-selected="false" tabindex="-1">
-                                    <i class="ri-walk-line me-2"></i>
-                                    Nouvelle consultation
-                                </a>
-                            </li>
-                            <li class="nav-item" role="presentation">
                                 <a class="nav-link text-white" id="tab-twoAAA" data-bs-toggle="tab" href="#twoAAA" role="tab" aria-controls="twoAAA" aria-selected="false" tabindex="-1">
                                     <i class="ri-walk-line me-2"></i>
                                     Nouveau patient
+                                </a>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <a class="nav-link active text-white" id="tab-oneAAA" data-bs-toggle="tab" href="#oneAAA" role="tab" aria-controls="oneAAA" aria-selected="false" tabindex="-1">
+                                    <i class="ri-walk-line me-2"></i>
+                                    Nouvelle consultation
                                 </a>
                             </li>
                             <li class="nav-item" role="presentation">
@@ -498,13 +513,14 @@
                             <strong>Chargement des données...</strong>
                         </div>
                     </div>
+                    <div id="pagination-controls" ></div>
                 </div>
             </div>
         </div>
     </div>
 
 </div>
-
+<script src="{{asset('assets/vendor/apex/apexcharts.min.js')}}"></script>
 {{-- <script src="{{ asset('js/app.js') }}"></script> --}}
 {{-- <script src="https://unpkg.com/jspdf-invoice-template@1.4.4/dist/index.js"></script> --}}
 <script src="{{asset('assets/js/app/js/jspdfinvoicetemplate/dist/index.js')}}" ></script>
@@ -516,12 +532,13 @@
     document.addEventListener("DOMContentLoaded", function() {
 
         Statistique();
+        Activity_cons();
+        Activity_cons_count();
         Statistique_cons();
         Name_atient();
         select_taux();
         select_societe_patient();
         select_assurance_patient();
-        // select_list_acte();
         list_cons();
 
         // ------------------------------------------------------------------
@@ -811,20 +828,8 @@
                 </div>
                 <div class="col-xxl-3 col-lg-4 col-sm-6">
                     <div class="mb-3">
-                        <label class="form-label" for="email">Email</label>
-                        <input value="${data.email}" readonly class="form-control" placeholder="Néant">
-                    </div>
-                </div>
-                <div class="col-xxl-3 col-lg-4 col-sm-6">
-                    <div class="mb-3">
                         <label class="form-label" for="tel">Contact</label>
                         <input value="+225 ${data.tel}" readonly class="form-control">
-                    </div>
-                </div>
-                <div class="col-xxl-3 col-lg-4 col-sm-6">
-                    <div class="mb-3">
-                        <label class="form-label" for="tel2">Contact 2</label>
-                        <input value="+225 ${data.tel2}" readonly class="form-control" placeholder="Néant">
                     </div>
                 </div>
                 <div class="col-xxl-3 col-lg-4 col-sm-6">
@@ -1622,7 +1627,7 @@
 
         // ------------------------------------------------------------------
 
-        function list_cons() {
+        function list_cons(page = 1) {
 
             const tableBody = document.querySelector('#Table tbody');
             const messageDiv = document.getElementById('message_Table');
@@ -1634,11 +1639,16 @@
             loaderDiv.style.display = 'block';
 
             // Fetch data from the API
-            fetch('/api/list_cons_day') // API endpoint
+            const url = `/api/list_cons_day?page=${page}`;
+            fetch(url) // API endpoint
                 .then(response => response.json())
                 .then(data => {
                     // Access the 'chambre' array from the API response
-                    const consultations = data.consultation;
+                    const consultations = data.consultation || [] ;
+                    const pagination = data.pagination || {};
+
+                    const perPage = pagination.per_page || 10;
+                    const currentPage = pagination.current_page || 1;
 
                     // Clear any existing rows in the table body
                     tableBody.innerHTML = '';
@@ -1657,7 +1667,7 @@
                             const row = document.createElement('tr');
                             // Create and append cells to the row based on your table's structure
                             row.innerHTML = `
-                                <td>${index + 1}</td>
+                                <td>${((currentPage - 1) * perPage) + index + 1}</td>
                                 <td>C-${item.code}</td>
                                 <td>P-${item.matricule}</td>
                                 <td>${item.name}</td>
@@ -1727,6 +1737,8 @@
                             generatePDFlisteCons(consultations,price);
                         });
 
+                        updatePaginationControls(pagination);
+
                     } else {
                         document.getElementById(`btn_print_table`).style.display = 'none';
                         loaderDiv.style.display = 'none';
@@ -1741,6 +1753,97 @@
                     messageDiv.style.display = 'block';
                     tableDiv.style.display = 'none';
                 });
+        }
+
+        function updatePaginationControls(pagination) {
+            const paginationDiv = document.getElementById('pagination-controls');
+            paginationDiv.innerHTML = '';
+
+            // Bootstrap pagination wrapper
+            const paginationWrapper = document.createElement('ul');
+            paginationWrapper.className = 'pagination justify-content-center';
+
+            // Previous button
+            if (pagination.current_page > 1) {
+                const prevButton = document.createElement('li');
+                prevButton.className = 'page-item';
+                prevButton.innerHTML = `<a class="page-link" href="#">Precédent</a>`;
+                prevButton.onclick = (event) => {
+                    event.preventDefault(); // Empêche le défilement en haut de la page
+                    list_cons(pagination.current_page - 1);
+                };
+                paginationWrapper.appendChild(prevButton);
+            } else {
+                // Disable the previous button if on the first page
+                const prevButton = document.createElement('li');
+                prevButton.className = 'page-item disabled';
+                prevButton.innerHTML = `<a class="page-link" href="#">Precédent</a>`;
+                paginationWrapper.appendChild(prevButton);
+            }
+
+            // Page number links (show a few around the current page)
+            const totalPages = pagination.last_page;
+            const currentPage = pagination.current_page;
+            const maxVisiblePages = 5; // Max number of page links to display
+
+            let startPage = Math.max(1, currentPage - Math.floor(maxVisiblePages / 2));
+            let endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
+
+            // Adjust start page if end page exceeds the total pages
+            if (endPage - startPage < maxVisiblePages - 1) {
+                startPage = Math.max(1, endPage - maxVisiblePages + 1);
+            }
+
+            // Loop through pages and create page links
+            for (let i = startPage; i <= endPage; i++) {
+                const pageItem = document.createElement('li');
+                pageItem.className = `page-item ${i === currentPage ? 'active' : ''}`;
+                pageItem.innerHTML = `<a class="page-link" href="#">${i}</a>`;
+                pageItem.onclick = (event) => {
+                    event.preventDefault(); // Empêche le défilement en haut de la page
+                    list_cons(i);
+                };
+                paginationWrapper.appendChild(pageItem);
+            }
+
+            // Ellipsis (...) if not all pages are shown
+            if (endPage < totalPages) {
+                const ellipsis = document.createElement('li');
+                ellipsis.className = 'page-item disabled';
+                ellipsis.innerHTML = `<a class="page-link" href="#">...</a>`;
+                paginationWrapper.appendChild(ellipsis);
+
+                // Add the last page link
+                const lastPageItem = document.createElement('li');
+                lastPageItem.className = `page-item`;
+                lastPageItem.innerHTML = `<a class="page-link" href="#">${totalPages}</a>`;
+                lastPageItem.onclick = (event) => {
+                    event.preventDefault(); // Empêche le défilement en haut de la page
+                    list_cons(totalPages);
+                };
+                paginationWrapper.appendChild(lastPageItem);
+            }
+
+            // Next button
+            if (pagination.current_page < pagination.last_page) {
+                const nextButton = document.createElement('li');
+                nextButton.className = 'page-item';
+                nextButton.innerHTML = `<a class="page-link" href="#">Suivant</a>`;
+                nextButton.onclick = (event) => {
+                    event.preventDefault(); // Empêche le défilement en haut de la page
+                    list_cons(pagination.current_page + 1);
+                };
+                paginationWrapper.appendChild(nextButton);
+            } else {
+                // Disable the next button if on the last page
+                const nextButton = document.createElement('li');
+                nextButton.className = 'page-item disabled';
+                nextButton.innerHTML = `<a class="page-link" href="#">Suivant</a>`;
+                paginationWrapper.appendChild(nextButton);
+            }
+
+            // Append pagination controls to the DOM
+            paginationDiv.appendChild(paginationWrapper);
         }
 
         // ------------------------------------------------------------------
@@ -1855,6 +1958,108 @@
                 .catch(error => {
                     console.error('Erreur lors du chargement des données:', error);
                 });
+        }
+
+        function Activity_cons() {
+
+            fetch('/api/getWeeklyConsultations')
+                .then(response => response.json())
+                .then(data => {
+                    // Now use the data to update the chart
+                    var options = {
+                        chart: {
+                            height: 150,
+                            type: "bar",
+                            toolbar: {
+                                show: false,
+                            },
+                        },
+                        plotOptions: {
+                            bar: {
+                                columnWidth: "70%",
+                                borderRadius: 2,
+                                distributed: true,
+                                dataLabels: {
+                                    position: "center",
+                                },
+                            },
+                        },
+                        series: [{
+                            name: "Consultations",
+                            data: data, // Use the data from the backend
+                        }],
+                        legend: {
+                            show: false,
+                        },
+                        xaxis: {
+                            categories: [
+                                "Lun", "Mar", "Mer", "Jeu", "Ven", "Sam", "Dim"
+                            ],
+                            axisBorder: {
+                                show: false,
+                            },
+                            labels: {
+                                show: true,
+                            },
+                        },
+                        yaxis: {
+                            show: false,
+                        },
+                        grid: {
+                            borderColor: "#d8dee6",
+                            strokeDashArray: 5,
+                            xaxis: {
+                                lines: {
+                                    show: true,
+                                },
+                            },
+                            yaxis: {
+                                lines: {
+                                    show: false,
+                                },
+                            },
+                            padding: {
+                                top: 0,
+                                right: 0,
+                                bottom: 0,
+                                left: 0,
+                            },
+                        },
+                        tooltip: {
+                            y: {
+                                formatter: function(val) {
+                                    return val;
+                                },
+                            },
+                        },
+                        colors: [
+                            "rgba(255, 255, 255, 0.7)", "rgba(255, 255, 255, 0.6)", "rgba(255, 255, 255, 0.5)", "rgba(255, 255, 255, 0.4)", "rgba(255, 255, 255, 0.3)", "rgba(255, 255, 255, 0.2)", "rgba(255, 255, 255, 0.2)"
+                        ],
+                    };
+
+                    var chart = new ApexCharts(document.querySelector("#docActivity"), options);
+                    chart.render();
+                })
+                .catch(error => console.error('Error fetching data:', error));
+        }
+
+        function Activity_cons_count() {
+            fetch('/api/getConsultationComparison')
+                .then(response => response.json())
+                .then(data => {
+                    const percentage = data.percentage || 0;
+                    const currentWeek = data.currentWeek || 0;
+                    const lastWeek = data.lastWeek || 0;
+
+                    // Afficher le résultat
+                    document.getElementById('consultationComparison').innerHTML = `
+                        <div class="text-center">
+                            <span class="badge bg-danger">${percentage}%</span> des patients sont supérieurs<br>à ceux de la semaine dernière. 
+                            (${currentWeek} consultation cette semaine, et ${lastWeek} consultation la semaine dernière).
+                        </div>
+                    `;
+                })
+                .catch(error => console.error('Error fetching data:', error));
         }
 
         // ------------------------------------------------------------------
@@ -1985,8 +2190,15 @@
             const { jsPDF } = window.jspdf;
             const doc = new jsPDF();
 
+            const titlea = "Fiche";
+            doc.setFontSize(100);
+            doc.setTextColor(242, 237, 237); // Gray color for background effect
+            doc.setFont("Helvetica", "bold");
+            doc.text(titlea, 120, 150, { align: 'center', angle: 40 });
+
             // Informations de l'entreprise
             doc.setFontSize(10);
+            doc.setTextColor(0, 0, 0);
             doc.setFont("Helvetica", "bold");
             // Texte de l'entreprise
             const title = "ESPACE MEDICO SOCIAL LA PYRAMIDE DU COMPLEXE";
@@ -2250,7 +2462,7 @@
 
         function generatePDFInvoice(patient, user, typeacte, consultation) {
             const { jsPDF } = window.jspdf;
-            const doc = new jsPDF();
+            const doc = new jsPDF({ orientation: 'p', unit: 'mm', format: 'a4' });
 
             yPos = 10;
 
@@ -2259,8 +2471,15 @@
                 leftMargin = 15;
                 pdfWidth = doc.internal.pageSize.getWidth();
 
+                const titlea = "Facture";
+                doc.setFontSize(100);
+                doc.setTextColor(242, 237, 237); // Gray color for background effect
+                doc.setFont("Helvetica", "bold");
+                doc.text(titlea, 120, yPos + 120, { align: 'center', angle: 40 });
+
                 // Informations de l'entreprise
                 doc.setFontSize(10);
+                doc.setTextColor(0, 0, 0);
                 doc.setFont("Helvetica", "bold");
                 // Texte de l'entreprise
                 const title = "ESPACE MEDICO SOCIAL LA PYRAMIDE DU COMPLEXE";

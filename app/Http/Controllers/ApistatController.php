@@ -113,4 +113,72 @@ class ApistatController extends Controller
         return response()->json(['typeacte' => $typeacte]);
     }
 
+    public function statistique_cons()
+    {
+        $typeacte = typeacte::join('actes', 'actes.id', '=', 'typeactes.acte_id')
+                            ->where('actes.nom', '=', 'CONSULTATION')
+                            ->select('typeactes.*')
+                            ->get();
+
+        foreach ($typeacte as $value) {
+            $stats = detailconsultation::where('typeacte_id', '=', $value->id)
+                        ->select(DB::raw('
+                            COALESCE(SUM(REPLACE(montant, ".", "") + 0), 0) as part_total,
+                            COALESCE(SUM(REPLACE(part_patient, ".", "") + 0), 0) as part_patient,
+                            COALESCE(SUM(REPLACE(part_assurance, ".", "") + 0), 0) as part_assurance
+                        '))
+                        ->first();
+
+            $nbre = detailconsultation::where('typeacte_id', '=', $value->id)->count();
+
+            $value->part_patient = $stats->part_patient;
+            $value->part_assurance = $stats->part_assurance;
+            $value->total = $stats->part_total;
+            $value->nbre = $nbre;
+
+        }
+
+        return response()->json(['typeacte' => $typeacte]);
+    }
+
+    public function getWeeklyConsultations()
+    {
+        $daysOfWeek = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+
+        // Start of the week (Monday) and end of the week (Sunday)
+        $startOfWeek = Carbon::now()->startOfWeek(Carbon::MONDAY);
+        $endOfWeek = Carbon::now()->endOfWeek(Carbon::SUNDAY);
+
+        // Create an array to hold consultation counts for each day
+        $weeklyConsultations = [];
+
+        foreach ($daysOfWeek as $day) {
+            // Get the number of consultations for the current day
+            $count = consultation::whereDate('created_at', Carbon::parse($startOfWeek)->addDays(array_search($day, $daysOfWeek)))
+                ->count();
+            // Add the count to the array, defaulting to 0 if nothing is found
+            $weeklyConsultations[] = $count ?? 0;
+        }
+
+        return response()->json($weeklyConsultations);
+    }
+
+    public function getConsultationComparison()
+    {
+        $currentWeekCount = $this->getWeeklyConsultations()->getData(); // Assurez-vous que cette méthode retourne le bon format
+        $lastWeekCount = consultation::whereBetween('created_at', [now()->subWeek()->startOfWeek(), now()->subWeek()->endOfWeek()])->count();
+
+        // Calculer le pourcentage
+        $totalCurrentWeek = array_sum($currentWeekCount);
+        $percentageIncrease = $totalCurrentWeek > 0 ? (($totalCurrentWeek - $lastWeekCount) / $lastWeekCount) * 100 : 0;
+
+        return response()->json([
+            'currentWeek' => $totalCurrentWeek,
+            'lastWeek' => $lastWeekCount,
+            'percentage' => round($percentageIncrease, 2),
+        ]);
+    }
+
+
+
 }

@@ -115,10 +115,6 @@
                                         <td>
                                             {{$value->nom}}
                                         </td>
-                                        <td>{{$value->email}}</td>
-                                        <td>{{$value->fax}}</td>
-                                        <td>{{$value->tel}}</td>
-                                        <td>{{$value->responsable}}</td>
                                         <td>
                                             <div class="d-inline-flex gap-1">
                                                 <a class="btn btn-outline-danger btn-sm rounded-5" data-bs-toggle="modal" data-bs-target="#delRow" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Supprimer">

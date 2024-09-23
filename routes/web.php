@@ -70,8 +70,7 @@ Route::middleware(['auth'])->group(function () {
 	Route::get('/Caisse', [Controller::class, 'encaissement'])->name('encaissement');
 	Route::get('/Caisse Détail/{id}', [Controller::class, 'encaissement_detail'])->name('encaissement_detail');
 	Route::get('/Liste Caisse', [Controller::class, 'liste_caisse'])->name('liste_caisse');
-
-	Route::get('/Recu Consultation/', [Controller::class, 'recu_consultation_cr'])->name('recu_consultation_cr');
+	Route::get('/Consultation/', [Controller::class, 'consultation_liste'])->name('consultation_liste');
 
 // Route::middleware(['role:ADMINISTRATEUR'])->group(function () {
 

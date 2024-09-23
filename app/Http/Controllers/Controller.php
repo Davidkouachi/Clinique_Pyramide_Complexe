@@ -31,8 +31,8 @@ class Controller
 
     // --------------------------------------------------------
 
-    public function recu_consultation_cr()
+    public function consultation_liste()
     {
-        return view('pdf.recu');
+        return view('grille.consultation');
     }
 }

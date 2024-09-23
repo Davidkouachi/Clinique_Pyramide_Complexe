@@ -54,6 +54,7 @@ Route::get('/name_patient', [ApisearchController::class, 'name_patient']);
 Route::get('/list_chambre_day', [ApilistController::class, 'list_chambre_day']);
 Route::get('/list_lit_day', [ApilistController::class, 'list_lit_day']);
 Route::get('/list_cons_day', [ApilistController::class, 'list_cons_day']);
+Route::get('/list_cons', [ApilistController::class, 'list_cons']);
 // liste day debut
 
 // update debut
@@ -83,6 +84,9 @@ Route::get('/list_medecin', [ApilistController::class, 'list_medecin']);
 Route::get('/statistique_reception', [ApistatController::class, 'statistique_reception']);
 Route::get('/statistique_caisse', [ApistatController::class, 'statistique_caisse']);
 Route::get('/statistique_reception_cons', [ApistatController::class, 'statistique_reception_cons']);
+Route::get('/statistique_cons', [ApistatController::class, 'statistique_cons']);
+Route::get('/getWeeklyConsultations', [ApistatController::class, 'getWeeklyConsultations']);
+Route::get('/getConsultationComparison', [ApistatController::class, 'getConsultationComparison']);
 // statistique fin
 
 // List facture debut
@@ -100,4 +104,5 @@ Route::get('/facture_payer/{code_fac}', [ApiinsertfactureController::class, 'fac
 
 // PDF debut
 Route::get('/fiche_consultation/{code}', [ApipdfController::class, 'fiche_consultation']);
+Route::get('/facture_inpayer_cons/{id}', [ApipdfController::class, 'facture_inpayer_cons']);
 // PDF fin

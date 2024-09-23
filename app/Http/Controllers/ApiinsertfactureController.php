@@ -52,41 +52,39 @@ class ApiinsertfactureController extends Controller
                     throw new \Exception('Erreur');
                 }
 
-                $cons = consultation::join('factures', 'factures.id', '=', 'consultations.facture_id')->where('factures.code', '=', $code_fac)->select('consultations.*')->first();
+                $consultation = consultation::join('detailconsultations', 'detailconsultations.consultation_id', '=', 'consultations.id')
+                ->join('factures', 'factures.id', '=', 'consultations.facture_id')
+                ->where('factures.code', '=', $code_fac)
+                ->select(
+                    'consultations.*',
+                    'detailconsultations.typeacte_id as typeacte_id',
+                    'detailconsultations.part_assurance as part_assurance',
+                    'detailconsultations.part_patient as part_patient',
+                    'detailconsultations.remise as remise',
+                    'factures.code as code_fac',
+                    'factures.date_payer as date_paye',
+                    'factures.montant_verser as montant_verser',
+                    'factures.montant_remis as montant_remis',
+                    'factures.statut as statut_fac',
+                    'factures.date_payer as date_payer',
+                )
+                ->first();
 
-                $factured = detailconsultation::join('consultations as c1', 'c1.id', '=', 'detailconsultations.consultation_id')
-                            ->join('typeactes', 'typeactes.id', '=', 'detailconsultations.typeacte_id')
-                            ->join('actes', 'actes.id', '=', 'typeactes.acte_id')
-                            ->join('patients', 'patients.id', '=', 'c1.patient_id')
-                            ->leftjoin('tauxes', 'tauxes.id', '=', 'patients.taux_id')
-                            ->where('c1.id', '=', $cons->id)
-                            ->select(
-                                'detailconsultations.*',
-                                'c1.code as code',
-                                'actes.nom as nom_acte',
-                                'typeactes.nom as nom_typeacte',
-                                'tauxes.taux as taux',
-                            )
-                            ->orderBy('detailconsultations.created_at', 'desc')
-                            ->get();
+                $patient = patient::leftjoin('assurances', 'assurances.id', '=', 'patients.assurance_id')->leftjoin('tauxes', 'tauxes.id', '=', 'patients.taux_id')
+                ->where('patients.id', '=', $consultation->patient_id)
+                ->select('patients.*', 'assurances.nom as assurance', 'tauxes.taux as taux')
+                ->first();
 
+                if ($patient && $patient->datenais) {
+                    $patient->age = Carbon::parse($patient->datenais)->age;
+                }
 
-                $Total = detailconsultation::where('consultation_id', '=', $cons->id)
-                    ->select(DB::raw('COALESCE(SUM(REPLACE(part_patient, ".", "") + 0), 0) as total_sum'))
-                    ->first();
+                $user = user::find($consultation->user_id);
 
-                $ID = consultation::join('factures', 'factures.id', '=', 'consultations.facture_id')
-                                    ->where('consultations.id', '=', $cons->id)
-                                    ->select(
-                                        'factures.code as code_fac',
-                                        'factures.created_at as date_fac',
-                                        'factures.statut as statut',
-                                        'factures.date_payer as date_paye',
-                                    )
-                                    ->first();
+                $typeacte = typeacte::find($consultation->typeacte_id);
 
                 DB::commit();
-                return response()->json(['success' => true, 'factured' => $factured, 'Total' => $Total, 'ID' => $ID]);
+                return response()->json(['success' => true, 'patient' => $patient, 'typeacte' => $typeacte, 'user' => $user, 'consultation' => $consultation]);
 
             }else{
                 throw new \Exception('Erreur');

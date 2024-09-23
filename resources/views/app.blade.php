@@ -132,12 +132,12 @@
                             <ul class="treeview-menu">
                                 <li>
                                     <a href="#!">
-                                        Encaissement
+                                        Consultation
                                         <i class="ri-arrow-right-s-line"></i>
                                     </a>
                                     <ul class="treeview-menu">
                                         <li>
-                                            <a href="{{route('encaissement')}}">Caisse</a>
+                                            <a href="{{route('encaissement')}}">Encaissemnt</a>
                                         </li>
                                         <li>
                                             <a href="{{route('liste_caisse')}}">Liste</a>
@@ -220,7 +220,7 @@
                                                     <a href="{{route('lit_new')}}">lit</a>
                                                 </li>
                                             </ul>
-                                        </li>
+                                        </li> --}}
                                         <li>
                                             <a href="#!">
                                                 Assurance
@@ -230,24 +230,24 @@
                                                 <li>
                                                     <a href="{{route('assurance_new')}}">Assurance</a>
                                                 </li>
-                                                <li>
+                                                {{-- <li>
                                                     <a href="{{route('produit_new')}}">Produit</a>
-                                                </li>
+                                                </li> --}}
                                                 <li>
                                                     <a href="{{route('taux_new')}}">Taux</a>
                                                 </li>
-                                                <li>
+                                                {{-- <li>
                                                     <a href="{{route('typeproduit_new')}}">Type Produit</a>
-                                                </li>
-                                                <li>
+                                                </li> --}}
+                                                {{-- <li>
                                                     <a href="{{route('assureur_new')}}">Assureur</a>
-                                                </li>
+                                                </li> --}}
                                                 <li>
                                                     <a href="{{route('societe_new')}}">Société assurer</a>
                                                 </li>
                                             </ul>
                                         </li>
-                                        <li>
+                                        {{-- <li>
                                             <a href="#!">
                                                 Pharmacie
                                                 <i class="ri-arrow-right-s-line"></i>
@@ -260,8 +260,8 @@
                                                     <a href="#">Catégorie</a>
                                                 </li>
                                             </ul>
-                                        </li>
-                                        <li>
+                                        </li> --}}
+                                        {{-- <li>
                                             <a href="#!">
                                                 Laboratoire
                                                 <i class="ri-arrow-right-s-line"></i>
@@ -537,7 +537,7 @@
                                 </li>
                             </ul>
                         </li> --}}
-                        <li class="treeview">
+                        {{-- <li class="treeview">
                             <a href="#!">
                                 <i class="ri-settings-5-line"></i>
                                 <span class="menu-text">Pdf</span>
@@ -550,6 +550,19 @@
                                 </li>
                                 <li>
                                     <a href="#">Ajouter</a>
+                                </li>
+                            </ul>
+                        </li> --}}
+                        <li class="treeview">
+                            <a href="#!">
+                                <i class="ri-settings-5-line"></i>
+                                <span class="menu-text">Gestionnaire</span>
+                            </a>
+                            <ul class="treeview-menu">
+                                <li>
+                                    <a href="{{route('consultation_liste')}}">
+                                        Consultation
+                                    </a>
                                 </li>
                             </ul>
                         </li>
@@ -599,11 +612,6 @@
     <script src="{{asset('assets/vendor/overlay-scroll/custom-scrollbar.js')}}"></script>
     <!-- Apex Charts -->
     <script src="{{asset('assets/vendor/apex/apexcharts.min.js')}}"></script>
-    <script src="{{asset('assets/vendor/apex/custom/home/patients.js')}}"></script>
-    <script src="{{asset('assets/vendor/apex/custom/home/treatment.js')}}"></script>
-    <script src="{{asset('assets/vendor/apex/custom/home/earnings.js')}}"></script>
-    <script src="{{asset('assets/vendor/apex/custom/home/gender-age.js')}}"></script>
-    <script src="{{asset('assets/vendor/apex/custom/home/claims.js')}}"></script>
     <!-- Custom JS files -->
     <script src="{{asset('assets/js/custom.js')}}"></script>
 

@@ -347,12 +347,13 @@
                                         <a class="btn btn-outline-info btn-sm rounded-5" data-bs-toggle="modal" data-bs-target="#Mmodif" id="edit-${item.id}">
                                             <i class="ri-edit-box-line"></i>
                                         </a>
-                                        <a class="btn btn-outline-danger btn-sm rounded-5" data-bs-toggle="modal" data-bs-target="#Mdelete" id="delete-${item.id}">
-                                            <i class="ri-delete-bin-line"></i>
-                                        </a>
+                                        
                                     </div>
                                 </td>
                             `;
+                            // <a class="btn btn-outline-danger btn-sm rounded-5" data-bs-toggle="modal" data-bs-target="#Mdelete" id="delete-${item.id}">
+                            //                 <i class="ri-delete-bin-line"></i>
+                            //             </a>
                             // Append the row to the table body
                             tableBody.appendChild(row);
 
@@ -364,10 +365,10 @@
                             });
 
                             // Add event listener to the edit button to open the modal with pre-filled data
-                            document.getElementById(`delete-${item.id}`).addEventListener('click', () => {
-                                // Set the values in the modal form
-                                document.getElementById('Iddelete').value = item.id;
-                            });
+                            // document.getElementById(`delete-${item.id}`).addEventListener('click', () => {
+                            //     // Set the values in the modal form
+                            //     document.getElementById('Iddelete').value = item.id;
+                            // });
 
                         });
                     } else {

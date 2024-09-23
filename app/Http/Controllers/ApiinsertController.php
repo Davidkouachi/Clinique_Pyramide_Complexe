@@ -337,6 +337,10 @@ class ApiinsertController extends Controller
         ->select('patients.*', 'assurances.nom as assurance')
         ->first();
 
+        if ($patient) {
+            $patient->age = $patient->datenais ? Carbon::parse($patient->datenais)->age : 0;
+        }
+
         if (!$patient) {
             return response()->json(['error' => true]);
         }
