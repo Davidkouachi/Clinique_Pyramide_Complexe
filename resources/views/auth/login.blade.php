@@ -5,13 +5,13 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Bootstrap Gallery - Medical Admin Templates & Dashboards</title>
+    <title>Se Connecter</title>
     <!-- Meta -->
     <meta name="description" content="Marketplace for Bootstrap Admin Dashboards">
     <meta property="og:title" content="Admin Templates - Dashboard Templates">
     <meta property="og:description" content="Marketplace for Bootstrap Admin Dashboards">
     <meta property="og:type" content="Website">
-    <link rel="shortcut icon" href="{{asset('assets/images/favicon.svg')}}">
+    <link rel="shortcut icon" href="{{asset('assets/images/logo.png')}}">
     <!-- *************
             ************ CSS Files *************
         ************* -->
@@ -28,10 +28,13 @@
             <!-- Form starts -->
             <form id="formulaire" action="{{route('trait_login')}}" method="post" >
                 @csrf
-                <div class="auth-box" style="max-width: 600px;">
-                    <h2 class="mb-4">Bienvenue</h2>
-                    <h6 class="mb-4" style="color: red;">Centre medico-social la pyramide du complexe</h6>
-                    <h4 class="mb-4">Se connecter</h4>
+                <div class="auth-box text-center" style="max-width: 600px;" >
+                    <a class="mb-4" >
+                        <img height="150" width="150" src="{{asset('assets/images/logo.png')}}" alt="Bootstrap Gallery">
+                    </a>
+                    {{-- <h2 class="mb-4">Bienvenue</h2> --}}
+                    {{-- <h6 class="mb-4" style="color: red;">Centre medico-social la pyramide du complexe</h6> --}}
+                    <h4 class="mt-4 mb-4 text-primary">Se connecter</h4>
                     <div class="mb-3">
                         <label class="form-label" for="email">login</label>
                         <input type="text" id="login" name="login" class="form-control" placeholder="Entrer votre Login">

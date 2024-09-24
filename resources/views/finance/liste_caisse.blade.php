@@ -728,7 +728,7 @@
                 const addressX = (doc.internal.pageSize.getWidth() - addressWidth) / 2;
                 doc.text(address, addressX, (yPos + 5));
                 // Texte du téléphone
-                const phone = "Tél.: 20 24 44 70 / 20 21 71 92 - Cel.: 01 01 01 63 43 / 01 01 01 63 43";
+                const phone = "Tél.: 20 24 44 70 / 20 21 71 92 - Cel.: 01 01 01 63 43";
                 const phoneWidth = doc.getTextWidth(phone);
                 const phoneX = (doc.internal.pageSize.getWidth() - phoneWidth) / 2;
                 doc.text(phone, phoneX, (yPos + 10));
@@ -934,7 +934,7 @@
                 const addressX = (doc.internal.pageSize.getWidth() - addressWidth) / 2;
                 doc.text(address, addressX, (yPos + 5));
                 // Texte du téléphone
-                const phone = "Tél.: 20 24 44 70 / 20 21 71 92 - Cel.: 01 01 01 63 43 / 01 01 01 63 43";
+                const phone = "Tél.: 20 24 44 70 / 20 21 71 92 - Cel.: 01 01 01 63 43";
                 const phoneWidth = doc.getTextWidth(phone);
                 const phoneX = (doc.internal.pageSize.getWidth() - phoneWidth) / 2;
                 doc.text(phone, phoneX, (yPos + 10));

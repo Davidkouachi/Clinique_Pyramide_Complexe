@@ -63,6 +63,7 @@
                         Facture non réglée
                     </h5>
                     <div class="d-flex" >
+                        <input type="text" id="searchInput" placeholder="N° facture" class="form-control me-1" >
                         <a id="btn_print_table" style="display: none;" class="btn btn-outline-warning ms-auto me-1">
                             <i class="ri-printer-line"></i>
                         </a>
@@ -70,9 +71,6 @@
                             <i class="ri-loop-left-line"></i>
                         </a>
                     </div>
-                </div>
-                <div class="card-header d-flex align-items-center justify-content-between">
-                    <input type="text" id="searchInput" placeholder="Rechercher par code facture" class="form-control mb-3" style="width: 50%;">
                 </div>
                 <div class="card-body">
                     <div id="div_alert_table" >
@@ -791,7 +789,7 @@
                 const addressX = (doc.internal.pageSize.getWidth() - addressWidth) / 2;
                 doc.text(address, addressX, (yPos + 5));
                 // Texte du téléphone
-                const phone = "Tél.: 20 24 44 70 / 20 21 71 92 - Cel.: 01 01 01 63 43 / 01 01 01 63 43";
+                const phone = "Tél.: 20 24 44 70 / 20 21 71 92 - Cel.: 01 01 01 63 43";
                 const phoneWidth = doc.getTextWidth(phone);
                 const phoneX = (doc.internal.pageSize.getWidth() - phoneWidth) / 2;
                 doc.text(phone, phoneX, (yPos + 10));
@@ -997,7 +995,7 @@
                 const addressX = (doc.internal.pageSize.getWidth() - addressWidth) / 2;
                 doc.text(address, addressX, (yPos + 5));
                 // Texte du téléphone
-                const phone = "Tél.: 20 24 44 70 / 20 21 71 92 - Cel.: 01 01 01 63 43 / 01 01 01 63 43";
+                const phone = "Tél.: 20 24 44 70 / 20 21 71 92 - Cel.: 01 01 01 63 43";
                 const phoneWidth = doc.getTextWidth(phone);
                 const phoneX = (doc.internal.pageSize.getWidth() - phoneWidth) / 2;
                 doc.text(phone, phoneX, (yPos + 10));

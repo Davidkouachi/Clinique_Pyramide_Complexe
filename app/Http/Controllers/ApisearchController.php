@@ -25,6 +25,9 @@ use App\Models\lit;
 use App\Models\acte;
 use App\Models\typeacte;
 use App\Models\role;
+use App\Models\typeadmission;
+use App\Models\natureadmission;
+use App\Models\detailhopital;
 
 class ApisearchController extends Controller
 {
@@ -78,11 +81,21 @@ class ApisearchController extends Controller
         }  
     }
 
-    public function list_chambre()
+    public function list_chambre_select()
     {
-        $list = chambre::all();
+        $list = chambre::all(); // Fetch all chambres
+        $availableList = [];    // Array to hold filtered chambres
 
-        return response()->json(['list' => $list]); 
+        foreach ($list as $value) {
+            $nbre = lit::where('chambre_id', '=', $value->id)->count(); // Count the number of lits 
+            
+            if ($nbre < $value->nbre_lit) {
+                $availableList[] = $value;
+            }
+        }
+
+        // Return either the filtered list or all chambres if none were available
+        return response()->json(['list' => $availableList]);
     }
 
     public function select_acte()
@@ -112,6 +125,20 @@ class ApisearchController extends Controller
     {
         $name = patient::all();
         return response()->json(['name' => $name]);
+    }
+
+    public function lit_select($id)
+    {
+        $lit = lit::join('chambres', 'chambres.id', '=', 'lits.chambre_id')->where('lits.chambre_id', '=', $id)->where('lits.statut', '=', 'disponible')->select('lits.*', 'chambres.prix as prix')->get();
+
+        return response()->json(['lit' => $lit]); 
+    }
+
+    public function natureadmission_select($id)
+    {
+        $natureadmission = natureadmission::where('typeadmission_id', '=', $id)->get();
+
+        return response()->json(['natureadmission' => $natureadmission]); 
     }
 
 }

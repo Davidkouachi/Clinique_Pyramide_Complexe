@@ -27,6 +27,10 @@ use App\Models\typeacte;
 use App\Models\user;
 use App\Models\typemedecin;
 use App\Models\role;
+use App\Models\typeadmission;
+use App\Models\natureadmission;
+use App\Models\detailhopital;
+
 
 class ApideleteController extends Controller
 {
@@ -106,5 +110,37 @@ class ApideleteController extends Controller
         }
 
         return response()->json(['error' => true]);
+    }
+
+    public function delete_typeadmission($id)
+    {
+        $put = typeadmission::find($id);
+
+        if ($put) {
+            if ($put->delete()) {
+                return response()->json(['success' => true]);
+            }else{
+                return response()->json(['error' => true]);
+            }
+        }
+
+        return response()->json(['error' => true]);
+
+    }
+
+    public function delete_natureadmission($id)
+    {
+        $put = natureadmission::find($id);
+
+        if ($put) {
+            if ($put->delete()) {
+                return response()->json(['success' => true]);
+            }else{
+                return response()->json(['error' => true]);
+            }
+        }
+
+        return response()->json(['error' => true]);
+
     }
 }

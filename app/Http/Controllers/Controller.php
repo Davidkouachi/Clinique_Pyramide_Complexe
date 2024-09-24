@@ -35,4 +35,29 @@ class Controller
     {
         return view('grille.consultation');
     }
+
+    public function hospitalisation()
+    {
+        return view('soins_medicaux.hospitalisation.index');
+    }
+
+    public function analyse()
+    {
+        return view('soins_medicaux.analyse');
+    }
+
+    public function imagerie()
+    {
+        return view('soins_medicaux.imagerie');
+    }
+
+    public function typeadmission_new()
+    {
+        return view('soins_medicaux.hospitalisation.typeadmission');
+    }
+
+    public function natureadmission_new()
+    {
+        return view('soins_medicaux.hospitalisation.natureadmission');
+    }
 }

@@ -72,6 +72,16 @@ Route::middleware(['auth'])->group(function () {
 	Route::get('/Liste Caisse', [Controller::class, 'liste_caisse'])->name('liste_caisse');
 	Route::get('/Consultation/', [Controller::class, 'consultation_liste'])->name('consultation_liste');
 
+	Route::get('/Hospitalisation/', [Controller::class, 'hospitalisation'])->name('hospitalisation');
+	Route::get('/Type Admission/', [Controller::class, 'typeadmission_new'])->name('typeadmission_new');
+	Route::get('/Nature Admission/', [Controller::class, 'natureadmission_new'])->name('natureadmission_new');
+
+
+
+
+	Route::get('/Analyse/', [Controller::class, 'analyse'])->name('analyse');
+	Route::get('/Imagerie/', [Controller::class, 'imagerie'])->name('imagerie');
+
 // Route::middleware(['role:ADMINISTRATEUR'])->group(function () {
 
 // });

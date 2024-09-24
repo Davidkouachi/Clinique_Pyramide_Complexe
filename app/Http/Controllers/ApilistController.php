@@ -29,22 +29,22 @@ use App\Models\user;
 use App\Models\role;
 use App\Models\consultation;
 use App\Models\detailconsultation;
+use App\Models\typeadmission;
+use App\Models\natureadmission;
+use App\Models\detailhopital;
 
 class ApilistController extends Controller
 {
-    public function list_chambre_day()
+    public function list_chambre()
     {
-        $today = Carbon::today();
-        $chambre = chambre::whereDate('created_at', $today)->orderBy('created_at', 'desc')->get();
+        $chambre = chambre::orderBy('created_at', 'desc')->get();
 
         return response()->json(['chambre' => $chambre]);
     }
 
-    public function list_lit_day()
+    public function list_lit()
     {
-        $today = Carbon::today();
-        $lit = lit::leftJoin('chambres', 'chambres.id', '=', 'lits.chambre_id')
-                        ->whereDate('lits.created_at', $today)
+        $lit = lit::Join('chambres', 'chambres.id', '=', 'lits.chambre_id')
                         ->orderBy('lits.created_at', 'desc')
                         ->select('lits.*', 'chambres.prix as prix', 'chambres.code as code_ch')
                         ->get();
@@ -147,6 +147,27 @@ class ApilistController extends Controller
                 'total' => $consultation->total(),
             ]
         ]);
+    }
+
+    public function list_typeadmission()
+    {
+        $typeadmission = typeadmission::orderBy('created_at', 'desc')->get();
+        foreach ($typeadmission as $value) {
+            $value->nbre = natureadmission::where('typeadmission_id', '=', $value->id)->count() ?: 0;
+        }
+
+        return response()->json(['typeadmission' => $typeadmission]);
+    }
+
+    public function list_natureadmission()
+    {
+        $natureadmission = natureadmission::join('typeadmissions', 'typeadmissions.id', '=', 'natureadmissions.typeadmission_id')->select('natureadmissions.*','typeadmissions.nom as typeadmission')->orderBy('created_at', 'desc')->get();
+
+        foreach ($natureadmission as $value) {
+            $value->nbre = detailhopital::where('natureadmission_id', '=', $value->id)->count() ?: 0;
+        }
+
+        return response()->json(['natureadmission' => $natureadmission]);
     }
 
 }

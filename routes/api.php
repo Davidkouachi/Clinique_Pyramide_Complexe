@@ -38,21 +38,23 @@ Route::get('/motif_cons_new', [ApiinsertController::class, 'motif_cons_new']);
 Route::get('/typeacte_cons_new', [ApiinsertController::class, 'typeacte_cons_new']);
 Route::get('/new_medecin', [ApiinsertController::class, 'new_medecin']);
 Route::get('/new_consultation', [ApiinsertController::class, 'new_consultation']);
+Route::get('/new_typeadmission', [ApiinsertController::class, 'new_typeadmission']);
+Route::get('/new_natureadmission', [ApiinsertController::class, 'new_natureadmission']);
 // insert debut
 
 // search debut
 Route::get('/rech_patient', [ApisearchController::class, 'rech_patient']);
 Route::get('/refresh_num_chambre', [ApisearchController::class, 'refresh_num_chambre']);
 Route::get('/refresh_num_lit', [ApisearchController::class, 'refresh_num_lit']);
-Route::get('/list_chambre', [ApisearchController::class, 'list_chambre']);
+Route::get('/list_chambre_select', [ApisearchController::class, 'list_chambre_select']);
 Route::get('/select_specialite', [ApisearchController::class, 'select_specialite']);
 Route::get('/select_typeacte/{id}', [ApisearchController::class, 'select_typeacte']);
 Route::get('/name_patient', [ApisearchController::class, 'name_patient']);
+Route::get('/lit_select/{id}', [ApisearchController::class, 'lit_select']);
+Route::get('/natureadmission_select/{id}', [ApisearchController::class, 'natureadmission_select']);
 // search debut
 
 // liste day debut
-Route::get('/list_chambre_day', [ApilistController::class, 'list_chambre_day']);
-Route::get('/list_lit_day', [ApilistController::class, 'list_lit_day']);
 Route::get('/list_cons_day', [ApilistController::class, 'list_cons_day']);
 Route::get('/list_cons', [ApilistController::class, 'list_cons']);
 // liste day debut
@@ -63,6 +65,8 @@ Route::get('/update_lit/{id}', [ApiupdateController::class, 'update_lit']);
 Route::get('/update_acte/{id}', [ApiupdateController::class, 'update_acte']);
 Route::get('/update_typeacte/{id}', [ApiupdateController::class, 'update_typeacte']);
 Route::get('/update_medecin/{id}', [ApiupdateController::class, 'update_medecin']);
+Route::get('/update_typeadmission/{id}', [ApiupdateController::class, 'update_typeadmission']);
+Route::get('/update_natureadmission/{id}', [ApiupdateController::class, 'update_natureadmission']);
 // update debut
 
 // delete debut
@@ -71,6 +75,8 @@ Route::get('/delete_lit/{id}', [ApideleteController::class, 'delete_lit']);
 Route::get('/delete_acte/{id}', [ApideleteController::class, 'delete_acte']);
 Route::get('/delete_typeacte/{id}', [ApideleteController::class, 'delete_typeacte']);
 Route::get('/delete_medecin/{id}', [ApideleteController::class, 'delete_medecin']);
+Route::get('/delete_typeadmission/{id}', [ApideleteController::class, 'delete_typeadmission']);
+Route::get('/delete_natureadmission/{id}', [ApideleteController::class, 'delete_natureadmission']);
 // delete debut
 
 // liste debut
@@ -78,6 +84,10 @@ Route::get('/list_acte', [ApilistController::class, 'list_acte']);
 Route::get('/list_typeacte', [ApilistController::class, 'list_typeacte']);
 Route::get('/list_user', [ApilistController::class, 'list_user']);
 Route::get('/list_medecin', [ApilistController::class, 'list_medecin']);
+Route::get('/list_chambre', [ApilistController::class, 'list_chambre']);
+Route::get('/list_lit', [ApilistController::class, 'list_lit']);
+Route::get('/list_typeadmission', [ApilistController::class, 'list_typeadmission']);
+Route::get('/list_natureadmission', [ApilistController::class, 'list_natureadmission']);
 // liste debut
 
 // statistique debut

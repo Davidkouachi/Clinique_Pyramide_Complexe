@@ -30,6 +30,9 @@ use App\Models\typemedecin;
 use App\Models\consultation;
 use App\Models\detailconsultation;
 use App\Models\facture;
+use App\Models\typeadmission;
+use App\Models\natureadmission;
+use App\Models\detailhopital;
 
 class ApiinsertController extends Controller
 {
@@ -183,7 +186,6 @@ class ApiinsertController extends Controller
     public function chambre_new(Request $request)
     {
         $add = new chambre();
-
         $add->code = $request->num_chambre;
         $add->nbre_lit = $request->nbre_lit;
         $add->prix = $request->prix;
@@ -205,9 +207,26 @@ class ApiinsertController extends Controller
         $add->chambre_id = $request->chambre_id;
         $add->statut = 'disponible';
 
-        if($add->save()){
+        DB::beginTransaction();
+
+        try {
+
+            if (!$add->save()) {
+                return response()->json(['error' => true]);
+            }
+
+            $add2 = chambre::find($request->chambre_id);
+            $add2->statut = 'disponible';
+
+            if (!$add2->save()) {
+                return response()->json(['error' => true]);
+            }
+
+            DB::commit();
             return response()->json(['success' => true]);
-        } else {
+            
+        } catch (Exception $e) {
+            DB::rollback();
             return response()->json(['error' => true]);
         }
     }
@@ -430,6 +449,43 @@ class ApiinsertController extends Controller
 
         // Return matricule with prefix
         return $code;
+    }
+
+    public function new_typeadmission(Request $request)
+    {
+        $verf = typeadmission::where('nom', '=', $request->nom)->first();
+
+        if ($verf) {
+            return response()->json(['existe' => true]);
+        }
+
+        $add = new typeadmission();
+        $add->nom = $request->nom;
+
+        if($add->save()){
+            return response()->json(['success' => true]);
+        } else {
+            return response()->json(['error' => true]);
+        }
+    }
+
+    public function new_natureadmission(Request $request)
+    {
+        $verf = natureadmission::where('nom', '=', $request->nom)->first();
+
+        if ($verf) {
+            return response()->json(['existe' => true]);
+        }
+
+        $add = new natureadmission();
+        $add->nom = $request->nom;
+        $add->typeadmission_id = $request->id;
+
+        if($add->save()){
+            return response()->json(['success' => true]);
+        } else {
+            return response()->json(['error' => true]);
+        }
     }
 
 }

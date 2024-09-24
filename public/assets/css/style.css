@@ -93,7 +93,7 @@
 /*fin pargination*/
 
 /*debut div suggestion*/
-#suggestions {
+.suggestions {
     border: 1px solid #ccc;
     max-height: 200px;
     overflow-y: auto;
@@ -103,12 +103,12 @@
     width: 300px;
 }
 
-#suggestions div {
+.suggestions div {
     padding: 8px;
     cursor: pointer;
 }
 
-#suggestions div:hover {
+.suggestions div:hover {
     background-color: #f0f0f0;
 }
 /*fin div suggestion*/

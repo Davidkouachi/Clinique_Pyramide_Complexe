@@ -10,6 +10,11 @@ use App\Models\taux;
 use App\Models\acte;
 use App\Models\typeacte;
 use App\Models\user;
+use App\Models\typeadmission;
+use App\Models\natureadmission;
+use App\Models\detailhopital;
+use App\Models\societe;
+use App\Models\assurance;
 
 class DatabaseSeeder extends Seeder
 {
@@ -37,17 +42,13 @@ class DatabaseSeeder extends Seeder
                 'typeacte' => ['GENERALISTE', 'PEDIATRE', 'CARDIOLOGUE', 'DENTISTE'],
                 'prix' => ['10.000', '2.000', '5.000', '7.000']
             ],
-            'RADIO' => [
-                'typeacte' => ['X-RAY', 'ULTRASOUND'],
-                'prix' => ['20.000', '30.000']
-            ],
             'ANALYSE' => [
                 'typeacte' => ['BLOOD TEST', 'URINE TEST'],
                 'prix' => ['15.000', '10.000']
             ],
-            'EXAMEN' => [
-                'typeacte' => ['ECG', 'ECHO'],
-                'prix' => ['25.000', '35.000']
+            'IMAGERIE' => [
+                'typeacte' => ['ECG', 'ECHO','X-RAY', 'ULTRASOUND'],
+                'prix' => ['25.000', '35.000','20.000', '30.000']
             ]
         ];
 
@@ -86,6 +87,36 @@ class DatabaseSeeder extends Seeder
             'adresse' => 'adresse',
             'sexe' => 'Mr',
         ]);
+
+        $typeadmission = [
+            'HOSPITALISATION' => [
+                'nature' => ['DIALYSE', 'CHIMIOTHÉRAPIE', 'INTERVENTION CHIRURGICALE', 'SOINS INTENSIFS', 'RÉADAPTATION'],
+            ],
+            'MISE EN OBSERVATION' => [
+                'nature' => ['CHIRURGIE AMBULATOIRE', 'SURVEILLANCE POST-OPÉRATOIRE', 'OBSERVATION POUR TRAUMATISME LÉGER', 'SURVEILLANCE CARDIAQUE']
+            ]
+        ];
+
+        foreach ($typeadmission as $acteName => $typeacteData) {
+            // Crée ou récupère l'entrée du type d'admission
+            $add = typeadmission::firstOrCreate(['nom' => $acteName]);
+
+            foreach ($typeacteData['nature'] as $typeacteName) {
+                // Crée l'entrée de la nature d'admission
+                natureadmission::create([
+                    'nom' => $typeacteName,
+                    'typeadmission_id' => $add->id
+                ]);
+            }
+        }
+
+        $societe = ['MOOV CI', 'ORANGE CI', 'MTN CI', 'SGBCI'];
+        foreach ($societe as $value) {
+            societe::create(['nom' => $value]); 
+        }
         
+        assurance::create(['nom' => 'SOGEMAD','email' => 'sogemad@gmail.com','tel' => '0757671653','fax' => '659625532', 'adresse' => 'COCODY RIVERA']);
+
+
     }
 }

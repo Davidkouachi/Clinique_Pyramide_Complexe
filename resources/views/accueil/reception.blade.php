@@ -152,7 +152,7 @@
                                                         <i class="ri-search-line"></i>
                                                     </button>
                                                 </div>
-                                                <div id="suggestions" style="display: none;"></div>
+                                                <div class="suggestions" id="suggestions" style="display: none;"></div>
                                             </div>
                                         </div>
                                     </div>
@@ -657,7 +657,6 @@
             }
 
         }); 
-
 
         function formatPrice(input) {
             // Remove all non-numeric characters except the comma
@@ -2212,7 +2211,7 @@
             const addressX = (doc.internal.pageSize.getWidth() - addressWidth) / 2;
             doc.text(address, addressX, 25);
             // Texte du téléphone
-            const phone = "Tél.: 20 24 44 70 / 20 21 71 92 - Cel.: 01 01 01 63 43 / 01 01 01 63 43";
+            const phone = "Tél.: 20 24 44 70 / 20 21 71 92 - Cel.: 01 01 01 63 43";
             const phoneWidth = doc.getTextWidth(phone);
             const phoneX = (doc.internal.pageSize.getWidth() - phoneWidth) / 2;
             doc.text(phone, phoneX, 30);
@@ -2413,7 +2412,7 @@
             doc.setFontSize(10);
             doc.setFont("Helvetica", "bold");
             doc.setTextColor(0, 0, 0);
-            doc.text("Pouls", 100, 165);
+            doc.text("Taille", 100, 165);
 
             doc.setFont("Helvetica", "normal");
             doc.setTextColor(0, 0, 0);
@@ -2423,21 +2422,11 @@
             doc.setFontSize(10);
             doc.setFont("Helvetica", "bold");
             doc.setTextColor(0, 0, 0);
-            doc.text("Pouls", 140, 165);
+            doc.text("Temp", 140, 165);
 
             doc.setFont("Helvetica", "normal");
             doc.setTextColor(0, 0, 0);
             doc.text(": ..........", 155, 165);
-
-            // Informations du service
-            doc.setFontSize(10);
-            doc.setFont("Helvetica", "bold");
-            doc.setTextColor(0, 0, 0);
-            doc.text("Temp", 20, 175);
-
-            doc.setFont("Helvetica", "normal");
-            doc.setTextColor(0, 0, 0);
-            doc.text(": ..........", 35, 175);
 
             doc.setFontSize(15);
             doc.setFont("Helvetica", "bold");
@@ -2493,7 +2482,7 @@
                 const addressX = (doc.internal.pageSize.getWidth() - addressWidth) / 2;
                 doc.text(address, addressX, (yPos + 5));
                 // Texte du téléphone
-                const phone = "Tél.: 20 24 44 70 / 20 21 71 92 - Cel.: 01 01 01 63 43 / 01 01 01 63 43";
+                const phone = "Tél.: 20 24 44 70 / 20 21 71 92 - Cel.: 01 01 01 63 43";
                 const phoneWidth = doc.getTextWidth(phone);
                 const phoneX = (doc.internal.pageSize.getWidth() - phoneWidth) / 2;
                 doc.text(phone, phoneX, (yPos + 10));

@@ -137,7 +137,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                Voulez-vous vraiment supprimé cette chambre
+                Voulez-vous vraiment supprimé cette chambre ?
                 <input type="hidden" id="chambreIddelete">
             </div>
             <div class="modal-footer">
@@ -195,9 +195,6 @@
         </div>
     </div>
 </div>
-
-{{-- <script src="{{asset('assets/js/app/js/nouveau/chambre.js')}}" ></script>
-<script src="{{asset('assets/js/app/js/modifier/chambre.js')}}" ></script> --}}
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
@@ -384,7 +381,7 @@
             loaderDiv.style.display = 'block';
 
             // Fetch data from the API
-            fetch('/api/list_chambre_day') // API endpoint
+            fetch('/api/list_chambre') // API endpoint
                 .then(response => response.json())
                 .then(data => {
                     // Access the 'chambre' array from the API response
@@ -419,9 +416,10 @@
                                         <a class="btn btn-outline-info btn-sm rounded-5" data-bs-toggle="modal" data-bs-target="#Mmodif" id="edit-${item.id}">
                                             <i class="ri-edit-box-line"></i>
                                         </a>
-                                        <a class="btn btn-outline-danger btn-sm rounded-5" data-bs-toggle="modal" data-bs-target="#Mdelete" id="delete-${item.id}">
+                                        ${item.statut === 'indisponible' ?  
+                                        `<a class="btn btn-outline-danger btn-sm rounded-5" data-bs-toggle="modal" data-bs-target="#Mdelete" id="delete-${item.id}">
                                             <i class="ri-delete-bin-line"></i>
-                                        </a>
+                                        </a>` : ``}
                                     </div>
                                 </td>
                             `;
@@ -449,10 +447,14 @@
                             });
 
                             // Add event listener to the edit button to open the modal with pre-filled data
-                            document.getElementById(`delete-${item.id}`).addEventListener('click', () => {
-                                // Set the values in the modal form
-                                document.getElementById('chambreIddelete').value = item.id;
-                            });
+                            const deleteButton = document.getElementById(`delete-${item.id}`);
+                            if (deleteButton) {
+                                deleteButton.addEventListener('click', () => {
+                                    // Set the values in the modal form
+                                    document.getElementById('chambreIddelete').value = item.id;
+                                });
+                            }
+
 
                         });
                     } else {

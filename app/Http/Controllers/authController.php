@@ -64,7 +64,7 @@ class authController extends Controller
             // Effacer l'URL prévue en session pour éviter des redirections indésirables
             Session::forget('url.intended');
 
-            return redirect()->route('index_reception');
+            return redirect()->route('index_accueil');
         }
 
         return redirect()->back()->withInput($request->only('login'))

@@ -593,7 +593,7 @@
             const addressX = (doc.internal.pageSize.getWidth() - addressWidth) / 2;
             doc.text(address, addressX, 25);
             // Texte du téléphone
-            const phone = "Tél.: 20 24 44 70 / 20 21 71 92 - Cel.: 01 01 01 63 43 / 01 01 01 63 43";
+            const phone = "Tél.: 20 24 44 70 / 20 21 71 92 - Cel.: 01 01 01 63 43";
             const phoneWidth = doc.getTextWidth(phone);
             const phoneX = (doc.internal.pageSize.getWidth() - phoneWidth) / 2;
             doc.text(phone, phoneX, 30);
@@ -869,7 +869,7 @@
 
                 const titlea = "PAYER";
                 doc.setFontSize(100);
-                doc.setTextColor(174, 255, 165); // Gray color for background effect
+                doc.setTextColor(237, 255, 238); // Gray color for background effect
                 doc.setFont("Helvetica", "bold");
                 doc.text(titlea, 120, yPos + 120, { align: 'center', angle: 40 });
 
@@ -889,7 +889,7 @@
                 const addressX = (doc.internal.pageSize.getWidth() - addressWidth) / 2;
                 doc.text(address, addressX, (yPos + 5));
                 // Texte du téléphone
-                const phone = "Tél.: 20 24 44 70 / 20 21 71 92 - Cel.: 01 01 01 63 43 / 01 01 01 63 43";
+                const phone = "Tél.: 20 24 44 70 / 20 21 71 92 - Cel.: 01 01 01 63 43";
                 const phoneWidth = doc.getTextWidth(phone);
                 const phoneX = (doc.internal.pageSize.getWidth() - phoneWidth) / 2;
                 doc.text(phone, phoneX, (yPos + 10));
@@ -1074,8 +1074,8 @@
                 pdfWidth = doc.internal.pageSize.getWidth();
 
                 const titlea = "IMPAYER";
-                doc.setFontSize(100);
-                doc.setTextColor(252, 173, 159); // Gray color for background effect
+                doc.setFontSize(80);
+                doc.setTextColor(255, 231, 226); // Gray color for background effect
                 doc.setFont("Helvetica", "bold");
                 doc.text(titlea, 120, yPos + 120, { align: 'center', angle: 40 });
 
@@ -1095,7 +1095,7 @@
                 const addressX = (doc.internal.pageSize.getWidth() - addressWidth) / 2;
                 doc.text(address, addressX, (yPos + 5));
                 // Texte du téléphone
-                const phone = "Tél.: 20 24 44 70 / 20 21 71 92 - Cel.: 01 01 01 63 43 / 01 01 01 63 43";
+                const phone = "Tél.: 20 24 44 70 / 20 21 71 92 - Cel.: 01 01 01 63 43 ";
                 const phoneWidth = doc.getTextWidth(phone);
                 const phoneX = (doc.internal.pageSize.getWidth() - phoneWidth) / 2;
                 doc.text(phone, phoneX, (yPos + 10));

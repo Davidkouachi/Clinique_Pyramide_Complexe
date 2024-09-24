@@ -27,6 +27,9 @@ use App\Models\typeacte;
 use App\Models\user;
 use App\Models\typemedecin;
 use App\Models\role;
+use App\Models\typeadmission;
+use App\Models\natureadmission;
+use App\Models\detailhopital;
 
 class ApiupdateController extends Controller
 {
@@ -178,6 +181,44 @@ class ApiupdateController extends Controller
             DB::rollback();
             return response()->json(['error' => true, 'message' => $e->getMessage()]);
         }
+    }
+
+    public function update_typeadmission(Request $request, $id)
+    {
+        $put = typeadmission::find($id);
+
+        if ($put) {
+            $put->nom = $request->nom;
+
+            if ($put->save()) {
+                return response()->json(['success' => true]);
+            }else{
+                return response()->json(['error' => true]);
+            }
+
+        }
+
+        return response()->json(['error' => true]);
+
+    }
+
+    public function update_typeacte(Request $request, $id)
+    {
+        $put = natureadmission::find($id);
+
+        if ($put) {
+            $put->nom = $request->nomModif;
+            $put->typeadmission_id = $request->type_id;
+
+            if ($put->save()) {
+                return response()->json(['success' => true]);
+            }else{
+                return response()->json(['error' => true]);
+            }
+
+        }
+
+        return response()->json(['error' => true]);
     }
 
 }

@@ -68,7 +68,7 @@
                                     <tr>
                                         <th scope="col">N°</th>
                                         <th scope="col">Taux</th>
-                                        <th scope="col">Actions</th>
+                                        {{-- <th scope="col">Actions</th> --}}
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -78,7 +78,7 @@
                                         <td>
                                             {{$value->taux.' %'}}
                                         </td>
-                                        <td>
+                                        {{-- <td>
                                             <div class="d-inline-flex gap-1">
                                                 <a class="btn btn-outline-danger btn-sm rounded-5" data-bs-toggle="modal" data-bs-target="#delRow" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Supprimer">
                                                   <i class="ri-delete-bin-line"></i>
@@ -87,7 +87,7 @@
                                                   <i class="ri-edit-box-line"></i>
                                                 </a>
                                             </div>
-                                        </td>
+                                        </td> --}}
                                     </tr>
                                     @endforeach
                                 </tbody>

@@ -11,7 +11,7 @@
     <meta property="og:description" content="Marketplace for Bootstrap Admin Dashboards">
     <meta property="og:type" content="Website">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <link rel="shortcut icon" href="{{asset('assets/images/favicon.svg')}}">
+    <link rel="shortcut icon" href="{{asset('assets/images/logo.png')}}">
     <!-- *************
         ************ CSS Files *************
     ************* -->
@@ -67,10 +67,10 @@
             <!-- App brand starts -->
             <div class="app-brand ms-3 ">
                 <a href="" class="d-lg-block d-none">
-                    <img src="{{asset('assets/images/logo.jpeg')}}" height="40" width="40" class="" style="border-radius: 50%;" alt="Medicare Admin Template">
+                    <img src="{{asset('assets/images/logo.png')}}" height="40" width="40" class="" style="border-radius: 10%;" alt="Medicare Admin Template">
                 </a>
                 <a href="" class="d-lg-none d-md-block">
-                    <img src="{{asset('assets/images/logo.jpeg')}}" height="40" width="40" class="" style="border-radius: 50%;" alt="Medicare Admin Template">
+                    <img src="{{asset('assets/images/logo.png')}}" height="40" width="40" class="" style="border-radius: 10%;" alt="Medicare Admin Template">
                 </a>
             </div>
             <!-- App brand ends -->
@@ -112,35 +112,58 @@
                 <!-- Sidebar menu starts -->
                 <div class="sidebarMenuScroll">
                     <ul class="sidebar-menu">
-                        {{-- <li class="">active current-page
+                        <li @if(request()->routeIs('index_accueil')) class="active current-page" @endif>
                             <a href="{{route('index_accueil')}}">
-                                <i class="ri-bar-chart-line"></i>
+                                <i class="ri-home-line"></i>
                                 <span class="menu-text">Accueil</span>
                             </a>
-                        </li> --}}
-                        <li class="">{{-- active current-page --}}
+                        </li>
+                        <li @if(request()->routeIs('index_reception')) class="active current-page" @endif>
                             <a href="{{route('index_reception')}}">
-                                <i class="ri-bar-chart-line"></i>
+                                <i class="ri-computer-line"></i>
                                 <span class="menu-text">Réception</span>
                             </a>
                         </li>
-                        <li class="treeview">
+                        <li @if(request()->routeIs('hospitalisation','analyse','imagerie')) class="active current-page treeview" @else class="treeview" @endif>
                             <a href="#!">
-                                <i class="ri-settings-5-line"></i>
-                                <span class="menu-text">Caisse</span>
+                                <i class="ri-first-aid-kit-fill"></i>
+                                <span class="menu-text">services médicaux</span>
                             </a>
                             <ul class="treeview-menu">
                                 <li>
+                                    <a @if(request()->routeIs('hospitalisation')) class="text-primary" @endif href="{{route('hospitalisation')}}">
+                                        Hospitalisation
+                                    </a>
+                                </li>
+                                <li>
+                                    <a @if(request()->routeIs('analyse')) class="text-primary" @endif href="{{route('analyse')}}">
+                                        Analyse
+                                    </a>
+                                </li>
+                                <li>
+                                    <a @if(request()->routeIs('imagerie')) class="text-primary" @endif href="{{route('imagerie')}}">
+                                        Imagerie
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li @if(request()->routeIs('encaissement','liste_caisse')) class="active current-page treeview" @else class="treeview" @endif>
+                            <a href="#!">
+                                <i class="ri-safe-2-line"></i>
+                                <span class="menu-text">Caisse</span>
+                            </a>
+                            <ul class="treeview-menu">
+                                <li @if(request()->routeIs('encaissement','liste_caisse')) class="active" @endif >
                                     <a href="#!">
                                         Consultation
                                         <i class="ri-arrow-right-s-line"></i>
                                     </a>
                                     <ul class="treeview-menu">
                                         <li>
-                                            <a href="{{route('encaissement')}}">Encaissemnt</a>
+                                            <a @if(request()->routeIs('encaissement')) class="text-primary" @endif href="{{route('encaissement')}}">Facture non-réglée</a>
                                         </li>
                                         <li>
-                                            <a href="{{route('liste_caisse')}}">Liste</a>
+                                            <a @if(request()->routeIs('liste_caisse')) class="text-primary" @endif href="{{route('liste_caisse')}}">Liste facture</a>
                                         </li>
                                         {{-- <li>
                                             <a href="#">Bulletin</a>
@@ -179,13 +202,13 @@
                                 </li> --}}
                             </ul>
                         </li>
-                        <li class="treeview">
+                        <li @if(request()->routeIs('medecin_new','assurance_new','taux_new','societe_new','acte_new','typeacte_new','chambre_new','lit_new','typeadmission_new','natureadmission_new')) class="active current-page treeview" @else class="treeview" @endif>
                             <a href="#!">
                                 <i class="ri-settings-5-line"></i>
                                 <span class="menu-text">Configuration</span>
                             </a>
                             <ul class="treeview-menu">
-                                <li>
+                                <li @if(request()->routeIs('medecin_new','assurance_new','taux_new','societe_new','chambre_new','lit_new','typeadmission_new','natureadmission_new')) class="active" @endif >
                                     <a href="#!">
                                         Ajouter
                                         <i class="ri-arrow-right-s-line"></i>
@@ -194,13 +217,13 @@
                                         <li>
                                             <a href="{{route('medecin_new')}}">Medecin</a>
                                         </li>
-                                        {{-- <li>
+                                        <li @if(request()->routeIs('chambre_new','lit_new','typeadmission_new','natureadmission_new')) class="active" @endif >
                                             <a href="#!">
-                                                Infirmerie
+                                                Hospitalisation
                                                 <i class="ri-arrow-right-s-line"></i>
                                             </a>
                                             <ul class="treeview-menu">
-                                                <li>
+                                                {{-- <li>
                                                     <a href="#!">
                                                         Soin
                                                         <i class="ri-arrow-right-s-line"></i>
@@ -213,28 +236,35 @@
                                                             <a href="#">Soin Infirmerie</a>
                                                         </li>
                                                     </ul>
+                                                <li> --}}
                                                 <li>
-                                                    <a href="{{route('chambre_new')}}">Chambre & Lit</a>
+                                                    <a @if(request()->routeIs('chambre_new')) class="text-primary" @endif href="{{route('chambre_new')}}">Chambre</a>
                                                 </li>
                                                 <li>
-                                                    <a href="{{route('lit_new')}}">lit</a>
+                                                    <a @if(request()->routeIs('lit_new')) class="text-primary" @endif href="{{route('lit_new')}}">lit</a>
+                                                </li>
+                                                <li>
+                                                    <a @if(request()->routeIs('typeadmission_new')) class="text-primary" @endif href="{{route('typeadmission_new')}}">Type admission</a>
+                                                </li>
+                                                <li>
+                                                    <a @if(request()->routeIs('natureadmission_new')) class="text-primary" @endif href="{{route('natureadmission_new')}}">Nature admission</a>
                                                 </li>
                                             </ul>
-                                        </li> --}}
-                                        <li>
+                                        </li>
+                                        <li @if(request()->routeIs('assurance_new','taux_new','societe_new')) class="active" @endif >
                                             <a href="#!">
                                                 Assurance
                                                 <i class="ri-arrow-right-s-line"></i>
                                             </a>
                                             <ul class="treeview-menu">
                                                 <li>
-                                                    <a href="{{route('assurance_new')}}">Assurance</a>
+                                                    <a @if(request()->routeIs('assurance_new')) class="text-primary" @endif href="{{route('assurance_new')}}">Assurance</a>
                                                 </li>
                                                 {{-- <li>
                                                     <a href="{{route('produit_new')}}">Produit</a>
                                                 </li> --}}
                                                 <li>
-                                                    <a href="{{route('taux_new')}}">Taux</a>
+                                                    <a @if(request()->routeIs('taux_new')) class="text-primary" @endif href="{{route('taux_new')}}">Taux</a>
                                                 </li>
                                                 {{-- <li>
                                                     <a href="{{route('typeproduit_new')}}">Type Produit</a>
@@ -243,7 +273,7 @@
                                                     <a href="{{route('assureur_new')}}">Assureur</a>
                                                 </li> --}}
                                                 <li>
-                                                    <a href="{{route('societe_new')}}">Société assurer</a>
+                                                    <a @if(request()->routeIs('societe_new')) class="text-primary" @endif href="{{route('societe_new')}}">Société assurer</a>
                                                 </li>
                                             </ul>
                                         </li>
@@ -345,10 +375,10 @@
                                     </ul>
                                 </li> --}}
                                 <li>
-                                    <a href="{{route('acte_new')}}">Acte</a>
+                                    <a @if(request()->routeIs('acte_new')) class="text-primary" @endif  href="{{route('acte_new')}}">Acte</a>
                                 </li>
                                 <li>
-                                    <a href="{{route('typeacte_new')}}">Type acte</a>
+                                    <a @if(request()->routeIs('typeacte_new')) class="text-primary" @endif href="{{route('typeacte_new')}}">Type acte</a>
                                 </li>
                             </ul>
                         </li>
@@ -553,14 +583,14 @@
                                 </li>
                             </ul>
                         </li> --}}
-                        <li class="treeview">
+                        <li @if(request()->routeIs('consultation_liste')) class="active current-page treeview" @else class="treeview" @endif>
                             <a href="#!">
-                                <i class="ri-settings-5-line"></i>
+                                <i class="ri-archive-2-line"></i>
                                 <span class="menu-text">Gestionnaire</span>
                             </a>
                             <ul class="treeview-menu">
                                 <li>
-                                    <a href="{{route('consultation_liste')}}">
+                                    <a @if(request()->routeIs('consultation_liste')) class="text-primary" @endif href="{{route('consultation_liste')}}">
                                         Consultation
                                     </a>
                                 </li>

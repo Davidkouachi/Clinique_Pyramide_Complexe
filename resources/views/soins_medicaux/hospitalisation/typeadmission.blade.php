@@ -1,6 +1,6 @@
 @extends('app')
 
-@section('titre', 'Nouvelle Assurance')
+@section('titre', 'Nouvel Acte')
 
 @section('info_page')
 <div class="app-hero-header d-flex align-items-center">
@@ -11,7 +11,7 @@
             <a href="{{route('index_accueil')}}">Espace Santé</a>
         </li>
         <li class="breadcrumb-item text-primary" aria-current="page">
-            Nouveau Lit
+            Nouveau type d'admission
         </li>
     </ol>
 </div>
@@ -21,65 +21,36 @@
 
 <div class="app-body">
     <!-- Row starts -->
-    <div class="row">
-        <div class="col-12">
+    <div class="row justify-content-center">
+        <div class="col-xxl-4 col-lg-6 col-md-8 col-sm-8">
             <div class="card mb-3">
                 <div class="card-header">
-                    <h5 class="card-title">Formulaire Nouveau Lit</h5>
+                    <h5 class="card-title">Formulaire Nouveau type d'admission</h5>
                 </div>
                 <div class="card-body" >
-                    <!-- Row starts -->
                     <div class="row gx-3">
-                        <div class="col-xxl-3 col-lg-4 col-sm-6">
+                        <div class="col-12">
                             <div class="mb-3">
                                 <label class="form-label">
-                                    Numéro du lit
+                                    Nom du type
                                 </label>
-                                <div class="input-group">
-                                    <span class="input-group-text">Lit-</span>
-                                    <input type="text" class="form-control" id="num_lit" placeholder="Saisie Obligatoire" maxlength="6">
-                                    <a id="btn_search_num" class="btn btn-success">
-                                        <i class="ri-loop-left-line"></i>
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-xxl-3 col-lg-4 col-sm-6">
-                            <div class="mb-3">
-                                <label class="form-label">
-                                    Type
-                                </label>
-                                <select class="form-select" id="type">
-                                    <option value="">Selectionner</option>
-                                    <option value="Enfant">Enfant</option>
-                                    <option value="Adulte">Adulte</option>
-                                    <option value="Berceau">Berceau</option>
-                                    <option value="Autre">Autre</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col-xxl-3 col-lg-4 col-sm-6">
-                            <div class="mb-3">
-                                <label class="form-label">
-                                    Chambre
-                                </label>
-                                <select class="form-select" id="chambre_id">
-                                </select>
+                                <input type="text" class="form-control" id="nom" placeholder="Saisie Obligatoire" oninput="this.value = this.value.toUpperCase()">
                             </div>
                         </div>
                         <div class="col-sm-12">
-                            <div class="mb-3">
-                                <div class="d-flex gap-2 justify-content-start">
-                                    <button id="btn_eng_lit" class="btn btn-success">
-                                        Enregistrer
-                                    </button>
+                            <div class="mb-3 d-flex gap-2 justify-content-start">
+                                <button id="btn_eng" class="btn btn-success">
+                                    Enregistrer
+                                </button>
+                            </div>
+                        </div> 
+                        <div class="col-sm-12" >
+                            <div class="mb-3" >
+                                <div id="div_alert" >
+                    
                                 </div>
                             </div>
-                        </div>
-                        <div class="col-sm-12">
-                            <div class="mb-3" id="div_alert">
-                            </div>
-                        </div>
+                        </div>  
                     </div>
                     <!-- Row ends -->
                 </div>
@@ -89,9 +60,9 @@
             <div class="card mb-3">
                 <div class="card-header d-flex align-items-center justify-content-between">
                     <h5 class="card-title">
-                        Lits enregistrées Aujourd'hui
+                        Liste des types d'admission
                     </h5>
-                    <a id="btn_refresh_table_day" class="btn btn-outline-info ms-auto">
+                    <a id="btn_refresh_table" class="btn btn-outline-info ms-auto">
                         <i class="ri-loop-left-line"></i>
                     </a>
                 </div>
@@ -99,17 +70,13 @@
                     <div id="div_alert_table" >
                     
                     </div>
-                    <div class="table-outer" id="div_Table_lit_day" style="display: none;">
+                    <div class="table-outer" id="div_Table" style="display: none;" >
                         <div class="table-responsive">
-                            <table class="table align-middle table-hover m-0 truncate" id="Table_lit_day">
+                            <table class="table align-middle table-hover m-0 truncate" id="Table_day">
                                 <thead>
                                     <tr>
                                         <th scope="col">N°</th>
-                                        <th scope="col">Numéro</th>
-                                        <th scope="col">Catégorie</th>
-                                        <th scope="col">Numéro chambre</th>
-                                        <th scope="col">Prix</th>
-                                        <th scope="col">Statut</th>
+                                        <th scope="col">Nom</th>
                                         <th scope="col">Actions</th>
                                     </tr>
                                 </thead>
@@ -118,9 +85,9 @@
                             </table>
                         </div>
                     </div>
-                    <div id="message_Table_lit_day" style="display: none;">
+                    <div id="message_Table" style="display: none;">
                         <p class="text-center" >
-                            Aucun Lit n'a été enregistrer aujourd'hui
+                            Aucun type d'admission n'a été trouvé
                         </p>
                     </div>
                     <div id="div_Table_loader" style="display: none;">
@@ -146,13 +113,13 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                Voulez-vous vraiment supprimé cette chambre
-                <input type="hidden" id="litIddelete">
+                Voulez-vous vraiment supprimé cet Type d'acte ?
+                <input type="hidden" id="Iddelete">
             </div>
             <div class="modal-footer">
                 <div class="d-flex justify-content-end gap-2">
                     <a class="btn btn-secondary" data-bs-dismiss="modal" aria-label="Close">Non</a>
-                    <button id="deleteLitBtn" class="btn btn-danger" data-bs-dismiss="modal" aria-label="Close">Oui</button>
+                    <button id="deleteBtn" class="btn btn-danger" data-bs-dismiss="modal" aria-label="Close">Oui</button>
                 </div>
             </div>
         </div>
@@ -163,37 +130,26 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Modifier Lit</h5>
+                <h5 class="modal-title" id="exampleModalLabel">Mise à jour</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form id="updateLitForm">
+                <form id="updateChambreForm">
                     <div class="mb-3" id="alert_update">
                         
                     </div>
-                    <input type="hidden" id="litId"> <!-- Hidden field for the room's ID -->
+                    <input type="hidden" id="Id"> <!-- Hidden field for the room's ID -->
                     <div class="mb-3">
-                        <label for="chambreCode" class="form-label">Numéro</label>
+                        <label class="form-label">Nom de l'acte</label>
                         <div class="input-group">
-                            <span class="input-group-text">Lit-</span>
-                            <input type="text" class="form-control" id="litCode" readonly>
+                            <input type="text" class="form-control" id="nomModif" oninput="this.value = this.value.toUpperCase()">
                         </div>
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Type</label>
-                        <select class="form-select" id="typeLit">
-                            <option value="">Selectionner</option>
-                            <option value="Enfant">Enfant</option>
-                            <option value="Adulte">Adulte</option>
-                            <option value="Berceau">Berceau</option>
-                            <option value="Autre">Autre</option>
-                        </select>
                     </div>
                 </form>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
-                <button type="button" class="btn btn-primary" id="updateLitBtn">Mettre à jour</button>
+                <button type="button" class="btn btn-primary" id="updateBtn">Mettre à jour</button>
             </div>
         </div>
     </div>
@@ -202,62 +158,12 @@
 <script>
     document.addEventListener('DOMContentLoaded', function() {
 
-        refresh_num();
-        select_lit();
-        list_lit();
+        list();
 
-        document.getElementById("btn_search_num").addEventListener("click", refresh_num);
-        document.getElementById("btn_eng_lit").addEventListener("click", eng_lit);
-
-        document.getElementById("btn_refresh_table_day").addEventListener("click", list_lit);
-        document.getElementById("updateLitBtn").addEventListener("click", update_lit);
-        document.getElementById("deleteLitBtn").addEventListener("click", delete_lit);
-
-        function refresh_num(){
-
-            var num_lit = document.getElementById('num_lit');
-
-            $.ajax({
-                url: '/api/refresh_num_lit',
-                method: 'GET',
-                success: function(response) {
-                    // showAlert('success', 'Code générer avec succès');
-                    num_lit.value = response.code;
-                },
-                error: function() {
-                    // showAlert('danger', 'Impossible de generer le code automatiquement');
-                }
-            });
-        }
-
-        function select_lit() {
-            const selectElement = document.getElementById('chambre_id');
-
-            // Clear existing options
-            selectElement.innerHTML = '';
-
-            const defaultOption = document.createElement('option');
-            defaultOption.value = '';
-            defaultOption.textContent = 'Sélectionner une Chambre';
-            selectElement.appendChild(defaultOption);
-
-            $.ajax({
-                url: '/api/list_chambre_select',
-                method: 'GET',
-                success: function(response) {
-                    data = response.list;
-                    data.forEach(list => {
-                        const option = document.createElement('option');
-                        option.value = list.id; // Ensure 'id' is the correct key
-                        option.textContent = 'CH-'+list.code; // Ensure 'nom' is the correct key
-                        selectElement.appendChild(option);
-                    });
-                },
-                error: function() {
-                    // showAlert('danger', 'Impossible de generer le code automatiquement');
-                }
-            });
-        }
+        document.getElementById("btn_eng").addEventListener("click", eng);
+        document.getElementById("btn_refresh_table").addEventListener("click", list);
+        document.getElementById("updateBtn").addEventListener("click", updatee);
+        document.getElementById("deleteBtn").addEventListener("click", deletee);
 
         function showAlert(type, message) {
 
@@ -309,7 +215,7 @@
             }, 3000);
         }
 
-        function showAlertList(type, message) {
+        function showAlertTable(type, message) {
 
             var dynamicFields = document.getElementById("div_alert_table");
             // Remove existing content
@@ -334,11 +240,10 @@
             }, 3000);
         }
 
-        function eng_lit() {
+        function eng() 
+        {
 
-            const num_lit = document.getElementById("num_lit");
-            const type = document.getElementById("type");
-            const chambre_id = document.getElementById("chambre_id");
+            const nom = document.getElementById("nom");
 
             var dynamicFields = document.getElementById("div_alert");
             // Remove existing content
@@ -346,7 +251,7 @@
                 dynamicFields.removeChild(dynamicFields.firstChild);
             }
 
-            if(!num_lit.value.trim() || !type.value.trim() || !chambre_id.value.trim()){
+            if(!nom.value.trim()){
                 showAlert('warning', 'Veuillez remplir tous les champs SVP.');
                 return false;
             }
@@ -360,54 +265,53 @@
             document.body.insertAdjacentHTML('beforeend', preloader_ch);
 
             $.ajax({
-                url: '/api/lit_new',
-                method: 'GET',  // Use 'POST' for data creation
-                data: { num_lit: num_lit.value, type: type.value, chambre_id: chambre_id.value },
+                url: '/api/new_typeadmission',
+                method: 'GET',
+                data: { nom: nom.value,},
                 success: function(response) {
                     var preloader = document.getElementById('preloader_ch');
                     if (preloader) {
                         preloader.remove();
                     }
 
-                    if (response.success) {
-                        showAlert('success', 'Lit Enregistrée.');
+                    if (response.existe) {
+                        showAlert('warning', 'Cet Acte existe déjà.');
+                    } else if (response.success) {
+                        showAlert('success', 'Acte Enregistrée.');
                     } else if (response.error) {
                         showAlert('danger', 'Une erreur est survenue lors de l\'enregistrement.');
                     }
 
-                    num_lit.value = '';
-                    type.value = '';
-                    chambre_id.value = '';
+                    nom.value = '';
 
-                    refresh_num();
-                    select_lit();
-                    list_lit();
+                    list();
                 },
-                error: function() {
+                error: function(xhr, status, error) {
                     var preloader = document.getElementById('preloader_ch');
                     if (preloader) {
                         preloader.remove();
                     }
 
-                    showAlert('danger', 'Une erreur est survenue lors de l\'enregistrement.');
-                    
-                    num_lit.value = '';
-                    type.value = '';
-                    chambre_id.value = '';
-                    
-                    refresh_num();
-                    select_lit();
-                    list_lit();
+                    // You can log the entire error object to inspect it if needed
+                    console.log(xhr, status, error);
+
+                    // Display a more specific error message
+                    if (xhr.responseText) {
+                        showAlert('danger', `Erreur: ${xhr.responseText}`);
+                    } else {
+                        showAlert('danger', `Erreur: ${status} - ${error}`);
+                    }
+
+                    nom.value = '';
                 }
             });
-
         }
 
-        function list_lit() {
+        function list() {
 
-            const tableBody = document.querySelector('#Table_lit_day tbody'); // Target the specific table by id
-            const messageDiv = document.getElementById('message_Table_lit_day');
-            const tableDiv = document.getElementById('div_Table_lit_day'); // The message div
+            const tableBody = document.querySelector('#Table_day tbody'); // Target the specific table by id
+            const messageDiv = document.getElementById('message_Table');
+            const tableDiv = document.getElementById('div_Table'); // The message div
             const loaderDiv = document.getElementById('div_Table_loader');
 
             messageDiv.style.display = 'none';
@@ -415,75 +319,55 @@
             loaderDiv.style.display = 'block';
 
             // Fetch data from the API
-            fetch('/api/list_lit') // API endpoint
+            fetch('/api/list_typeadmission') // API endpoint
                 .then(response => response.json())
                 .then(data => {
                     // Access the 'chambre' array from the API response
-                    const lits = data.lit;
+                    const typeadmissions = data.typeadmission;
 
                     // Clear any existing rows in the table body
                     tableBody.innerHTML = '';
 
-                    if (lits.length > 0) {
+                    if (typeadmissions.length > 0) {
 
                         loaderDiv.style.display = 'none';
                         messageDiv.style.display = 'none';
                         tableDiv.style.display = 'block';
 
                         // Loop through each item in the chambre array
-                        lits.forEach((item, index) => {
+                        typeadmissions.forEach((item, index) => {
                             // Create a new row
                             const row = document.createElement('tr');
                             // Create and append cells to the row based on your table's structure
                             row.innerHTML = `
                                 <td>${index + 1}</td>
-                                <td>Lit-${item.code}</td>
-                                <td>${item.type}</td>
-                                <td>CH-${item.code_ch}</td>
-                                <td>${item.prix} Fcfa</td>
-                                <td>
-                                    ${item.statut === 'indisponible' ? 
-                                        `<span class="badge bg-danger">${item.statut}</span>` : 
-                                        `<span class="badge bg-success">${item.statut}</span>`}
-                                </td>
+                                <td>${item.nom}</td>
                                 <td>
                                     <div class="d-inline-flex gap-1">
                                         <a class="btn btn-outline-info btn-sm rounded-5" data-bs-toggle="modal" data-bs-target="#Mmodif" id="edit-${item.id}">
                                             <i class="ri-edit-box-line"></i>
                                         </a>
-                                        ${item.statut === 'indisponible' ? 
+                                        ${item.nbre == '0' ? 
                                             `<a class="btn btn-outline-danger btn-sm rounded-5" data-bs-toggle="modal" data-bs-target="#Mdelete" id="delete-${item.id}">
                                                 <i class="ri-delete-bin-line"></i>
                                             </a>` : `` }
                                     </div>
                                 </td>
                             `;
-                            // Append the row to the table body
+
                             tableBody.appendChild(row);
 
-                            // Add event listener to the edit button to open the modal with pre-filled data
                             document.getElementById(`edit-${item.id}`).addEventListener('click', () => {
                                 // Set the values in the modal form
-                                document.getElementById('litId').value = item.id;
-                                document.getElementById('litCode').value = item.code;
-
-                                const litTypeSelect = document.getElementById('typeLit');
-                                const typeOptions = litTypeSelect.options;
-
-                                // Loop through the options to find the matching value
-                                for (let i = 0; i < typeOptions.length; i++) {
-                                    if (typeOptions[i].value === item.type) { // Replace 'item.type_lit' with the correct field from your data
-                                        typeOptions[i].selected = true; // Set the matching option as selected
-                                        break; // Stop the loop once a match is found
-                                    }
-                                }
+                                document.getElementById('Id').value = item.id;
+                                document.getElementById('nomModif').value = item.nom;
                             });
 
                             const deleteButton = document.getElementById(`delete-${item.id}`);
                             if (deleteButton) {
                                 deleteButton.addEventListener('click', () => {
                                     // Set the values in the modal form
-                                    document.getElementById('litIddelete').value = item.id;
+                                    document.getElementById('Iddelete').value = item.id;
                                 });
                             }
 
@@ -503,10 +387,10 @@
                 });
         }
 
-        function update_lit() {
+        function updatee() {
 
-            const id = document.getElementById('litId').value;
-            const typeLit = document.getElementById('typeLit').value;
+            const id = document.getElementById('Id').value;
+            const nom = document.getElementById('nomModif').value;
 
             var dynamicFields = document.getElementById("alert_update");
             // Remove existing content
@@ -514,7 +398,13 @@
                 dynamicFields.removeChild(dynamicFields.firstChild);
             }
 
-            if(!typeLit.trim()){
+            var dynamicFields2 = document.getElementById("div_alert_table");
+            // Remove existing content
+            while (dynamicFields2.firstChild) {
+                dynamicFields2.removeChild(dynamicFields2.firstChild);
+            }
+
+            if(!nom.trim()){
                 showAlertUpdate('warning', 'Veuillez remplir tous les champs SVP.');
                 return false;
             }
@@ -531,28 +421,19 @@
             document.body.insertAdjacentHTML('beforeend', preloader_ch);
 
             $.ajax({
-                url: '/api/update_lit/'+id,
+                url: '/api/update_typeadmission/'+id,
                 method: 'GET',  // Use 'POST' for data creation
-                // headers: {
-                //     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'), // Include CSRF token if required
-                //     'Content-Type': 'application/json',  // Ensure JSON request
-                // },
-                data: { typeLit: typeLit},
-                // data: JSON.stringify({
-                //     nbre_lit: nbreLit,
-                //     prix: prix,
-                // }),
+                data: { nom: nom},
                 success: function(response) {
                     var preloader = document.getElementById('preloader_ch');
                     if (preloader) {
                         preloader.remove();
                     }
 
-                    showAlertList('success', 'Lit mise à jour avec succès.');
-
-                    refresh_num();
-                    select_lit();
-                    list_lit();
+                    showAlertTable('success', 'Type admission mise à jour avec succès.');
+                    // Reload the list or update the table row without a full refresh
+                    list(); // Call your function to reload the table
+                    // Close the modal
                 },
                 error: function() {
                     var preloader = document.getElementById('preloader_ch');
@@ -560,14 +441,20 @@
                         preloader.remove();
                     }
 
-                    showAlertList('error', 'Erreur lors de la mise à jour de la chambre.');
+                    showAlertTable('error', 'Erreur lors de la mise à jour du type d\'admission.');
                 }
             });
         }
 
-        function delete_lit() {
+        function deletee() {
 
-            const id = document.getElementById('litIddelete').value;
+            const id = document.getElementById('Iddelete').value;
+
+            var dynamicFields = document.getElementById("div_alert_table");
+            // Remove existing content
+            while (dynamicFields.firstChild) {
+                dynamicFields.removeChild(dynamicFields.firstChild);
+            }
 
             var modal = bootstrap.Modal.getInstance(document.getElementById('Mdelete'));
             modal.hide();
@@ -581,28 +468,18 @@
             document.body.insertAdjacentHTML('beforeend', preloader_ch);
 
             $.ajax({
-                url: '/api/delete_lit/'+id,
+                url: '/api/delete_typeadmission/'+id,
                 method: 'GET',  // Use 'POST' for data creation
-                // headers: {
-                //     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'), // Include CSRF token if required
-                //     'Content-Type': 'application/json',  // Ensure JSON request
-                // },
-                // data: { nbre_lit: nbreLit, prix: prix},
-                // data: JSON.stringify({
-                //     nbre_lit: nbreLit,
-                //     prix: prix,
-                // }),
                 success: function(response) {
                     var preloader = document.getElementById('preloader_ch');
                     if (preloader) {
                         preloader.remove();
                     }
 
-                    showAlertList('success', 'Chambre supprimer avec succès.');
-                    
-                    refresh_num();
-                    select_lit();
-                    list_lit();
+                    showAlertTable('success', 'Type admission supprimer avec succès.');
+                    // Reload the list or update the table row without a full refresh
+                    list(); // Call your function to reload the table
+                    // Close the modal
                 },
                 error: function() {
                     var preloader = document.getElementById('preloader_ch');
@@ -610,13 +487,13 @@
                         preloader.remove();
                     }
 
-                    showAlertList('error', 'Erreur lors de la suppression de la chambre.');
+                    showAlertTable('error', 'Erreur lors de la suppression du type d\'admission.');
                 }
             });
         }
-
     });
 </script>
 
-
 @endsection
+
+
