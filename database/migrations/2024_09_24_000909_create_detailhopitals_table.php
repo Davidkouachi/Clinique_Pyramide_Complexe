@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('detailhopitals', function (Blueprint $table) {
             $table->id();
+            $table->string('statut');
             $table->string('part_assurance');
             $table->string('part_patient');
             $table->string('remise');
@@ -27,6 +28,8 @@ return new class extends Migration
             $table->foreign('patient_id')->references('id')->on('patients')->onDelete('cascade');
             $table->unsignedBigInteger('lit_id');
             $table->foreign('lit_id')->references('id')->on('lits')->onDelete('cascade');
+            $table->unsignedBigInteger('user_id');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->timestamps();
         });
     }

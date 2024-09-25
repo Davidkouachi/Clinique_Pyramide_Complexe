@@ -40,6 +40,7 @@ Route::get('/new_medecin', [ApiinsertController::class, 'new_medecin']);
 Route::get('/new_consultation', [ApiinsertController::class, 'new_consultation']);
 Route::get('/new_typeadmission', [ApiinsertController::class, 'new_typeadmission']);
 Route::get('/new_natureadmission', [ApiinsertController::class, 'new_natureadmission']);
+Route::get('/hosp_new', [ApiinsertController::class, 'hosp_new']);
 // insert debut
 
 // search debut
@@ -88,6 +89,8 @@ Route::get('/list_chambre', [ApilistController::class, 'list_chambre']);
 Route::get('/list_lit', [ApilistController::class, 'list_lit']);
 Route::get('/list_typeadmission', [ApilistController::class, 'list_typeadmission']);
 Route::get('/list_natureadmission', [ApilistController::class, 'list_natureadmission']);
+Route::get('/list_hopital/{statut}', [ApilistController::class, 'list_hopital']);
+Route::get('/detail_hos/{id}', [ApilistController::class, 'detail_hos']);
 // liste debut
 
 // statistique debut

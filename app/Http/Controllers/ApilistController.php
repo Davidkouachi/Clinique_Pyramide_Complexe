@@ -32,6 +32,7 @@ use App\Models\detailconsultation;
 use App\Models\typeadmission;
 use App\Models\natureadmission;
 use App\Models\detailhopital;
+use App\Models\facture;
 
 class ApilistController extends Controller
 {
@@ -168,6 +169,78 @@ class ApilistController extends Controller
         }
 
         return response()->json(['natureadmission' => $natureadmission]);
+    }
+
+    public function list_hopital($statut)
+    {
+        $hopitalQuery = detailhopital::join('natureadmissions', 'natureadmissions.id', '=', 'detailhopitals.natureadmission_id')
+                                ->join('typeadmissions', 'typeadmissions.id', '=', 'natureadmissions.typeadmission_id')
+                                ->join('patients', 'patients.id', '=', 'detailhopitals.patient_id')
+                                ->join('users', 'users.id', '=', 'detailhopitals.user_id')
+                                ->select(
+                                    'detailhopitals.*',
+                                    'natureadmissions.nom as nature',
+                                    'typeadmissions.nom as type',
+                                    'patients.np as patient',
+                                    'users.name as medecin',
+                                )->orderBy('detailhopitals.created_at', 'desc');
+
+        if ($statut !== 'tous') {
+            $hopitalQuery->where('detailhopitals.statut', '=', $statut);
+        }
+
+        $hopital = $hopitalQuery->paginate(15);
+
+        return response()->json([
+            'hopital' => $hopital->items(), // Paginated data
+            'pagination' => [
+                'current_page' => $hopital->currentPage(),
+                'last_page' => $hopital->lastPage(),
+                'per_page' => $hopital->perPage(),
+                'total' => $hopital->total(),
+            ]
+        ]);
+    }
+
+    public function detail_hos($id)
+    {
+        $hopital = detailhopital::find($id);
+
+        $facture = facture::find($hopital->facture_id);
+
+        $patient = patient::leftjoin('assurances', 'assurances.id', '=', 'patients.assurance_id')
+        ->leftjoin('tauxes', 'tauxes.id', '=', 'patients.taux_id')
+        ->where('patients.id', '=', $hopital->patient_id)
+        ->select('patients.*', 'assurances.nom as assurance', 'tauxes.taux as taux')
+        ->first();
+
+        if ($patient) {
+            $patient->age = $patient->datenais ? Carbon::parse($patient->datenais)->age : 0;
+        }
+
+        $natureadmission = natureadmission::find($hopital->natureadmission_id);
+        $typeadmission = typeadmission::find($natureadmission->typeadmission_id);
+
+        $lit = lit::find($hopital->lit_id);
+        $chambre = chambre::find($lit->chambre_id);
+
+        $user = user::join('typemedecins', 'typemedecins.user_id', '=', 'users.id')
+            ->join('typeactes', 'typeactes.id', '=', 'typemedecins.typeacte_id')
+            ->where('users.id', '=', $hopital->user_id)
+            ->select('users.*', 'typeactes.nom as typeacte')
+            ->first();
+        
+        return response()->json([
+            'hopital' => $hopital,
+            'facture' => $facture,
+            'patient' => $patient,
+            'natureadmission' => $natureadmission,
+            'typeadmission' => $typeadmission,
+            'lit' => $lit,
+            'chambre' => $chambre,
+            'user' => $user,
+        ]);
+
     }
 
 }

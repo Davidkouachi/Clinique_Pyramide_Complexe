@@ -451,7 +451,7 @@
                                         <a class="btn btn-outline-info btn-sm rounded-5" data-bs-toggle="modal" data-bs-target="#Mmodif" id="edit-${item.id}">
                                             <i class="ri-edit-box-line"></i>
                                         </a>
-                                        ${item.statut === 'indisponible' ? 
+                                        ${item.statut === 'disponible' ? 
                                             `<a class="btn btn-outline-danger btn-sm rounded-5" data-bs-toggle="modal" data-bs-target="#Mdelete" id="delete-${item.id}">
                                                 <i class="ri-delete-bin-line"></i>
                                             </a>` : `` }

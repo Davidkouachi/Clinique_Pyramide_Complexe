@@ -65,7 +65,7 @@
                             <li class="nav-item" role="presentation">
                                 <a class="nav-link text-white" id="tab-oneAAA" data-bs-toggle="tab" href="#oneAAA" role="tab" aria-controls="oneAAA" aria-selected="false" tabindex="-1">
                                     <i class="ri-walk-line me-2"></i>
-                                    Patient hospitalisé
+                                    Liste
                                 </a>
                             </li>
                             <li class="nav-item" role="presentation">
@@ -87,7 +87,7 @@
                                             <label class="form-label">Patient</label>
                                             <div class="input-group">
                                                 <input type="hidden" class="form-control" id="matricule_patient" autocomplete="off">
-                                                <input type="text" class="form-control" id="patient" placeholder="facultatif">
+                                                <input type="text" class="form-control" id="patient" placeholder="facultatif" autocomplete="off">
                                             </div>
                                             <div class="suggestions" id="suggestions_patient" style="display: none;"></div>
                                         </div>
@@ -126,42 +126,66 @@
                                             </select>
                                         </div>
                                     </div>
-                                    <div class="col-sm-3 col-12">
+                                    <div class="col-xxl-3 col-lg-4 col-sm-6">
                                         <div class="mb-3">
                                             <label class="form-label">
                                                 Date d'entrée
                                             </label>
-                                            <input type="date" class="form-control" placeholder="Selectionner une date" id="date_entrer" min="{{ date('Y-m-d')}}">
+                                            <input type="date" class="form-control" placeholder="Selectionner une date" id="date_entrer" min="{{ date('Y-m-d') }}" value="{{ date('Y-m-d') }}">
                                         </div>
                                     </div>
-                                    <div class="col-sm-3 col-12">
+                                    <div class="col-xxl-3 col-lg-4 col-sm-6">
                                         <div class="mb-3">
                                             <label class="form-label">
                                                 Date de sortie probable
                                             </label>
-                                            <input type="date" class="form-control" placeholder="Sélectionner une date" id="date_sortie" min="{{ date('Y-m-d')}}">
+                                            <input type="date" class="form-control" placeholder="Sélectionner une date" id="date_sortie" min="{{ date('Y-m-d')}}" value="{{ date('Y-m-d') }}">
                                         </div>
                                     </div>
-                                    <div class="col-12">
+                                    <div class="col-xxl-3 col-lg-4 col-sm-6">
+                                        <div class="mb-3">
+                                            <label class="form-label">
+                                                Nombre de jours
+                                            </label>
+                                            <input readonly type="tel" class="form-control" id="nbre_jour" value="1">
+                                        </div>
+                                    </div>
+                                    <div class="col-xxl-9 col-lg-4 col-sm-6">
                                         <div class="mb-3">
                                             <label class="form-label">Motif</label>
                                             <input type="email" class="form-control" id="motif" placeholder="facultatif">
                                         </div>
                                     </div>
-                                    <div class="card-header text-center">
-                                        <h5 class="card-title">Information Caisse</h5>
+                                    <div class="col-sm-12">
+                                        <div class="d-flex gap-2 justify-content-center">
+                                            <button id="btn_calcul" class="btn btn-warning">
+                                                Calcul
+                                            </button>
+                                        </div>
                                     </div>
-                                    <div class="row gx-3">
-                                        <div class="col-xxl-3 col-lg-4 col-sm-6" id="div_taux" style="display: none;">
+                                    <div class="row gx-3" id="div_calcul" style="display: none;">
+                                        <div class="card-header text-center">
+                                            <h5 class="card-title">Information Caisse</h5>
+                                        </div>
+                                        <div class="col-xxl-3 col-lg-4 col-sm-6">
                                             <div class="mb-3">
                                                 <label class="form-label">Taux</label>
                                                 <div class="input-group">
-                                                    <input readonly type="tel" class="form-control" id="patient_taux" value="">
+                                                    <input readonly type="tel" class="form-control" id="patient_taux">
                                                     <span class="input-group-text">%</span>
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="col-xxl-3 col-lg-4 col-sm-6" style="display: none;" id="div_assurance">
+                                        <div class="col-xxl-3 col-lg-4 col-sm-6">
+                                            <div class="mb-3">
+                                                <label class="form-label">Prix de la chambre</label>
+                                                <div class="input-group">
+                                                    <input readonly type="tel" class="form-control" id="montant_chambre">
+                                                    <span class="input-group-text">Fcfa</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-xxl-3 col-lg-4 col-sm-6">
                                             <div class="mb-3">
                                                 <label class="form-label">Part Assurance</label>
                                                 <div class="input-group">
@@ -190,16 +214,16 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="col-xxl-3 col-lg-4 col-sm-6" id="div_remise" style="display: block;">
+                                        <div class="col-xxl-3 col-lg-4 col-sm-6">
                                             <div class="mb-3">
                                                 <label class="form-label">Remise</label>
                                                 <div class="input-group">
-                                                    <input type="tel" class="form-control" id="taux_remise" value="0">
+                                                    <input type="tel" class="form-control" id="taux_remise">
                                                     <span class="input-group-text">Fcfa</span>
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="col-xxl-3 col-lg-4 col-sm-6" id="div_remise_appliq" style="display: none;">
+                                        <div class="col-xxl-3 col-lg-4 col-sm-6">
                                             <div class="mb-3">
                                                 <label class="form-label">Application de la remise</label>
                                                 <select class="form-select" id="appliq_remise">
@@ -208,19 +232,86 @@
                                                 </select>
                                             </div>
                                         </div>
-                                    </div>
-                                    <div class="col-sm-12">
-                                        <div class="d-flex gap-2 justify-content-start">
-                                            <button id="btn_eng_patient" class="btn btn-success">
-                                                Enregistrer
-                                            </button>
+                                        <div class="col-sm-12">
+                                            <div class="d-flex gap-2 justify-content-center">
+                                                <button id="btn_eng_hosp" class="btn btn-success">
+                                                    Enregistrer
+                                                </button>
+                                            </div>
                                         </div>
                                     </div>
+                                    <div id="div_loader" style="display: none;">
+                                        <div class="d-flex justify-content-center align-items-center">
+                                            <div class="spinner-border text-warning me-2" role="status" aria-hidden="true"></div>
+                                            <strong>Calcul en cours...</strong>
+                                        </div>
+                                    </div>
+                                    <div class="p-2" id="div_alert_calcul" ></div>
                                 </div>
                             </div>
                             <div class="tab-pane fade " id="oneAAA" role="tabpanel" aria-labelledby="tab-oneAAA">
-                                <div class="card-header">
-                                    <h5 class="card-title text-center">Patient hospitalisé</h5>
+                                <div class="row gx-3" >
+                                    <div class="col-12">
+                                        <div class=" mb-3">
+                                            <div class="card-header d-flex align-items-center justify-content-between">
+                                                <h5 class="card-title">
+                                                    List des hospitalisation
+                                                </h5>
+                                                <div class="d-flex" >
+                                                    <select class="form-select me-1" id="statut">
+                                                        <option selected value="tous">Tous</option>
+                                                        <option value="Hospitaliser">Hospitaliser</option>
+                                                        <option value="Liberé">Liberé</option>
+                                                    </select>
+                                                    <a id="btn_print_table_hos" style="display: none;" class="btn btn-outline-warning ms-auto me-1">
+                                                        <i class="ri-printer-line"></i>
+                                                    </a>
+                                                    <a id="btn_refresh_table_hos" class="btn btn-outline-info ms-auto">
+                                                        <i class="ri-loop-left-line"></i>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                            <div class="card-body">
+                                                <div id="div_alert_table_hos" >
+                                                
+                                                </div>
+                                                <div class="table-outer" id="div_Table_hos" style="display: none;">
+                                                    <div class="table-responsive">
+                                                        <table class="table align-middle table-hover m-0 truncate" id="Table_hos">
+                                                            <thead>
+                                                                <tr>
+                                                                    <th scope="col">N°</th>
+                                                                    <th scope="col">Statut</th>
+                                                                    <th scope="col">Type</th>
+                                                                    <th scope="col">Nature</th>
+                                                                    <th scope="col">Nom et Prénoms</th>
+                                                                    <th scope="col">Date entrer</th>
+                                                                    <th scope="col">Date sorti</th>
+                                                                    <th scope="col">Medecin</th>
+                                                                    <th scope="col">Prix</th>
+                                                                    <th scope="col"></th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                                <div id="message_Table_hos" style="display: none;">
+                                                    <p class="text-center" >
+                                                        Aucune hospitalisation pour le moment
+                                                    </p>
+                                                </div>
+                                                <div id="div_Table_loader_hos" style="display: none;">
+                                                    <div class="d-flex justify-content-center align-items-center">
+                                                        <div class="spinner-border text-warning me-2" role="status" aria-hidden="true"></div>
+                                                        <strong>Chargement des données...</strong>
+                                                    </div>
+                                                </div>
+                                                <div id="pagination-controls-hos" ></div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                             <div class="tab-pane fade" id="threeAAA" role="tabpanel" aria-labelledby="tab-threeAAA">
@@ -278,27 +369,45 @@
     </div>
 </div>
 
+
+<div class="modal fade" id="Detail" tabindex="-1" aria-labelledby="exampleModalCenteredScrollableTitle" aria-modal="true" role="dialog">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalCenteredScrollableTitle">
+                    Détails
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" id="modal_detail">
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="{{asset('jsPDF-master/dist/jspdf.umd.js')}}"></script>
+
 <script>
     document.addEventListener("DOMContentLoaded", function() {
 
         Name_atient();
+        calculerJours();
         select_medecin();
         select_chambre();
         select_typeadmission();
         list_lit();
+        list_hos();
+        
 
         document.getElementById("id_chambre").addEventListener("change", select_lit);
         document.getElementById("id_typeadmission").addEventListener("change", select_natureadmission);
         document.getElementById("btn_refresh_table").addEventListener("click", list_lit);
-
-        document.getElementById('taux_remise').addEventListener('input', function() {
-            this.value = formatPrice(this.value);
-            if (this.value !== ''){
-                document.getElementById('div_remise_appliq').style.display = 'block';
-            }else{
-                document.getElementById('div_remise_appliq').style.display = 'none';
-            }
-        });
+        document.getElementById('date_entrer').addEventListener('change', calculerJours);
+        document.getElementById('date_sortie').addEventListener('change', calculerJours);
+        document.getElementById('btn_calcul').addEventListener('click', calculAmounts);
+        document.getElementById('btn_eng_hosp').addEventListener('click', eng_hosp);
+        document.getElementById("btn_refresh_table_hos").addEventListener("click", list_hos);
+        document.getElementById("statut").addEventListener("change", list_hos);
 
         function Name_atient()
         {
@@ -399,11 +508,6 @@
                         patient_taux.value = '';
                         patient_taux.value = response.patient.taux ? response.patient.taux : 0;
 
-                        if (patient_taux.value > 0) {
-                            document.getElementById('div_taux').style.display = 'block';
-                            document.getElementById('div_assurance').style.display = 'block';
-                        }
-
                         const appliq_remise = document.getElementById('appliq_remise');
 
                         // Cacher l'option "Assurance" si le taux est égal à 0
@@ -421,14 +525,6 @@
                                 }
                             }
                         }
-
-                        let prix = document.getElementById('montant_total').value;
-
-                        document.getElementById('div_remise_appliq').style.display = 'none';
-                        document.getElementById('taux_remise').value = 0;
-
-                        calculateAndFormatAmounts(prix, patient_taux.value);
-
                     }
                 },
                 error: function() {
@@ -456,6 +552,31 @@
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>   
             `;
             document.getElementById("div_alert").appendChild(groupe);
+
+            setTimeout(function() {
+                groupe.classList.remove("show");
+                groupe.classList.add("fade");
+                setTimeout(function() {
+                    groupe.remove();
+                }, 150); // Time for the fade effect to complete
+            }, 3000);
+        }
+
+        function showAlertCalcul(type, message) {
+
+            var dynamicFields = document.getElementById("div_alert_calcul");
+            // Remove existing content
+            while (dynamicFields.firstChild) {
+                dynamicFields.removeChild(dynamicFields.firstChild);
+            }
+
+            var groupe = document.createElement("div");
+            groupe.className = `alert bg-${type} text-white alert-dismissible fade show`;
+            groupe.innerHTML = `
+                ${message}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>   
+            `;
+            document.getElementById("div_alert_calcul").appendChild(groupe);
 
             setTimeout(function() {
                 groupe.classList.remove("show");
@@ -527,6 +648,7 @@
             defaultOption.textContent = 'Sélectionner';
             selectElement.appendChild(defaultOption);
             // Vérifie que l'élément select existe
+
             if (selectElement) {
                 // Effectuer une requête pour récupérer les taux
                 fetch('/api/list_chambre')
@@ -552,20 +674,6 @@
             defaultOption.value = '';
             defaultOption.textContent = 'Sélectionner';
             typeSelect.appendChild(defaultOption);
-
-            const montant_assurance = document.getElementById('montant_assurance');
-            const taux_remise = document.getElementById('taux_remise');
-            const montant_total = document.getElementById('montant_total');
-            const montant_patient = document.getElementById('montant_patient');
-
-            const montant_patient_hidden = document.getElementById('montant_patient_hidden');
-            const montant_assurance_hidden = document.getElementById('montant_assurance_hidden');
-
-            montant_assurance.value = '';
-            montant_total.value = '';
-            montant_patient.value = '';
-
-            const patient_taux = document.getElementById('patient_taux');
 
             const Id = document.getElementById('id_chambre').value;
 
@@ -601,12 +709,11 @@
 
                     if (prix) {
 
-                        calculateAndFormatAmounts(prix,patient_taux.value);
+                        document.getElementById('montant_chambre').value = prix;
+
 
                     } else {
-                        montant_total.value = '';
-                        montant_assurance.value = '';
-                        montant_patient.value = '';// Clear the field if no valid price
+                        document.getElementById('montant_chambre').value = 0;
                     }
 
                 });
@@ -651,48 +758,95 @@
             }
         }
 
-        function calculateAndFormatAmounts(prix, patient_taux) {
-            if (prix) {
-                // Remove all dots and commas from price and convert to number
-                let prixFloat = parseFloat(prix.replace(/[.,]/g, ''));
-                if (isNaN(prixFloat)) {
-                    console.error('Invalid price value');
-                    montant_total.value = ''; // Clear the field if the price is invalid
-                    return;
-                }
+        function calculAmounts() {
+            // Show loader and hide other elements
+            document.getElementById('div_loader').style.display = 'block';
+            document.getElementById('div_calcul').style.display = 'none';
+            document.getElementById('btn_calcul').style.display = 'none';
 
-                // Assign the total price
-                montant_total.value = formatPrice(prix);
+            // Get input elements
+            const montant_assurance = document.getElementById('montant_assurance');
+            const taux_remise = document.getElementById('taux_remise');
+            const montant_total = document.getElementById('montant_total');
+            const montant_patient = document.getElementById('montant_patient');
 
-                // Ensure patient_taux is a valid number
-                let tauxFloat = parseFloat(patient_taux);
-                if (isNaN(tauxFloat)) {
-                    tauxFloat = 0; // Set to 0 if patient_taux is not a number
-                }
+            const montant_patient_hidden = document.getElementById('montant_patient_hidden');
+            const montant_assurance_hidden = document.getElementById('montant_assurance_hidden');
 
-                if (tauxFloat === 0) {
-                    montant_assurance.value = '0'; // No insurance coverage
-                    montant_patient.value = formatPrice(prixFloat.toString());
-                    montant_patient_hidden.value = formatPrice(prixFloat.toString());
-                    montant_assurance_hidden.value = '0';
-                } else {
-                    // Calculate insurance amount and patient's amount
-                    let montantAssurance = (tauxFloat / 100) * prixFloat;
-                    let montantPatient = prixFloat - montantAssurance;
+            // Initialize amounts
+            let montantAssurance = 0;
+            let remise = 0;
+            let totalMontant = 0;
+            let montantPatient = 0;
 
-                    // Format the results and assign them
-                    montant_assurance.value = formatPrice(montantAssurance.toString());
-                    montant_patient.value = formatPrice(montantPatient.toString());
+            const patient_taux = document.getElementById('patient_taux').value;
+            const nbre_jour = document.getElementById('nbre_jour').value;
+            const montant_chambre = document.getElementById('montant_chambre').value;
 
-                    montant_patient_hidden.value = formatPrice(montantPatient.toString());
-                    montant_assurance_hidden.value = formatPrice(montantAssurance.toString());
-                }
+            // Validate inputs
+            if (patient_taux === '' || nbre_jour === '' || montant_chambre === '') {
 
-                getElementById('div_remise').style.display = 'block';
+                showAlertCalcul('warning', 'Veuillez remplir tous les champs SVP.');
 
-            } else {
-                montant_total.value = '';
+                document.getElementById('div_loader').style.display = 'none';
+                document.getElementById('div_calcul').style.display = 'none';
+                document.getElementById('btn_calcul').style.display = 'block';
+                return false;
             }
+
+            // Convert and validate values
+            let prixFloat = parseFloat(montant_chambre.replace(/[.,]/g, ''));
+            let joursInt = parseInt(nbre_jour);
+
+            if (isNaN(prixFloat) || isNaN(joursInt)) {
+                console.error('Invalid price or number of days');
+                montant_total.value = '';  // Clear the field if values are invalid
+                return;
+            }
+
+            // Calculate total price
+            let prixTotal = prixFloat * joursInt;
+
+            // Apply discount if available
+            remise = parseFloat(taux_remise.value) || 0;  // Get discount rate or default to 0
+            if (remise > 0 && remise <= 100) {
+                prixTotal -= (prixTotal * remise / 100);  // Apply discount
+            }
+
+            // Set total price
+            montant_total.value = formatPrice(prixTotal.toString());
+
+            // Validate insurance rate
+            let tauxFloat = parseFloat(patient_taux);
+            if (isNaN(tauxFloat)) {
+                tauxFloat = 0;  // Set to 0 if the rate is not valid
+            }
+
+            // Calculate insurance and patient portions
+            if (tauxFloat === 0) {
+                montant_assurance.value = '0';  // No insurance coverage
+                montant_patient.value = formatPrice(prixTotal.toString());
+                montant_patient_hidden.value = formatPrice(prixTotal.toString());
+                montant_assurance_hidden.value = '0';
+            } else {
+                montantAssurance = (tauxFloat / 100) * prixTotal;
+                montantPatient = prixTotal - montantAssurance;
+
+                montant_assurance.value = formatPrice(montantAssurance.toString());
+                montant_patient.value = formatPrice(montantPatient.toString());
+
+                montant_patient_hidden.value = formatPrice(montantPatient.toString());
+                montant_assurance_hidden.value = formatPrice(montantAssurance.toString());
+            }
+
+            document.getElementById('taux_remise').value = 0;
+
+            // Show results
+            document.getElementById('div_loader').style.display = 'none';
+            document.getElementById('div_calcul').style.display = 'flex';
+            document.getElementById('btn_calcul').style.display = 'block';
+
+            return false;
         }
 
         document.getElementById('taux_remise').addEventListener('input', function() {
@@ -701,7 +855,6 @@
             // Ajouter des points pour les milliers
             const formattedValue = formatPrice(rawValue);
             
-            // Mettre à jour la valeur du champ avec la valeur formatée
             this.value = formattedValue;
 
             const appliq_remise = document.getElementById('appliq_remise').value;
@@ -730,7 +883,6 @@
             document.getElementById('montant_assurance').value = formatPrice(document.getElementById('montant_assurance_hidden').value);
             document.getElementById('montant_patient').value = formatPrice(document.getElementById('montant_patient_hidden').value);
 
-            // Nettoyer la valeur entrée en supprimant les caractères non numériques sauf le point
             const rawValue = document.getElementById('taux_remise').value.replace(/[^0-9]/g, ''); // 
 
             if (this.value == 'patient') {
@@ -842,6 +994,700 @@
                     messageDiv.style.display = 'block';
                     tableDiv.style.display = 'none';
                 });
+        }
+
+        function calculerJours() {
+            // Sélectionner les éléments des champs date
+            const dateEntree = document.getElementById('date_entrer');
+            const dateSortie = document.getElementById('date_sortie');
+            const joursInput = document.getElementById('nbre_jour');
+
+            const entreeValue = new Date(dateEntree.value);
+            const sortieValue = new Date(dateSortie.value);
+
+            // Vérifier si les deux dates sont valides
+            if (entreeValue && sortieValue) {
+                // Calcul de la différence en millisecondes
+                const difference = sortieValue - entreeValue;
+                // Convertir en jours (1 jour = 24*60*60*1000 millisecondes)
+                let jours = difference / (1000 * 60 * 60 * 24);
+                jours = jours >= 0 ? jours + 1 : 0; // Si date entrée et sortie sont égales, il affiche 1 jour minimum
+                joursInput.value = '';
+                joursInput.value = jours;
+            }
+        }
+
+        function eng_hosp()
+        {
+            var matricule_patient = document.getElementById("matricule_patient").value;
+            var medecin_id = document.getElementById("medecin_id").value;
+            var id_typeadmission = document.getElementById("id_typeadmission").value;
+            var id_natureadmission = document.getElementById("id_natureadmission").value;
+            var id_chambre = document.getElementById("id_chambre").value;
+            var id_lit = document.getElementById('id_lit').value;
+            var date_entrer = document.getElementById('date_entrer').value;
+            var date_sortie = document.getElementById('date_sortie').value;
+            var motif = document.getElementById('motif').value;
+
+
+            if (!matricule_patient.trim() || 
+                !medecin_id.trim() || 
+                !id_typeadmission.trim() || 
+                !id_natureadmission.trim() || 
+                !id_chambre.trim() || 
+                !id_lit.trim() || 
+                !date_entrer.trim() || 
+                !date_sortie.trim() || 
+                !motif.trim()) {
+                showAlertCalcul('warning', 'Tous les champs sont obligatoires.');
+                return false; 
+            }
+
+            var montant_assurance = document.getElementById('montant_assurance').value;
+            var taux_remise = document.getElementById('taux_remise').value;
+            var montant_total = document.getElementById('montant_total').value;
+            var montant_patient = document.getElementById('montant_patient').value;
+            var patient_taux = document.getElementById('patient_taux').value;
+            var nbre_jour = document.getElementById('nbre_jour').value;
+            var montant_chambre = document.getElementById('montant_chambre').value;
+
+            // Validate monetary fields
+            if (!montant_assurance || 
+                !montant_total || 
+                !montant_patient || 
+                !patient_taux || 
+                !nbre_jour || 
+                !montant_chambre) {
+                
+                showAlertCalcul('warning', 'Vérifier les montants SVP.');
+                return false; 
+            }
+
+            var montantAssuranceValue = parseFloat(montant_assurance);
+            var montantTotalValue = parseFloat(montant_total);
+            var montantPatientValue = parseFloat(montant_patient);
+            var montantChambreValue = parseFloat(montant_chambre);
+
+            if (isNaN(montantAssuranceValue) || 
+                isNaN(montantTotalValue) || 
+                isNaN(montantPatientValue) || 
+                isNaN(montantChambreValue) || 
+                montantAssuranceValue < 0 || 
+                montantTotalValue < 0 || 
+                montantPatientValue < 0 || 
+                montantChambreValue < 0) {
+                
+                showAlertCalcul('warning', 'Vérifier les montants SVP (les montants ne doivent pas être négatifs).');
+                return false;
+            }
+
+            var preloader_ch = `
+                <div id="preloader_ch">
+                    <div class="spinner_preloader_ch"></div>
+                </div>
+            `;
+            // Add the preloader to the body
+            document.body.insertAdjacentHTML('beforeend', preloader_ch);
+
+            $.ajax({
+                url: '/api/hosp_new',
+                method: 'GET',  // Use 'POST' for data creation
+                data: {
+                    matricule_patient: matricule_patient,
+                    medecin_id: medecin_id,
+                    id_typeadmission: id_typeadmission,
+                    id_natureadmission: id_natureadmission,
+                    id_chambre: id_chambre,
+                    id_lit: id_lit,
+                    date_entrer: date_entrer,
+                    date_sortie: date_sortie,
+                    motif: motif,
+                    montant_assurance: montant_assurance,
+                    taux_remise: taux_remise,
+                    montant_total: montant_total,
+                    montant_patient: montant_patient,
+                    patient_taux: patient_taux,
+                    nbre_jour: nbre_jour,
+                    montant_chambre: montant_chambre
+                },
+                success: function(response) {
+                    var preloader = document.getElementById('preloader_ch');
+                    if (preloader) {
+                        preloader.remove();
+                    }
+                    
+                    if (response.success) {
+                        showAlert('success', 'Patient Hospitaliser.');
+                    } else if (response.error) {
+                        showAlert('danger', 'Une erreur est survenue lors de l\'hospitalisation.');
+                    }
+
+                    list_hos();
+                    reset();
+
+                    var newConsultationTab = new bootstrap.Tab(document.getElementById('tab-oneAAA'));
+                    newConsultationTab.show();
+                    newConsultationTab.active();
+
+                },
+                error: function() {
+
+                    var preloader = document.getElementById('preloader_ch');
+                    if (preloader) {
+                        preloader.remove();
+                    }
+
+                    showAlert('danger', 'Une erreur est survenue lors de l\'hospitalisation.');
+
+                    reset();
+                    
+                }
+            });
+        }
+
+        function reset()
+        {
+            document.getElementById("patient").value = '';
+            document.getElementById("matricule_patient").value = '';
+            document.getElementById("medecin_id").value = '';
+            document.getElementById("id_typeadmission").value = '';
+            document.getElementById("id_natureadmission").value = '';
+            document.getElementById("id_chambre").value = '';
+            document.getElementById('id_lit').value = '';
+            document.getElementById('date_entrer').value = '';
+            document.getElementById('date_sortie').value = '';
+            document.getElementById('motif').value = '';
+
+            document.getElementById('montant_assurance').value = '';
+            document.getElementById('taux_remise').value = '';
+            document.getElementById('montant_total').value = '';
+            document.getElementById('montant_patient').value = '';
+            document.getElementById('patient_taux').value = '';
+            document.getElementById('nbre_jour').value = '';
+            document.getElementById('montant_chambre').value = '';
+
+            document.getElementById('div_loader').style.display = 'none';
+            document.getElementById('div_calcul').style.display = 'none';
+            document.getElementById('btn_calcul').style.display = 'block';
+
+            calculerJours();
+            Name_atient();
+            select_medecin();
+            select_chambre();
+            select_typeadmission();
+            list_lit();
+        }
+
+        function list_hos(page = 1) {
+
+            const tableBody = document.querySelector('#Table_hos tbody');
+            const messageDiv = document.getElementById('message_Table_hos');
+            const tableDiv = document.getElementById('div_Table_hos'); // The message div
+            const loaderDiv = document.getElementById('div_Table_loader_hos');
+
+            messageDiv.style.display = 'none';
+            tableDiv.style.display = 'none';
+            loaderDiv.style.display = 'block';
+
+            // Fetch data from the API
+            const statut = document.getElementById('statut').value;
+            const url = `/api/list_hopital/${statut}?page=${page}`;
+            fetch(url) // API endpoint
+                .then(response => response.json())
+                .then(data => {
+
+                    const hopitals = data.hopital || [] ;
+                    const pagination = data.pagination || {};
+
+                    const perPage = pagination.per_page || 10;
+                    const currentPage = pagination.current_page || 1;
+
+                    // Clear any existing rows in the table body
+                    tableBody.innerHTML = '';
+
+                    if (hopitals.length > 0) {
+
+                        document.getElementById(`btn_print_table_hos`).style.display = 'block';
+
+                        loaderDiv.style.display = 'none';
+                        messageDiv.style.display = 'none';
+                        tableDiv.style.display = 'block';
+
+                        // Loop through each item in the chambre array
+                        hopitals.forEach((item, index) => {
+                            // Create a new row
+                            const row = document.createElement('tr');
+                            // Create and append cells to the row based on your table's structure
+                            row.innerHTML = `
+                                <td>${((currentPage - 1) * perPage) + index + 1}</td>
+                                <td>
+                                    ${item.statut === 'Hospitaliser' ? 
+                                        `<span class="badge bg-danger">${item.statut}</span>` : 
+                                        `<span class="badge bg-success">${item.statut}</span>`}
+                                </td>
+                                <td>${item.type}</td>
+                                <td>${item.nature}</td>
+                                <td>${item.patient}</td>
+                                <td>${formatDate(item.date_debut)}</td>
+                                <td>${formatDate(item.date_fin)}</td>
+                                <td>${item.medecin}</td>
+                                <td>${item.montant} Fcfa</td>
+                                <td>
+                                    <div class="d-inline-flex gap-1">
+                                        <a class="btn btn-outline-warning btn-sm" id="detail-${item.id}" data-bs-toggle="modal" data-bs-target="#Detail">
+                                            <i class="ri-eye-line"></i>
+                                        </a>
+                                        <a class="btn btn-outline-info btn-sm" id="fiche-${item.id}">
+                                            <i class="ri-file-line"></i>
+                                        </a>
+                                    </div>
+                                </td>
+                                
+                            `;
+                            // Append the row to the table body
+                            tableBody.appendChild(row);
+
+                            document.getElementById(`detail-${item.id}`).addEventListener('click', () =>
+                            {
+                                fetch(`/api/detail_hos/${item.id}`) // API endpoint
+                                    .then(response => response.json())
+                                    .then(data => {
+                                        // Access the 'chambre' array from the API response
+                                        const modal = document.getElementById('modal_detail');
+                                        modal.innerHTML = '';
+
+                                        const hopital = data.hopital;
+                                        const facture = data.facture;
+                                        const patient = data.patient;
+                                        const nature = data.natureadmission;
+                                        const type = data.typeadmission;
+                                        const lit = data.lit;
+                                        const chambre = data.chambre;
+                                        const user = data.user;
+
+                                        const div = document.createElement('div');
+                                        div.innerHTML = `
+                                            <div class="row">
+                                                <div class="col-xl-12">
+                                                    <div class="">
+                                                        <div class="card-body">
+                                                            <div class="row justify-content-between">
+                                                                <div class="col-12 text-center">                  
+                                                                    <h6 class="fw-semibold">Docteur :</h6>
+                                                                    <p>${user.name}</p>
+                                                                    <h6 class="fw-semibold">Spécialité :</h6>
+                                                                    <p>${user.typeacte}</p>
+                                                                    <h6 class="fw-semibold">Chambre Occupé :</h6>
+                                                                    <p>CH-${chambre.code}</p>
+                                                                    <h6 class="fw-semibold">Lit Occupé :</h6>
+                                                                    <p>LIT-${lit.code}/${lit.type}</p>
+                                                                    <h6 class="fw-semibold">Prix :</h6>
+                                                                    <p>${chambre.prix} Fcfa</p>
+                                                                </div>
+                                                                <div class="col-12 text-center mt-4">
+                                                                    <h6 class="fw-semibold">Type d'admission :</h6>
+                                                                    <p>${type.nom}</p>
+                                                                    <h6 class="fw-semibold">Nature d'admission :</h6>
+                                                                    <p>${nature.nom}</p>
+                                                                    <h6 class="fw-semibold">Date d'entrer :</h6>
+                                                                    <p>${formatDate(hopital.date_debut)}</p>
+                                                                    <h6 class="fw-semibold">Date de sortie Probable :</h6>
+                                                                    <p>${formatDate(hopital.date_fin)}</p>
+                                                                    <h6 class="fw-semibold">Nombre de jours :</h6>
+                                                                    <p>${calculateDaysBetween(hopital.date_debut, hopital.date_fin)}</p>
+                                                                </div>
+                                                                <div class="col-12 text-center mt-4">
+                                                                    <h6 class="fw-semibold">N° Dossier :</h6>
+                                                                    <p>${patient.matricule}</p>
+                                                                    <h6 class="fw-semibold">Nom du patient :</h6>
+                                                                    <p>${patient.np}</p>
+                                                                    <h6 class="fw-semibold">contact :</h6>
+                                                                    <p>${patient.tel}</p>
+                                                                    <h6 class="fw-semibold">Assurer :</h6>
+                                                                    <p>${patient.assurer}</p>
+                                                                    ${patient.assurer === 'oui' ? `
+                                                                        <h6 class="fw-semibold">Taux :</h6>
+                                                                        <p>${patient.taux}%</p>
+
+                                                                        <h6 class="fw-semibold">Assurance :</h6>
+                                                                        <p>${patient.assurance}</p> 
+
+                                                                        <h6 class="fw-semibold">Matricule :</h6>
+                                                                        <p>${patient.matricule_assurance}</p>
+                                                                    ` : ''}
+                                                                </div>
+                                                                <div class="col-12 text-center mt-4">
+                                                                    <h6 class="fw-semibold">Part Patient :</h6>
+                                                                    <p>${hopital.part_patient} Fcfa</p>
+                                                                    <h6 class="fw-semibold">Part Assurance :</h6>
+                                                                    <p>${hopital.part_assurance} Fcfa</p>
+                                                                    <h6 class="fw-semibold">Remise :</h6>
+                                                                    <p>${hopital.remise ? hopital.remise : '0'} Fcfa</p>
+                                                                    <h6 class="fw-semibold">Montant Total :</h6>
+                                                                    <p>${hopital.montant} Fcfa</p>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        `;
+
+                                        modal.appendChild(div);
+
+                                    })
+                                    .catch(error => {
+                                        console.error('Erreur lors du chargement des données:', error);
+                                    });
+                            });
+
+                            document.getElementById(`fiche-${item.id}`).addEventListener('click', () =>
+                            {
+                                fetch(`/api/detail_hos/${item.id}`) // API endpoint
+                                    .then(response => response.json())
+                                    .then(data => {
+                                        // Access the 'chambre' array from the API response
+                                        const hopital = data.hopital;
+                                        const facture = data.facture;
+                                        const patient = data.patient;
+                                        const nature = data.natureadmission;
+                                        const type = data.typeadmission;
+                                        const lit = data.lit;
+                                        const chambre = data.chambre;
+                                        const user = data.user;
+
+                                        generatePDFInvoice(hopital, facture, patient, nature, type, lit, chambre, user);
+
+                                    })
+                                    .catch(error => {
+                                        console.error('Erreur lors du chargement des données:', error);
+                                    });
+                            });
+
+                        });
+
+                        updatePaginationControls(pagination);
+
+                    } else {
+                        document.getElementById(`btn_print_table_hos`).style.display = 'none';
+                        loaderDiv.style.display = 'none';
+                        messageDiv.style.display = 'block';
+                        tableDiv.style.display = 'none';
+                    }
+                })
+                .catch(error => {
+                    console.error('Erreur lors du chargement des données:', error);
+                    // Hide the table and show the error message in case of failure
+                    loaderDiv.style.display = 'none';
+                    messageDiv.style.display = 'block';
+                    tableDiv.style.display = 'none';
+                });
+        }
+
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            const day = String(date.getDate()).padStart(2, '0');  // Ajoute un '0' si le jour est à un chiffre
+            const month = String(date.getMonth() + 1).padStart(2, '0');  // Les mois sont indexés de 0, donc +1
+            const year = date.getFullYear();
+            
+            return `${day}-${month}-${year}`;
+        }
+
+        function calculateDaysBetween(startDate, endDate) {
+            const start = new Date(startDate);
+            const end = new Date(endDate);
+            
+            // Calcul de la différence en millisecondes
+            const diffInMilliseconds = end - start;
+
+            // Conversion en jours (millisecondes en secondes, minutes, heures, jours)
+            let diffInDays = diffInMilliseconds / (1000 * 60 * 60 * 24);
+
+            // Si la différence est inférieure ou égale à 0, on retourne 1 jour minimum
+            return diffInDays <= 0 ? 1 : Math.round(diffInDays); 
+        }
+
+        function updatePaginationControls(pagination) {
+            const paginationDiv = document.getElementById('pagination-controls-hos');
+            paginationDiv.innerHTML = '';
+
+            // Bootstrap pagination wrapper
+            const paginationWrapper = document.createElement('ul');
+            paginationWrapper.className = 'pagination justify-content-center';
+
+            // Previous button
+            if (pagination.current_page > 1) {
+                const prevButton = document.createElement('li');
+                prevButton.className = 'page-item';
+                prevButton.innerHTML = `<a class="page-link" href="#">Precédent</a>`;
+                prevButton.onclick = (event) => {
+                    event.preventDefault(); // Empêche le défilement en haut de la page
+                    list_cons(pagination.current_page - 1);
+                };
+                paginationWrapper.appendChild(prevButton);
+            } else {
+                // Disable the previous button if on the first page
+                const prevButton = document.createElement('li');
+                prevButton.className = 'page-item disabled';
+                prevButton.innerHTML = `<a class="page-link" href="#">Precédent</a>`;
+                paginationWrapper.appendChild(prevButton);
+            }
+
+            // Page number links (show a few around the current page)
+            const totalPages = pagination.last_page;
+            const currentPage = pagination.current_page;
+            const maxVisiblePages = 5; // Max number of page links to display
+
+            let startPage = Math.max(1, currentPage - Math.floor(maxVisiblePages / 2));
+            let endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
+
+            // Adjust start page if end page exceeds the total pages
+            if (endPage - startPage < maxVisiblePages - 1) {
+                startPage = Math.max(1, endPage - maxVisiblePages + 1);
+            }
+
+            // Loop through pages and create page links
+            for (let i = startPage; i <= endPage; i++) {
+                const pageItem = document.createElement('li');
+                pageItem.className = `page-item ${i === currentPage ? 'active' : ''}`;
+                pageItem.innerHTML = `<a class="page-link" href="#">${i}</a>`;
+                pageItem.onclick = (event) => {
+                    event.preventDefault(); // Empêche le défilement en haut de la page
+                    list_cons(i);
+                };
+                paginationWrapper.appendChild(pageItem);
+            }
+
+            // Ellipsis (...) if not all pages are shown
+            if (endPage < totalPages) {
+                const ellipsis = document.createElement('li');
+                ellipsis.className = 'page-item disabled';
+                ellipsis.innerHTML = `<a class="page-link" href="#">...</a>`;
+                paginationWrapper.appendChild(ellipsis);
+
+                // Add the last page link
+                const lastPageItem = document.createElement('li');
+                lastPageItem.className = `page-item`;
+                lastPageItem.innerHTML = `<a class="page-link" href="#">${totalPages}</a>`;
+                lastPageItem.onclick = (event) => {
+                    event.preventDefault(); // Empêche le défilement en haut de la page
+                    list_cons(totalPages);
+                };
+                paginationWrapper.appendChild(lastPageItem);
+            }
+
+            // Next button
+            if (pagination.current_page < pagination.last_page) {
+                const nextButton = document.createElement('li');
+                nextButton.className = 'page-item';
+                nextButton.innerHTML = `<a class="page-link" href="#">Suivant</a>`;
+                nextButton.onclick = (event) => {
+                    event.preventDefault(); // Empêche le défilement en haut de la page
+                    list_cons(pagination.current_page + 1);
+                };
+                paginationWrapper.appendChild(nextButton);
+            } else {
+                // Disable the next button if on the last page
+                const nextButton = document.createElement('li');
+                nextButton.className = 'page-item disabled';
+                nextButton.innerHTML = `<a class="page-link" href="#">Suivant</a>`;
+                paginationWrapper.appendChild(nextButton);
+            }
+
+            // Append pagination controls to the DOM
+            paginationDiv.appendChild(paginationWrapper);
+        }
+
+        function generatePDFInvoice(hopital, facture, patient, nature, type, lit, chambre, user) {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF({ orientation: 'p', unit: 'mm', format: 'a4' });
+
+            yPos = 10;
+
+            function drawConsultationSection(yPos) {
+                rightMargin = 15;
+                leftMargin = 15;
+                pdfWidth = doc.internal.pageSize.getWidth();
+
+                const titlea = "Facture";
+                doc.setFontSize(100);
+                doc.setTextColor(242, 242, 242); // Gray color for background effect
+                doc.setFont("Helvetica", "bold");
+                doc.text(titlea, 120, yPos + 120, { align: 'center', angle: 40 });
+
+                // Informations de l'entreprise
+                doc.setFontSize(10);
+                doc.setTextColor(0, 0, 0);
+                doc.setFont("Helvetica", "bold");
+                // Texte de l'entreprise
+                const title = "ESPACE MEDICO SOCIAL LA PYRAMIDE DU COMPLEXE";
+                const titleWidth = doc.getTextWidth(title);
+                const titleX = (doc.internal.pageSize.getWidth() - titleWidth) / 2;
+                doc.text(title, titleX, yPos);
+                // Texte de l'adresse
+                doc.setFont("Helvetica", "normal");
+                const address = "Abidjan Yopougon Selmer, Non loin du complexe sportif Jesse-Jackson - 04 BP 1523";
+                const addressWidth = doc.getTextWidth(address);
+                const addressX = (doc.internal.pageSize.getWidth() - addressWidth) / 2;
+                doc.text(address, addressX, (yPos + 5));
+                // Texte du téléphone
+                const phone = "Tél.: 20 24 44 70 / 20 21 71 92 - Cel.: 01 01 01 63 43";
+                const phoneWidth = doc.getTextWidth(phone);
+                const phoneX = (doc.internal.pageSize.getWidth() - phoneWidth) / 2;
+                doc.text(phone, phoneX, (yPos + 10));
+                doc.setFontSize(10);
+                doc.setFont("Helvetica", "normal");
+                const hopitalDate = new Date(hopital.created_at);
+                // Formatter la date et l'heure séparément
+                const formattedDate = hopitalDate.toLocaleDateString(); // Formater la date
+                const formattedTime = hopitalDate.toLocaleTimeString();
+                doc.text("Date: " + formattedDate, 15, (yPos + 25));
+                doc.text("Heure: " + formattedTime, 15, (yPos + 30));
+
+                //Ligne de séparation
+                doc.setFontSize(15);
+                doc.setFont("Helvetica", "bold");
+                doc.setLineWidth(0.5);
+                doc.setTextColor(255, 0, 0);
+                // doc.line(10, 35, 200, 35); 
+                const titleR = "FACTURE HOSPITALISATION";
+                const titleRWidth = doc.getTextWidth(titleR);
+                const titleRX = (doc.internal.pageSize.getWidth() - titleRWidth) / 2;
+                // Définir le padding
+                const paddingh = 0; // Padding vertical
+                const paddingw = 15; // Padding horizontal
+                // Calculer les dimensions du rectangle
+                const rectX = titleRX - paddingw; // X du rectangle
+                const rectY = (yPos + 18) - paddingh; // Y du rectangle
+                const rectWidth = titleRWidth + (paddingw * 2); // Largeur du rectangle
+                const rectHeight = 15 + (paddingh * 2); // Hauteur du rectangle
+                // Définir la couleur pour le cadre (noir)
+                doc.setDrawColor(0, 0, 0);
+                doc.rect(rectX, rectY, rectWidth, rectHeight); // Dessiner le rectangle
+                // Ajouter le texte centré en gras
+                doc.setFontSize(15);
+                doc.setFont("Helvetica", "bold");
+                doc.setTextColor(255, 0, 0); // Couleur du texte rouge
+                doc.text(titleR, titleRX, (yPos + 25)); // Positionner le texte
+                const titleN = "N° "+facture.code;
+                doc.text(titleN, (doc.internal.pageSize.getWidth() - doc.getTextWidth(titleN)) / 2, (yPos + 31));
+
+                doc.setFontSize(10);
+                doc.setFont("Helvetica", "bold");
+                doc.setTextColor(0, 0, 0);
+                const numDossier = "N° Dossier : P-"+ patient.matricule;
+                const numDossierWidth = doc.getTextWidth(numDossier);
+                doc.text(numDossier, pdfWidth - rightMargin - numDossierWidth, yPos + 28);
+
+                yPoss = (yPos + 40);
+
+                const patientInfo = [
+                    { label: "Nom et Prénoms", value: patient.np },
+                    { label: "Assurer", value: patient.assurer },
+                    { label: "Age", value: patient.age+" an(s)" },
+                    { label: "Domicile", value: patient.adresse },
+                    { label: "Contact", value: "+225 "+patient.tel }
+                ];
+
+                if (patient.assurer == 'oui') {
+                    patientInfo.push(
+                        { label: "Assurance", value: patient.assurance },
+                        { label: "Matricule", value: patient.matricule_assurance },
+                    );
+                }
+
+                patientInfo.forEach(info => {
+                    doc.setFontSize(9);
+                    doc.setFont("Helvetica", "bold");
+                    doc.text(info.label, leftMargin, yPoss);
+                    doc.setFont("Helvetica", "normal");
+                    doc.text(": " + info.value, leftMargin + 35, yPoss);
+                    yPoss += 7;
+                });
+
+                yPoss = (yPos + 40);
+
+                const medecinInfo = [
+                    { label: "Medecin", value: "Dr. "+user.name },
+                    { label: "Spécialité", value: user.typeacte },
+                ];
+
+                medecinInfo.forEach(info => {
+                    doc.setFontSize(9);
+                    doc.setFont("Helvetica", "bold");
+                    doc.text(info.label, leftMargin + 110, yPoss);
+                    doc.setFont("Helvetica", "normal");
+                    doc.text(": " + info.value, leftMargin + 140, yPoss);
+                    yPoss += 7;
+                });
+
+                yPoss = (yPos + 90);
+
+                const typeInfo = [
+                    { label: "Type d'admission", value: type.nom },
+                    { label: "Nature d'admission", value: nature.nom },
+                    { label: "Chambre Occupée", value: "CH-"+chambre.code },
+                    { label: "Lit Occupée", value: "LIT-"+lit.code+"/"+lit.type },
+                    { label: "Prix", value: chambre.prix+" Fcfa" },
+                ];
+
+                typeInfo.forEach(info => {
+                    doc.setFontSize(9);
+                    doc.setFont("Helvetica", "bold");
+                    doc.text(info.label, leftMargin, yPoss);
+                    doc.setFont("Helvetica", "normal");
+                    doc.text(": " + info.value, leftMargin + 35, yPoss);
+                    yPoss += 7;
+                });
+
+                yPoss = (yPos + 103);
+
+                const compteInfo = [
+                    { label: "Part assurance", value: hopital.part_assurance+" Fcfa"},
+                    { label: "Part Patient", value: hopital.part_patient+" Fcfa"},
+                    { label: "Remise", value: hopital.remise ? hopital.remise + " Fcfa" : "0 Fcfa" }
+                ];
+
+                if (patient.taux !== null) {
+                    compteInfo.push({ label: "Taux", value: patient.taux + "%" });
+                }
+
+                compteInfo.forEach(info => {
+                    doc.setFontSize(9);
+                    doc.setFont("Helvetica", "bold");
+                    doc.text(info.label, leftMargin + 130, yPoss);
+                    doc.setFont("Helvetica", "normal");
+                    doc.text(": " + info.value, leftMargin + 160, yPoss);
+                    yPoss += 7;
+                });
+
+                yPoss += 1;
+
+                doc.setFontSize(11);
+                doc.setFont("Helvetica", "bold");
+                doc.text('Total', leftMargin + 130, yPoss);
+                doc.setFont("Helvetica", "bold");
+                doc.text(": "+hopital.montant+" Fcfa", leftMargin + 160, yPoss);
+
+                doc.setFontSize(10);
+                doc.setFont("Helvetica", "bold");
+                doc.setTextColor(0, 0, 0);
+                doc.text("Imprimer le "+new Date().toLocaleDateString()+" à "+new Date().toLocaleTimeString() , 5, yPos + 133);
+
+            }
+
+            drawConsultationSection(yPos);
+
+            doc.setFontSize(30);
+            doc.setLineWidth(0.5);
+            doc.setLineDashPattern([3, 3], 0);
+            doc.line(0, (yPos + 135), 300, (yPos + 135));
+            doc.setLineDashPattern([], 0);
+
+            drawConsultationSection(yPos + 150);
+
+
+            doc.output('dataurlnewwindow');
         }
 
 

@@ -488,4 +488,104 @@ class ApiinsertController extends Controller
         }
     }
 
+    public function hosp_new(Request $request)
+    {
+
+        $patient = patient::leftjoin('assurances', 'assurances.id', '=', 'patients.assurance_id')
+        ->where('patients.matricule', '=', $request->matricule_patient)
+        ->select('patients.*', 'assurances.nom as assurance')
+        ->first();
+
+        if ($patient) {
+            $patient->age = $patient->datenais ? Carbon::parse($patient->datenais)->age : 0;
+        }
+
+        if (!$patient) {
+            return response()->json(['error' => true]);
+        }
+
+        $chambre = chambre::find($request->id_chambre);
+
+        if (!$chambre) {
+            return response()->json(['error' => true]);
+        }
+
+        $lit = lit::find($request->id_lit);
+
+        if (!$lit) {
+            return response()->json(['error' => true]);
+        }
+
+        $typeadmission = typeadmission::find($request->id_typeadmission);
+
+        if (!$typeadmission) {
+            return response()->json(['error' => true]);
+        }
+
+        $natureadmission = natureadmission::find($request->id_natureadmission);
+
+        if (!$natureadmission) {
+            return response()->json(['error' => true]);
+        }
+        
+        $user = user::join('typemedecins', 'typemedecins.user_id', '=', 'users.id')
+            ->join('typeactes', 'typeactes.id', '=', 'typemedecins.typeacte_id')
+            ->where('users.id', '=', $request->medecin_id)
+            ->select('users.*', 'typeactes.nom as typeacte')
+            ->first();
+
+        if (!$user) {
+            return response()->json(['error' => true]);
+        }
+
+        $codeFac = $this->generateUniqueFacture();
+
+        DB::beginTransaction();
+
+        try {
+
+            $fac = new facture();
+            $fac->code = $codeFac;
+            $fac->statut = 'impayer';
+
+            if (!$fac->save()) {
+                throw new \Exception('Erreur');
+            }
+
+            $add = new detailhopital();
+            $add->statut = 'Hospitaliser';
+            $add->part_assurance = $request->montant_assurance;
+            $add->part_patient = $request->montant_patient;
+            $add->remise = $request->taux_remise;
+            $add->montant = $request->montant_total;
+            $add->date_debut = $request->date_entrer;
+            $add->date_fin = $request->date_sortie;
+            $add->natureadmission_id = $natureadmission->id;
+            $add->facture_id = $fac->id;
+            $add->patient_id = $patient->id;
+            $add->lit_id = $lit->id;
+            $add->user_id = $user->id;
+
+            if (!$add->save()) {
+                throw new \Exception('Erreur');
+            }
+
+            $lit->statut = 'indisponible';
+            if (!$lit->save()) {
+                throw new \Exception('Erreur');
+            }
+
+            $hopital = $add;
+            $facture = $fac;
+
+            DB::commit();
+            return response()->json(['success' => true, 'patient' => $patient, 'chambre' => $chambre, 'user' => $user, 'hopital' => $hopital, 'lit' => $lit, 'typeadmission' => $typeadmission, 'natureadmission' => $natureadmission, 'facture' => $facture]);
+            
+        } catch (Exception $e) {
+
+            DB::rollback();
+            return response()->json(['error' => true]);
+        }
+    }
+
 }

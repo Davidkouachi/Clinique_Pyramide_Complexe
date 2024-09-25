@@ -22,10 +22,7 @@ class societeController extends Controller
 {
     public function societe_new()
     {
-        $today = Carbon::today();
-        $socies = societe::whereDate('created_at', $today)
-                            ->orderBy('created_at', 'desc')
-                            ->get();
+        $socies = societe::orderBy('created_at', 'desc')->get();
 
         return view('assurance.nouveau.societe',['socies' => $socies]);
     }

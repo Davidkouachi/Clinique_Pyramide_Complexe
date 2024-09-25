@@ -10,6 +10,7 @@ class detailhopital extends Model
     use HasFactory;
 
     protected $fillable = [
+        'statut',
         'part_assurance',
         'part_patient',
         'remise',
@@ -20,6 +21,7 @@ class detailhopital extends Model
         'facture_id',
         'patient_id',
         'lit_id',
+        'user_id',
     ];
 
     public function natureadmission()
@@ -40,5 +42,10 @@ class detailhopital extends Model
     public function lit()
     {
         return $this->belongsTo(lit::class, 'lit_id');
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(user::class, 'user_id');
     }
 }
