@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Validator;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 use App\Models\assurance;
 use App\Models\taux;
@@ -33,6 +34,8 @@ use App\Models\facture;
 use App\Models\typeadmission;
 use App\Models\natureadmission;
 use App\Models\detailhopital;
+use App\Models\produit;
+use App\Models\soinshopital;
 
 class ApiinsertController extends Controller
 {
@@ -580,6 +583,88 @@ class ApiinsertController extends Controller
 
             DB::commit();
             return response()->json(['success' => true, 'patient' => $patient, 'chambre' => $chambre, 'user' => $user, 'hopital' => $hopital, 'lit' => $lit, 'typeadmission' => $typeadmission, 'natureadmission' => $natureadmission, 'facture' => $facture]);
+            
+        } catch (Exception $e) {
+
+            DB::rollback();
+            return response()->json(['error' => true]);
+        }
+    }
+
+    public function new_produit(Request $request)
+    {
+        $verf = produit::where('nom', '=', $request->nom)->first();
+
+        if ($verf) {
+            return response()->json(['existe' => true]);
+        }
+
+        $add = new produit();
+        $add->nom = $request->nom;
+        $add->prix = $request->prix;
+        $add->quantite = $request->quantite;
+
+        if($add->save()){
+            return response()->json(['success' => true]);
+        } else {
+            return response()->json(['error' => true]);
+        }
+    }
+
+    public function add_soinshopital(Request $request, $id)
+    {
+
+        $selections = $request->input('selections');
+
+        // Vérifier si les sélections sont bien un tableau
+        if (!is_array($selections) || empty($selections)) {
+            return response()->json(['json' => true]);
+        }
+
+        Log::info('Selections:', $selections);
+
+        $montantTotal = str_replace('.', '', $request->input('montantTotal'));
+
+        DB::beginTransaction();
+
+        try {
+
+            foreach ($selections as $value) {
+                $add = new soinshopital();
+
+                $add->produit_id = $value['id'];
+                $add->quantite = $value['quantite'];
+                $add->montant = number_format($value['montant'], 0, ',', '.');
+                $add->detailhopital_id = $id;
+
+                if (!$add->save()) {
+                    throw new \Exception('Erreur');
+                }
+            }
+
+            // Récupérer le montant existant de detailhopital
+            $add2 = detailhopital::find($id);
+
+            // Enlever les points du montant actuel
+            $currentMontant = str_replace('.', '', $add2->montant);
+
+            // Additionner les montants (les deux montants sont maintenant des entiers sans points)
+            $nouveauMontant = $montantTotal + $currentMontant;
+
+            // Remettre les points après chaque trois chiffres
+            $formattedMontant = number_format($nouveauMontant, 0, '', '.');
+
+            // Mettre à jour le montant dans la table detailhopital
+            $add2->montant = $formattedMontant;
+
+            if (!$add2->save()) {
+                throw new \Exception('Erreur lors de la mise à jour du montant total');
+            }
+
+            // Si tout s'est bien passé, on commit les changements
+            DB::commit();
+
+            return response()->json(['success' => true]);
             
         } catch (Exception $e) {
 

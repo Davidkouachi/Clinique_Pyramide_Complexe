@@ -56,10 +56,6 @@ Route::middleware(['auth'])->group(function () {
 	Route::post('/insert taux', [tauxController::class, 'insert_taux'])->name('insert_taux');
 	Route::post('/update taux/{id}', [tauxController::class, 'update_taux'])->name('update_taux');
 
-	Route::get('/Nouvel Produit', [produitController::class, 'produit_new'])->name('produit_new');
-	Route::post('/insert produit', [produitController::class, 'insert_produit'])->name('insert_produit');
-	Route::post('/update produit/{id}', [produitController::class, 'update_produit'])->name('update_produit');
-
 	Route::get('/Nouvel Type Produit', [typeproduitController::class, 'typeproduit_new'])->name('typeproduit_new');
 	Route::post('/insert typeproduit', [typeproduitController::class, 'insert_typeproduit'])->name('insert_typeproduit');
 	Route::post('/update typeproduit/{id}', [typeproduitController::class, 'update_typeproduit'])->name('update_typeproduit');
@@ -67,20 +63,21 @@ Route::middleware(['auth'])->group(function () {
 	Route::get('/Acte', [Controller::class, 'acte_new'])->name('acte_new');
 	Route::get('/Type Acte', [Controller::class, 'typeacte_new'])->name('typeacte_new');
 	Route::get('/Nouvel Medecin', [utilisateurController::class, 'medecin_new'])->name('medecin_new');
-	Route::get('/Caisse', [Controller::class, 'encaissement'])->name('encaissement');
-	Route::get('/Caisse Détail/{id}', [Controller::class, 'encaissement_detail'])->name('encaissement_detail');
-	Route::get('/Liste Caisse', [Controller::class, 'liste_caisse'])->name('liste_caisse');
-	Route::get('/Consultation/', [Controller::class, 'consultation_liste'])->name('consultation_liste');
+	Route::get('/Consultation Caisse', [Controller::class, 'encaissement_cons'])->name('encaissement_cons');
+	Route::get('/Consultation Liste Caisse', [Controller::class, 'liste_caisse_cons'])->name('liste_caisse_cons');
+	Route::get('/Consultation', [Controller::class, 'consultation_liste'])->name('consultation_liste');
 
-	Route::get('/Hospitalisation/', [Controller::class, 'hospitalisation'])->name('hospitalisation');
-	Route::get('/Type Admission/', [Controller::class, 'typeadmission_new'])->name('typeadmission_new');
-	Route::get('/Nature Admission/', [Controller::class, 'natureadmission_new'])->name('natureadmission_new');
+	Route::get('/Hospitalisation', [Controller::class, 'hospitalisation'])->name('hospitalisation');
+	Route::get('/Type Admission', [Controller::class, 'typeadmission_new'])->name('typeadmission_new');
+	Route::get('/Nature Admission', [Controller::class, 'natureadmission_new'])->name('natureadmission_new');
+	Route::get('/Hospitalisation Caisse', [Controller::class, 'encaissement_hos'])->name('encaissement_hos');
+	Route::get('/Hospitalisation Liste Caisse', [Controller::class, 'liste_caisse_hos'])->name('liste_caisse_hos');
+
+	Route::get('/Produit Pharmacie', [Controller::class, 'produit_new'])->name('produit_new');
 
 
-
-
-	Route::get('/Analyse/', [Controller::class, 'analyse'])->name('analyse');
-	Route::get('/Imagerie/', [Controller::class, 'imagerie'])->name('imagerie');
+	Route::get('/Analyse', [Controller::class, 'analyse'])->name('analyse');
+	Route::get('/Imagerie', [Controller::class, 'imagerie'])->name('imagerie');
 
 // Route::middleware(['role:ADMINISTRATEUR'])->group(function () {
 

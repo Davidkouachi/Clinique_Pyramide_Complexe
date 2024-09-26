@@ -30,6 +30,7 @@ use App\Models\role;
 use App\Models\typeadmission;
 use App\Models\natureadmission;
 use App\Models\detailhopital;
+use App\Models\produit;
 
 class ApiupdateController extends Controller
 {
@@ -50,7 +51,6 @@ class ApiupdateController extends Controller
         }
 
         return response()->json(['error' => true]);
-
     }
 
     public function update_lit(Request $request, $id)
@@ -69,7 +69,6 @@ class ApiupdateController extends Controller
         }
 
         return response()->json(['error' => true]);
-
     }
 
     public function update_acte(Request $request, $id)
@@ -199,10 +198,9 @@ class ApiupdateController extends Controller
         }
 
         return response()->json(['error' => true]);
-
     }
 
-    public function update_typeacte(Request $request, $id)
+    public function update_natureadmission(Request $request, $id)
     {
         $put = natureadmission::find($id);
 
@@ -219,6 +217,26 @@ class ApiupdateController extends Controller
         }
 
         return response()->json(['error' => true]);
+    }
+
+    public function update_produit(Request $request, $id)
+    {
+        $put = produit::find($id);
+
+        if ($put) {
+            $put->nom = $request->nom;
+            $put->prix = $request->prix;
+            $put->quantite = $request->quantite;
+
+            if ($put->save()) {
+                return response()->json(['success' => true]);
+            }else{
+                return response()->json(['error' => true]);
+            }
+
+        }
+
+        return response()->json(['success' => true]);
     }
 
 }

@@ -147,33 +147,38 @@
                                 </li>
                             </ul>
                         </li>
-                        <li @if(request()->routeIs('encaissement','liste_caisse')) class="active current-page treeview" @else class="treeview" @endif>
+                        <li @if(request()->routeIs('encaissement_cons','liste_caisse_cons','encaissement_hos','liste_caisse_hos')) class="active current-page treeview" @else class="treeview" @endif>
                             <a href="#!">
                                 <i class="ri-safe-2-line"></i>
                                 <span class="menu-text">Caisse</span>
                             </a>
                             <ul class="treeview-menu">
-                                <li @if(request()->routeIs('encaissement','liste_caisse')) class="active" @endif >
+                                <li @if(request()->routeIs('encaissement_cons','liste_caisse_cons')) class="active" @endif >
                                     <a href="#!">
                                         Consultation
                                         <i class="ri-arrow-right-s-line"></i>
                                     </a>
                                     <ul class="treeview-menu">
                                         <li>
-                                            <a @if(request()->routeIs('encaissement')) class="text-primary" @endif href="{{route('encaissement')}}">Facture non-réglée</a>
+                                            <a @if(request()->routeIs('encaissement_cons')) class="text-primary" @endif href="{{route('encaissement_cons')}}">Facture non-réglée</a>
                                         </li>
                                         <li>
-                                            <a @if(request()->routeIs('liste_caisse')) class="text-primary" @endif href="{{route('liste_caisse')}}">Liste facture</a>
+                                            <a @if(request()->routeIs('liste_caisse_cons')) class="text-primary" @endif href="{{route('liste_caisse_cons')}}">Liste facture</a>
                                         </li>
-                                        {{-- <li>
-                                            <a href="#">Bulletin</a>
+                                    </ul>
+                                </li>
+                                <li @if(request()->routeIs('encaissement_hos','liste_caisse_hos')) class="active" @endif >
+                                    <a href="#!">
+                                        Hospitalisation
+                                        <i class="ri-arrow-right-s-line"></i>
+                                    </a>
+                                    <ul class="treeview-menu">
+                                        <li>
+                                            <a @if(request()->routeIs('encaissement_hos')) class="text-primary" @endif href="{{route('encaissement_hos')}}">Facture non-réglée</a>
                                         </li>
                                         <li>
-                                            <a href="#">Admission</a>
+                                            <a @if(request()->routeIs('liste_caisse_hos')) class="text-primary" @endif href="{{route('liste_caisse_hos')}}">Liste facture</a>
                                         </li>
-                                        <li>
-                                            <a href="#">Soins infirmier</a>
-                                        </li> --}}
                                     </ul>
                                 </li>
                                 {{-- <li>
@@ -202,13 +207,13 @@
                                 </li> --}}
                             </ul>
                         </li>
-                        <li @if(request()->routeIs('medecin_new','assurance_new','taux_new','societe_new','acte_new','typeacte_new','chambre_new','lit_new','typeadmission_new','natureadmission_new')) class="active current-page treeview" @else class="treeview" @endif>
+                        <li @if(request()->routeIs('medecin_new','assurance_new','taux_new','societe_new','acte_new','typeacte_new','chambre_new','lit_new','typeadmission_new','natureadmission_new','produit_new')) class="active current-page treeview" @else class="treeview" @endif>
                             <a href="#!">
                                 <i class="ri-settings-5-line"></i>
                                 <span class="menu-text">Configuration</span>
                             </a>
                             <ul class="treeview-menu">
-                                <li @if(request()->routeIs('medecin_new','assurance_new','taux_new','societe_new','chambre_new','lit_new','typeadmission_new','natureadmission_new')) class="active" @endif >
+                                <li @if(request()->routeIs('medecin_new','assurance_new','taux_new','societe_new','chambre_new','lit_new','typeadmission_new','natureadmission_new','produit_new')) class="active" @endif >
                                     <a href="#!">
                                         Ajouter
                                         <i class="ri-arrow-right-s-line"></i>
@@ -217,7 +222,7 @@
                                         <li>
                                             <a href="{{route('medecin_new')}}">Medecin</a>
                                         </li>
-                                        <li @if(request()->routeIs('chambre_new','lit_new','typeadmission_new','natureadmission_new')) class="active" @endif >
+                                        <li @if(request()->routeIs('chambre_new','lit_new','typeadmission_new','natureadmission_new','produit_new')) class="active" @endif >
                                             <a href="#!">
                                                 Hospitalisation
                                                 <i class="ri-arrow-right-s-line"></i>
@@ -248,6 +253,9 @@
                                                 </li>
                                                 <li>
                                                     <a @if(request()->routeIs('natureadmission_new')) class="text-primary" @endif href="{{route('natureadmission_new')}}">Nature admission</a>
+                                                </li>
+                                                <li>
+                                                    <a @if(request()->routeIs('produit_new')) class="text-primary" @endif href="{{route('produit_new')}}">Produit Pharmacie</a>
                                                 </li>
                                             </ul>
                                         </li>

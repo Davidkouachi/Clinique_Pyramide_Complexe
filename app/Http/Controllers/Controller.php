@@ -14,19 +14,24 @@ class Controller
         return view('grille.typeacte');
     }
 
-    public function encaissement()
+    public function encaissement_cons()
     {
-        return view('finance.encaissement');
+        return view('finance.consultation.encaissement');
     }
 
-    public function encaissement_detail($id)
+    public function liste_caisse_cons()
     {
-        return view('finance.encaissement_detail');
+        return view('finance.consultation.liste_caisse');
     }
 
-    public function liste_caisse()
+    public function encaissement_hos()
     {
-        return view('finance.liste_caisse');
+        return view('finance.hospitalisation.encaissement');
+    }
+
+    public function liste_caisse_hos()
+    {
+        return view('finance.hospitalisation.liste_caisse');
     }
 
     // --------------------------------------------------------
@@ -59,5 +64,12 @@ class Controller
     public function natureadmission_new()
     {
         return view('soins_medicaux.hospitalisation.natureadmission');
+    }
+
+    // --------------------------------------------------------
+
+    public function produit_new()
+    {
+        return view('infirmerie.nouveau.produit_pharmacie');
     }
 }

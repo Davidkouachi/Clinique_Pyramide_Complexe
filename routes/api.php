@@ -41,6 +41,8 @@ Route::get('/new_consultation', [ApiinsertController::class, 'new_consultation']
 Route::get('/new_typeadmission', [ApiinsertController::class, 'new_typeadmission']);
 Route::get('/new_natureadmission', [ApiinsertController::class, 'new_natureadmission']);
 Route::get('/hosp_new', [ApiinsertController::class, 'hosp_new']);
+Route::get('/new_produit', [ApiinsertController::class, 'new_produit']);
+Route::get('/add_soinshopital/{id}', [ApiinsertController::class, 'add_soinshopital']);
 // insert debut
 
 // search debut
@@ -68,6 +70,8 @@ Route::get('/update_typeacte/{id}', [ApiupdateController::class, 'update_typeact
 Route::get('/update_medecin/{id}', [ApiupdateController::class, 'update_medecin']);
 Route::get('/update_typeadmission/{id}', [ApiupdateController::class, 'update_typeadmission']);
 Route::get('/update_natureadmission/{id}', [ApiupdateController::class, 'update_natureadmission']);
+Route::get('/update_produit/{id}', [ApiupdateController::class, 'update_produit']);
+Route::get('/appro_produit/{id}', [ApiupdateController::class, 'appro_produit']);
 // update debut
 
 // delete debut
@@ -91,6 +95,8 @@ Route::get('/list_typeadmission', [ApilistController::class, 'list_typeadmission
 Route::get('/list_natureadmission', [ApilistController::class, 'list_natureadmission']);
 Route::get('/list_hopital/{statut}', [ApilistController::class, 'list_hopital']);
 Route::get('/detail_hos/{id}', [ApilistController::class, 'detail_hos']);
+Route::get('/list_produit', [ApilistController::class, 'list_produit']);
+Route::get('/list_produit_all', [ApilistController::class, 'list_produit_all']);
 // liste debut
 
 // statistique debut

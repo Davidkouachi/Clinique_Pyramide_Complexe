@@ -15,6 +15,7 @@ use App\Models\natureadmission;
 use App\Models\detailhopital;
 use App\Models\societe;
 use App\Models\assurance;
+use App\Models\produit;
 
 class DatabaseSeeder extends Seeder
 {
@@ -117,6 +118,67 @@ class DatabaseSeeder extends Seeder
         
         assurance::create(['nom' => 'SOGEMAD','email' => 'sogemad@gmail.com','tel' => '0757671653','fax' => '659625532', 'adresse' => 'COCODY RIVERA']);
 
+        // Liste de produits pharmaceutiques avec leurs prix
+        $produitsPharmaceutiques = [
+            ['nom' => 'PARACÉTAMOL 500MG', 'prix' => '1.500', 'quantite' => '20'],
+            ['nom' => 'IBUPROFÈNE 400MG', 'prix' => '1.800', 'quantite' => '20'],
+            ['nom' => 'AMOXICILLINE 500MG', 'prix' => '1.000', 'quantite' => '20'],
+            ['nom' => 'VITAMINE C 1000MG', 'prix' => '1.500', 'quantite' => '20'],
+            ['nom' => 'ANTIBIOTIQUE Z', 'prix' => '1.200', 'quantite' => '20'],
+            ['nom' => 'CÉTIRIZINE 10MG', 'prix' => '1.600', 'quantite' => '20'],
+            ['nom' => 'LORATADINE 10MG', 'prix' => '1.750', 'quantite' => '20'],
+            ['nom' => 'POMMADE ANTISEPTIQUE', 'prix' => '1.300', 'quantite' => '20'],
+            ['nom' => 'SOLUTION SALINE', 'prix' => '1.450', 'quantite' => '20'],
+            ['nom' => 'GEL DÉSINFECTANT', 'prix' => '1.350', 'quantite' => '20'],
+            ['nom' => 'ASPIRINE 100MG', 'prix' => '1.100', 'quantite' => '20'],
+            ['nom' => 'ANTIDOULEUR B', 'prix' => '1.800', 'quantite' => '20'],
+            ['nom' => 'PENICILLINE G 600MG', 'prix' => '1.250', 'quantite' => '20'],
+            ['nom' => 'DOLIPRANE 1000MG', 'prix' => '1.500', 'quantite' => '20'],
+            ['nom' => 'ANTI-INFLAMMATOIRE Q', 'prix' => '1.950', 'quantite' => '20'],
+            ['nom' => 'CREME ANTIFONGIQUE', 'prix' => '1.700', 'quantite' => '20'],
+            ['nom' => 'ANTIHISTAMINIQUE V', 'prix' => '1.600', 'quantite' => '20'],
+            ['nom' => 'COLLYRE ANTIALLERGIQUE', 'prix' => '1.400', 'quantite' => '20'],
+            ['nom' => 'CRÈME ANTIBIOTIQUE', 'prix' => '1.850', 'quantite' => '20'],
+            ['nom' => 'VACCIN ANTI-TÉTANIQUE', 'prix' => '1.900', 'quantite' => '20'],
+            ['nom' => 'TUBES DE TEST', 'prix' => '1.300', 'quantite' => '20'],
+            ['nom' => 'BANDAGE ÉLASTIQUE', 'prix' => '1.250', 'quantite' => '20'],
+            ['nom' => 'DÉSINFECTANT POUR LES MAINS', 'prix' => '1.350', 'quantite' => '20'],
+            ['nom' => 'SOLUTION D\'HYDRATATION ORALE', 'prix' => '1.450', 'quantite' => '20'],
+            ['nom' => 'SYRINGES STÉRILES', 'prix' => '1.600', 'quantite' => '20'],
+            ['nom' => 'THERMOMÈTRE DIGITAL', 'prix' => '1.550', 'quantite' => '20'],
+            ['nom' => 'GANTS EN LATEX', 'prix' => '1.450', 'quantite' => '20'],
+            ['nom' => 'CATAPLASME FROID', 'prix' => '1.350', 'quantite' => '20'],
+            ['nom' => 'COMPRESSES STÉRILES', 'prix' => '1.250', 'quantite' => '20'],
+            ['nom' => 'PILULE CONTRACEPTIVE', 'prix' => '1.200', 'quantite' => '20'],
+            ['nom' => 'MASQUE CHIRURGICAL', 'prix' => '1.100', 'quantite' => '20'],
+            ['nom' => 'ANTIBIOTIQUE Y', 'prix' => '1.900', 'quantite' => '20'],
+            ['nom' => 'VACCIN ANTI-GRIPPE', 'prix' => '1.850', 'quantite' => '20'],
+            ['nom' => 'PANSEMENTS ADHÉSIFS', 'prix' => '1.250', 'quantite' => '20'],
+            ['nom' => 'BÉQUILLES MÉDICALES', 'prix' => '1.500', 'quantite' => '20'],
+            ['nom' => 'SUPPOSITOIRE ANTI-DOULEUR', 'prix' => '1.300', 'quantite' => '20'],
+            ['nom' => 'INHALATEUR POUR ASTHME', 'prix' => '1.800', 'quantite' => '20'],
+            ['nom' => 'COLLIER CERVICAL', 'prix' => '1.550', 'quantite' => '20'],
+            ['nom' => 'SERUM PHYSIOLOGIQUE', 'prix' => '1.300', 'quantite' => '20'],
+            ['nom' => 'OXYGÈNE MÉDICAL', 'prix' => '1.700', 'quantite' => '20'],
+            ['nom' => 'ELECTRODES POUR ECG', 'prix' => '1.600', 'quantite' => '20'],
+            ['nom' => 'SIROP POUR TOUX', 'prix' => '1.250', 'quantite' => '20'],
+            ['nom' => 'COMPRESSES DE GAZE', 'prix' => '1.150', 'quantite' => '20'],
+            ['nom' => 'SOLUTION DE RINCAGE OCULAIRE', 'prix' => '1.450', 'quantite' => '20'],
+            ['nom' => 'ALCOOL MÉDICAL', 'prix' => '1.300', 'quantite' => '20'],
+            ['nom' => 'CREME POUR BRÛLURES', 'prix' => '1.900', 'quantite' => '20'],
+            ['nom' => 'ANALGÉSIQUE FORTE', 'prix' => '1.800', 'quantite' => '20'],
+            ['nom' => 'ANTIBIOTIQUE A', 'prix' => '1.500', 'quantite' => '20'],
+            ['nom' => 'BANDES DE SUTURE', 'prix' => '1.350', 'quantite' => '20'],
+        ];
+
+        // Enregistrer les produits dans la table produit
+        foreach ($produitsPharmaceutiques as $produitData) {
+            produit::create([
+                'nom' => $produitData['nom'],
+                'prix' => $produitData['prix'],
+                'quantite' => $produitData['quantite'],
+            ]);
+        }
 
     }
 }

@@ -5,13 +5,19 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class produit extends Model
+class soinshopital extends Model
 {
     use HasFactory;
 
     protected $fillable = [
-        'nom',
-        'prix',
+        'id',
         'quantite',
+        'produit_id',
+        'montant',
     ];
+
+    public function produit()
+    {
+        return $this->belongsTo(produit::class, 'produit_id');
+    }
 }

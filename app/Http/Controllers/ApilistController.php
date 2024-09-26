@@ -33,6 +33,7 @@ use App\Models\typeadmission;
 use App\Models\natureadmission;
 use App\Models\detailhopital;
 use App\Models\facture;
+use App\Models\produit;
 
 class ApilistController extends Controller
 {
@@ -241,6 +242,30 @@ class ApilistController extends Controller
             'user' => $user,
         ]);
 
+    }
+
+    public function list_produit()
+    {
+        $produitQuery = produit::orderBy('created_at', 'desc');
+
+        $produit = $produitQuery->paginate(15);
+
+        return response()->json([
+            'produit' => $produit->items(), // Paginated data
+            'pagination' => [
+                'current_page' => $produit->currentPage(),
+                'last_page' => $produit->lastPage(),
+                'per_page' => $produit->perPage(),
+                'total' => $produit->total(),
+            ]
+        ]);
+    }
+
+    public function list_produit_all()
+    {
+        $produit = produit::orderBy('nom', 'asc')->get();
+
+        return response()->json(['produit' => $produit]);
     }
 
 }

@@ -159,7 +159,7 @@
                                     <div class="col-sm-12">
                                         <div class="d-flex gap-2 justify-content-center">
                                             <button id="btn_calcul" class="btn btn-warning">
-                                                Calcul
+                                                Calculer le montant final
                                             </button>
                                         </div>
                                     </div>
@@ -380,6 +380,44 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body" id="modal_detail">
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="Add" tabindex="-1" aria-modal="true" role="dialog">
+    <div class="modal-dialog modal-dialog modal-dialog-scrollable modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" >
+                    Produits Pharmacie
+                </h5>
+                <button type="button" id="close_modal_produit" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div id="div_alert_produit_qu" ></div>
+            <div class="modal-body" id="modal_add">
+                <div class="row gx-3 justify-content-center align-items-center">
+                    <div class="col-12 mb-3">
+                        <button type="button" id="add_select" class="btn btn-info">
+                            <i class="ri-sticky-note-add-line"></i>
+                            Ajouter un Produit
+                        </button>
+                    </div>
+                    <div class="col-12" id="contenu">
+
+                    </div>
+                    <div class="col-12" id="div_btn_pro">
+                        <div class="input-group mb-3">
+                            <input type="tel" class="form-control" id="montant_total_produit" placeholder="Montant Total">
+                            <span class="input-group-text">Fcfa</span>
+                        </div>
+                        <input type="hidden" id="id_hos_produit">
+                        <button type="button" id="btn_eng_produit" class="btn btn-outline-success">
+                            Enregistrer
+                            <i class="ri-send-plane-fill"></i>
+                        </button>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -658,7 +696,7 @@
                         chambres.forEach(item => {
                             const option = document.createElement('option');
                             option.value = item.id;
-                            option.textContent = item.code;
+                            option.textContent = "CH-"+item.code;
                             selectElement.appendChild(option);
                         });
                     })
@@ -691,7 +729,7 @@
                             data.forEach(item => {
                                 const option = document.createElement('option');
                                 option.value = item.id; // Ensure 'id' is the correct key
-                                option.textContent = 'Lit-'+item.code+'-'+item.type;
+                                option.textContent = 'Lit-'+item.code+'/'+item.type;
                                 option.setAttribute('data-prix', item.prix);
                                 typeSelect.appendChild(option);
                             });
@@ -1011,8 +1049,12 @@
                 const difference = sortieValue - entreeValue;
                 // Convertir en jours (1 jour = 24*60*60*1000 millisecondes)
                 let jours = difference / (1000 * 60 * 60 * 24);
-                jours = jours >= 0 ? jours + 1 : 0; // Si date entrée et sortie sont égales, il affiche 1 jour minimum
-                joursInput.value = '';
+                // jours = jours = 0 ? jours + 1 : 0;
+                
+                // Si jours est égal à 0, alors définir jours à 1
+                jours = jours === 0 ? 1 : jours;
+                
+                // Mise à jour de la valeur du champ input
                 joursInput.value = jours;
             }
         }
@@ -1124,6 +1166,12 @@
 
                     list_hos();
                     reset();
+                    Name_atient();
+                    calculerJours();
+                    select_medecin();
+                    select_chambre();
+                    select_typeadmission();
+                    list_lit();
 
                     var newConsultationTab = new bootstrap.Tab(document.getElementById('tab-oneAAA'));
                     newConsultationTab.show();
@@ -1234,6 +1282,9 @@
                                 <td>${item.montant} Fcfa</td>
                                 <td>
                                     <div class="d-inline-flex gap-1">
+                                        <a class="btn btn-outline-success btn-sm" id="add-${item.id}" data-bs-toggle="modal" data-bs-target="#Add">
+                                            <i class="ri-dossier-line"></i>
+                                        </a>
                                         <a class="btn btn-outline-warning btn-sm" id="detail-${item.id}" data-bs-toggle="modal" data-bs-target="#Detail">
                                             <i class="ri-eye-line"></i>
                                         </a>
@@ -1364,6 +1415,27 @@
                                     });
                             });
 
+                            document.getElementById(`add-${item.id}`).addEventListener('click', () => {
+                                fetch(`/api/list_produit_all`) // API endpoint pour récupérer la liste des produits
+                                    .then(response => response.json())
+                                    .then(data => {
+                                        
+                                        document.getElementById('id_hos_produit').value = item.id;
+                                        document.getElementById('montant_total_produit').value = "";
+
+                                        const produits = data.produit;
+
+                                        // Affichage initial des produits dans le premier select
+                                        const contenuDiv = document.getElementById('contenu');
+                                        contenuDiv.innerHTML = '';
+                                        
+                                        addSelect(contenuDiv, produits); // Ajouter le premier select
+                                    })
+                                    .catch(error => {
+                                        console.error('Erreur lors du chargement des données:', error);
+                                    });
+                            });
+
                         });
 
                         updatePaginationControls(pagination);
@@ -1383,6 +1455,235 @@
                     tableDiv.style.display = 'none';
                 });
         }
+
+        function addSelect(parentDiv, produits) {
+            const div = document.createElement('div');
+            div.className = 'mb-3';
+
+            // Créer le groupe de contrôle contenant le select et le bouton supprimer
+            div.innerHTML = `
+                <div class="input-group">
+                    <select class="form-select produit-select w-50">
+                        <option value="">Sélectionner</option>
+                        ${produits.map(produit => `<option value="${produit.id}" data-prix="${produit.prix.replace(/\./g, '')}" data-quantite="${produit.quantite}">${produit.nom} / ${produit.quantite} / ${produit.prix} Fcfa</option>`).join('')}
+                    </select>
+                    <input type="tel" id="quantite_demande" class="form-control" placeholder="Quantité" value="1" maxlength="2">
+                    <button class="btn btn-outline-danger suppr-btn">Supprimer</button>
+                </div>
+            `;
+
+            // Ajouter l'élément dans le parent (contenu div)
+            parentDiv.appendChild(div);
+
+            checkContenu(); // Vérifier le contenu et gérer la visibilité du bouton enregistrer
+
+            // Ajouter un event listener pour le bouton supprimer
+            div.querySelector('.suppr-btn').addEventListener('click', () => {
+                div.remove(); // Supprimer l'élément div parent
+                checkContenu(); // Re-vérifier le contenu
+                updateMontantTotal(); // Mettre à jour le montant total après la suppression
+            });
+
+            const quantiteInput = div.querySelector('#quantite_demande');
+            const produitSelect = div.querySelector('.produit-select');
+
+            // Validation pour n'accepter que des valeurs numériques
+            quantiteInput.addEventListener('keypress', function(event) {
+                const key = event.key;
+                if (isNaN(key)) {
+                    event.preventDefault();
+                }
+            });
+
+            // Fonction pour mettre à jour le montant total
+            function updateMontantTotal() {
+                let montantTotal = 0;
+                const selects = document.querySelectorAll('.produit-select');
+                selects.forEach(select => {
+                    const selectedOption = select.options[select.selectedIndex];
+                    const prix = parseInt(selectedOption.dataset.prix);
+                    const quantite = parseInt(select.parentElement.querySelector('#quantite_demande').value);
+                    montantTotal += prix * quantite;
+                });
+                
+                // Formater le montant total avec des points
+                const montantTotalFormatted = montantTotal.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+                document.getElementById('montant_total_produit').value = montantTotalFormatted;
+            }
+
+            // Validation de la quantité saisie pour ne pas dépasser la quantité disponible
+            produitSelect.addEventListener('change', function() {
+                const selectedOption = produitSelect.options[produitSelect.selectedIndex];
+                const quantiteDisponible = parseInt(selectedOption.dataset.quantite);
+                
+                // Réinitialiser la quantité demandée à 1
+                quantiteInput.value = 1;
+
+                // Si la quantité est supérieure à la quantité disponible, ajuster
+                if (quantiteDisponible < 1) {
+                    quantiteInput.value = 1; // S'assurer que la quantité ne soit pas négative
+                }
+
+                updateMontantTotal(); // Mettre à jour le montant total après changement de produit
+            });
+
+            // Vérification lors de la perte de focus
+            quantiteInput.addEventListener('blur', function() {
+                const selectedOption = produitSelect.options[produitSelect.selectedIndex];
+                const quantiteDisponible = parseInt(selectedOption.dataset.quantite);
+                
+                if (parseInt(quantiteInput.value) > quantiteDisponible) {
+                    showAlertQauntite('warning', `La quantité demandée ne peut pas dépasser ${quantiteDisponible}.`);
+                    quantiteInput.value = quantiteDisponible;
+                }else if(quantiteInput.value == ''){
+                    quantiteInput.value = 1;
+                }
+
+                if(!selectedOption.value == ''){
+                    updateMontantTotal();
+                } // Mettre à jour le montant total lors de la perte de focus
+            });
+        }
+
+
+        document.getElementById('add_select').addEventListener('click', () => {
+            const contenuDiv = document.getElementById('contenu');
+
+            // Récupérer les produits à partir de l'API
+            fetch(`/api/list_produit_all`)
+                .then(response => response.json())
+                .then(data => {
+                    const produits = data.produit;
+                    // Ajouter un nouveau select avec les produits
+                    addSelect(contenuDiv, produits);
+                })
+                .catch(error => {
+                    console.error('Erreur lors du chargement des produits:', error);
+                });
+        });
+
+        function checkContenu() {
+            const contenuDiv = document.getElementById('contenu');
+            const divBtnPro = document.getElementById('div_btn_pro');
+            
+            // Si la div #contenu a un contenu, on affiche le bouton, sinon on le cache
+            if (contenuDiv.innerHTML.trim() !== "") {
+                divBtnPro.style.display = "block"; // Afficher le bouton
+            } else {
+                divBtnPro.style.display = "none";  // Cacher le bouton
+            }
+        }
+
+        function showAlertQauntite(type, message) {
+
+            var dynamicFields = document.getElementById("div_alert_produit_qu");
+            // Remove existing content
+            while (dynamicFields.firstChild) {
+                dynamicFields.removeChild(dynamicFields.firstChild);
+            }
+
+            var groupe = document.createElement("div");
+            groupe.className = `alert bg-${type} text-white alert-dismissible fade show`;
+            groupe.innerHTML = `
+                ${message}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>   
+            `;
+            document.getElementById("div_alert_produit_qu").appendChild(groupe);
+
+            setTimeout(function() {
+                groupe.classList.remove("show");
+                groupe.classList.add("fade");
+                setTimeout(function() {
+                    groupe.remove();
+                }, 150); // Time for the fade effect to complete
+            }, 3000);
+        }
+
+        // Assurez-vous que ce code soit exécuté après l'ajout du bouton "Enregistrer"
+        document.getElementById('btn_eng_produit').addEventListener('click', () => {
+            const selections = [];
+            const selects = document.querySelectorAll('.produit-select');
+
+            selects.forEach(select => {
+                const selectedOption = select.options[select.selectedIndex];
+                const idProduit = selectedOption.value; // ID du produit sélectionné
+                const quantiteDemande = parseInt(select.parentElement.querySelector('#quantite_demande').value); // Quantité demandée
+                const prix = parseInt(selectedOption.dataset.prix); // Prix du produit
+
+                // Validation du produit et de la quantité
+                if (!idProduit) {  // Si aucun produit n'est sélectionné
+                    formIsValid = false;
+                    showAlertQauntite('danger', 'Veuillez sélectionner un produit.');
+                    return;  // Stopper l'exécution si une erreur est trouvée
+                }
+                if (isNaN(quantiteDemande) || quantiteDemande <= 0) { // Si la quantité n'est pas valide
+                    formIsValid = false;
+                    showAlertQauntite('danger', 'Veuillez entrer une quantité valide pour chaque produit.');
+                    return;  // Stopper l'exécution si une erreur est trouvée
+                }
+
+                // Si un produit est sélectionné, ajoutez-le au tableau
+                if (idProduit) {
+                    selections.push({
+                        id: idProduit,
+                        quantite: quantiteDemande,
+                        montant: prix * quantiteDemande // Calculer le montant
+                    });
+                }
+            });
+
+            const montantTotal = document.getElementById('montant_total_produit').value;
+            const id = document.getElementById('id_hos_produit').value;
+
+            var modal = bootstrap.Modal.getInstance(document.getElementById('Add'));
+            modal.hide();
+
+            var preloader_ch = `
+                <div id="preloader_ch">
+                    <div class="spinner_preloader_ch"></div>
+                </div>
+            `;
+            // Add the preloader to the body
+            document.body.insertAdjacentHTML('beforeend', preloader_ch);
+
+            $.ajax({
+                url: '/api/add_soinshopital/'+ id,
+                method: 'GET',
+                data:{
+                    selections: selections,
+                    montantTotal: montantTotal,
+                },
+                success: function(response) {
+                    var preloader = document.getElementById('preloader_ch');
+                    if (preloader) {
+                        preloader.remove();
+                    }
+                    
+                    if (response.success) {
+                        showAlert('success', 'Produit Pharmacie ajouter.');
+                    } else if (response.error) {
+                        showAlert('danger', 'Une erreur est survenue');
+                    } else if (response.json) {
+                        showAlert('danger', 'Invalid selections format');
+                    }
+
+                    list_hos();
+                },
+                error: function() {
+                    var preloader = document.getElementById('preloader_ch');
+                    if (preloader) {
+                        preloader.remove();
+                    }
+
+                    showAlert('danger', 'Une erreur est survenue lors de l\'enregistrement');
+                }
+            });
+        });
+
+        document.getElementById('close_modal_produit').addEventListener('click', () => {
+            document.getElementById('montant_total_produit').value = "";
+        });
+
 
         function formatDate(dateString) {
             const date = new Date(dateString);
@@ -1422,7 +1723,7 @@
                 prevButton.innerHTML = `<a class="page-link" href="#">Precédent</a>`;
                 prevButton.onclick = (event) => {
                     event.preventDefault(); // Empêche le défilement en haut de la page
-                    list_cons(pagination.current_page - 1);
+                    list_hos(pagination.current_page - 1);
                 };
                 paginationWrapper.appendChild(prevButton);
             } else {
@@ -1453,7 +1754,7 @@
                 pageItem.innerHTML = `<a class="page-link" href="#">${i}</a>`;
                 pageItem.onclick = (event) => {
                     event.preventDefault(); // Empêche le défilement en haut de la page
-                    list_cons(i);
+                    list_hos(i);
                 };
                 paginationWrapper.appendChild(pageItem);
             }
@@ -1471,7 +1772,7 @@
                 lastPageItem.innerHTML = `<a class="page-link" href="#">${totalPages}</a>`;
                 lastPageItem.onclick = (event) => {
                     event.preventDefault(); // Empêche le défilement en haut de la page
-                    list_cons(totalPages);
+                    list_hos(totalPages);
                 };
                 paginationWrapper.appendChild(lastPageItem);
             }
@@ -1483,7 +1784,7 @@
                 nextButton.innerHTML = `<a class="page-link" href="#">Suivant</a>`;
                 nextButton.onclick = (event) => {
                     event.preventDefault(); // Empêche le défilement en haut de la page
-                    list_cons(pagination.current_page + 1);
+                    list_hos(pagination.current_page + 1);
                 };
                 paginationWrapper.appendChild(nextButton);
             } else {
@@ -1610,6 +1911,9 @@
                 const medecinInfo = [
                     { label: "Medecin", value: "Dr. "+user.name },
                     { label: "Spécialité", value: user.typeacte },
+                    { label: "Date d'entrée le :", value: formatDate(hopital.date_debut) },
+                    { label: "Date de sortie prévu le : ", value: formatDate(hopital.date_fin) },
+                    { label: "Nombre de jours ", value: calculateDaysBetween(hopital.date_debut, hopital.date_fin)+" Jour(s)" },
                 ];
 
                 medecinInfo.forEach(info => {
@@ -1617,7 +1921,7 @@
                     doc.setFont("Helvetica", "bold");
                     doc.text(info.label, leftMargin + 110, yPoss);
                     doc.setFont("Helvetica", "normal");
-                    doc.text(": " + info.value, leftMargin + 140, yPoss);
+                    doc.text(": " + info.value, leftMargin + 150, yPoss);
                     yPoss += 7;
                 });
 
