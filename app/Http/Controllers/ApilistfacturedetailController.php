@@ -30,6 +30,8 @@ use App\Models\typemedecin;
 use App\Models\consultation;
 use App\Models\detailconsultation;
 use App\Models\facture;
+use App\Models\soinshopital;
+use App\Models\detailhopital;
 
 class ApilistfacturedetailController extends Controller
 {
@@ -67,5 +69,22 @@ class ApilistfacturedetailController extends Controller
                             ->first();
 
         return response()->json(['factured' => $factured, 'Total' => $Total, 'ID' => $ID]);
+    }
+
+    public function list_facture_hos_d($id)
+    {
+        $hos = soinshopital::find($id);
+
+        $factured = soinshopital::join('produits', 'produits.id', '=', 'soinshopitals.produit_id')
+                            ->where('soinshopitals.detailhopital_id', '=', $id)
+                            ->select(
+                                'soinshopitals.*',
+                                'produits.nom as nom_produit',
+                                'produits.prix as prix_produit',
+                            )
+                            ->orderBy('soinshopitals.created_at', 'desc')
+                            ->get();
+
+        return response()->json(['factured' => $factured]);
     }
 }

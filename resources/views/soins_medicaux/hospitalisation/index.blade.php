@@ -289,6 +289,7 @@
                                                                     <th scope="col">Date sorti</th>
                                                                     <th scope="col">Medecin</th>
                                                                     <th scope="col">Prix</th>
+                                                                    <th scope="col">Prix Soins</th>
                                                                     <th scope="col"></th>
                                                                 </tr>
                                                             </thead>
@@ -423,7 +424,63 @@
     </div>
 </div>
 
+<div class="modal fade" id="Detail_produit" tabindex="-1" aria-modal="true" role="dialog">
+    <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalCenteredScrollableTitle">
+                    Produit Pharmacie Utilisé
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-xl-12">
+                        <div class="">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-12">
+                                        <div id="div_alert_tableP" >
+                    
+                                        </div>
+                                        <div class="table-responsive" id="div_TableP" style="display: none;">
+                                            <table class="table table-bordered" id="TableP">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Produit utilisé</th>
+                                                        <th style="width: 150px;" >Prix unitaire</th>
+                                                        <th style="width: 50px;" >Quantité</th>
+                                                        <th style="width: 150px;" >Prix</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <div id="message_TableP" style="display: none;">
+                                            <p class="text-center" >
+                                                Aucun Produit utilisé pour le moment
+                                            </p>
+                                        </div>
+                                        <div id="div_Table_loaderP" style="display: none;">
+                                            <div class="d-flex justify-content-center align-items-center">
+                                                <div class="spinner-border text-warning me-2" role="status" aria-hidden="true"></div>
+                                                <strong>Chargement des données...</strong>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script src="{{asset('jsPDF-master/dist/jspdf.umd.js')}}"></script>
+<script src="{{asset('jsPDF-AutoTable/dist/jspdf.plugin.autotable.min.js')}}"></script>
 
 <script>
     document.addEventListener("DOMContentLoaded", function() {
@@ -811,6 +868,7 @@
 
             document.getElementById('montant_assurance').value = formatPrice(document.getElementById('montant_assurance_hidden').value);
             document.getElementById('montant_patient').value = formatPrice(document.getElementById('montant_patient_hidden').value);
+            document.getElementById('taux_remise').value = 0;
 
             // Get input elements
             const montant_assurance = document.getElementById('montant_assurance');
@@ -1276,6 +1334,14 @@
                             // Create a new row
                             const row = document.createElement('tr');
                             // Create and append cells to the row based on your table's structure
+                            let addButton = '';
+                            if (item.statut === 'Hospitaliser') {
+                                addButton = `
+                                    <a class="btn btn-outline-success btn-sm" id="add-${item.id}" data-bs-toggle="modal" data-bs-target="#Add">
+                                        <i class="ri-dossier-line"></i>
+                                    </a>
+                                `;
+                            }
                             row.innerHTML = `
                                 <td>${((currentPage - 1) * perPage) + index + 1}</td>
                                 <td>
@@ -1290,10 +1356,12 @@
                                 <td>${formatDate(item.date_fin)}</td>
                                 <td>${item.medecin}</td>
                                 <td>${item.montant} Fcfa</td>
+                                <td>${item.montant_soins} Fcfa</td>
                                 <td>
                                     <div class="d-inline-flex gap-1">
-                                        <a class="btn btn-outline-success btn-sm" id="add-${item.id}" data-bs-toggle="modal" data-bs-target="#Add">
-                                            <i class="ri-dossier-line"></i>
+                                        ${addButton}
+                                        <a class="btn btn-outline-danger btn-sm" id="detail_produit-${item.id}" data-bs-toggle="modal" data-bs-target="#Detail_produit">
+                                            <i class="ri-archive-2-fill"></i>
                                         </a>
                                         <a class="btn btn-outline-warning btn-sm" id="detail-${item.id}" data-bs-toggle="modal" data-bs-target="#Detail">
                                             <i class="ri-eye-line"></i>
@@ -1416,8 +1484,9 @@
                                         const lit = data.lit;
                                         const chambre = data.chambre;
                                         const user = data.user;
+                                        const produit = data.produit;
 
-                                        generatePDFInvoice(hopital, facture, patient, nature, type, lit, chambre, user);
+                                        generatePDFInvoice(hopital, facture, patient, nature, type, lit, chambre, user, produit);
 
                                     })
                                     .catch(error => {
@@ -1425,26 +1494,119 @@
                                     });
                             });
 
-                            document.getElementById(`add-${item.id}`).addEventListener('click', () => {
-                                fetch(`/api/list_produit_all`) // API endpoint pour récupérer la liste des produits
-                                    .then(response => response.json())
-                                    .then(data => {
-                                        
-                                        document.getElementById('id_hos_produit').value = item.id;
-                                        document.getElementById('montant_total_produit').value = "";
+                            const deleteButton = document.getElementById(`add-${item.id}`);
+                            if (deleteButton) {
+                                deleteButton.addEventListener('click', () => {
+                                    fetch(`/api/list_produit_all`) // API endpoint pour récupérer la liste des produits
+                                        .then(response => response.json())
+                                        .then(data => {
+                                            
+                                            document.getElementById('id_hos_produit').value = item.id;
+                                            document.getElementById('montant_total_produit').value = "";
 
-                                        const produits = data.produit;
+                                            const produits = data.produit;
 
-                                        // Affichage initial des produits dans le premier select
-                                        const contenuDiv = document.getElementById('contenu');
-                                        contenuDiv.innerHTML = '';
-                                        
-                                        addSelect(contenuDiv, produits); // Ajouter le premier select
-                                    })
-                                    .catch(error => {
-                                        console.error('Erreur lors du chargement des données:', error);
-                                    });
-                            });
+                                            // Affichage initial des produits dans le premier select
+                                            const contenuDiv = document.getElementById('contenu');
+                                            contenuDiv.innerHTML = '';
+                                            
+                                            addSelect(contenuDiv, produits); // Ajouter le premier select
+                                        })
+                                        .catch(error => {
+                                            console.error('Erreur lors du chargement des données:', error);
+                                        });
+                                });
+                            }
+
+                            document.getElementById(`detail_produit-${item.id}`).addEventListener('click',()=>
+                                {
+                                    const tableBodyP = document.querySelector('#TableP tbody');
+                                    const messageDivP = document.getElementById('message_TableP');
+                                    const tableDivP = document.getElementById('div_TableP');
+                                    const loaderDivP = document.getElementById('div_Table_loaderP');
+
+                                    messageDivP.style.display = 'none';
+                                    tableDivP.style.display = 'none';
+                                    loaderDivP.style.display = 'block';
+
+                                    fetch(`/api/list_facture_hos_d/${item.id}`) // API endpoint
+                                        .then(response => response.json())
+                                        .then(data => {
+                                            // Access the 'chambre' array from the API response
+                                            const factureds = data.factured;
+
+                                            // Clear any existing rows in the table body
+                                            tableBodyP.innerHTML = '';
+
+                                            if (factureds.length > 0) {
+
+                                                loaderDivP.style.display = 'none';
+                                                messageDivP.style.display = 'none';
+                                                tableDivP.style.display = 'block';
+
+                                                // Loop through each item in the chambre array
+                                                factureds.forEach((item, index) => {
+                                                    // Create a new row
+                                                    const row = document.createElement('tr');
+                                                    // Create and append cells to the row based on your table's structure
+                                                    row.innerHTML = `
+                                                        <td>
+                                                            <h6>${item.nom_produit}</h6>
+                                                        </td>
+                                                        <td>
+                                                            <h6>${item.prix_produit} Fcfa</h6>
+                                                        </td>
+                                                        <td>
+                                                            <h6>${item.quantite}</h6>
+                                                        </td>
+                                                        <td>
+                                                            <h6>${item.montant} Fcfa</h6>
+                                                        </td>
+                                                    `;
+                                                    // Append the row to the table body
+                                                    tableBodyP.appendChild(row);
+
+                                                });
+
+                                                const row2 = document.createElement('tr');
+                                                row2.innerHTML = `
+                                                    <td colspan="2">&nbsp;</td>
+                                                    <td colspan="2" >
+                                                        <h5 class="mt-4 text-success">
+                                                            Total : ${item.montant_soins} Fcfa
+                                                        </h5>
+                                                    </td>
+                                                `;
+                                                tableBodyP.appendChild(row2);
+
+                                                const row3 = document.createElement('tr');
+                                                row3.innerHTML = `
+                                                    <td colspan="4">
+                                                        <h6 class="text-danger">NOTE</h6>
+                                                        <p class="small m-0">
+                                                            Le Montant Total des produits utilisés
+                                                            seront ajouter au montant total de la
+                                                            chambre occupé par le patient.
+                                                        </p>
+                                                    </td>
+                                                `;
+
+                                                tableBodyP.appendChild(row3);
+
+                                            } else {
+                                                loaderDivP.style.display = 'none';
+                                                messageDivP.style.display = 'block';
+                                                tableDivP.style.display = 'none';
+                                            }
+                                        })
+                                        .catch(error => {
+                                            console.error('Erreur lors du chargement des données:', error);
+                                            loaderDivD.style.display = 'none';
+                                            messageDivD.style.display = 'block';
+                                            tableDivD.style.display = 'none';
+                                        });
+                                    
+                                });
 
                         });
 
@@ -1554,7 +1716,6 @@
                 } // Mettre à jour le montant total lors de la perte de focus
             });
         }
-
 
         document.getElementById('add_select').addEventListener('click', () => {
             const contenuDiv = document.getElementById('contenu');
@@ -1809,11 +1970,207 @@
             paginationDiv.appendChild(paginationWrapper);
         }
 
-        function generatePDFInvoice(hopital, facture, patient, nature, type, lit, chambre, user) {
+        // function generatePDFInvoice(hopital, facture, patient, nature, type, lit, chambre, user) {
+        //     const { jsPDF } = window.jspdf;
+        //     const doc = new jsPDF({ orientation: 'p', unit: 'mm', format: 'a4' });
+
+        //     yPos = 10;
+
+        //     function drawConsultationSection(yPos) {
+        //         rightMargin = 15;
+        //         leftMargin = 15;
+        //         pdfWidth = doc.internal.pageSize.getWidth();
+
+        //         const titlea = "Facture";
+        //         doc.setFontSize(100);
+        //         doc.setTextColor(242, 242, 242); // Gray color for background effect
+        //         doc.setFont("Helvetica", "bold");
+        //         doc.text(titlea, 120, yPos + 120, { align: 'center', angle: 40 });
+
+        //         // Informations de l'entreprise
+        //         doc.setFontSize(10);
+        //         doc.setTextColor(0, 0, 0);
+        //         doc.setFont("Helvetica", "bold");
+        //         // Texte de l'entreprise
+        //         const title = "ESPACE MEDICO SOCIAL LA PYRAMIDE DU COMPLEXE";
+        //         const titleWidth = doc.getTextWidth(title);
+        //         const titleX = (doc.internal.pageSize.getWidth() - titleWidth) / 2;
+        //         doc.text(title, titleX, yPos);
+        //         // Texte de l'adresse
+        //         doc.setFont("Helvetica", "normal");
+        //         const address = "Abidjan Yopougon Selmer, Non loin du complexe sportif Jesse-Jackson - 04 BP 1523";
+        //         const addressWidth = doc.getTextWidth(address);
+        //         const addressX = (doc.internal.pageSize.getWidth() - addressWidth) / 2;
+        //         doc.text(address, addressX, (yPos + 5));
+        //         // Texte du téléphone
+        //         const phone = "Tél.: 20 24 44 70 / 20 21 71 92 - Cel.: 01 01 01 63 43";
+        //         const phoneWidth = doc.getTextWidth(phone);
+        //         const phoneX = (doc.internal.pageSize.getWidth() - phoneWidth) / 2;
+        //         doc.text(phone, phoneX, (yPos + 10));
+        //         doc.setFontSize(10);
+        //         doc.setFont("Helvetica", "normal");
+        //         const hopitalDate = new Date(hopital.created_at);
+        //         // Formatter la date et l'heure séparément
+        //         const formattedDate = hopitalDate.toLocaleDateString(); // Formater la date
+        //         const formattedTime = hopitalDate.toLocaleTimeString();
+        //         doc.text("Date: " + formattedDate, 15, (yPos + 25));
+        //         doc.text("Heure: " + formattedTime, 15, (yPos + 30));
+
+        //         //Ligne de séparation
+        //         doc.setFontSize(15);
+        //         doc.setFont("Helvetica", "bold");
+        //         doc.setLineWidth(0.5);
+        //         doc.setTextColor(255, 0, 0);
+        //         // doc.line(10, 35, 200, 35); 
+        //         const titleR = "FACTURE HOSPITALISATION";
+        //         const titleRWidth = doc.getTextWidth(titleR);
+        //         const titleRX = (doc.internal.pageSize.getWidth() - titleRWidth) / 2;
+        //         // Définir le padding
+        //         const paddingh = 0; // Padding vertical
+        //         const paddingw = 15; // Padding horizontal
+        //         // Calculer les dimensions du rectangle
+        //         const rectX = titleRX - paddingw; // X du rectangle
+        //         const rectY = (yPos + 18) - paddingh; // Y du rectangle
+        //         const rectWidth = titleRWidth + (paddingw * 2); // Largeur du rectangle
+        //         const rectHeight = 15 + (paddingh * 2); // Hauteur du rectangle
+        //         // Définir la couleur pour le cadre (noir)
+        //         doc.setDrawColor(0, 0, 0);
+        //         doc.rect(rectX, rectY, rectWidth, rectHeight); // Dessiner le rectangle
+        //         // Ajouter le texte centré en gras
+        //         doc.setFontSize(15);
+        //         doc.setFont("Helvetica", "bold");
+        //         doc.setTextColor(255, 0, 0); // Couleur du texte rouge
+        //         doc.text(titleR, titleRX, (yPos + 25)); // Positionner le texte
+        //         const titleN = "N° "+facture.code;
+        //         doc.text(titleN, (doc.internal.pageSize.getWidth() - doc.getTextWidth(titleN)) / 2, (yPos + 31));
+
+        //         doc.setFontSize(10);
+        //         doc.setFont("Helvetica", "bold");
+        //         doc.setTextColor(0, 0, 0);
+        //         const numDossier = "N° Dossier : P-"+ patient.matricule;
+        //         const numDossierWidth = doc.getTextWidth(numDossier);
+        //         doc.text(numDossier, pdfWidth - rightMargin - numDossierWidth, yPos + 28);
+
+        //         yPoss = (yPos + 40);
+
+        //         const patientInfo = [
+        //             { label: "Nom et Prénoms", value: patient.np },
+        //             { label: "Assurer", value: patient.assurer },
+        //             { label: "Age", value: patient.age+" an(s)" },
+        //             { label: "Domicile", value: patient.adresse },
+        //             { label: "Contact", value: "+225 "+patient.tel }
+        //         ];
+
+        //         if (patient.assurer == 'oui') {
+        //             patientInfo.push(
+        //                 { label: "Assurance", value: patient.assurance },
+        //                 { label: "Matricule", value: patient.matricule_assurance },
+        //             );
+        //         }
+
+        //         patientInfo.forEach(info => {
+        //             doc.setFontSize(9);
+        //             doc.setFont("Helvetica", "bold");
+        //             doc.text(info.label, leftMargin, yPoss);
+        //             doc.setFont("Helvetica", "normal");
+        //             doc.text(": " + info.value, leftMargin + 35, yPoss);
+        //             yPoss += 7;
+        //         });
+
+        //         yPoss = (yPos + 40);
+
+        //         const medecinInfo = [
+        //             { label: "Medecin", value: "Dr. "+user.name },
+        //             { label: "Spécialité", value: user.typeacte },
+        //             { label: "Date d'entrée le :", value: formatDate(hopital.date_debut) },
+        //             { label: "Date de sortie prévu le : ", value: formatDate(hopital.date_fin) },
+        //             { label: "Nombre de jours ", value: calculateDaysBetween(hopital.date_debut, hopital.date_fin)+" Jour(s)" },
+        //         ];
+
+        //         medecinInfo.forEach(info => {
+        //             doc.setFontSize(9);
+        //             doc.setFont("Helvetica", "bold");
+        //             doc.text(info.label, leftMargin + 110, yPoss);
+        //             doc.setFont("Helvetica", "normal");
+        //             doc.text(": " + info.value, leftMargin + 150, yPoss);
+        //             yPoss += 7;
+        //         });
+
+        //         yPoss = (yPos + 90);
+
+        //         const typeInfo = [
+        //             { label: "Type d'admission", value: type.nom },
+        //             { label: "Nature d'admission", value: nature.nom },
+        //             { label: "Chambre Occupée", value: "CH-"+chambre.code },
+        //             { label: "Lit Occupée", value: "LIT-"+lit.code+"/"+lit.type },
+        //             { label: "Prix", value: chambre.prix+" Fcfa" },
+        //         ];
+
+        //         typeInfo.forEach(info => {
+        //             doc.setFontSize(9);
+        //             doc.setFont("Helvetica", "bold");
+        //             doc.text(info.label, leftMargin, yPoss);
+        //             doc.setFont("Helvetica", "normal");
+        //             doc.text(": " + info.value, leftMargin + 35, yPoss);
+        //             yPoss += 7;
+        //         });
+
+        //         yPoss = (yPos + 103);
+
+        //         const compteInfo = [
+        //             { label: "Part assurance", value: hopital.part_assurance+" Fcfa"},
+        //             { label: "Part Patient", value: hopital.part_patient+" Fcfa"},
+        //             { label: "Remise", value: hopital.remise ? hopital.remise + " Fcfa" : "0 Fcfa" }
+        //         ];
+
+        //         if (patient.taux !== null) {
+        //             compteInfo.push({ label: "Taux", value: patient.taux + "%" });
+        //         }
+
+        //         compteInfo.forEach(info => {
+        //             doc.setFontSize(9);
+        //             doc.setFont("Helvetica", "bold");
+        //             doc.text(info.label, leftMargin + 130, yPoss);
+        //             doc.setFont("Helvetica", "normal");
+        //             doc.text(": " + info.value, leftMargin + 160, yPoss);
+        //             yPoss += 7;
+        //         });
+
+        //         yPoss += 1;
+
+        //         doc.setFontSize(11);
+        //         doc.setFont("Helvetica", "bold");
+        //         doc.text('Total', leftMargin + 130, yPoss);
+        //         doc.setFont("Helvetica", "bold");
+        //         doc.text(": "+hopital.montant+" Fcfa", leftMargin + 160, yPoss);
+
+        //         doc.setFontSize(10);
+        //         doc.setFont("Helvetica", "bold");
+        //         doc.setTextColor(0, 0, 0);
+        //         doc.text("Imprimer le "+new Date().toLocaleDateString()+" à "+new Date().toLocaleTimeString() , 5, yPos + 133);
+
+        //     }
+
+        //     drawConsultationSection(yPos);
+
+        //     doc.setFontSize(30);
+        //     doc.setLineWidth(0.5);
+        //     doc.setLineDashPattern([3, 3], 0);
+        //     doc.line(0, (yPos + 135), 300, (yPos + 135));
+        //     doc.setLineDashPattern([], 0);
+
+        //     drawConsultationSection(yPos + 150);
+
+
+        //     doc.output('dataurlnewwindow');
+        // }
+
+
+        function generatePDFInvoice(hopital, facture, patient, nature, type, lit, chambre, user, produit) {
             const { jsPDF } = window.jspdf;
             const doc = new jsPDF({ orientation: 'p', unit: 'mm', format: 'a4' });
 
-            yPos = 10;
+            let yPos = 10;
 
             function drawConsultationSection(yPos) {
                 rightMargin = 15;
@@ -1908,7 +2265,7 @@
                 }
 
                 patientInfo.forEach(info => {
-                    doc.setFontSize(9);
+                    doc.setFontSize(8);
                     doc.setFont("Helvetica", "bold");
                     doc.text(info.label, leftMargin, yPoss);
                     doc.setFont("Helvetica", "normal");
@@ -1921,17 +2278,17 @@
                 const medecinInfo = [
                     { label: "Medecin", value: "Dr. "+user.name },
                     { label: "Spécialité", value: user.typeacte },
-                    { label: "Date d'entrée le :", value: formatDate(hopital.date_debut) },
-                    { label: "Date de sortie prévu le : ", value: formatDate(hopital.date_fin) },
+                    { label: "Date d'entrée le ", value: formatDate(hopital.date_debut) },
+                    { label: "Date de sortie prévu le ", value: formatDate(hopital.date_fin) },
                     { label: "Nombre de jours ", value: calculateDaysBetween(hopital.date_debut, hopital.date_fin)+" Jour(s)" },
                 ];
 
                 medecinInfo.forEach(info => {
-                    doc.setFontSize(9);
+                    doc.setFontSize(8);
                     doc.setFont("Helvetica", "bold");
-                    doc.text(info.label, leftMargin + 110, yPoss);
+                    doc.text(info.label, leftMargin + 100, yPoss);
                     doc.setFont("Helvetica", "normal");
-                    doc.text(": " + info.value, leftMargin + 150, yPoss);
+                    doc.text(": " + info.value, leftMargin + 135, yPoss);
                     yPoss += 7;
                 });
 
@@ -1946,7 +2303,7 @@
                 ];
 
                 typeInfo.forEach(info => {
-                    doc.setFontSize(9);
+                    doc.setFontSize(8);
                     doc.setFont("Helvetica", "bold");
                     doc.text(info.label, leftMargin, yPoss);
                     doc.setFont("Helvetica", "normal");
@@ -1954,7 +2311,7 @@
                     yPoss += 7;
                 });
 
-                yPoss = (yPos + 103);
+                yPoss = (yPos + 90);
 
                 const compteInfo = [
                     { label: "Part assurance", value: hopital.part_assurance+" Fcfa"},
@@ -1969,9 +2326,9 @@
                 compteInfo.forEach(info => {
                     doc.setFontSize(9);
                     doc.setFont("Helvetica", "bold");
-                    doc.text(info.label, leftMargin + 130, yPoss);
+                    doc.text(info.label, leftMargin + 120, yPoss);
                     doc.setFont("Helvetica", "normal");
-                    doc.text(": " + info.value, leftMargin + 160, yPoss);
+                    doc.text(": " + info.value, leftMargin + 150, yPoss);
                     yPoss += 7;
                 });
 
@@ -1979,30 +2336,98 @@
 
                 doc.setFontSize(11);
                 doc.setFont("Helvetica", "bold");
-                doc.text('Total', leftMargin + 130, yPoss);
+                doc.text('Total Chambre', leftMargin + 120, yPoss);
                 doc.setFont("Helvetica", "bold");
-                doc.text(": "+hopital.montant+" Fcfa", leftMargin + 160, yPoss);
+                doc.text(": "+hopital.montant+" Fcfa", leftMargin + 150, yPoss);
 
-                doc.setFontSize(10);
-                doc.setFont("Helvetica", "bold");
-                doc.setTextColor(0, 0, 0);
-                doc.text("Imprimer le "+new Date().toLocaleDateString()+" à "+new Date().toLocaleTimeString() , 5, yPos + 133);
+                const donneeTable = produit;
+                // Using autoTable to add a dynamic table for hospital stay details
+                if (donneeTable.length > 0) {
+                    yPossT = yPoss + 10;
+                    doc.autoTable({
+                        startY: yPossT, // Ajustez cette valeur pour le placer correctement sur la page
+                        head: [['N°','Nom du produit utilisé', 'Quantité', 'Prix Unitaire', 'Montant']], // En-têtes du tableau
+                        body: donneeTable.map((item, index) => [
+                            index + 1,
+                            item.nom_produit, // Nom du produit
+                            item.quantite, // Quantité
+                            item.prix_produit+" Fcfa", // Prix unitaire
+                            item.montant+" Fcfa", // Montant (quantité * prix unitaire)
+                        ]), // Remplace les lignes par les données dynamiques
+                        theme: 'striped', // Vous pouvez changer le thème en plain, grid, etc.
+                        // headStyles: { fillColor: [255, 0, 0] }, // En-tête en rouge si nécessaire
+                    });
 
+                    // Utiliser la position Y de la dernière ligne du tableau
+                    const finalY = doc.autoTable.previous.finalY || yPossT + 10;
+
+                    // Ajuster yPoss à la fin du tableau pour le placement des totaux
+                    yPoss = finalY + 10;
+
+                    // Déclarer finalInfo comme un tableau vide
+                    const finalInfo = [];
+                    
+                    // Ajouter l'entrée "Total Produit" si produit.length > 0
+                    if (produit.length > 0) {
+                        finalInfo.push({ label: "Total Produit", value: hopital.montant_soins });
+                    }
+                    
+                    // Ajouter l'entrée "Montant a payer"
+                    finalInfo.push({ label: "Montant a payer", value: hopital.total_final });
+                    
+                    // Boucler à travers finalInfo pour afficher les informations
+                    finalInfo.forEach(info => {
+                        doc.setFontSize(11);
+                        doc.setFont("Helvetica", "bold");
+                        doc.text(info.label, leftMargin + 120, yPoss);
+                        doc.setFont("Helvetica", "normal");
+                        doc.text(": " + info.value + " Fcfa", leftMargin + 150, yPoss);
+                        yPoss += 7;
+                    });
+
+                } else {
+
+                    yPoss += 7;
+                    // Déclarer finalInfo comme un tableau vide
+                    const finalInfo = [];
+                    // Ajouter l'entrée "Total Produit" si produit.length > 0
+                    if (produit.length > 0) {
+                        finalInfo.push({ label: "Total Produit", value: hopital.montant_soins });
+                    }
+                    // Ajouter l'entrée "Montant a payer"
+                    finalInfo.push({ label: "Montant a payer", value: hopital.total_final });
+                    // Boucler à travers finalInfo pour afficher les informations
+                    finalInfo.forEach(info => {
+                        doc.setFontSize(11);
+                        doc.setFont("Helvetica", "bold");
+                        doc.text(info.label, leftMargin + 120, yPoss);
+                        doc.setFont("Helvetica", "normal");
+                        doc.text(": " + info.value + " Fcfa", leftMargin + 150, yPoss);
+                        yPoss += 7;
+                    });
+                }
+
+            }
+
+            function addFooter() {
+                const pageCount = doc.internal.getNumberOfPages();
+                for (let i = 1; i <= pageCount; i++) {
+                    doc.setPage(i);
+                    const footerText = "Imprimer le " + new Date().toLocaleDateString() + " à " + new Date().toLocaleTimeString();
+                    doc.setFontSize(7);
+                    doc.setFont("Helvetica", "bold");
+                    doc.setTextColor(0, 0, 0);
+                    doc.text(footerText, 5, 295); // Position near the bottom of the page (5mm from the left, 290mm from the top)
+                }
             }
 
             drawConsultationSection(yPos);
 
-            doc.setFontSize(30);
-            doc.setLineWidth(0.5);
-            doc.setLineDashPattern([3, 3], 0);
-            doc.line(0, (yPos + 135), 300, (yPos + 135));
-            doc.setLineDashPattern([], 0);
-
-            drawConsultationSection(yPos + 150);
-
+            addFooter();
 
             doc.output('dataurlnewwindow');
         }
+
 
 
     });

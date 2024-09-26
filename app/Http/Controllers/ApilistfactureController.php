@@ -30,6 +30,7 @@ use App\Models\typemedecin;
 use App\Models\consultation;
 use App\Models\detailconsultation;
 use App\Models\facture;
+use App\Models\detailhopital;
 
 class ApilistfactureController extends Controller
 {
@@ -138,6 +139,76 @@ class ApilistfactureController extends Controller
                 'last_page' => $facture->lastPage(),
                 'per_page' => $facture->perPage(),
                 'total' => $facture->total(),
+            ]
+        ]);
+    }
+
+    public function list_facture_hos()
+    {
+        $hopitalQuery = detailhopital::join('factures', 'factures.id','=','detailhopitals.facture_id')
+                                ->where('factures.statut', '=', 'impayer')
+                                ->select(
+                                    'detailhopitals.*',
+                                    'factures.code as code_fac',
+                                )->orderBy('detailhopitals.created_at', 'desc');
+
+        $hopital = $hopitalQuery->paginate(15);
+
+        foreach ($hopital->items() as $value) {
+            $montant = str_replace('.', '', $value->part_patient);
+            $montant_soins = str_replace('.', '', $value->montant_soins);
+
+            // Additionner les montants
+            $total = $montant + $montant_soins;
+
+            // Remettre les points pour les milliers
+            $total_formatted = number_format($total, 0, '', '.');
+
+            $value->total = $total_formatted ;
+        }
+
+        return response()->json([
+            'hopital' => $hopital->items(), // Paginated data
+            'pagination' => [
+                'current_page' => $hopital->currentPage(),
+                'last_page' => $hopital->lastPage(),
+                'per_page' => $hopital->perPage(),
+                'total' => $hopital->total(),
+            ]
+        ]);
+    }
+
+    public function list_facture_hos_all()
+    {
+        $hopitalQuery = detailhopital::join('factures', 'factures.id','=','detailhopitals.facture_id')
+                                ->select(
+                                    'detailhopitals.*',
+                                    'factures.code as code_fac',
+                                    'factures.statut as statut_fac',
+                                )->orderBy('detailhopitals.created_at', 'desc');
+
+        $hopital = $hopitalQuery->paginate(15);
+
+        foreach ($hopital->items() as $value) {
+            $montant = str_replace('.', '', $value->part_patient);
+            $montant_soins = str_replace('.', '', $value->montant_soins);
+
+            // Additionner les montants
+            $total = $montant + $montant_soins;
+
+            // Remettre les points pour les milliers
+            $total_formatted = number_format($total, 0, '', '.');
+
+            $value->total = $total_formatted ;
+        }
+
+        return response()->json([
+            'hopital' => $hopital->items(), // Paginated data
+            'pagination' => [
+                'current_page' => $hopital->currentPage(),
+                'last_page' => $hopital->lastPage(),
+                'per_page' => $hopital->perPage(),
+                'total' => $hopital->total(),
             ]
         ]);
     }

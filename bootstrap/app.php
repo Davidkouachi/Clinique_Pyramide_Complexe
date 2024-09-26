@@ -15,9 +15,11 @@ return Application::configure(basePath: dirname(__DIR__))
         // $middleware->redirectGuestsTo('/');
         $middleware->alias([
             'role' => \App\Http\Middleware\RoleMiddleware::class,
+            'statutchambre' => \App\Http\Middleware\StatutChambremiddleware::class,
         ]);
         $middleware->web([
             'role',
+            'statutchambre',
         ]);
 
     })

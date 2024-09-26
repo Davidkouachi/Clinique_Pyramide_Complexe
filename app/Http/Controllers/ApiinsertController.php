@@ -561,6 +561,7 @@ class ApiinsertController extends Controller
             $add->part_patient = $request->montant_patient;
             $add->remise = $request->taux_remise;
             $add->montant = $request->montant_total;
+            $add->montant_soins = '0';
             $add->date_debut = $request->date_entrer;
             $add->date_fin = $request->date_sortie;
             $add->natureadmission_id = $natureadmission->id;
@@ -621,8 +622,6 @@ class ApiinsertController extends Controller
             return response()->json(['json' => true]);
         }
 
-        Log::info('Selections:', $selections);
-
         $montantTotal = str_replace('.', '', $request->input('montantTotal'));
 
         DB::beginTransaction();
@@ -646,7 +645,7 @@ class ApiinsertController extends Controller
             $add2 = detailhopital::find($id);
 
             // Enlever les points du montant actuel
-            $currentMontant = str_replace('.', '', $add2->montant);
+            $currentMontant = str_replace('.', '', $add2->montant_soins);
 
             // Additionner les montants (les deux montants sont maintenant des entiers sans points)
             $nouveauMontant = $montantTotal + $currentMontant;
@@ -655,7 +654,7 @@ class ApiinsertController extends Controller
             $formattedMontant = number_format($nouveauMontant, 0, '', '.');
 
             // Mettre à jour le montant dans la table detailhopital
-            $add2->montant = $formattedMontant;
+            $add2->montant_soins = $formattedMontant;
 
             if (!$add2->save()) {
                 throw new \Exception('Erreur lors de la mise à jour du montant total');

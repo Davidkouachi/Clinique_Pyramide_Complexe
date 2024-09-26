@@ -20,7 +20,7 @@ Route::get('/', [authController::class, 'login'])->name('login');
 Route::post('/trait_login', [authController::class, 'trait_login'])->name('trait_login');
 Route::get('/refresh_csrf', [authController::class, 'refresh_csrf'])->name('refresh_csrf');
 
-Route::middleware(['auth'])->group(function () {
+Route::middleware(['auth','statutchambre'])->group(function () {
 
 	Route::get('/Acceuil', [AccueilController::class, 'index_accueil'])->name('index_accueil');
 

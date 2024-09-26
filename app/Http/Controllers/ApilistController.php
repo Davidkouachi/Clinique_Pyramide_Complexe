@@ -34,6 +34,7 @@ use App\Models\natureadmission;
 use App\Models\detailhopital;
 use App\Models\facture;
 use App\Models\produit;
+use App\Models\soinshopital;
 
 class ApilistController extends Controller
 {
@@ -178,8 +179,10 @@ class ApilistController extends Controller
                                 ->join('typeadmissions', 'typeadmissions.id', '=', 'natureadmissions.typeadmission_id')
                                 ->join('patients', 'patients.id', '=', 'detailhopitals.patient_id')
                                 ->join('users', 'users.id', '=', 'detailhopitals.user_id')
+                                ->join('factures', 'factures.id','=','detailhopitals.facture_id')
                                 ->select(
                                     'detailhopitals.*',
+                                    'factures.statut as statut_fac',
                                     'natureadmissions.nom as nature',
                                     'typeadmissions.nom as type',
                                     'patients.np as patient',
@@ -207,6 +210,17 @@ class ApilistController extends Controller
     {
         $hopital = detailhopital::find($id);
 
+        $montant = str_replace('.', '', $hopital->part_patient);
+        $montant_soins = str_replace('.', '', $hopital->montant_soins);
+
+        // Additionner les montants
+        $total = $montant + $montant_soins;
+
+        // Remettre les points pour les milliers
+        $total_formatted = number_format($total, 0, '', '.');
+
+        $hopital->total_final = $total_formatted ;
+
         $facture = facture::find($hopital->facture_id);
 
         $patient = patient::leftjoin('assurances', 'assurances.id', '=', 'patients.assurance_id')
@@ -230,6 +244,16 @@ class ApilistController extends Controller
             ->where('users.id', '=', $hopital->user_id)
             ->select('users.*', 'typeactes.nom as typeacte')
             ->first();
+
+        $produit = soinshopital::join('produits', 'produits.id', '=', 'soinshopitals.produit_id')
+                            ->where('soinshopitals.detailhopital_id', '=', $hopital->id)
+                            ->select(
+                                'soinshopitals.*',
+                                'produits.nom as nom_produit',
+                                'produits.prix as prix_produit',
+                            )
+                            ->orderBy('soinshopitals.created_at', 'desc')
+                            ->get();
         
         return response()->json([
             'hopital' => $hopital,
@@ -240,6 +264,7 @@ class ApilistController extends Controller
             'lit' => $lit,
             'chambre' => $chambre,
             'user' => $user,
+            'produit' => $produit,
         ]);
 
     }
