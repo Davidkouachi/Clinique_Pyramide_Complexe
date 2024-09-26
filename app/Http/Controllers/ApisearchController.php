@@ -28,6 +28,7 @@ use App\Models\role;
 use App\Models\typeadmission;
 use App\Models\natureadmission;
 use App\Models\detailhopital;
+use App\Models\facture;
 
 class ApisearchController extends Controller
 {
@@ -46,6 +47,39 @@ class ApisearchController extends Controller
 
         if ($patient) {
             return response()->json(['success' => true, 'patient' => $patient]);
+        }else{
+            return response()->json(['existep' => true]);
+        }
+
+    }
+
+    public function rech_patient_hos($code)
+    {
+        $patient = patient::leftJoin('assurances', 'assurances.id', '=', 'patients.assurance_id')
+                       ->leftJoin('tauxes', 'tauxes.id', '=', 'patients.taux_id')
+                       ->leftJoin('societes', 'societes.id', '=', 'patients.societe_id')
+                       ->where('patients.matricule', '=', $code)
+                       ->select(
+                            'patients.*', 
+                            'assurances.nom as assurance', 
+                            'tauxes.taux as taux', 
+                            'societes.nom as societe')
+                       ->first();
+
+        if ($patient) {
+
+            $verf = patient::join('detailhopitals', 'detailhopitals.patient_id', '=', 'patients.id')
+                                ->join('factures', 'factures.id', '=', 'detailhopitals.facture_id')
+                                ->where('patients.matricule', '=', $code)
+                                ->select('patients.*','factures.statut as statut')
+                                ->first();
+
+            if ($verf && $verf->statut == 'impayer') {
+                return response()->json(['existe' => true]);
+            }
+
+            return response()->json(['success' => true, 'patient' => $patient]);
+
         }else{
             return response()->json(['existep' => true]);
         }

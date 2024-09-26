@@ -507,9 +507,9 @@
 
         function rech_dossier()
         {
-            const matricule_patient = document.getElementById("matricule_patient");
+            const matricule_patient = document.getElementById("matricule_patient").value;
 
-            if(!matricule_patient.value.trim()){
+            if(!matricule_patient.trim()){
                 showAlert('warning', 'Veuillez saisie le nom d\'un du patient.');
                 return false;
             }
@@ -525,9 +525,8 @@
             document.body.insertAdjacentHTML('beforeend', preloader_ch);
 
             $.ajax({
-                url: '/api/rech_patient',
-                method: 'GET',  // Use 'POST' for data creation
-                data: { matricule: matricule_patient.value },
+                url: '/api/rech_patient_hos/' + matricule_patient,
+                method: 'GET',
                 success: function(response) {
                     var preloader = document.getElementById('preloader_ch');
 
@@ -538,6 +537,14 @@
                     if(response.existep) {
 
                         showAlert('warning', 'Ce patient n\'existe pas.');
+                        return false;
+
+                    } else if(response.existe) {
+
+                        showAlert('warning', 'Ce patient est déjà hospitaliser.');
+                        document.getElementById('patient').value = "" ;
+                        document.getElementById("matricule_patient").value = "" ;
+                        return false;
 
                     } else if (response.success) {
                         showAlert('success', 'Patient trouvé.');
@@ -802,6 +809,9 @@
             document.getElementById('div_calcul').style.display = 'none';
             document.getElementById('btn_calcul').style.display = 'none';
 
+            document.getElementById('montant_assurance').value = formatPrice(document.getElementById('montant_assurance_hidden').value);
+            document.getElementById('montant_patient').value = formatPrice(document.getElementById('montant_patient_hidden').value);
+
             // Get input elements
             const montant_assurance = document.getElementById('montant_assurance');
             const taux_remise = document.getElementById('taux_remise');
@@ -833,7 +843,7 @@
             }
 
             // Convert and validate values
-            let prixFloat = parseFloat(montant_chambre.replace(/[.,]/g, ''));
+            let prixFloat = parseInt(montant_chambre.replace(/[.,]/g, ''));
             let joursInt = parseInt(nbre_jour);
 
             if (isNaN(prixFloat) || isNaN(joursInt)) {
@@ -846,7 +856,7 @@
             let prixTotal = prixFloat * joursInt;
 
             // Apply discount if available
-            remise = parseFloat(taux_remise.value) || 0;  // Get discount rate or default to 0
+            remise = parseInt(taux_remise.value) || 0;  // Get discount rate or default to 0
             if (remise > 0 && remise <= 100) {
                 prixTotal -= (prixTotal * remise / 100);  // Apply discount
             }
@@ -855,7 +865,7 @@
             montant_total.value = formatPrice(prixTotal.toString());
 
             // Validate insurance rate
-            let tauxFloat = parseFloat(patient_taux);
+            let tauxFloat = parseInt(patient_taux);
             if (isNaN(tauxFloat)) {
                 tauxFloat = 0;  // Set to 0 if the rate is not valid
             }

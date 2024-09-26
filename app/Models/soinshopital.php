@@ -13,11 +13,17 @@ class soinshopital extends Model
         'id',
         'quantite',
         'produit_id',
+        'detailhopital_id',
         'montant',
     ];
 
     public function produit()
     {
         return $this->belongsTo(produit::class, 'produit_id');
+    }
+
+    public function detailhopital()
+    {
+        return $this->belongsTo(detailhopital::class, 'detailhopital_id');
     }
 }

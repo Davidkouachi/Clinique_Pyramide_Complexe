@@ -17,6 +17,8 @@ return new class extends Migration
             $table->string('montant');
             $table->unsignedBigInteger('produit_id');
             $table->foreign('produit_id')->references('id')->on('produits')->onDelete('cascade');
+            $table->unsignedBigInteger('detailhopital_id');
+            $table->foreign('detailhopital_id')->references('id')->on('detailhopitals')->onDelete('cascade');
             $table->timestamps();
         });
     }

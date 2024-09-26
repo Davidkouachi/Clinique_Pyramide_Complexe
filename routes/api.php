@@ -47,6 +47,7 @@ Route::get('/add_soinshopital/{id}', [ApiinsertController::class, 'add_soinshopi
 
 // search debut
 Route::get('/rech_patient', [ApisearchController::class, 'rech_patient']);
+Route::get('/rech_patient_hos/{code}', [ApisearchController::class, 'rech_patient_hos']);
 Route::get('/refresh_num_chambre', [ApisearchController::class, 'refresh_num_chambre']);
 Route::get('/refresh_num_lit', [ApisearchController::class, 'refresh_num_lit']);
 Route::get('/list_chambre_select', [ApisearchController::class, 'list_chambre_select']);
