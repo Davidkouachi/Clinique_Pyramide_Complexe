@@ -452,7 +452,8 @@
                                             });
                                 });
 
-                                document.getElementById(`detail-${item.id}`).addEventListener('click', () => {
+                                document.getElementById(`detail-${item.id}`).addEventListener('click', () => 
+                                {
                                     const tableBodyD = document.querySelector('#TableD tbody');
                                     const messageDivD = document.getElementById('message_TableD');
                                     const tableDivD = document.getElementById('div_TableD');

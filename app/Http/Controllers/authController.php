@@ -37,11 +37,6 @@ class authController extends Controller
         return redirect()->route('login');
     }
 
-    public function trait_auth(Request $request)
-    {
-        return redirect()->route('index_accueil');
-    }
-
     public function mdp_oublie_email()
     {
         return view('auth.mdp_email');

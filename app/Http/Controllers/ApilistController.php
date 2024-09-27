@@ -293,4 +293,69 @@ class ApilistController extends Controller
         return response()->json(['produit' => $produit]);
     }
 
+    public function list_patient_all($statut)
+    {
+        $patientQuery = patient::leftJoin('assurances', 'assurances.id', '=', 'patients.assurance_id')
+                       ->leftJoin('tauxes', 'tauxes.id', '=', 'patients.taux_id')
+                       ->leftJoin('societes', 'societes.id', '=', 'patients.societe_id')
+                       ->select(
+                            'patients.*', 
+                            'assurances.nom as assurance', 
+                            'tauxes.taux as taux', 
+                            'societes.nom as societe')
+                       ->orderBy('created_at', 'desc');
+
+        if ($statut !== 'tous') {
+            $patientQuery->where('patients.assurer', '=', $statut);
+        }
+
+        $patient = $patientQuery->paginate(15);
+
+        foreach ($patient->items() as $value) {
+            $value->age = $value->datenais ? Carbon::parse($value->datenais)->age : 0;
+
+            $value->nbre_hos = detailhopital::where('patient_id', '=', $value->id)->count() ?: 0;
+            $value->nbre_cons = consultation::where('patient_id', '=', $value->id)->count() ?: 0;
+        }
+
+        return response()->json([
+            'patient' => $patient->items(), // Paginated data
+            'pagination' => [
+                'current_page' => $patient->currentPage(),
+                'last_page' => $patient->lastPage(),
+                'per_page' => $patient->perPage(),
+                'total' => $patient->total(),
+            ]
+        ]);
+    }
+
+    public function list_cons_all()
+    {
+
+        $consultationQuery = detailconsultation::join('consultations', 'consultations.id', '=', 'detailconsultations.consultation_id')
+                                    ->leftJoin('users', 'users.id', '=', 'consultations.user_id')
+                                    ->join('patients', 'patients.id', '=', 'consultations.patient_id')
+                                    ->select(
+                                        'detailconsultations.*',
+                                        'consultations.code as code', 
+                                        'patients.np as name', 
+                                        'users.tel as tel', 
+                                        'users.tel2 as tel2',
+                                        'patients.matricule as matricule'
+                                    )
+                                    ->orderBy('detailconsultations.created_at', 'desc');
+
+        $consultation = $consultationQuery->paginate(15);
+
+        return response()->json([
+            'consultation' => $consultation->items(), // Paginated data
+            'pagination' => [
+                'current_page' => $consultation->currentPage(),
+                'last_page' => $consultation->lastPage(),
+                'per_page' => $consultation->perPage(),
+                'total' => $consultation->total(),
+            ]
+        ]);
+    }
+
 }

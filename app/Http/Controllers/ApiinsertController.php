@@ -431,10 +431,8 @@ class ApiinsertController extends Controller
                 throw new \Exception('Erreur');
             }
 
-            $consultation = consultation::find($add->id);
-
             DB::commit();
-            return response()->json(['success' => true, 'patient' => $patient, 'typeacte' => $typeacte, 'user' => $user, 'consultation' => $consultation]);
+            return response()->json(['success' => true]);
             
         } catch (Exception $e) {
             DB::rollback();

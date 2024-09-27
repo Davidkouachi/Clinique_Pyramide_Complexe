@@ -99,6 +99,8 @@ Route::middleware(['statutchambre'])->group(function () {
 	Route::get('/detail_hos/{id}', [ApilistController::class, 'detail_hos']);
 	Route::get('/list_produit', [ApilistController::class, 'list_produit']);
 	Route::get('/list_produit_all', [ApilistController::class, 'list_produit_all']);
+	Route::get('/list_patient_all/{statut}', [ApilistController::class, 'list_patient_all']);
+	Route::get('/list_cons_all', [ApilistController::class, 'list_cons_all']);
 	// liste debut
 
 	// statistique debut
