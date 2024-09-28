@@ -78,9 +78,12 @@
                     <h5 class="card-title">
                         Liste des Produits Pharmacie
                     </h5>
-                    <a id="btn_refresh_table" class="btn btn-outline-info ms-auto">
-                        <i class="ri-loop-left-line"></i>
-                    </a>
+                    <div class="d-flex" >
+                        <input type="text" id="searchInput" placeholder="Produit" class="form-control me-1">
+                        <a id="btn_refresh_table" class="btn btn-outline-info ms-auto">
+                            <i class="ri-loop-left-line"></i>
+                        </a>
+                    </div>
                 </div>
                 <div class="card-body">
                     <div id="div_alert_table" >
@@ -443,16 +446,18 @@
             });
         }
 
-        function list(page = 1) {
+        function list(page = 1,) {
 
-            const tableBody = document.querySelector('#Table_day tbody'); // Target the specific table by id
+            const tableBody = document.querySelector('#Table_day tbody');
             const messageDiv = document.getElementById('message_Table');
-            const tableDiv = document.getElementById('div_Table'); // The message div
+            const tableDiv = document.getElementById('div_Table');
             const loaderDiv = document.getElementById('div_Table_loader');
 
             messageDiv.style.display = 'none';
             tableDiv.style.display = 'none';
             loaderDiv.style.display = 'block';
+
+            let allPproduits = [];
 
             // Fetch data from the API
             const url = `/api/list_produit?page=${page}`;
@@ -460,7 +465,7 @@
                 .then(response => response.json())
                 .then(data => {
 
-                    const produits = data.produit || [] ;
+                    allPproduits = data.produit || [] ;
                     const pagination = data.pagination || {};
 
                     const perPage = pagination.per_page || 10;
@@ -469,52 +474,58 @@
                     // Clear any existing rows in the table body
                     tableBody.innerHTML = '';
 
-                    if (produits.length > 0) {
+                    if (allPproduits.length > 0) {
 
                         loaderDiv.style.display = 'none';
                         messageDiv.style.display = 'none';
                         tableDiv.style.display = 'block';
 
-                        // Loop through each item in the chambre array
-                        produits.forEach((item, index) => {
-                            // Create a new row
-                            const row = document.createElement('tr');
-                            // Create and append cells to the row based on your table's structure
-                            row.innerHTML = `
-                                <td>${((currentPage - 1) * perPage) + index + 1}</td>
-                                <td>${item.nom}</td>
-                                <td>${item.prix} Fcfa</td>
-                                <td>${item.quantite}</td>
-                                <td>
-                                    <div class="d-inline-flex gap-1">
-                                        <a class="btn btn-outline-info btn-sm rounded-5" data-bs-toggle="modal" data-bs-target="#Mmodif" id="edit-${item.id}">
-                                            <i class="ri-edit-box-line"></i>
-                                        </a>
-                                    </div>
-                                </td>
-                            `;
-                            // <a class="btn btn-outline-danger btn-sm rounded-5" data-bs-toggle="modal" data-bs-target="#Mdelete" id="delete-${item.id}">
-                            //                 <i class="ri-delete-bin-line"></i>
-                            //             </a>
-                            // Append the row to the table body
-                            tableBody.appendChild(row);
+                        function displayRows(filteredProduits) {
+                            tableBody.innerHTML = ''; 
 
-                            // Add event listener to the edit button to open the modal with pre-filled data
-                            document.getElementById(`edit-${item.id}`).addEventListener('click', () => {
-                                // Set the values in the modal form
-                                document.getElementById('Id').value = item.id;
-                                document.getElementById('nomModif').value = item.nom;
-                                document.getElementById('prixModif').value = item.prix;
-                                document.getElementById('quantiteModif').value = item.quantite;
+                            // Loop through each item in the chambre array
+                            filteredProduits.forEach((item, index) => {
+                                // Create a new row
+                                const row = document.createElement('tr');
+                                // Create and append cells to the row based on your table's structure
+                                row.innerHTML = `
+                                    <td>${((currentPage - 1) * perPage) + index + 1}</td>
+                                    <td>${item.nom}</td>
+                                    <td>${item.prix} Fcfa</td>
+                                    <td>${item.quantite}</td>
+                                    <td>
+                                        <div class="d-inline-flex gap-1">
+                                            <a class="btn btn-outline-info btn-sm rounded-5" data-bs-toggle="modal" data-bs-target="#Mmodif" id="edit-${item.id}">
+                                                <i class="ri-edit-box-line"></i>
+                                            </a>
+                                        </div>
+                                    </td>
+                                `;
+                                tableBody.appendChild(row);
+
+                                document.getElementById(`edit-${item.id}`).addEventListener('click', () => {
+                                    // Set the values in the modal form
+                                    document.getElementById('Id').value = item.id;
+                                    document.getElementById('nomModif').value = item.nom;
+                                    document.getElementById('prixModif').value = item.prix;
+                                    document.getElementById('quantiteModif').value = item.quantite;
+                                });
+
                             });
+                        }
 
-                            // Add event listener to the edit button to open the modal with pre-filled data
-                            // document.getElementById(`delete-${item.id}`).addEventListener('click', () => {
-                            //     // Set the values in the modal form
-                            //     document.getElementById('Iddelete').value = item.id;
-                            // });
+                        // Update table with filtered factures
+                        function applySearchFilter() {
+                            const search = searchInput.value.toLowerCase();
+                            const filteredProduits = allPproduits.filter(item =>
+                                item.nom.toLowerCase().includes(search)
+                            );
+                            displayRows(filteredProduits); // Display only filtered factures
+                        }
 
-                        });
+                        searchInput.addEventListener('input', applySearchFilter);
+
+                        displayRows(allPproduits);
 
                         updatePaginationControls(pagination);
 

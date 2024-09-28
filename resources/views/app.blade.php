@@ -93,10 +93,7 @@
                 </div>
                 <!-- Header user settings ends -->
             </div>
-            <!-- App header actions ends -->
         </div>
-        <!-- App header ends -->
-        <!-- Main container starts -->
         <div class="main-container">
             <!-- Sidebar wrapper starts -->
             <nav id="sidebar" class="sidebar-wrapper">
@@ -108,8 +105,6 @@
                         <p class="m-0 small profile-name text-nowrap text-truncate">{{Auth::user()->email}}</p>
                     </div>
                 </div>
-                <!-- Sidebar profile ends -->
-                <!-- Sidebar menu starts -->
                 <div class="sidebarMenuScroll">
                     <ul class="sidebar-menu">
                         <li @if(request()->routeIs('index_accueil')) class="active current-page" @endif>
@@ -118,31 +113,53 @@
                                 <span class="menu-text">Accueil</span>
                             </a>
                         </li>
-                        <li @if(request()->routeIs('index_reception')) class="active current-page" @endif>
-                            <a href="{{route('index_reception')}}">
+                        <li @if(request()->routeIs('index_reception','consultation_liste','patient_liste')) class="active current-page treeview" @else class="treeview" @endif >
+                            <a href="#!">
                                 <i class="ri-computer-line"></i>
                                 <span class="menu-text">Réception</span>
                             </a>
+                            <ul class="treeview-menu">
+                                <li>
+                                    <a @if(request()->routeIs('index_reception')) class="text-primary" @endif href="{{route('index_reception')}}">
+                                        Tableau de bord
+                                    </a>
+                                </li>
+                                <li>
+                                    <a @if(request()->routeIs('consultation_liste')) class="text-primary" @endif href="{{route('consultation_liste')}}">
+                                        Consultation
+                                    </a>
+                                </li>
+                                <li>
+                                    <a @if(request()->routeIs('patient_liste')) class="text-primary" @endif href="{{route('patient_liste')}}">
+                                        Patient
+                                    </a>
+                                </li>
+                            </ul>
                         </li>
-                        <li @if(request()->routeIs('hospitalisation','analyse','imagerie')) class="active current-page treeview" @else class="treeview" @endif>
+                        <li @if(request()->routeIs('hospitalisation','analyse','imagerie','soinsam')) class="active current-page treeview" @else class="treeview" @endif>
                             <a href="#!">
                                 <i class="ri-first-aid-kit-fill"></i>
                                 <span class="menu-text">services médicaux</span>
                             </a>
                             <ul class="treeview-menu">
                                 <li>
+                                    <a @if(request()->routeIs('analyse')) class="text-primary" @endif href="{{route('analyse')}}">
+                                        Analyse (en cours)
+                                    </a>
+                                </li>
+                                <li>
                                     <a @if(request()->routeIs('hospitalisation')) class="text-primary" @endif href="{{route('hospitalisation')}}">
                                         Hospitalisation
                                     </a>
                                 </li>
                                 <li>
-                                    <a @if(request()->routeIs('analyse')) class="text-primary" @endif href="{{route('analyse')}}">
-                                        Analyse
+                                    <a @if(request()->routeIs('imagerie')) class="text-primary" @endif href="{{route('imagerie')}}">
+                                        Imagerie (en cours)
                                     </a>
                                 </li>
                                 <li>
-                                    <a @if(request()->routeIs('imagerie')) class="text-primary" @endif href="{{route('imagerie')}}">
-                                        Imagerie
+                                    <a @if(request()->routeIs('soinsam')) class="text-primary" @endif href="{{route('soinsam')}}">
+                                        Soins Ambulantoires (en cours)
                                     </a>
                                 </li>
                             </ul>
@@ -591,7 +608,7 @@
                                 </li>
                             </ul>
                         </li> --}}
-                        <li @if(request()->routeIs('consultation_liste')) class="active current-page treeview" @else class="treeview" @endif>
+                        {{-- <li @if(request()->routeIs('consultation_liste',)) class="active current-page treeview" @else class="treeview" @endif>
                             <a href="#!">
                                 <i class="ri-archive-2-line"></i>
                                 <span class="menu-text">Gestionnaire</span>
@@ -603,7 +620,7 @@
                                     </a>
                                 </li>
                             </ul>
-                        </li>
+                        </li> --}}
                     </ul>
                 </div>
                 <!-- Sidebar menu ends -->

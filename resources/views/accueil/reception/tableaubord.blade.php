@@ -132,18 +132,6 @@
                                     Nouvelle Assurance
                                 </a>
                             </li>
-                            <li class="nav-item" role="presentation">
-                                <a class="nav-link  text-white" id="tab-listPAAA" data-bs-toggle="tab" href="#listPAAA" role="tab" aria-controls="listPAAA" aria-selected="true">
-                                    <i class="ri-contacts-book-3-line me-2"></i>
-                                    Liste des patients
-                                </a>
-                            </li>
-                            <li class="nav-item" role="presentation">
-                                <a class="nav-link  text-white" id="tab-listCAAA" data-bs-toggle="tab" href="#listCAAA" role="tab" aria-controls="listCAAA" aria-selected="true">
-                                    <i class="ri-survey-line me-2"></i>
-                                    Liste des Consultations
-                                </a>
-                            </li>
                         </ul>
                         <div class="tab-content" id="customTabContent">
                             <div class="tab-pane fade active show" id="oneAAA" role="tabpanel" aria-labelledby="tab-oneAAA">
@@ -159,7 +147,10 @@
                                                 </label>
                                                 <div class="input-group">
                                                     <input type="hidden" class="form-control" id="matricule_patient" autocomplete="off">
-                                                    <input type="text" class="form-control" id="name_rech" placeholder="Saisie Obligatoire" autocomplete="off">
+                                                    <input type="text" class="form-control" id="name_rech" name="np" placeholder="Saisie Obligatoire" autocomplete="off">
+                                                    <button hidden id="btn_rech_num_dossier" class="btn btn-outline-success">
+                                                        <i class="ri-search-line"></i>
+                                                    </button>
                                                 </div>
                                                 <div class="suggestions" id="suggestions" style="display: none;"></div>
                                             </div>
@@ -214,11 +205,20 @@
                                                     </select>
                                                 </div>
                                             </div>
+                                            <div class="col-xxl-3 col-lg-4 col-sm-6" id="div_assurance_utiliser" style="display: none;">
+                                                <div class="mb-3">
+                                                    <label class="form-label">Utilisé l'assurance</label>
+                                                    <select class="form-select" id="assurance_utiliser">
+                                                        <option selected value="oui">Oui</option>
+                                                        <option value="non">Non</option>
+                                                    </select>
+                                                </div>
+                                            </div>
                                             <div class="card-header text-center">
                                                 <h5 class="card-title">Information Caisse</h5>
                                             </div>
                                             <div class="row gx-3">
-                                                <div class="col-xxl-3 col-lg-4 col-sm-6">
+                                                <div class="col-xxl-3 col-lg-4 col-sm-6" id="input_part_assurance" style="display: none;">
                                                     <div class="mb-3">
                                                         <div class="input-group">
                                                             <span class="input-group-text">Part Assurance</span>
@@ -461,131 +461,6 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="tab-pane fade" id="listPAAA" role="tabpanel" aria-labelledby="tab-listPAAA">
-                                <div class="row justify-content-center">
-                                    <div class="col-12">
-                                        <div class=" mb-3">
-                                            <div class="card-header d-flex align-items-center justify-content-between">
-                                                <h5 class="card-title">
-                                                    Liste des Patients
-                                                </h5>
-                                                <div class="d-flex" >
-                                                    <input type="text" id="searchInputP" placeholder="N° Dossier" class="form-control me-1">
-                                                    <select class="form-select me-1" id="statutP">
-                                                        <option selected value="tous">Tous</option>
-                                                        <option value="oui">Assurer</option>
-                                                        <option value="non">Non Assurer</option>
-                                                    </select>
-                                                    <a id="btn_print_tableP" style="display: none;" class="btn btn-outline-warning ms-auto me-1">
-                                                        <i class="ri-printer-line"></i>
-                                                    </a>
-                                                    <a id="btn_refresh_tableP" class="btn btn-outline-info ms-auto">
-                                                        <i class="ri-loop-left-line"></i>
-                                                    </a>
-                                                </div>
-                                            </div>
-                                            <div class="card-body">
-                                                <div id="div_alert_tableP" >
-                                                
-                                                </div>
-                                                <div class="table-outer" id="div_TableP" style="display: none;">
-                                                    <div class="table-responsive">
-                                                        <table class="table align-middle table-hover m-0 truncate" id="TableP">
-                                                            <thead>
-                                                                <tr>
-                                                                    <th scope="col">N°</th>
-                                                                    <th scope="col">N° Dossier</th>
-                                                                    <th scope="col">Nom et Prénoms</th>
-                                                                    <th scope="col">Date de naissance</th>
-                                                                    <th scope="col">Age</th>
-                                                                    <th scope="col">Assurer</th>
-                                                                    <th scope="col">Contact</th>
-                                                                    <th scope="col">Date de création</th>
-                                                                    <th scope="col">Actions</th>
-                                                                </tr>
-                                                            </thead>
-                                                            <tbody>
-                                                            </tbody>
-                                                        </table>
-                                                    </div>
-                                                </div>
-                                                <div id="message_TableP" style="display: none;">
-                                                    <p class="text-center" >
-                                                        Aucun Patient n'a été trouvé
-                                                    </p>
-                                                </div>
-                                                <div id="div_Table_loaderP" style="display: none;">
-                                                    <div class="d-flex justify-content-center align-items-center">
-                                                        <div class="spinner-border text-warning me-2" role="status" aria-hidden="true"></div>
-                                                        <strong>Chargement des données...</strong>
-                                                    </div>
-                                                </div>
-                                                <div id="pagination-controlsP" ></div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="tab-pane fade" id="listCAAA" role="tabpanel" aria-labelledby="tab-listCAAA">
-                                <div class="row gx-3" >
-                                    <div class="col-12">
-                                        <div class=" mb-3">
-                                            <div class="card-header d-flex align-items-center justify-content-between">
-                                                <h5 class="card-title">
-                                                    Liste des Conultations
-                                                </h5>
-                                                <div class="d-flex" >
-                                                    <input type="text" id="searchInputC" placeholder="N° Consultation" class="form-control me-1">
-                                                    <a id="btn_print_tableC" style="display: none;" class="btn btn-outline-warning ms-auto me-1">
-                                                        <i class="ri-printer-line"></i>
-                                                    </a>
-                                                    <a id="btn_refresh_tableC" class="btn btn-outline-info ms-auto">
-                                                        <i class="ri-loop-left-line"></i>
-                                                    </a>
-                                                </div>
-                                            </div>
-                                            <div class="card-body">
-                                                <div id="div_alert_tableC" >
-                                                
-                                                </div>
-                                                <div class="table-outer" id="div_TableC" style="display: none;">
-                                                    <div class="table-responsive">
-                                                        <table class="table align-middle table-hover m-0 truncate" id="TableC">
-                                                            <thead>
-                                                                <tr>
-                                                                    <th scope="col">N°</th>
-                                                                    <th scope="col">Code</th>
-                                                                    <th scope="col">N° dossier</th>
-                                                                    <th scope="col">Nom et Prénoms</th>
-                                                                    <th scope="col">Contact</th>
-                                                                    <th scope="col">Motif</th>
-                                                                    <th scope="col">Détail</th>
-                                                                    <th scope="col">Prix</th>
-                                                                    <th scope="col"></th>
-                                                                </tr>
-                                                            </thead>
-                                                            <tbody>
-                                                            </tbody>
-                                                        </table>
-                                                    </div>
-                                                </div>
-                                                <div id="message_TableC" style="display: none;">
-                                                    <p class="text-center" >
-                                                        Aucune Consultation n'a été trouvée
-                                                    </p>
-                                                </div>
-                                                <div id="div_Table_loaderC" style="display: none;">
-                                                    <div class="d-flex justify-content-center align-items-center">
-                                                        <div class="spinner-border text-warning me-2" role="status" aria-hidden="true"></div>
-                                                        <strong>Chargement des données...</strong>
-                                                    </div>
-                                                </div>
-                                                <div id="pagination-controlsC" ></div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
                         </div>
                     </div>
                 </div>
@@ -653,92 +528,6 @@
 
 </div>
 
-<div class="modal fade" id="DetailP" tabindex="-1" aria-modal="true" role="dialog">
-    <div class="modal-dialog modal-lg modal-dialog-scrollable">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">
-                    Détail Patient
-                </h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body" id="modal_detailP">
-                
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class="modal fade" id="CDetail" tabindex="-1" aria-modal="true" role="dialog" >
-    <div class="modal-dialog modal-xl modal-dialog-scrollable modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalXlLabel">
-                    Détail facture
-                </h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <div class="row">
-                    <div class="col-xxl-3 col-sm-3 col-12">
-                        <img height="100" width="100" src="{{asset('assets/images/facture.webp')}}" alt="Bootstrap Admin Dashboard" class="img-fluid">
-                    </div>
-                    <div class="col-sm-9 col-12">
-                        <div class="text-end" id="fac_detail">
-                            
-                        </div>
-                    </div>
-                    <div class="col-12 mb-5"></div>
-                </div>
-                <div class="row">
-                    <div class="col-xl-12">
-                        <div class="">
-                            <div class="card-body">
-                                <div class="row">
-                                    <div class="col-12">
-                                        <div id="div_alert_tableDC" >
-                    
-                                        </div>
-                                        <div class="table-responsive" id="div_TableDC" style="display: none;">
-                                            <table class="table " id="TableDC">
-                                                <thead>
-                                                    <tr>
-                                                        <th width="100px" >Code</th>
-                                                        <th colspan="2">Description</th>
-                                                        <th width="120px" >Part Assurance</th>
-                                                        <th width="50px" >Taux</th>
-                                                        <th width="100px" >Remise</th>
-                                                        <th width="120px" >Part Patient</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                        <div id="message_TableDC" style="display: none;">
-                                            <p class="text-center" >
-                                                Aucune facture disponible
-                                            </p>
-                                        </div>
-                                        <div id="div_Table_loaderDC" style="display: none;">
-                                            <div class="d-flex justify-content-center align-items-center">
-                                                <div class="spinner-border text-warning me-2" role="status" aria-hidden="true"></div>
-                                                <strong>Chargement des données...</strong>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-
-
 <script src="{{asset('assets/vendor/apex/apexcharts.min.js')}}"></script>
 {{-- <script src="{{ asset('js/app.js') }}"></script> --}}
 {{-- <script src="https://unpkg.com/jspdf-invoice-template@1.4.4/dist/index.js"></script> --}}
@@ -759,8 +548,6 @@
         select_societe_patient();
         select_assurance_patient();
         list_cons();
-        listP();
-        list_cons_all();
 
         // ------------------------------------------------------------------
 
@@ -771,9 +558,6 @@
         document.getElementById("btn_eng_societe").addEventListener("click", eng_societe);
         document.getElementById("btn_eng_assurance").addEventListener("click", eng_assurance);
         document.getElementById("btn_eng_patient").addEventListener("click", eng_patient);
-        document.getElementById("btn_refresh_tableP").addEventListener("click", listP);
-        document.getElementById("btn_refresh_tableC").addEventListener("click", list_cons_all);
-        document.getElementById("statutP").addEventListener("change", listP);
 
         // ------------------------------------------------------------------
 
@@ -832,8 +616,9 @@
             this.value = formattedValue;
 
             const appliq_remise = document.getElementById('appliq_remise').value;
+            const assuranceUtiliser = document.getElementById('assurance_utiliser').value; // Récupérer la valeur 'oui' ou 'non'
 
-            if (appliq_remise == 'patient') {
+            if (appliq_remise == 'patient' || assuranceUtiliser == 'non') {
                 // Convertir la valeur formatée en nombre pour les calculs
                 const montant_patient = parseInt(document.getElementById('montant_patient_hidden').value.replace(/\./g, '')) || 0;
                 const remise = parseInt(rawValue) || 0;
@@ -841,8 +626,8 @@
                 // Calculer le montant remis
                 const montantRemis = montant_patient - remise;
                 document.getElementById('montant_patient').value = formatPriceT(montantRemis);
-            }else{
-                // Convertir la valeur formatée en nombre pour les calculs
+            } else if (assuranceUtiliser == 'oui') {
+                // Si l'assurance est utilisée (valeur 'oui'), calculer le montant remis pour l'assurance
                 const montant_assurance = parseInt(document.getElementById('montant_assurance_hidden').value.replace(/\./g, '')) || 0;
                 const remise = parseInt(rawValue) || 0;
 
@@ -853,14 +638,15 @@
         });
 
         document.getElementById('appliq_remise').addEventListener('change', function() {
-
             document.getElementById('montant_assurance').value = formatPrice(document.getElementById('montant_assurance_hidden').value);
             document.getElementById('montant_patient').value = formatPrice(document.getElementById('montant_patient_hidden').value);
 
             // Nettoyer la valeur entrée en supprimant les caractères non numériques sauf le point
-            const rawValue = document.getElementById('taux_remise').value.replace(/[^0-9]/g, ''); // 
+            const rawValue = document.getElementById('taux_remise').value.replace(/[^0-9]/g, ''); 
 
-            if (this.value == 'patient') {
+            const assuranceUtiliser = document.getElementById('assurance_utiliser').value; // Récupérer la valeur 'oui' ou 'non'
+
+            if (this.value == 'patient' || assuranceUtiliser == 'non') {
                 // Convertir la valeur formatée en nombre pour les calculs
                 const montant_patient = parseFloat(document.getElementById('montant_patient_hidden').value.replace(/\./g, '')) || 0;
                 const remise = parseFloat(rawValue) || 0;
@@ -868,8 +654,8 @@
                 // Calculer le montant remis
                 const montantRemis = montant_patient - remise;
                 document.getElementById('montant_patient').value = formatPriceT(montantRemis);
-            }else{
-                // Convertir la valeur formatée en nombre pour les calculs
+            } else if (assuranceUtiliser == 'oui') {
+                // Si l'assurance est utilisée (valeur 'oui'), calculer le montant remis pour l'assurance
                 const montant_assurance = parseFloat(document.getElementById('montant_assurance_hidden').value.replace(/\./g, '')) || 0;
                 const remise = parseFloat(rawValue) || 0;
 
@@ -877,7 +663,8 @@
                 const montantRemis = montant_assurance - remise;
                 document.getElementById('montant_assurance').value = formatPriceT(montantRemis);
             }
-        }); 
+        });
+
 
         function formatPrice(input) {
             // Remove all non-numeric characters except the comma
@@ -1008,8 +795,43 @@
                         Reset();
                     } else if (response.success) {
                         showAlert('success', 'Patient trouvé.');
+
                         addGroup(response.patient);
+
                         document.getElementById("div_info_consul").style.display = 'block';
+
+                        if (response.patient.taux) {
+                            // Le patient a un taux d'assurance
+                            document.getElementById("input_part_assurance").style.display = 'block';
+                            document.getElementById("div_assurance_utiliser").style.display = 'block';
+
+                            // Afficher le select et inclure l'option 'Assurance'
+                            // Assurez-vous que l'option 'Assurance' est visible
+                            const assuranceOption = document.querySelector("#appliq_remise option[value='assurance']");
+                            if (assuranceOption) {
+                                assuranceOption.style.display = 'block';
+                            } else {
+                                // Si l'option 'Assurance' n'existe pas, la créer et l'ajouter
+                                const newAssuranceOption = document.createElement('option');
+                                newAssuranceOption.value = 'assurance';
+                                newAssuranceOption.text = 'Assurance';
+                                document.getElementById("appliq_remise").appendChild(newAssuranceOption);
+                            }
+
+                        } else {
+                            // Le patient n'a pas d'assurance
+                            document.getElementById("input_part_assurance").style.display = 'none';
+                            document.getElementById("div_assurance_utiliser").style.display = 'none';
+
+                            // Cacher l'option 'Assurance' dans le select
+                            const assuranceOption = document.querySelector("#appliq_remise option[value='assurance']");
+                            if (assuranceOption) {
+                                assuranceOption.style.display = 'none';
+                            }
+                        }
+
+
+
                         select_list_typeacte();
                     }
                 },
@@ -1204,8 +1026,7 @@
             }
 
             document.getElementById("div_info_consul").style.display = 'none';
-            document.getElementById("matricule_patient").value = '';
-            document.getElementById("name_rech").value = '';
+            document.getElementById("matricule_patient").value='';
         }
 
         // ------------------------------------------------------------------
@@ -1424,6 +1245,35 @@
                     }
 
                 });
+
+                const appliq_remise = document.getElementById('appliq_remise');
+                const auS = document.getElementById('assurance_utiliser');
+                auS.addEventListener('change', function() {
+                    const selectedOption = typeActeSelect.options[typeActeSelect.selectedIndex];
+                    const prix = selectedOption.getAttribute('data-prix');
+
+                    taux_remise.value = 0;
+
+                    if (prix) {
+                        if (this.value == 'oui') {
+
+
+
+                            // Inclure le taux d'assurance si l'option 'oui' est sélectionnée
+                            calculateAndFormatAmounts(prix, patient_taux.value);
+                        } else {
+                            // Exclure le taux d'assurance si l'option 'non' est sélectionnée
+                            appliq_remise.value = 'patient'; // Sélectionner l'option "patient"
+                            appliq_remise.querySelector('option[value="assurance"]').style.display = 'none'; // Cacher l'option "Assurance"
+                            calculateAndFormatAmounts(prix, 0); // Calculer sans taux d'assurance
+                        }
+                    } else {
+                        // Réinitialiser les champs si aucun prix valide n'est trouvé
+                        montant_total.value = '';
+                        montant_assurance.value = '';
+                        montant_patient.value = '';
+                    }
+                });
             }
         }
 
@@ -1441,10 +1291,16 @@
                 montant_total.value = formatPrice(prix);
 
                 // Ensure patient_taux is a valid number
+                const au = document.getElementById('assurance_utiliser');
                 let tauxFloat = parseFloat(patient_taux);
-                if (isNaN(tauxFloat)) {
-                    tauxFloat = 0; // Set to 0 if patient_taux is not a number
-                }
+
+                if (au.value == 'non') {
+                    tauxFloat = 0;
+                }else{
+                   if (isNaN(tauxFloat)) {
+                        tauxFloat = 0; // Set to 0 if patient_taux is not a number
+                    } 
+                } 
 
                 if (tauxFloat === 0) {
                     montant_assurance.value = '0'; // No insurance coverage
@@ -1640,7 +1496,7 @@
             var taux_id = document.getElementById("patient_taux_id_new");
             var societe_id = document.getElementById("patient_societe_id_new");
 
-            if (!nom.value.trim() || !phone.value.trim() || !adresse.value.trim() || !datenais.value.trim() || !sexe.value.trim()) {
+            if (!nom.value.trim() || !phone.value.trim() || !datenais.value.trim() || !sexe.value.trim()) {
                 showAlert('warning', 'Tous les champs sont obligatoires.');
                 return false; 
             }
@@ -1676,7 +1532,7 @@
             $.ajax({
                 url: '/api/patient_new',
                 method: 'GET',  // Use 'POST' for data creation
-                data: { nom: nom.value, email: email.value || null , tel: phone.value, tel2: phone2.value || null, adresse: adresse.value, assurer: assurer.value, assurance_id: assurance_id.value || null, taux_id: taux_id.value || null, societe_id: societe_id.value || null, datenais: datenais.value, sexe: sexe.value, filiation: filiation.value || null, matricule_assurance: matricule_assurance.value || null},
+                data: { nom: nom.value, email: email.value || null , tel: phone.value, tel2: phone2.value || null, adresse: adresse.value || null, assurer: assurer.value, assurance_id: assurance_id.value || null, taux_id: taux_id.value || null, societe_id: societe_id.value || null, datenais: datenais.value, sexe: sexe.value, filiation: filiation.value || null, matricule_assurance: matricule_assurance.value || null},
                 success: function(response) {
                     var preloader = document.getElementById('preloader_ch');
                     if (preloader) {
@@ -1714,7 +1570,6 @@
                     document.getElementById('matricule_patient').value = `${response.matricule}`;
 
                     rech_dosier();
-                    listP();
 
                     var newConsultationTab = new bootstrap.Tab(document.getElementById('tab-oneAAA'));
                     newConsultationTab.show();
@@ -1729,21 +1584,6 @@
                     }
 
                     showAlert('danger', 'Une erreur est survenue lors de l\'enregistrement.');
-
-                    nom.value = '';
-                    email.value = '';
-                    phone.value = '';
-                    phone2.value = '';
-                    adresse.value = '';
-
-                    datenais.value = '';
-                    sexe.value = '';
-                    filiation.value = '';
-                    matricule_assurance.value = '';
-
-                    assurer.value = 'non';
-
-                    divAssurer.style.display = "none";
                 }
             });
         }
@@ -1809,10 +1649,11 @@
                         const consultation = response.consultation;
 
                         list_cons();
-                        list_cons_all();
                         Statistique();
                         Statistique_cons();
                         Reset();
+
+                        generatePDFficheCons(patient, user, typeacte, consultation);
 
                     } else if (response.error) {
                         showAlertConsultation('danger', 'Une erreur est survenue lors de l\'enregistrement.');
@@ -1839,10 +1680,6 @@
                     }
 
                     showAlertConsultation('danger', ' Une erreur est survenue lors de l\'enregistrement.');
-
-                    jourO.checked = true;
-                    jourF.checked = false;
-                    nuit.checked = false;
                 }
             });
         }
@@ -2060,646 +1897,7 @@
             paginationDiv.appendChild(paginationWrapper);
         }
 
-        function list_cons_all(page = 1) {
-
-            const tableBody = document.querySelector('#TableC tbody');
-            const messageDiv = document.getElementById('message_TableC');
-            const tableDiv = document.getElementById('div_TableC'); // The message div
-            const loaderDiv = document.getElementById('div_Table_loaderC');
-
-            messageDiv.style.display = 'none';
-            tableDiv.style.display = 'none';
-            loaderDiv.style.display = 'block';
-
-            let allCons = [];
-
-            // Fetch data from the API
-            const url = `/api/list_cons_all?page=${page}`;
-            fetch(url) // API endpoint
-                .then(response => response.json())
-                .then(data => {
-                    // Access the 'chambre' array from the API response
-                    allCons = data.consultation || [] ;
-                    const pagination = data.pagination || {};
-
-                    const perPage = pagination.per_page || 10;
-                    const currentPage = pagination.current_page || 1;
-
-                    // Clear any existing rows in the table body
-                    tableBody.innerHTML = '';
-
-                    if (allCons.length > 0) {
-
-                        document.getElementById(`btn_print_tableC`).style.display = 'block';
-
-                        loaderDiv.style.display = 'none';
-                        messageDiv.style.display = 'none';
-                        tableDiv.style.display = 'block';
-
-                        function displayRows(filteredCons) {
-                            tableBody.innerHTML = ''; 
-
-                            // Loop through each item in the chambre array
-                            filteredCons.forEach((item, index) => {
-                                // Create a new row
-                                const row = document.createElement('tr');
-                                // Create and append cells to the row based on your table's structure
-                                row.innerHTML = `
-                                    <td>${((currentPage - 1) * perPage) + index + 1}</td>
-                                    <td>C-${item.code}</td>
-                                    <td>P-${item.matricule}</td>
-                                    <td>${item.name}</td>
-                                    <td>+225 ${item.tel}</td>
-                                    <td>${item.motif}</td>
-                                    <td>${item.type_motif}</td>
-                                    <td>${item.montant} Fcfa</td>
-                                    <td>
-                                        <div class="d-inline-flex gap-1">
-                                            <a class="btn btn-outline-warning btn-sm" data-bs-toggle="modal" data-bs-target="#CDetail" id="Cdetail-${item.id}">
-                                                <i class="ri-eye-line"></i>
-                                            </a>
-                                            <a class="btn btn-outline-warning btn-sm" id="Cfacture-${item.code}">
-                                                <i class="ri-printer-line"></i>
-                                            </a>
-                                            <a class="btn btn-outline-info btn-sm" id="Cfiche-${item.code}">
-                                                <i class="ri-file-line"></i>
-                                            </a>
-                                        </div>
-                                    </td>
-                                `;
-                                // Append the row to the table body
-                                tableBody.appendChild(row);
-
-                                document.getElementById(`Cfiche-${item.code}`).addEventListener('click', () =>
-                                {
-                                    fetch(`/api/fiche_consultation/${item.code}`) // API endpoint
-                                        .then(response => response.json())
-                                        .then(data => {
-                                            // Access the 'chambre' array from the API response
-                                            const patient = data.patient;
-                                            const typeacte = data.typeacte;
-                                            const user = data.user;
-                                            const consultation = data.consultation;
-
-                                            generatePDFficheCons(patient, user, typeacte, consultation);
-
-                                        })
-                                        .catch(error => {
-                                            console.error('Erreur lors du chargement des données:', error);
-                                        });
-                                });
-
-                                document.getElementById(`Cfacture-${item.code}`).addEventListener('click', () =>
-                                {
-                                    fetch(`/api/fiche_consultation/${item.code}`) // API endpoint
-                                        .then(response => response.json())
-                                        .then(data => {
-                                            // Access the 'chambre' array from the API response
-                                            const patient = data.patient;
-                                            const typeacte = data.typeacte;
-                                            const user = data.user;
-                                            const consultation = data.consultation;
-
-                                            generatePDFInvoice(patient, user, typeacte, consultation);
-
-                                        })
-                                        .catch(error => {
-                                            console.error('Erreur lors du chargement des données:', error);
-                                        });
-                                });
-
-                                document.getElementById(`Cdetail-${item.id}`).addEventListener('click', () => 
-                                {
-                                    const tableBodyD = document.querySelector('#TableDC tbody');
-                                    const messageDivD = document.getElementById('message_TableDC');
-                                    const tableDivD = document.getElementById('div_TableDC');
-                                    const loaderDivD = document.getElementById('div_Table_loaderDC');
-
-                                    messageDivD.style.display = 'none';
-                                    tableDivD.style.display = 'none';
-                                    loaderDivD.style.display = 'block';
-
-                                    fetch(`/api/list_facture_inpayer_d/${item.id}`)
-                                        .then(response => response.json())
-                                        .then(data => {
-                                            const factureds = data.factured;
-                                            const total = data.Total;
-
-                                            const id = data.ID.code_fac;
-                                            const date_fac = data.ID.date_fac;
-                                            const statutValue = data.ID.statut;
-                                            const date_paye = data.ID.date_paye;
-
-                                            const fac_detail = document.getElementById('fac_detail');
-                                            fac_detail.innerHTML = '';
-
-                                            const para = document.createElement('p');
-                                            para.className = "mb-2";
-                                            para.innerHTML = `Invoice - <span class="text-primary">${id}</span>`;
-                                            fac_detail.appendChild(para);
-
-                                            const date0 = document.createElement('p');
-                                            date0.className = "mb-2";
-                                            date0.innerHTML = `Date de création ${formatDateHeure(date_fac)}`;
-                                            fac_detail.appendChild(date0);
-
-                                            if (date_paye) {
-                                                const date = document.createElement('p');
-                                                date.className = "mb-2";
-                                                date.innerHTML = `Date de paiement ${formatDateHeure(date_paye)}`;
-                                                fac_detail.appendChild(date);
-                                            }
-
-                                            const statutElement = document.createElement('span');
-                                            if (statutValue === 'payer') {
-                                                statutElement.className = "badge bg-success";
-                                                statutElement.innerHTML = `Facture Réglée`;
-                                            } else {
-                                                statutElement.className = "badge bg-danger";
-                                                statutElement.innerHTML = `Facture Non Réglée`;
-                                            }
-                                            fac_detail.appendChild(statutElement);
-
-                                            tableBodyD.innerHTML = '';
-
-                                            if (factureds.length > 0) {
-                                                loaderDivD.style.display = 'none';
-                                                messageDivD.style.display = 'none';
-                                                tableDivD.style.display = 'block';
-
-                                                factureds.forEach((item, index) => {
-                                                    // Create a new row
-                                                    const row = document.createElement('tr');
-                                                    // Create and append cells to the row based on your table's structure
-                                                    row.innerHTML = `
-                                                        <td><h6>C-${item.code}</h6></td>
-                                                        <td colspan="2" >
-                                                            <h6>${item.nom_acte}</h6>
-                                                            <p>
-                                                                ${item.nom_typeacte}
-                                                            </p>
-                                                        </td>
-                                                        <td>
-                                                            <h6 class="text-primary" >
-                                                                ${item.part_assurance} Fcfa
-                                                            </h6>
-                                                        </td>
-                                                        <td>
-                                                            <h6 class="text-primary" >
-                                                                ${item.taux ?? 0}%
-                                                            </h6>
-                                                        </td>
-                                                        <td>
-                                                            <h6 class="text-primary">
-                                                                ${item.remise ?? 0} Fcfa
-                                                            </h6>
-                                                        </td>
-                                                        <td>
-                                                            <h6 class="text-success" >
-                                                                ${item.part_patient} Fcfa
-                                                            </h6>
-                                                        </td>
-                                                    `;
-                                                    // Append the row to the table body
-                                                    tableBodyD.appendChild(row);
-
-                                                });
-
-                                                const row2 = document.createElement('tr');
-                                                row2.innerHTML = `
-                                                    <td colspan="4">&nbsp;</td>
-                                                    <td colspan="3" >
-                                                        <h5 class="mt-1 text-success">
-                                                            Total : ${formatPriceT(total.total_sum)} Fcfa
-                                                        </h5>
-                                                    </td>
-                                                `;
-                                                tableBodyD.appendChild(row2);
-
-                                            } else {
-                                                tableDivD.style.display = 'none';
-                                                messageDivD.style.display = 'block';
-                                                loaderDivD.style.display = 'none';
-                                                messageDivD.innerHTML = '<p class="text-danger">Aucun détail trouvé.</p>';
-                                            }
-                                        })
-                                        .catch(error => {
-                                            console.error('Erreur lors du chargement des données:', error);
-                                        });
-                                });
-
-                            });
-                        }
-
-                        // Update table with filtered factures
-                        function applySearchFilterC() {
-                            const searchTerm = searchInputC.value.toLowerCase();
-                            const filteredCons = allCons.filter(item =>
-                                item.code.toLowerCase().includes(searchTerm)
-                            );
-                            displayRows(filteredCons); // Display only filtered factures
-                        }
-
-                        searchInputC.addEventListener('input', applySearchFilterC);
-
-                        displayRows(allCons);
-
-                        updatePaginationControlsC(pagination);
-
-                    } else {
-                        document.getElementById(`btn_print_tableC`).style.display = 'none';
-                        loaderDiv.style.display = 'none';
-                        messageDiv.style.display = 'block';
-                        tableDiv.style.display = 'none';
-                    }
-                })
-                .catch(error => {
-                    console.error('Erreur lors du chargement des données:', error);
-                    // Hide the table and show the error message in case of failure
-                    loaderDiv.style.display = 'none';
-                    messageDiv.style.display = 'block';
-                    tableDiv.style.display = 'none';
-                });
-        }
-
-        function updatePaginationControlsC(pagination) {
-            const paginationDiv = document.getElementById('pagination-controlsC');
-            paginationDiv.innerHTML = '';
-
-            // Bootstrap pagination wrapper
-            const paginationWrapper = document.createElement('ul');
-            paginationWrapper.className = 'pagination justify-content-center';
-
-            // Previous button
-            if (pagination.current_page > 1) {
-                const prevButton = document.createElement('li');
-                prevButton.className = 'page-item';
-                prevButton.innerHTML = `<a class="page-link" href="#">Precédent</a>`;
-                prevButton.onclick = (event) => {
-                    event.preventDefault(); // Empêche le défilement en haut de la page
-                    list_cons_all(pagination.current_page - 1);
-                };
-                paginationWrapper.appendChild(prevButton);
-            } else {
-                // Disable the previous button if on the first page
-                const prevButton = document.createElement('li');
-                prevButton.className = 'page-item disabled';
-                prevButton.innerHTML = `<a class="page-link" href="#">Precédent</a>`;
-                paginationWrapper.appendChild(prevButton);
-            }
-
-            // Page number links (show a few around the current page)
-            const totalPages = pagination.last_page;
-            const currentPage = pagination.current_page;
-            const maxVisiblePages = 5; // Max number of page links to display
-
-            let startPage = Math.max(1, currentPage - Math.floor(maxVisiblePages / 2));
-            let endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
-
-            // Adjust start page if end page exceeds the total pages
-            if (endPage - startPage < maxVisiblePages - 1) {
-                startPage = Math.max(1, endPage - maxVisiblePages + 1);
-            }
-
-            // Loop through pages and create page links
-            for (let i = startPage; i <= endPage; i++) {
-                const pageItem = document.createElement('li');
-                pageItem.className = `page-item ${i === currentPage ? 'active' : ''}`;
-                pageItem.innerHTML = `<a class="page-link" href="#">${i}</a>`;
-                pageItem.onclick = (event) => {
-                    event.preventDefault(); // Empêche le défilement en haut de la page
-                    list_cons_all(i);
-                };
-                paginationWrapper.appendChild(pageItem);
-            }
-
-            // Ellipsis (...) if not all pages are shown
-            if (endPage < totalPages) {
-                const ellipsis = document.createElement('li');
-                ellipsis.className = 'page-item disabled';
-                ellipsis.innerHTML = `<a class="page-link" href="#">...</a>`;
-                paginationWrapper.appendChild(ellipsis);
-
-                // Add the last page link
-                const lastPageItem = document.createElement('li');
-                lastPageItem.className = `page-item`;
-                lastPageItem.innerHTML = `<a class="page-link" href="#">${totalPages}</a>`;
-                lastPageItem.onclick = (event) => {
-                    event.preventDefault(); // Empêche le défilement en haut de la page
-                    list_cons_all(totalPages);
-                };
-                paginationWrapper.appendChild(lastPageItem);
-            }
-
-            // Next button
-            if (pagination.current_page < pagination.last_page) {
-                const nextButton = document.createElement('li');
-                nextButton.className = 'page-item';
-                nextButton.innerHTML = `<a class="page-link" href="#">Suivant</a>`;
-                nextButton.onclick = (event) => {
-                    event.preventDefault(); // Empêche le défilement en haut de la page
-                    list_cons_all(pagination.current_page + 1);
-                };
-                paginationWrapper.appendChild(nextButton);
-            } else {
-                // Disable the next button if on the last page
-                const nextButton = document.createElement('li');
-                nextButton.className = 'page-item disabled';
-                nextButton.innerHTML = `<a class="page-link" href="#">Suivant</a>`;
-                paginationWrapper.appendChild(nextButton);
-            }
-
-            // Append pagination controls to the DOM
-            paginationDiv.appendChild(paginationWrapper);
-        }
-
         // ------------------------------------------------------------------
-
-        function listP(page = 1) {
-
-            const tableBody = document.querySelector('#TableP tbody');
-            const messageDiv = document.getElementById('message_TableP');
-            const tableDiv = document.getElementById('div_TableP');
-            const loaderDiv = document.getElementById('div_Table_loaderP');
-
-            let allPatients = [];
-
-            messageDiv.style.display = 'none';
-            tableDiv.style.display = 'none';
-            loaderDiv.style.display = 'block';
-
-            const statut = document.getElementById('statutP').value;
-            const url = `/api/list_patient_all/${statut}?page=${page}`;
-
-            fetch(url)
-                .then(response => response.json())
-                .then(data => {
-                    allPatients = data.patient || [] ;
-                    const pagination = data.pagination || {};
-
-                    const perPage = pagination.per_page || 10;
-                    const currentPage = pagination.current_page || 1;
-
-                    tableBody.innerHTML = '';
-
-                    if (allPatients.length > 0) {
-                        document.getElementById('btn_print_tableP').style.display = 'block';
-
-                        loaderDiv.style.display = 'none';
-                        messageDiv.style.display = 'none';
-                        tableDiv.style.display = 'block';
-
-                        function displayRows(filteredPatients) {
-                            tableBody.innerHTML = ''; 
-
-                            filteredPatients.forEach((item, index) => {
-                                const row = document.createElement('tr');
-                                row.innerHTML = `
-                                    <td>${((currentPage - 1) * perPage) + index + 1}</td>
-                                    <td>P-${item.matricule}</td>
-                                    <td>${item.sexe}. ${item.np}</td>
-                                    <td>${formatDate(item.datenais)}</td>
-                                    <td>${item.age} an(s)</td>
-                                    <td>
-                                        <span class="badge ${item.assurer === 'oui' ? 'bg-success' : 'bg-danger'}">
-                                            ${item.assurer === 'oui' ? 'Oui' : 'Non'}
-                                        </span>
-                                    </td>
-                                    <td>+225 ${item.tel}</td>
-                                    <td>${formatDateHeure(item.created_at)}</td>
-                                    <td>
-                                        <div class="d-inline-flex gap-1">
-                                            <a class="btn btn-outline-warning btn-sm rounded-5" data-bs-toggle="modal" data-bs-target="#DetailP" id="detailP-${item.id}">
-                                                <i class="ri-eye-line"></i>
-                                            </a>
-                                        </div>
-                                    </td>
-                                `;
-                                tableBody.appendChild(row);
-
-                                document.getElementById(`detailP-${item.id}`).addEventListener('click', () =>
-                                {
-                                    const modal = document.getElementById('modal_detailP');
-                                    modal.innerHTML = '';
-
-                                    const div = document.createElement('div');
-                                    div.innerHTML = `
-                                           <div class="row gx-3">
-                                                <div class="col-12">
-                                                    <div class=" mb-3">
-                                                        <div class="card-body">
-                                                            <div class="text-center">
-                                                                <a href="doctors-profile.html" class="d-flex align-items-center flex-column">
-                                                                    <img src="{{asset('assets/images/user7.png')}}" class="img-7x rounded-circle mb-3 border border-3">
-                                                                    <h5>${item.sexe}. ${item.np}</h5>
-                                                                    <h6 class="text-truncate">
-                                                                        +225 ${item.tel}
-                                                                    </h6>
-                                                                    <p>Date création : ${formatDateHeure(item.created_at)} </p>
-                                                                </a>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="col-12">
-                                                    <div class=" mb-3">
-                                                        <div class="card-body">
-                                                            <ul class="list-group">
-                                                                <li class="list-group-item active" aria-current="true">
-                                                                    Informations personnelles
-                                                                </li>
-                                                                <li class="list-group-item">
-                                                                    N° Dossier : P-${item.matricule} 
-                                                                </li>
-                                                                <li class="list-group-item">
-                                                                    Nom et Prénoms : ${item.np}
-                                                                </li>
-                                                                <li class="list-group-item">
-                                                                    Date de naissance : ${formatDate(item.datenais)}
-                                                                </li>
-                                                                <li class="list-group-item">
-                                                                    Age : ${item.age ? item.age : '0'} an(s)
-                                                                </li>
-                                                                <li class="list-group-item">
-                                                                    Genre : ${item.sexe == 'M' ? 'Homme' : 'Femme'}
-                                                                </li>
-                                                                <li class="list-group-item">
-                                                                    Email : ${item.email ? item.email : 'Néant'}
-                                                                </li>
-                                                                <li class="list-group-item">
-                                                                    Contact 1 : ${item.tel ? '+225 '+item.tel : 'Néant'}
-                                                                </li>
-                                                                <li class="list-group-item">
-                                                                    Contact2 :  ${item.tel2 ? '+225 '+item.tel2 : 'Néant'}
-                                                                </li>
-                                                                <li class="list-group-item">
-                                                                    Adresse : ${item.adresse ? item.adresse : 'Néant'}
-                                                                </li>
-                                                                <li class="list-group-item">
-                                                                    Assurer : ${item.assurer ? item.assurer : 'Néant'}
-                                                                </li>
-                                                            </ul>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                ${item.assurer == 'oui' ?  
-                                                `<div class="col-12">
-                                                    <div class=" mb-3">
-                                                        <div class="card-body">
-                                                            <ul class="list-group">
-                                                                <li class="list-group-item active" aria-current="true">
-                                                                    Informations Assurance
-                                                                </li>
-                                                                <li class="list-group-item">
-                                                                    Nom de l'assurance : ${item.assurance ? item.assurance : 'Néant'}
-                                                                </li>
-                                                                <li class="list-group-item">
-                                                                    Taux de Couverture : ${item.taux ? item.taux+'%' : 'Néant'}
-                                                                </li>
-                                                                <li class="list-group-item">
-                                                                    Filiation : ${item.filiation ? item.filiation : 'Néant'}
-                                                                </li>
-                                                                <li class="list-group-item">
-                                                                    Matricule : ${item.matricule_assurance ? item.matricule_assurance : 'Néant'}
-                                                                </li>
-                                                            </ul>
-                                                        </div>
-                                                    </div>
-                                                </div>`
-                                                : ''}
-                                                <div class="col-12">
-                                                    <div class=" mb-3">
-                                                        <div class="card-body">
-                                                            <ul class="list-group">
-                                                                <li class="list-group-item active" aria-current="true">
-                                                                    Statistique
-                                                                </li>
-                                                                <li class="list-group-item">
-                                                                    Consultation : ${item.nbre_cons ? item.nbre_cons : 'O'}
-                                                                </li>
-                                                                <li class="list-group-item">
-                                                                    Hospitalisation : ${item.nbre_hos ? item.nbre_hos : 'O'}
-                                                                </li>
-                                                            </ul>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>     
-                                    `;
-
-                                    modal.appendChild(div);
-
-                                });
-                            });
-                        };
-
-                        // Update table with filtered factures
-                        function applySearchFilter() {
-                            const searchTerm = searchInputP.value.toLowerCase();
-                            const filteredPatients = allPatients.filter(item =>
-                                item.matricule.toLowerCase().includes(searchTerm)
-                            );
-                            displayRows(filteredPatients); // Display only filtered factures
-                        }
-
-                        searchInputP.addEventListener('input', applySearchFilter);
-
-                        displayRows(allPatients);
-
-                        updatePaginationControlsP(pagination);
-
-                    } else {
-                        tableDiv.style.display = 'none';
-                        loaderDiv.style.display = 'none';
-                        messageDiv.style.display = 'block';
-                    }
-                })
-                .catch(error => {
-                    console.error('Erreur lors du chargement des données:', error);
-                    loaderDiv.style.display = 'none';
-                    tableDiv.style.display = 'none';
-                    messageDiv.style.display = 'block';
-                });
-        }
-
-        function updatePaginationControlsP(pagination) {
-            const paginationDiv = document.getElementById('pagination-controlsP');
-            paginationDiv.innerHTML = '';
-
-            // Bootstrap pagination wrapper
-            const paginationWrapper = document.createElement('ul');
-            paginationWrapper.className = 'pagination justify-content-center';
-
-            // Previous button
-            if (pagination.current_page > 1) {
-                const prevButton = document.createElement('li');
-                prevButton.className = 'page-item';
-                prevButton.innerHTML = `<a class="page-link" href="#">Precédent</a>`;
-                prevButton.onclick = () => listP(pagination.current_page - 1);
-                paginationWrapper.appendChild(prevButton);
-            } else {
-                // Disable the previous button if on the first page
-                const prevButton = document.createElement('li');
-                prevButton.className = 'page-item disabled';
-                prevButton.innerHTML = `<a class="page-link" href="#">Precédent</a>`;
-                paginationWrapper.appendChild(prevButton);
-            }
-
-            // Page number links (show a few around the current page)
-            const totalPages = pagination.last_page;
-            const currentPage = pagination.current_page;
-            const maxVisiblePages = 5; // Max number of page links to display
-
-            let startPage = Math.max(1, currentPage - Math.floor(maxVisiblePages / 2));
-            let endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
-
-            // Adjust start page if end page exceeds the total pages
-            if (endPage - startPage < maxVisiblePages - 1) {
-                startPage = Math.max(1, endPage - maxVisiblePages + 1);
-            }
-
-            // Loop through pages and create page links
-            for (let i = startPage; i <= endPage; i++) {
-                const pageItem = document.createElement('li');
-                pageItem.className = `page-item ${i === currentPage ? 'active' : ''}`;
-                pageItem.innerHTML = `<a class="page-link" href="#">${i}</a>`;
-                pageItem.onclick = () => listP(i);
-                paginationWrapper.appendChild(pageItem);
-            }
-
-            // Ellipsis (...) if not all pages are shown
-            if (endPage < totalPages) {
-                const ellipsis = document.createElement('li');
-                ellipsis.className = 'page-item disabled';
-                ellipsis.innerHTML = `<a class="page-link" href="#">...</a>`;
-                paginationWrapper.appendChild(ellipsis);
-
-                // Add the last page link
-                const lastPageItem = document.createElement('li');
-                lastPageItem.className = `page-item`;
-                lastPageItem.innerHTML = `<a class="page-link" href="#">${totalPages}</a>`;
-                lastPageItem.onclick = () => listP(totalPages);
-                paginationWrapper.appendChild(lastPageItem);
-            }
-
-            // Next button
-            if (pagination.current_page < pagination.last_page) {
-                const nextButton = document.createElement('li');
-                nextButton.className = 'page-item';
-                nextButton.innerHTML = `<a class="page-link" href="#">Suivant</a>`;
-                nextButton.onclick = () => listP(pagination.current_page + 1);
-                paginationWrapper.appendChild(nextButton);
-            } else {
-                // Disable the next button if on the last page
-                const nextButton = document.createElement('li');
-                nextButton.className = 'page-item disabled';
-                nextButton.innerHTML = `<a class="page-link" href="#">Suivant</a>`;
-                paginationWrapper.appendChild(nextButton);
-            }
-
-            // Append pagination controls to the DOM
-            paginationDiv.appendChild(paginationWrapper);
-        }
 
         function formatDate(dateString) {
 

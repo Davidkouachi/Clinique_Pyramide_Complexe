@@ -24,8 +24,7 @@ Route::middleware(['auth','statutchambre'])->group(function () {
 
 	Route::get('/', [AccueilController::class, 'index_accueil'])->name('index_accueil');
 
-	Route::get('/Réception', [receptionController::class, 'index_reception'])->name('index_reception');
-
+	Route::get('/Reception', [receptionController::class,'index_reception'])->name('index_reception');
 
 	Route::post('/trait_auth', [authController::class, 'trait_auth'])->name('trait_auth');
 	Route::get('/deconnecter', [authController::class, 'deconnecter'])->name('deconnecter');
@@ -65,7 +64,9 @@ Route::middleware(['auth','statutchambre'])->group(function () {
 	Route::get('/Nouvel Medecin', [utilisateurController::class, 'medecin_new'])->name('medecin_new');
 	Route::get('/Consultation Caisse', [Controller::class, 'encaissement_cons'])->name('encaissement_cons');
 	Route::get('/Consultation Liste Caisse', [Controller::class, 'liste_caisse_cons'])->name('liste_caisse_cons');
-	Route::get('/Consultation', [Controller::class, 'consultation_liste'])->name('consultation_liste');
+	Route::get('/Consultation', [Controller::class,'consultation_liste'])->name('consultation_liste');
+
+	Route::get('/Patient', [Controller::class,'patient_liste'])->name('patient_liste');
 
 	Route::get('/Hospitalisation', [Controller::class, 'hospitalisation'])->name('hospitalisation');
 	Route::get('/Type Admission', [Controller::class, 'typeadmission_new'])->name('typeadmission_new');
@@ -74,6 +75,8 @@ Route::middleware(['auth','statutchambre'])->group(function () {
 	Route::get('/Hospitalisation Liste Caisse', [Controller::class, 'liste_caisse_hos'])->name('liste_caisse_hos');
 
 	Route::get('/Produit Pharmacie', [Controller::class, 'produit_new'])->name('produit_new');
+
+	Route::get('/Soins Ambulantoires', [Controller::class, 'soinsam'])->name('soinsam');
 
 
 	Route::get('/Analyse', [Controller::class, 'analyse'])->name('analyse');

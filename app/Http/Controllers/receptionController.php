@@ -20,6 +20,6 @@ class receptionController extends Controller
 {
     public function index_reception()
     {
-        return view('accueil.reception');
+        return view('accueil.reception.tableaubord');
     }
 }

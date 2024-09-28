@@ -36,9 +36,14 @@ class Controller
 
     // --------------------------------------------------------
 
+    public function patient_liste()
+    {
+        return view('accueil.reception.patient');
+    }
+
     public function consultation_liste()
     {
-        return view('grille.consultation');
+        return view('accueil.reception.consultation');
     }
 
     public function hospitalisation()
@@ -64,6 +69,11 @@ class Controller
     public function natureadmission_new()
     {
         return view('soins_medicaux.hospitalisation.natureadmission');
+    }
+
+    public function soinsam()
+    {
+        return view('infirmerie.nouveau.soinsam');
     }
 
     // --------------------------------------------------------

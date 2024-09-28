@@ -23,7 +23,7 @@ return new class extends Migration
             $table->string('sexe');
             $table->string('filiation')->index()->nullable();
             $table->string('matricule_assurance')->index()->nullable();
-            $table->string('adresse');
+            $table->string('adresse')->nullable();
             $table->unsignedBigInteger('assurance_id')->nullable();
             $table->foreign('assurance_id')->references('id')->on('assurances')->onDelete('cascade');
             $table->unsignedBigInteger('taux_id')->nullable();

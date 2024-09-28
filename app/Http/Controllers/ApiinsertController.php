@@ -627,8 +627,21 @@ class ApiinsertController extends Controller
         try {
 
             foreach ($selections as $value) {
-                $add = new soinshopital();
 
+                $qu = produit::find($value['id']);
+                if ($qu && $qu->quantite >= $value['quantite']) {
+                    
+                    $qu->quantite -= $value['quantite'];
+
+                    if (!$qu->save()) {
+                        throw new \Exception('Erreur lors de la mise à jour de la quantité du produit');
+                    }
+
+                }else{
+                    throw new \Exception('Quantité insuffisante pour le produit : ' . $qu->nom);
+                }
+
+                $add = new soinshopital();
                 $add->produit_id = $value['id'];
                 $add->quantite = $value['quantite'];
                 $add->montant = number_format($value['montant'], 0, ',', '.');

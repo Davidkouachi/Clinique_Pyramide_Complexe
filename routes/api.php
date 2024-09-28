@@ -23,6 +23,7 @@ use App\Http\Controllers\ApipdfController;
 // });
 
 Route::middleware(['statutchambre'])->group(function () {
+	
 	// recherche debut
 	Route::get('/taux_select_patient_new', [ApiController::class, 'taux_select_patient_new']);
 	Route::get('/societe_select_patient_new', [ApiController::class, 'societe_select_patient_new']);
