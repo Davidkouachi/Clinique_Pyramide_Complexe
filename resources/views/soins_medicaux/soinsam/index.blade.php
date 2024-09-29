@@ -35,7 +35,7 @@
                                 </div>
                                 <div class="d-flex flex-column">
                                     <h2 class="m-0 lh-1">9</h2>
-                                    <p class="m-0">Hospitaliés</p>
+                                    <p class="m-0">Patients Traités</p>
                                 </div>
                             </div>
                         </div>
@@ -59,7 +59,7 @@
                             <li class="nav-item" role="presentation">
                                 <a class="nav-link active text-white" id="tab-twoAAA" data-bs-toggle="tab" href="#twoAAA" role="tab" aria-controls="twoAAA" aria-selected="false" tabindex="-1">
                                     <i class="ri-walk-line me-2"></i>
-                                    Nouvelle admission
+                                    Nouveau Soins Infirmier
                                 </a>
                             </li>
                             <li class="nav-item" role="presentation">
@@ -68,95 +68,99 @@
                                     Liste
                                 </a>
                             </li>
-                            <li class="nav-item" role="presentation">
-                                <a class="nav-link  text-white" id="tab-threeAAA" data-bs-toggle="tab" href="#threeAAA" role="tab" aria-controls="threeAAA" aria-selected="true">
-                                    <i class="ri-shake-hands-line me-2"></i>
-                                    Disponibilité Chambre & Lit
-                                </a>
-                            </li>
                         </ul>
                         <div class="tab-content" id="customTabContent">
                             <div class="tab-pane active show fade" id="twoAAA" role="tabpanel" aria-labelledby="tab-twoAAA">
                                 <div class="p-2" id="div_alert" ></div>
                                 <div class="card-header">
-                                    <h5 class="card-title text-center">Nouvelle admission</h5>
+                                    <h5 class="card-title text-left">
+                                        Nouveau Soins Infirmier
+                                    </h5>
                                 </div>
                                 <div class="row gx-3 justify-content-center align-items-center mb-4">
                                     <div class="col-xxl-3 col-lg-4 col-sm-6">
                                         <div class="mb-3">
                                             <label class="form-label">Patient</label>
-                                            <div class="input-group">
-                                                <input type="hidden" class="form-control" id="matricule_patient" autocomplete="off">
-                                                <input type="text" class="form-control" id="patient" placeholder="facultatif" autocomplete="off">
-                                            </div>
+                                            <input type="hidden" class="form-control" id="matricule_patient" autocomplete="off">
+                                            <input type="text" class="form-control" id="patient" placeholder="saisie obligatoire" autocomplete="off">
                                             <div class="suggestions" id="suggestions_patient" style="display: none;"></div>
                                         </div>
                                     </div>
+                                </div>
+                                <div class="row gx-3 justify-content-center align-items-center mb-4">
                                     <div class="col-xxl-3 col-lg-4 col-sm-6">
                                         <div class="mb-3">
-                                            <label class="form-label">Medecin</label>
-                                            <select class="form-select" id="medecin_id"></select>
+                                            <label class="form-label">Type de Soins Infirmer</label>
+                                            <select class="form-select" id="typesoins_id"></select>
                                         </div>
                                     </div>
-                                    <div class="col-xxl-3 col-lg-4 col-sm-6">
-                                        <div class="mb-3">
-                                            <label class="form-label">Type admission</label>
-                                            <select class="form-select" id="id_typeadmission"></select>
+                                </div>
+                                <div id="div_selectSoins" >
+                                    <div class="card-header">
+                                        <h5 class="card-title text-center">
+                                            Choix des Soins Infirmiers
+                                        </h5>
+                                    </div>
+                                    <div class="row gx-3 justify-content-center align-items-center">
+                                        <div class="col-lg-8 col-12">
+                                            <div class="row gx-3 justify-content-center align-items-center">
+                                                <div id="div_alert_soins" ></div>
+                                                <div class="col-12 mb-3 text-center">
+                                                    <button type="button" id="add_select_soins" class="btn btn-info">
+                                                        <i class="ri-sticky-note-add-line"></i>
+                                                        Ajouter un Soins
+                                                    </button>
+                                                </div>
+                                                <div class="col-12" id="contenu_soins">
+
+                                                </div>
+                                                <div class="col-12" id="div_btn_soins" style="display: none;">
+                                                    <div class="input-group mb-3">
+                                                        <input type="tel" class="form-control" id="montant_total_soins" placeholder="Montant Total">
+                                                        <span class="input-group-text">Fcfa</span>
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
-                                    <div class="col-xxl-3 col-lg-4 col-sm-6">
-                                        <div class="mb-3">
-                                            <label class="form-label">Nature Admission</label>
-                                            <select class="form-select" id="id_natureadmission">
-                                                <option value="">Selectioner</option>
-                                            </select>
+                                </div>
+                                <div id="div_selectProduit" >
+                                    <div class="card-header">
+                                        <h5 class="card-title text-center">
+                                            Choix des Produits Utilisés
+                                        </h5>
+                                    </div>
+                                    <div class="row gx-3 justify-content-center align-items-center" >
+                                        <div class="col-lg-8 col-12">
+                                            <div class="row gx-3 justify-content-center align-items-center">
+                                                <div id="div_alert_produit_qu" ></div>
+                                                <div class="col-12 mb-3 text-center">
+                                                    <button type="button" id="add_select_produit" class="btn btn-info">
+                                                        <i class="ri-sticky-note-add-line"></i>
+                                                        Ajouter un Produit
+                                                    </button>
+                                                </div>
+                                                <div class="col-12" id="contenu_produit">
+
+                                                </div>
+                                                <div class="col-12" id="div_btn_pro" style="display: none;">
+                                                    <div class="input-group mb-3">
+                                                        <input type="tel" class="form-control" id="montant_total_produit" placeholder="Montant Total">
+                                                        <span class="input-group-text">Fcfa</span>
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
-                                    <div class="col-xxl-3 col-lg-4 col-sm-6">
-                                        <div class="mb-3">
-                                            <label class="form-label">Chambre à occuper</label>
-                                            <select class="form-select" id="id_chambre"></select>
-                                        </div>
+                                </div>
+                                <div id="div_btn_calcul mt-3" >
+                                    <div class="card-header">
+                                        <h5 class="card-title text-center">
+                                            Informations Montant
+                                        </h5>
                                     </div>
-                                    <div class="col-xxl-3 col-lg-4 col-sm-6">
-                                        <div class="mb-3">
-                                            <label class="form-label">Lit à occuper</label>
-                                            <select class="form-select" id="id_lit">
-                                                <option value="">Selectioner</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="col-xxl-3 col-lg-4 col-sm-6">
-                                        <div class="mb-3">
-                                            <label class="form-label">
-                                                Date d'entrée
-                                            </label>
-                                            <input type="date" class="form-control" placeholder="Selectionner une date" id="date_entrer" min="{{ date('Y-m-d') }}" value="{{ date('Y-m-d') }}">
-                                        </div>
-                                    </div>
-                                    <div class="col-xxl-3 col-lg-4 col-sm-6">
-                                        <div class="mb-3">
-                                            <label class="form-label">
-                                                Date de sortie probable
-                                            </label>
-                                            <input type="date" class="form-control" placeholder="Sélectionner une date" id="date_sortie" min="{{ date('Y-m-d')}}" value="{{ date('Y-m-d') }}">
-                                        </div>
-                                    </div>
-                                    <div class="col-xxl-3 col-lg-4 col-sm-6">
-                                        <div class="mb-3">
-                                            <label class="form-label">
-                                                Nombre de jours
-                                            </label>
-                                            <input readonly type="tel" class="form-control" id="nbre_jour" value="1">
-                                        </div>
-                                    </div>
-                                    <div class="col-xxl-9 col-lg-4 col-sm-6">
-                                        <div class="mb-3">
-                                            <label class="form-label">Motif</label>
-                                            <input type="email" class="form-control" id="motif" placeholder="facultatif">
-                                        </div>
-                                    </div>
-                                    <div class="col-sm-12">
+                                    <div class="row gx-3 justify-content-center align-items-center" >
+                                        <div class="col-sm-12">
                                         <div class="d-flex gap-2 justify-content-center">
                                             <button id="btn_calcul" class="btn btn-warning">
                                                 Calculer le montant final
@@ -247,6 +251,7 @@
                                         </div>
                                     </div>
                                     <div class="p-2" id="div_alert_calcul" ></div>
+                                    </div>
                                 </div>
                             </div>
                             <div class="tab-pane fade " id="oneAAA" role="tabpanel" aria-labelledby="tab-oneAAA">
@@ -315,53 +320,6 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="tab-pane fade" id="threeAAA" role="tabpanel" aria-labelledby="tab-threeAAA">
-                                <div class="card-header">
-                                    <h5 class="card-title text-center">Disponibilité Chambre & Lit</h5>
-                                </div>
-                                <div class="row gx-3" >
-                                    <div class="col-12">
-                                        <div class=" mb-3">
-                                            <div class="card-header d-flex align-items-center justify-content-between">
-                                                <a id="btn_refresh_table" class="btn btn-outline-info ms-auto">
-                                                    <i class="ri-loop-left-line"></i>
-                                                </a>
-                                            </div>
-                                            <div class="card-body">
-                                                <div class="table-outer" id="div_Table_lit" style="display: none;">
-                                                    <div class="table-responsive">
-                                                        <table class="table align-middle table-hover m-0 truncate" id="Table_lit">
-                                                            <thead>
-                                                                <tr>
-                                                                    <th scope="col">N°</th>
-                                                                    <th scope="col">Numéro</th>
-                                                                    <th scope="col">Catégorie</th>
-                                                                    <th scope="col">Numéro chambre</th>
-                                                                    <th scope="col">Prix</th>
-                                                                    <th scope="col">Statut</th>
-                                                                </tr>
-                                                            </thead>
-                                                            <tbody>
-                                                            </tbody>
-                                                        </table>
-                                                    </div>
-                                                </div>
-                                                <div id="message_Table_lit" style="display: none;">
-                                                    <p class="text-center" >
-                                                        Aucun Lit n'a été enregistrer aujourd'hui
-                                                    </p>
-                                                </div>
-                                                <div id="div_Table_loader" style="display: none;">
-                                                    <div class="d-flex justify-content-center align-items-center">
-                                                        <div class="spinner-border text-warning me-2" role="status" aria-hidden="true"></div>
-                                                        <strong>Chargement des données...</strong>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
                         </div>
                     </div>
                 </div>
@@ -409,7 +367,7 @@
                     </div>
                     <div class="col-12" id="div_btn_pro">
                         <div class="input-group mb-3">
-                            <input readonly type="tel" class="form-control" id="montant_total_produit" placeholder="Montant Total">
+                            <input type="tel" class="form-control" id="montant_total_produit" placeholder="Montant Total">
                             <span class="input-group-text">Fcfa</span>
                         </div>
                         <input type="hidden" id="id_hos_produit">
@@ -486,81 +444,8 @@
     document.addEventListener("DOMContentLoaded", function() {
 
         Name_atient();
-        calculerJours();
-        select_medecin();
-        select_chambre();
-        select_typeadmission();
-        list_lit();
-        list_hos();
-        
+        select_typesoins();
 
-        document.getElementById("id_chambre").addEventListener("change", select_lit);
-        document.getElementById("id_typeadmission").addEventListener("change", select_natureadmission);
-        document.getElementById("btn_refresh_table").addEventListener("click", list_lit);
-        document.getElementById('date_entrer').addEventListener('change', calculerJours);
-        document.getElementById('date_sortie').addEventListener('change', calculerJours);
-        document.getElementById('btn_calcul').addEventListener('click', calculAmounts);
-        document.getElementById('btn_eng_hosp').addEventListener('click', eng_hosp);
-        document.getElementById("btn_refresh_table_hos").addEventListener("click", list_hos);
-        document.getElementById("statut").addEventListener("change", list_hos);
-
-        // function Name_atient()
-        // {
-        //     $.ajax({
-        //         url: '/api/name_patient',
-        //         method: 'GET',
-        //         success: function(response) {
-        //             // Sample data array
-        //             const data = response.name;
-
-        //             // Elements
-        //             const input = document.getElementById('patient');
-        //             const matricule_patient = document.getElementById('matricule_patient');
-        //             const suggestionsDiv = document.getElementById('suggestions_patient');
-
-        //             // Event listener for input typing
-        //             input.addEventListener('input', function() {
-        //                 const searchTerm = input.value.toLowerCase();
-                        
-        //                 // Clear previous suggestions
-        //                 suggestionsDiv.style.display = 'block';
-        //                 suggestionsDiv.innerHTML = '';
-
-        //                 // Filter data based on input
-        //                 const filteredData = data.filter(item => item.np.toLowerCase().includes(searchTerm));
-
-        //                 // Display filtered data
-        //                 filteredData.forEach(item => {
-        //                     const suggestion = document.createElement('div');
-        //                     suggestion.innerText = item.np;
-        //                     suggestion.addEventListener('click', function() {
-        //                         // Set selected data in the input field
-        //                         input.value = `${item.np}`;
-        //                         matricule_patient.value = `${item.matricule}`;
-        //                         suggestionsDiv.innerHTML = ''; // Clear suggestions
-        //                         suggestionsDiv.style.display = 'none';
-
-        //                         rech_dossier();
-
-        //                     });
-        //                     suggestionsDiv.appendChild(suggestion);
-        //                 });
-
-        //                 // Show/hide suggestions based on results
-        //                 suggestionsDiv.style.display = filteredData.length > 0 ? 'block' : 'none';
-        //             });
-
-        //             // Hide suggestions when clicking outside
-        //             document.addEventListener('click', function(e) {
-        //                 if (!suggestionsDiv.contains(e.target) && e.target !== input) {
-        //                     suggestionsDiv.style.display = 'none';
-        //                 }
-        //             });
-        //         },
-        //         error: function() {
-        //         }
-        //     });
-        // }
 
         function Name_atient() {
             $.ajax({
@@ -637,82 +522,83 @@
             });
         }
 
-        // function rech_dossier()
-        // {
-        //     const matricule_patient = document.getElementById("matricule_patient").value;
 
-        //     if(!matricule_patient.trim()){
-        //         showAlert('warning', 'Veuillez saisie le nom d\'un du patient.');
-        //         return false;
-        //     }
+        function rech_dossier()
+        {
+            const matricule_patient = document.getElementById("matricule_patient").value;
 
-        //     // Créer l'élément de préchargement
-        //     var preloader_ch = `
-        //         <div id="preloader_ch">
-        //             <div class="spinner_preloader_ch"></div>
-        //         </div>
-        //     `;
+            if(!matricule_patient.trim()){
+                showAlert('warning', 'Veuillez saisie le nom d\'un du patient.');
+                return false;
+            }
 
-        //     // Ajouter le préchargeur au body
-        //     document.body.insertAdjacentHTML('beforeend', preloader_ch);
+            // Créer l'élément de préchargement
+            var preloader_ch = `
+                <div id="preloader_ch">
+                    <div class="spinner_preloader_ch"></div>
+                </div>
+            `;
 
-        //     $.ajax({
-        //         url: '/api/rech_patient_hos/' + matricule_patient,
-        //         method: 'GET',
-        //         success: function(response) {
-        //             var preloader = document.getElementById('preloader_ch');
+            // Ajouter le préchargeur au body
+            document.body.insertAdjacentHTML('beforeend', preloader_ch);
 
-        //             if (preloader) {
-        //                 preloader.remove();
-        //             }
+            $.ajax({
+                url: '/api/rech_patient_hos/' + matricule_patient,
+                method: 'GET',
+                success: function(response) {
+                    var preloader = document.getElementById('preloader_ch');
 
-        //             if(response.existep) {
+                    if (preloader) {
+                        preloader.remove();
+                    }
 
-        //                 showAlert('warning', 'Ce patient n\'existe pas.');
-        //                 return false;
+                    if(response.existep) {
 
-        //             } else if(response.existe) {
+                        showAlert('warning', 'Ce patient n\'existe pas.');
+                        return false;
 
-        //                 showAlert('warning', 'Ce patient est déjà hospitaliser.');
-        //                 document.getElementById('patient').value = "" ;
-        //                 document.getElementById("matricule_patient").value = "" ;
-        //                 return false;
+                    } else if(response.existe) {
 
-        //             } else if (response.success) {
-        //                 showAlert('success', 'Patient trouvé.');
+                        showAlert('warning', 'Ce patient est déjà hospitaliser.');
+                        document.getElementById('patient').value = "" ;
+                        document.getElementById("matricule_patient").value = "" ;
+                        return false;
 
-        //                 const patient_taux = document.getElementById('patient_taux');
-        //                 patient_taux.value = '';
-        //                 patient_taux.value = response.patient.taux ? response.patient.taux : 0;
+                    } else if (response.success) {
+                        showAlert('success', 'Patient trouvé.');
 
-        //                 const appliq_remise = document.getElementById('appliq_remise');
+                        const patient_taux = document.getElementById('patient_taux');
+                        patient_taux.value = '';
+                        patient_taux.value = response.patient.taux ? response.patient.taux : 0;
 
-        //                 // Cacher l'option "Assurance" si le taux est égal à 0
-        //                 if (patient_taux.value == 0) {
-        //                     for (let i = 0; i < appliq_remise.options.length; i++) {
-        //                         if (appliq_remise.options[i].value === 'assurance') {
-        //                             appliq_remise.options[i].style.display = 'none'; // Cacher l'option
-        //                         }
-        //                     }
-        //                 } else {
-        //                     // Afficher l'option "Assurance" si le taux est différent de 0
-        //                     for (let i = 0; i < appliq_remise.options.length; i++) {
-        //                         if (appliq_remise.options[i].value === 'assurance') {
-        //                             appliq_remise.options[i].style.display = 'block'; // Afficher l'option
-        //                         }
-        //                     }
-        //                 }
-        //             }
-        //         },
-        //         error: function() {
-        //             var preloader = document.getElementById('preloader_ch');
-        //             if (preloader) {
-        //                 preloader.remove();
-        //             }
-        //             showAlert('danger', 'Une erreur est survenue lors de la recherche.');
-        //         }
-        //     });
-        // }
+                        const appliq_remise = document.getElementById('appliq_remise');
+
+                        // Cacher l'option "Assurance" si le taux est égal à 0
+                        if (patient_taux.value == 0) {
+                            for (let i = 0; i < appliq_remise.options.length; i++) {
+                                if (appliq_remise.options[i].value === 'assurance') {
+                                    appliq_remise.options[i].style.display = 'none'; // Cacher l'option
+                                }
+                            }
+                        } else {
+                            // Afficher l'option "Assurance" si le taux est différent de 0
+                            for (let i = 0; i < appliq_remise.options.length; i++) {
+                                if (appliq_remise.options[i].value === 'assurance') {
+                                    appliq_remise.options[i].style.display = 'block'; // Afficher l'option
+                                }
+                            }
+                        }
+                    }
+                },
+                error: function() {
+                    var preloader = document.getElementById('preloader_ch');
+                    if (preloader) {
+                        preloader.remove();
+                    }
+                    showAlert('danger', 'Une erreur est survenue lors de la recherche.');
+                }
+            });
+        }
 
         function showAlert(type, message) {
 
@@ -764,326 +650,330 @@
             }, 3000);
         }
 
-        function select_medecin()
-        {
-            const selectElement = document.getElementById('medecin_id');
+        // -----------------------------------------------------
+
+        function select_typesoins() {
+            const selectElement = document.getElementById('typesoins_id');
+
             // Clear existing options
             selectElement.innerHTML = '';
+
             const defaultOption = document.createElement('option');
             defaultOption.value = '';
-            defaultOption.textContent = 'Sélectionner un medecin';
+            defaultOption.textContent = 'Selectionner';
             selectElement.appendChild(defaultOption);
 
-            fetch('/api/list_medecin')
-                .then(response => response.json())
-                .then(data => {
-                    const medecins = data.medecin;
-                    medecins.forEach((item, index) => {
+            $.ajax({
+                url: '/api/list_typesoins',
+                method: 'GET',
+                success: function(response) {
+                    data = response.typesoins;
+                    data.forEach(item => {
                         const option = document.createElement('option');
-                        option.value = `${item.id}`; // Ensure 'id' is the correct key
-                        option.textContent = `Dr. ${item.name}`; // Ensure 'nom' is the correct key
+                        option.value = item.id; // Ensure 'id' is the correct key
+                        option.textContent = item.nom; // Ensure 'nom' is the correct key
                         selectElement.appendChild(option);
                     });
-                })
-                .catch(error => console.error('Erreur lors du chargement des societes:', error));
-        }
+                },
+                error: function() {
+                    // showAlert('danger', 'Impossible de generer le code automatiquement');
+                }
+            });
 
-        function select_typeadmission()
-        {
-            const selectElement = document.getElementById('id_typeadmission');
-            selectElement.innerHTML = '';
+            selectElement.addEventListener('change', function() {
+                const id = this.value;
+                
+                if (id) {
+                    const url = '/api/select_soinsIn/' + id;
+                    fetch(url)
+                        .then(response => response.json())
+                        .then(data => {
 
-            const defaultOption = document.createElement('option');
-            defaultOption.value = '';
-            defaultOption.textContent = 'Sélectionner';
-            selectElement.appendChild(defaultOption);
-            // Vérifie que l'élément select existe
-            if (selectElement) {
-                // Effectuer une requête pour récupérer les taux
-                fetch('/api/list_typeadmission')
-                    .then(response => response.json())
-                    .then(data => {
-                        const typeadmissions = data.typeadmission;
-                        typeadmissions.forEach(item => {
-                            const option = document.createElement('option');
-                            option.value = item.id;
-                            option.textContent = item.nom;
-                            selectElement.appendChild(option);
+                            const soinsins = data.soinsin;
+
+                            const contenuDiv = document.getElementById('contenu_soins');
+                            contenuDiv.innerHTML = '';
+
+                            document.getElementById('montant_total_soins').value ='';
+                                                    
+                            addSelectSoins(contenuDiv, soinsins); // Ajouter le premier select
+                        })
+                        .catch(error => {
+                            console.error('Erreur lors du chargement des données:', error);
                         });
-                    })
-                    .catch(error => console.error('Erreur lors du chargement des taux:', error));
-            }
+                }else{
+                    const contenuDiv = document.getElementById('contenu_soins');
+                    contenuDiv.innerHTML = '';
+
+                    checkContenuSoins();
+                }
+                
+            });
         }
 
-        function select_chambre()
-        {
-            const selectElement = document.getElementById('id_chambre');
-            selectElement.innerHTML = '';
+        function addSelectSoins(parentDiv, soinsins) {
+            const div = document.createElement('div');
+            div.className = 'mb-3';
 
-            const defaultOption = document.createElement('option');
-            defaultOption.value = '';
-            defaultOption.textContent = 'Sélectionner';
-            selectElement.appendChild(defaultOption);
-            // Vérifie que l'élément select existe
+            // Créer le groupe de contrôle contenant le select et le bouton supprimer
+            div.innerHTML = `
+                <div class="input-group">
+                    <select class="form-select soins-select w-50">
+                        <option value="">Sélectionner</option>
+                        ${soinsins.map(item => `<option value="${item.id}" data-prix="${item.prix.replace(/\./g, '')}">${item.nom} / ${item.prix} Fcfa</option>`).join('')}
+                    </select>
+                    <button class="btn btn-outline-danger suppr-btn">Supprimer</button>
+                </div>
+            `;
 
-            if (selectElement) {
-                // Effectuer une requête pour récupérer les taux
-                fetch('/api/list_chambre')
-                    .then(response => response.json())
-                    .then(data => {
-                        const chambres = data.chambre;
-                        chambres.forEach(item => {
-                            const option = document.createElement('option');
-                            option.value = item.id;
-                            option.textContent = "CH-"+item.code;
-                            selectElement.appendChild(option);
-                        });
-                    })
-                    .catch(error => console.error('Erreur lors du chargement des taux:', error));
-            }
+            // Ajouter l'élément dans le parent (contenu div)
+            parentDiv.appendChild(div);
+
+            checkContenuSoins();
+
+            // Ajouter un event listener pour le bouton supprimer
+            div.querySelector('.suppr-btn').addEventListener('click', () => {
+                div.remove(); // Supprimer l'élément div parent
+                checkContenuSoins(); // Re-vérifier le contenu
+                updateMontantTotalSoins(); // Mettre à jour le montant total après la suppression
+            });
+
+            // Event listener pour le select
+            const produitSelect = div.querySelector('.soins-select');
+            produitSelect.addEventListener('change', function() {
+                updateMontantTotalSoins();
+            });
         }
 
-        function select_lit() {
-            const typeSelect = document.getElementById('id_lit');
-
-            typeSelect.innerHTML = '';
-            const defaultOption = document.createElement('option');
-            defaultOption.value = '';
-            defaultOption.textContent = 'Sélectionner';
-            typeSelect.appendChild(defaultOption);
-
-            const Id = document.getElementById('id_chambre').value;
-
-            // Validate if acteId is valid before making the AJAX request
-             if (Id) {
-                $.ajax({
-                    url: '/api/lit_select/' + Id,
-                    method: 'GET',
-                    success: function(response) {
-                        const data = response.lit; 
-
-                        if (data && data.length > 0) {
-
-                            // Populate the select with the response data
-                            data.forEach(item => {
-                                const option = document.createElement('option');
-                                option.value = item.id; // Ensure 'id' is the correct key
-                                option.textContent = 'Lit-'+item.code+'/'+item.type;
-                                option.setAttribute('data-prix', item.prix);
-                                typeSelect.appendChild(option);
-                            });
-
-                        }
-                    },
-                    error: function() {
-                        console.error('Erreur lors du chargement des types d\'actes');
-                    }
-                });
-
-                typeSelect.addEventListener('change', function() {
-                    const selectedOption = typeSelect.options[typeSelect.selectedIndex];
-                    const prix = selectedOption.getAttribute('data-prix');
-
-                    if (prix) {
-
-                        document.getElementById('montant_chambre').value = prix;
-
-
-                    } else {
-                        document.getElementById('montant_chambre').value = 0;
-                    }
-
-                });
-            }
-        }
-
-        function select_natureadmission() {
-            const typeSelect = document.getElementById('id_natureadmission');
-
-            typeSelect.innerHTML = '';
-            const defaultOption = document.createElement('option');
-            defaultOption.value = '';
-            defaultOption.textContent = 'Sélectionner';
-            typeSelect.appendChild(defaultOption);
-
-            const Id = document.getElementById('id_typeadmission').value;
-
-            // Validate if acteId is valid before making the AJAX request
-             if (Id) {
-                $.ajax({
-                    url: '/api/natureadmission_select/' + Id,
-                    method: 'GET',
-                    success: function(response) {
-                        const data = response.natureadmission; 
-
-                        if (data && data.length > 0) {
-
-                            // Populate the select with the response data
-                            data.forEach(item => {
-                                const option = document.createElement('option');
-                                option.value = item.id; // Ensure 'id' is the correct key
-                                option.textContent =item.nom;
-                                typeSelect.appendChild(option);
-                            });
-
-                        }
-                    },
-                    error: function() {
-                        console.error('Erreur lors du chargement des types d\'actes');
-                    }
-                });
-            }
-        }
-
-        function calculAmounts() {
-            // Show loader and hide other elements
-            document.getElementById('div_loader').style.display = 'block';
-            document.getElementById('div_calcul').style.display = 'none';
-            document.getElementById('btn_calcul').style.display = 'none';
-
-            document.getElementById('montant_assurance').value = formatPrice(document.getElementById('montant_assurance_hidden').value);
-            document.getElementById('montant_patient').value = formatPrice(document.getElementById('montant_patient_hidden').value);
-            document.getElementById('taux_remise').value = 0;
-
-            // Get input elements
-            const montant_assurance = document.getElementById('montant_assurance');
-            const taux_remise = document.getElementById('taux_remise');
-            const montant_total = document.getElementById('montant_total');
-            const montant_patient = document.getElementById('montant_patient');
-
-            const montant_patient_hidden = document.getElementById('montant_patient_hidden');
-            const montant_assurance_hidden = document.getElementById('montant_assurance_hidden');
-
-            // Initialize amounts
-            let montantAssurance = 0;
-            let remise = 0;
-            let totalMontant = 0;
-            let montantPatient = 0;
-
-            const patient_taux = document.getElementById('patient_taux').value;
-            const nbre_jour = document.getElementById('nbre_jour').value;
-            const montant_chambre = document.getElementById('montant_chambre').value;
-
-            // Validate inputs
-            if (patient_taux === '' || nbre_jour === '' || montant_chambre === '') {
-
-                showAlertCalcul('warning', 'Veuillez remplir tous les champs SVP.');
-
-                document.getElementById('div_loader').style.display = 'none';
-                document.getElementById('div_calcul').style.display = 'none';
-                document.getElementById('btn_calcul').style.display = 'block';
-                return false;
-            }
-
-            // Convert and validate values
-            let prixFloat = parseInt(montant_chambre.replace(/[.,]/g, ''));
-            let joursInt = parseInt(nbre_jour);
-
-            if (isNaN(prixFloat) || isNaN(joursInt)) {
-                console.error('Invalid price or number of days');
-                montant_total.value = '';  // Clear the field if values are invalid
-                return;
-            }
-
-            // Calculate total price
-            let prixTotal = prixFloat * joursInt;
-
-            // Apply discount if available
-            remise = parseInt(taux_remise.value) || 0;  // Get discount rate or default to 0
-            if (remise > 0 && remise <= 100) {
-                prixTotal -= (prixTotal * remise / 100);  // Apply discount
-            }
-
-            // Set total price
-            montant_total.value = formatPrice(prixTotal.toString());
-
-            // Validate insurance rate
-            let tauxFloat = parseInt(patient_taux);
-            if (isNaN(tauxFloat)) {
-                tauxFloat = 0;  // Set to 0 if the rate is not valid
-            }
-
-            // Calculate insurance and patient portions
-            if (tauxFloat === 0) {
-                montant_assurance.value = '0';  // No insurance coverage
-                montant_patient.value = formatPrice(prixTotal.toString());
-                montant_patient_hidden.value = formatPrice(prixTotal.toString());
-                montant_assurance_hidden.value = '0';
-            } else {
-                montantAssurance = (tauxFloat / 100) * prixTotal;
-                montantPatient = prixTotal - montantAssurance;
-
-                montant_assurance.value = formatPrice(montantAssurance.toString());
-                montant_patient.value = formatPrice(montantPatient.toString());
-
-                montant_patient_hidden.value = formatPrice(montantPatient.toString());
-                montant_assurance_hidden.value = formatPrice(montantAssurance.toString());
-            }
-
-            document.getElementById('taux_remise').value = 0;
-
-            // Show results
-            document.getElementById('div_loader').style.display = 'none';
-            document.getElementById('div_calcul').style.display = 'flex';
-            document.getElementById('btn_calcul').style.display = 'block';
-
-            return false;
-        }
-
-        document.getElementById('taux_remise').addEventListener('input', function() {
-            // Nettoyer la valeur entrée en supprimant les caractères non numériques sauf le point
-            const rawValue = this.value.replace(/[^0-9]/g, ''); // Supprimer tous les caractères non numériques
-            // Ajouter des points pour les milliers
-            const formattedValue = formatPrice(rawValue);
+        function updateMontantTotalSoins() {
+            let montantTotal = 0;
+            const selects = document.querySelectorAll('.produit-select');
             
-            this.value = formattedValue;
+            selects.forEach(select => {
+                const selectedOption = select.options[select.selectedIndex];
+                const prix = selectedOption.getAttribute('data-prix');
+                
+                if (prix) {
+                    montantTotal += parseInt(prix); // Ajouter le prix à la somme totale
+                }
+            });
+            
+            // Formater le montant total avec des points
+            const montantTotalFormatted = montantTotal.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+            document.getElementById('montant_total_soins').value = montantTotalFormatted;
+        }
 
-            const appliq_remise = document.getElementById('appliq_remise').value;
-
-            if (appliq_remise == 'patient') {
-                // Convertir la valeur formatée en nombre pour les calculs
-                const montant_patient = parseInt(document.getElementById('montant_patient_hidden').value.replace(/\./g, '')) || 0;
-                const remise = parseInt(rawValue) || 0;
-
-                // Calculer le montant remis
-                const montantRemis = montant_patient - remise;
-                document.getElementById('montant_patient').value = formatPriceT(montantRemis);
-            }else{
-                // Convertir la valeur formatée en nombre pour les calculs
-                const montant_assurance = parseInt(document.getElementById('montant_assurance_hidden').value.replace(/\./g, '')) || 0;
-                const remise = parseInt(rawValue) || 0;
-
-                // Calculer le montant remis
-                const montantRemis = montant_assurance - remise;
-                document.getElementById('montant_assurance').value = formatPriceT(montantRemis);
+        function checkContenuSoins() {
+            const contenuDiv = document.getElementById('contenu_soins');
+            const divBtnPro = document.getElementById('div_btn_soins');
+            
+            // Si la div #contenu a un contenu, on affiche le bouton, sinon on le cache
+            if (contenuDiv.innerHTML.trim() !== "") {
+                divBtnPro.style.display = "block"; // Afficher le bouton
+            } else {
+                divBtnPro.style.display = "none";  // Cacher le bouton
             }
+        }
+
+        document.getElementById('add_select_soins').addEventListener('click', () => {
+            const contenuDiv = document.getElementById('contenu_soins');
+            const id = document.getElementById('typesoins_id').value;
+
+            if (id == '') {
+                showAlertSoins('warning', `Selectionner un Type de Soins`);
+            }
+
+            const url = '/api/select_soinsIn/' + id;
+                fetch(url)
+                    .then(response => response.json())
+                    .then(data => {
+
+                        const soinsins = data.soinsin;
+
+                        const contenuDiv = document.getElementById('contenu_soins');
+                                                
+                        addSelectSoins(contenuDiv, soinsins); // Ajouter le premier select
+                    })
+                    .catch(error => {
+                        console.error('Erreur lors du chargement des données:', error);
+                    });
         });
 
-        document.getElementById('appliq_remise').addEventListener('change', function() {
+        function showAlertSoins(type, message) {
 
-            document.getElementById('montant_assurance').value = formatPrice(document.getElementById('montant_assurance_hidden').value);
-            document.getElementById('montant_patient').value = formatPrice(document.getElementById('montant_patient_hidden').value);
-
-            const rawValue = document.getElementById('taux_remise').value.replace(/[^0-9]/g, ''); // 
-
-            if (this.value == 'patient') {
-                // Convertir la valeur formatée en nombre pour les calculs
-                const montant_patient = parseFloat(document.getElementById('montant_patient_hidden').value.replace(/\./g, '')) || 0;
-                const remise = parseFloat(rawValue) || 0;
-
-                // Calculer le montant remis
-                const montantRemis = montant_patient - remise;
-                document.getElementById('montant_patient').value = formatPriceT(montantRemis);
-            }else{
-                // Convertir la valeur formatée en nombre pour les calculs
-                const montant_assurance = parseFloat(document.getElementById('montant_assurance_hidden').value.replace(/\./g, '')) || 0;
-                const remise = parseFloat(rawValue) || 0;
-
-                // Calculer le montant remis
-                const montantRemis = montant_assurance - remise;
-                document.getElementById('montant_assurance').value = formatPriceT(montantRemis);
+            var dynamicFields = document.getElementById("div_alert_soins");
+            // Remove existing content
+            while (dynamicFields.firstChild) {
+                dynamicFields.removeChild(dynamicFields.firstChild);
             }
-        }); 
+
+            var groupe = document.createElement("div");
+            groupe.className = `alert bg-${type} text-white alert-dismissible fade show`;
+            groupe.innerHTML = `
+                ${message}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>   
+            `;
+            document.getElementById("div_alert_soins").appendChild(groupe);
+
+            setTimeout(function() {
+                groupe.classList.remove("show");
+                groupe.classList.add("fade");
+                setTimeout(function() {
+                    groupe.remove();
+                }, 150); // Time for the fade effect to complete
+            }, 3000);
+        }
+
+        // -------------------------------------------------------
+
+        function addSelect(parentDiv, produits) {
+            const div = document.createElement('div');
+            div.className = 'mb-3';
+
+            // Créer le groupe de contrôle contenant le select et le bouton supprimer
+            div.innerHTML = `
+                <div class="input-group">
+                    <select class="form-select produit-select w-50">
+                        <option value="">Sélectionner</option>
+                        ${produits.map(produit => `<option value="${produit.id}" data-prix="${produit.prix.replace(/\./g, '')}" data-quantite="${produit.quantite}">${produit.nom} / ${produit.quantite} / ${produit.prix} Fcfa</option>`).join('')}
+                    </select>
+                    <input type="tel" id="quantite_demande" class="form-control" placeholder="Quantité" value="1" maxlength="2">
+                    <button class="btn btn-outline-danger suppr-btn">Supprimer</button>
+                </div>
+            `;
+
+            // Ajouter l'élément dans le parent (contenu div)
+            parentDiv.appendChild(div);
+
+            checkContenu(); // Vérifier le contenu et gérer la visibilité du bouton enregistrer
+
+            // Ajouter un event listener pour le bouton supprimer
+            div.querySelector('.suppr-btn').addEventListener('click', () => {
+                div.remove(); // Supprimer l'élément div parent
+                checkContenu(); // Re-vérifier le contenu
+                updateMontantTotal(); // Mettre à jour le montant total après la suppression
+            });
+
+            const quantiteInput = div.querySelector('#quantite_demande');
+            const produitSelect = div.querySelector('.produit-select');
+
+            // Validation pour n'accepter que des valeurs numériques
+            quantiteInput.addEventListener('keypress', function(event) {
+                const key = event.key;
+                if (isNaN(key)) {
+                    event.preventDefault();
+                }
+            });
+
+            // Validation de la quantité saisie pour ne pas dépasser la quantité disponible
+            produitSelect.addEventListener('change', function() {
+                const selectedOption = produitSelect.options[produitSelect.selectedIndex];
+                const quantiteDisponible = parseInt(selectedOption.dataset.quantite);
+                
+                // Réinitialiser la quantité demandée à 1
+                quantiteInput.value = 1;
+
+                // Si la quantité est supérieure à la quantité disponible, ajuster
+                if (quantiteDisponible < 1) {
+                    quantiteInput.value = 1; // S'assurer que la quantité ne soit pas négative
+                }
+
+                updateMontantTotal(); // Mettre à jour le montant total après changement de produit
+            });
+
+            // Vérification lors de la perte de focus
+            quantiteInput.addEventListener('blur', function() {
+                const selectedOption = produitSelect.options[produitSelect.selectedIndex];
+                const quantiteDisponible = parseInt(selectedOption.dataset.quantite);
+                
+                if (parseInt(quantiteInput.value) > quantiteDisponible) {
+                    showAlertQauntite('warning', `La quantité demandée ne peut pas dépasser ${quantiteDisponible}.`);
+                    quantiteInput.value = quantiteDisponible;
+                }else if(quantiteInput.value == ''){
+                    quantiteInput.value = 1;
+                }
+
+                if(!selectedOption.value == ''){
+                    updateMontantTotal();
+                } // Mettre à jour le montant total lors de la perte de focus
+            });
+        }
+
+        function updateMontantTotal() {
+            let montantTotal = 0;
+            const selects = document.querySelectorAll('.produit-select');
+
+            selects.forEach(select => {
+                const selectedOption = select.options[select.selectedIndex];
+
+                // Vérifier si une option valide est sélectionnée
+                if (selectedOption.value) {
+                    const prix = parseInt(selectedOption.dataset.prix) || 0; // Si 'prix' est invalide ou manquant, utiliser 0
+                    const quantite = parseInt(select.parentElement.querySelector('#quantite_demande').value) || 1; // Si la quantité est invalide, utiliser 1 par défaut
+                    montantTotal += prix * quantite;
+                }
+            });
+
+            // Formater le montant total avec des points
+            const montantTotalFormatted = montantTotal.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+            document.getElementById('montant_total_produit').value = montantTotalFormatted;
+        }
+
+
+        function checkContenu() {
+            const contenuDiv = document.getElementById('contenu_produit');
+            const divBtnPro = document.getElementById('div_btn_pro');
+            
+            // Si la div #contenu a un contenu, on affiche le bouton, sinon on le cache
+            if (contenuDiv.innerHTML.trim() !== "") {
+                divBtnPro.style.display = "block"; // Afficher le bouton
+            } else {
+                divBtnPro.style.display = "none";
+                document.getElementById('montant_total_produit').value = '';
+            }
+        }
+
+        document.getElementById('add_select_produit').addEventListener('click', () => {
+            const contenuDiv = document.getElementById('contenu_produit');
+
+            // Récupérer les produits à partir de l'API
+            fetch(`/api/list_produit_all`)
+                .then(response => response.json())
+                .then(data => {
+                    const contenuDiv = document.getElementById('contenu_produit');
+                    const produits = data.produit;
+                    // Ajouter un nouveau select avec les produits
+                    addSelect(contenuDiv, produits);
+                })
+                .catch(error => {
+                    console.error('Erreur lors du chargement des produits:', error);
+                });
+        });
+
+        function showAlertQauntite(type, message) {
+
+            var dynamicFields = document.getElementById("div_alert_produit_qu");
+            // Remove existing content
+            while (dynamicFields.firstChild) {
+                dynamicFields.removeChild(dynamicFields.firstChild);
+            }
+
+            var groupe = document.createElement("div");
+            groupe.className = `alert bg-${type} text-white alert-dismissible fade show`;
+            groupe.innerHTML = `
+                ${message}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>   
+            `;
+            document.getElementById("div_alert_produit_qu").appendChild(groupe);
+
+            setTimeout(function() {
+                groupe.classList.remove("show");
+                groupe.classList.add("fade");
+                setTimeout(function() {
+                    groupe.remove();
+                }, 150); // Time for the fade effect to complete
+            }, 3000);
+        }
 
         function formatPrice(input) {
             // Remove all non-numeric characters except the comma
@@ -1114,157 +1004,57 @@
             return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
         }
 
-        function list_lit() {
+        // -----------------------------------------------------
 
-            const tableBody = document.querySelector('#Table_lit tbody');
-            const messageDiv = document.getElementById('message_Table_lit');
-            const tableDiv = document.getElementById('div_Table_lit'); // The message div
-            const loaderDiv = document.getElementById('div_Table_loader');
+        document.getElementById('btn_eng_produit').addEventListener('click', () => {
+            const selections = [];
+            const selects = document.querySelectorAll('.produit-select');
+            let formIsValid = true;
 
-            messageDiv.style.display = 'none';
-            tableDiv.style.display = 'none';
-            loaderDiv.style.display = 'block';
+            selects.forEach(select => {
+                const selectedOption = select.options[select.selectedIndex];
+                const idProduit = selectedOption.value; // ID du produit sélectionné
+                const quantiteDemande = parseInt(select.parentElement.querySelector('#quantite_demande').value); // Quantité demandée
+                const prix = parseInt(selectedOption.dataset.prix); // Prix du produit
 
-            // Fetch data from the API
-            fetch('/api/list_lit') // API endpoint
-                .then(response => response.json())
-                .then(data => {
-                    // Access the 'chambre' array from the API response
-                    const lits = data.lit;
+                // Validation du produit et de la quantité
+                if (!idProduit) {  // Si aucun produit n'est sélectionné
+                    formIsValid = false;
+                    showAlertQauntite('danger', 'Veuillez sélectionner un produit.');
+                    return;  // Stopper l'exécution si une erreur est trouvée
+                }
 
-                    // Clear any existing rows in the table body
-                    tableBody.innerHTML = '';
+                if (isNaN(quantiteDemande) || quantiteDemande <= 0) { // Si la quantité n'est pas valide
+                    formIsValid = false;
+                    showAlertQauntite('danger', 'Veuillez entrer une quantité valide pour chaque produit.');
+                    return;  // Stopper l'exécution si une erreur est trouvée
+                }
 
-                    if (lits.length > 0) {
+                // Si un produit est sélectionné, ajoutez-le au tableau
+                if (idProduit) {
+                    selections.push({
+                        id: idProduit,
+                        quantite: quantiteDemande,
+                        montant: prix * quantiteDemande // Calculer le montant
+                    });
+                }
+            });
 
-                        loaderDiv.style.display = 'none';
-                        messageDiv.style.display = 'none';
-                        tableDiv.style.display = 'block';
-
-                        // Loop through each item in the chambre array
-                        lits.forEach((item, index) => {
-                            // Create a new row
-                            const row = document.createElement('tr');
-                            // Create and append cells to the row based on your table's structure
-                            row.innerHTML = `
-                                <td>${index + 1}</td>
-                                <td>Lit-${item.code}</td>
-                                <td>${item.type}</td>
-                                <td>CH-${item.code_ch}</td>
-                                <td>${item.prix} Fcfa</td>
-                                <td>
-                                    ${item.statut === 'indisponible' ? 
-                                        `<span class="badge bg-danger">${item.statut}</span>` : 
-                                        `<span class="badge bg-success">${item.statut}</span>`}
-                                </td>
-                            `;
-                            // Append the row to the table body
-                            tableBody.appendChild(row);
-
-                        });
-                    } else {
-                        loaderDiv.style.display = 'none';
-                        messageDiv.style.display = 'block';
-                        tableDiv.style.display = 'none';
-                    }
-                })
-                .catch(error => {
-                    console.error('Erreur lors du chargement des données:', error);
-                    // Hide the table and show the error message in case of failure
-                    loaderDiv.style.display = 'none';
-                    messageDiv.style.display = 'block';
-                    tableDiv.style.display = 'none';
-                });
-        }
-
-        function calculerJours() {
-            // Sélectionner les éléments des champs date
-            const dateEntree = document.getElementById('date_entrer');
-            const dateSortie = document.getElementById('date_sortie');
-            const joursInput = document.getElementById('nbre_jour');
-
-            const entreeValue = new Date(dateEntree.value);
-            const sortieValue = new Date(dateSortie.value);
-
-            // Vérifier si les deux dates sont valides
-            if (entreeValue && sortieValue) {
-                // Calcul de la différence en millisecondes
-                const difference = sortieValue - entreeValue;
-                // Convertir en jours (1 jour = 24*60*60*1000 millisecondes)
-                let jours = difference / (1000 * 60 * 60 * 24);
-                // jours = jours = 0 ? jours + 1 : 0;
-                
-                // Si jours est égal à 0, alors définir jours à 1
-                jours = jours === 0 ? 1 : jours;
-                
-                // Mise à jour de la valeur du champ input
-                joursInput.value = jours;
-            }
-        }
-
-        function eng_hosp()
-        {
-            var matricule_patient = document.getElementById("matricule_patient").value;
-            var medecin_id = document.getElementById("medecin_id").value;
-            var id_typeadmission = document.getElementById("id_typeadmission").value;
-            var id_natureadmission = document.getElementById("id_natureadmission").value;
-            var id_chambre = document.getElementById("id_chambre").value;
-            var id_lit = document.getElementById('id_lit').value;
-            var date_entrer = document.getElementById('date_entrer').value;
-            var date_sortie = document.getElementById('date_sortie').value;
-            var motif = document.getElementById('motif').value;
-
-
-            if (!matricule_patient.trim() || 
-                !medecin_id.trim() || 
-                !id_typeadmission.trim() || 
-                !id_natureadmission.trim() || 
-                !id_chambre.trim() || 
-                !id_lit.trim() || 
-                !date_entrer.trim() || 
-                !date_sortie.trim() || 
-                !motif.trim()) {
-                showAlertCalcul('warning', 'Tous les champs sont obligatoires.');
-                return false; 
+            if (!Array.isArray(selections) || selections.length === 0) {
+                showAlertQauntite('danger', 'Veuillez selectionner un produit.');
+                return;
             }
 
-            var montant_assurance = document.getElementById('montant_assurance').value;
-            var taux_remise = document.getElementById('taux_remise').value;
-            var montant_total = document.getElementById('montant_total').value;
-            var montant_patient = document.getElementById('montant_patient').value;
-            var patient_taux = document.getElementById('patient_taux').value;
-            var nbre_jour = document.getElementById('nbre_jour').value;
-            var montant_chambre = document.getElementById('montant_chambre').value;
-
-            // Validate monetary fields
-            if (!montant_assurance || 
-                !montant_total || 
-                !montant_patient || 
-                !patient_taux || 
-                !nbre_jour || 
-                !montant_chambre) {
-                
-                showAlertCalcul('warning', 'Vérifier les montants SVP.');
-                return false; 
+            if (!formIsValid) {
+                showAlertQauntite('danger', 'Veuillez selectionner un ou des produit(s).');
+                return; // Sortir de la fonction pour éviter le calcul
             }
 
-            var montantAssuranceValue = parseFloat(montant_assurance);
-            var montantTotalValue = parseFloat(montant_total);
-            var montantPatientValue = parseFloat(montant_patient);
-            var montantChambreValue = parseFloat(montant_chambre);
+            const montantTotal = document.getElementById('montant_total_produit').value;
+            const id = document.getElementById('id_hos_produit').value;
 
-            if (isNaN(montantAssuranceValue) || 
-                isNaN(montantTotalValue) || 
-                isNaN(montantPatientValue) || 
-                isNaN(montantChambreValue) || 
-                montantAssuranceValue < 0 || 
-                montantTotalValue < 0 || 
-                montantPatientValue < 0 || 
-                montantChambreValue < 0) {
-                
-                showAlertCalcul('warning', 'Vérifier les montants SVP (les montants ne doivent pas être négatifs).');
-                return false;
-            }
+            var modal = bootstrap.Modal.getInstance(document.getElementById('Add'));
+            modal.hide();
 
             var preloader_ch = `
                 <div id="preloader_ch">
@@ -1275,25 +1065,11 @@
             document.body.insertAdjacentHTML('beforeend', preloader_ch);
 
             $.ajax({
-                url: '/api/hosp_new',
-                method: 'GET',  // Use 'POST' for data creation
-                data: {
-                    matricule_patient: matricule_patient,
-                    medecin_id: medecin_id,
-                    id_typeadmission: id_typeadmission,
-                    id_natureadmission: id_natureadmission,
-                    id_chambre: id_chambre,
-                    id_lit: id_lit,
-                    date_entrer: date_entrer,
-                    date_sortie: date_sortie,
-                    motif: motif,
-                    montant_assurance: montant_assurance,
-                    taux_remise: taux_remise,
-                    montant_total: montant_total,
-                    montant_patient: montant_patient,
-                    patient_taux: patient_taux,
-                    nbre_jour: nbre_jour,
-                    montant_chambre: montant_chambre
+                url: '/api/add_soinshopital/'+ id,
+                method: 'GET',
+                data:{
+                    selections: selections,
+                    montantTotal: montantTotal,
                 },
                 success: function(response) {
                     var preloader = document.getElementById('preloader_ch');
@@ -1302,72 +1078,119 @@
                     }
                     
                     if (response.success) {
-                        showAlert('success', 'Patient Hospitaliser.');
+                        showAlert('success', 'Produit Pharmacie ajouter.');
                     } else if (response.error) {
-                        showAlert('danger', 'Une erreur est survenue lors de l\'hospitalisation.');
+                        showAlert('danger', 'Une erreur est survenue');
+                    } else if (response.json) {
+                        showAlert('danger', 'Invalid selections format');
                     }
 
                     list_hos();
-                    reset();
-                    Name_atient();
-                    calculerJours();
-                    select_medecin();
-                    select_chambre();
-                    select_typeadmission();
-                    list_lit();
-
-                    var newConsultationTab = new bootstrap.Tab(document.getElementById('tab-oneAAA'));
-                    newConsultationTab.show();
-                    newConsultationTab.active();
-
                 },
                 error: function() {
-
                     var preloader = document.getElementById('preloader_ch');
                     if (preloader) {
                         preloader.remove();
                     }
 
-                    showAlert('danger', 'Une erreur est survenue lors de l\'hospitalisation.');
-
-                    reset();
-                    
+                    showAlert('danger', 'Une erreur est survenue lors de l\'enregistrement');
                 }
             });
-        }
+        });
 
-        function reset()
-        {
-            document.getElementById("patient").value = '';
-            document.getElementById("matricule_patient").value = '';
-            document.getElementById("medecin_id").value = '';
-            document.getElementById("id_typeadmission").value = '';
-            document.getElementById("id_natureadmission").value = '';
-            document.getElementById("id_chambre").value = '';
-            document.getElementById('id_lit').value = '';
-            document.getElementById('date_entrer').value = '';
-            document.getElementById('date_sortie').value = '';
-            document.getElementById('motif').value = '';
+                        // -----------------------------------
 
-            document.getElementById('montant_assurance').value = '';
-            document.getElementById('taux_remise').value = '';
-            document.getElementById('montant_total').value = '';
-            document.getElementById('montant_patient').value = '';
-            document.getElementById('patient_taux').value = '';
-            document.getElementById('nbre_jour').value = '';
-            document.getElementById('montant_chambre').value = '';
+        document.getElementById('btn_calcul').addEventListener('click', () => {
+            const selectionsSoins = [];
+            const selectionsProduits = [];
+            let formIsValid = true;
 
-            document.getElementById('div_loader').style.display = 'none';
-            document.getElementById('div_calcul').style.display = 'none';
-            document.getElementById('btn_calcul').style.display = 'block';
+            // Récupération des soins infirmiers sélectionnés
+            const soinsSelects = document.querySelectorAll('.soins-select');
+            soinsSelects.forEach(select => {
+                const selectedOption = select.options[select.selectedIndex];
+                const idSoins = selectedOption.value; // ID du soin sélectionné
+                const montant = parseInt(select.dataset.montant.replace(/\./g, '')); // Supprimer les points
 
-            calculerJours();
-            Name_atient();
-            select_medecin();
-            select_chambre();
-            select_typeadmission();
-            list_lit();
-        }
+                if (!idSoins) {  // Si aucun soin n'est sélectionné
+                    formIsValid = false;
+                    showAlert('danger', 'Veuillez sélectionner un soin infirmier.');
+                    return;  // Stopper l'exécution si une erreur est trouvée
+                }
+
+                // Si un soin est sélectionné, ajoutez-le au tableau
+                if (idSoins) {
+                    selectionsSoins.push({
+                        id: idSoins,
+                        montant: montant // Ajouter le montant sans les points
+                    });
+                }
+            });
+
+            // Récupération des produits sélectionnés
+            const produitsSelects = document.querySelectorAll('.produit-select');
+            produitsSelects.forEach(select => {
+                const selectedOption = select.options[select.selectedIndex];
+                const idProduit = selectedOption.value; // ID du produit sélectionné
+                const quantiteDemande = parseInt(select.parentElement.querySelector('#quantite_demande').value); // Quantité demandée
+                const prix = parseInt(selectedOption.dataset.prix.replace(/\./g, '')); // Supprimer les points
+
+                if (!idProduit) {  // Si aucun produit n'est sélectionné
+                    formIsValid = false;
+                    showAlert('danger', 'Veuillez sélectionner un produit.');
+                    return;  // Stopper l'exécution si une erreur est trouvée
+                }
+                if (isNaN(quantiteDemande) || quantiteDemande <= 0) { // Si la quantité n'est pas valide
+                    formIsValid = false;
+                    showAlert('danger', 'Veuillez entrer une quantité valide pour chaque produit.');
+                    return;  // Stopper l'exécution si une erreur est trouvée
+                }
+
+                // Si un produit est sélectionné, ajoutez-le au tableau
+                if (idProduit) {
+                    selectionsProduits.push({
+                        id: idProduit,
+                        quantite: quantiteDemande,
+                        montant: prix * quantiteDemande // Calculer le montant sans les points
+                    });
+                }
+            });
+
+            // Si le formulaire n'est pas valide, on ne continue pas
+            if (!formIsValid) {
+                return; // Sortir de la fonction pour éviter le calcul
+            }
+
+            // Calculer le montant total à partir des sélections
+            const montantTotalSoins = selectionsSoins.reduce((total, soin) => total + soin.montant, 0);
+            const montantTotalProduits = selectionsProduits.reduce((total, produit) => total + produit.montant, 0);
+
+            // Calculer le montant total
+            const montantTotal = montantTotalSoins + montantTotalProduits;
+
+            // Récupérer le taux d'assurance et le prix de la chambre
+            const taux = parseFloat(document.getElementById('patient_taux').value) || 0;
+            const montantChambre = parseFloat(document.getElementById('montant_chambre').value.replace(/\./g, '')) || 0; // Supprimer les points
+
+            // Calculer la part assurance et part patient
+            const montantAssurance = (montantTotal * taux / 100) + montantChambre;
+            const montantPatient = montantTotal - montantAssurance;
+
+            // Fonction pour formater les montants avec des points
+            const formatMontant = (montant) => {
+                return montant.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+            };
+
+            // Affichage des montants dans les champs correspondants
+            document.getElementById('montant_total').value = formatMontant(montantTotal); // Montant total
+            document.getElementById('montant_assurance').value = formatMontant(montantAssurance); // Part assurance
+            document.getElementById('montant_patient').value = formatMontant(montantPatient); // Part patient
+
+            // Afficher la section de calculs si elle est cachée
+            document.getElementById('div_calcul').style.display = 'block';
+        });
+
+        // -----------------------------------------------------
 
         function list_hos(page = 1) {
 
@@ -1572,24 +1395,7 @@
                             const deleteButton = document.getElementById(`add-${item.id}`);
                             if (deleteButton) {
                                 deleteButton.addEventListener('click', () => {
-                                    fetch(`/api/list_produit_all`) // API endpoint pour récupérer la liste des produits
-                                        .then(response => response.json())
-                                        .then(data => {
-                                            
-                                            document.getElementById('id_hos_produit').value = item.id;
-                                            document.getElementById('montant_total_produit').value = "";
-
-                                            const produits = data.produit;
-
-                                            // Affichage initial des produits dans le premier select
-                                            const contenuDiv = document.getElementById('contenu');
-                                            contenuDiv.innerHTML = '';
-                                            
-                                            addSelect(contenuDiv, produits); // Ajouter le premier select
-                                        })
-                                        .catch(error => {
-                                            console.error('Erreur lors du chargement des données:', error);
-                                        });
+                                    
                                 });
                             }
 
@@ -1703,153 +1509,10 @@
                 });
         }
 
-        function addSelect(parentDiv, produits) {
-            const div = document.createElement('div');
-            div.className = 'mb-3';
-
-            // Créer le groupe de contrôle contenant le select et le bouton supprimer
-            div.innerHTML = `
-                <div class="input-group">
-                    <select class="form-select produit-select w-50">
-                        <option value="">Sélectionner</option>
-                        ${produits.map(produit => `<option value="${produit.id}" data-prix="${produit.prix.replace(/\./g, '')}" data-quantite="${produit.quantite}">${produit.nom} / ${produit.quantite} / ${produit.prix} Fcfa</option>`).join('')}
-                    </select>
-                    <input type="tel" id="quantite_demande" class="form-control" placeholder="Quantité" value="1" maxlength="2">
-                    <button class="btn btn-outline-danger suppr-btn">Supprimer</button>
-                </div>
-            `;
-
-            // Ajouter l'élément dans le parent (contenu div)
-            parentDiv.appendChild(div);
-
-            checkContenu(); // Vérifier le contenu et gérer la visibilité du bouton enregistrer
-
-            // Ajouter un event listener pour le bouton supprimer
-            div.querySelector('.suppr-btn').addEventListener('click', () => {
-                div.remove(); // Supprimer l'élément div parent
-                checkContenu(); // Re-vérifier le contenu
-                updateMontantTotal(); // Mettre à jour le montant total après la suppression
-            });
-
-            const quantiteInput = div.querySelector('#quantite_demande');
-            const produitSelect = div.querySelector('.produit-select');
-
-            // Validation pour n'accepter que des valeurs numériques
-            quantiteInput.addEventListener('keypress', function(event) {
-                const key = event.key;
-                if (isNaN(key)) {
-                    event.preventDefault();
-                }
-            });
-
-            // Fonction pour mettre à jour le montant total
-            function updateMontantTotal() {
-                let montantTotal = 0;
-                const selects = document.querySelectorAll('.produit-select');
-                selects.forEach(select => {
-                    const selectedOption = select.options[select.selectedIndex];
-                    const prix = parseInt(selectedOption.dataset.prix);
-                    const quantite = parseInt(select.parentElement.querySelector('#quantite_demande').value);
-                    montantTotal += prix * quantite;
-                });
-                
-                // Formater le montant total avec des points
-                const montantTotalFormatted = montantTotal.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
-                document.getElementById('montant_total_produit').value = montantTotalFormatted;
-            }
-
-            // Validation de la quantité saisie pour ne pas dépasser la quantité disponible
-            produitSelect.addEventListener('change', function() {
-                const selectedOption = produitSelect.options[produitSelect.selectedIndex];
-                const quantiteDisponible = parseInt(selectedOption.dataset.quantite);
-                
-                // Réinitialiser la quantité demandée à 1
-                quantiteInput.value = 1;
-
-                // Si la quantité est supérieure à la quantité disponible, ajuster
-                if (quantiteDisponible < 1) {
-                    quantiteInput.value = 1; // S'assurer que la quantité ne soit pas négative
-                }
-
-                updateMontantTotal(); // Mettre à jour le montant total après changement de produit
-            });
-
-            // Vérification lors de la perte de focus
-            quantiteInput.addEventListener('blur', function() {
-                const selectedOption = produitSelect.options[produitSelect.selectedIndex];
-                const quantiteDisponible = parseInt(selectedOption.dataset.quantite);
-                
-                if (parseInt(quantiteInput.value) > quantiteDisponible) {
-                    showAlertQauntite('warning', `La quantité demandée ne peut pas dépasser ${quantiteDisponible}.`);
-                    quantiteInput.value = quantiteDisponible;
-                }else if(quantiteInput.value == ''){
-                    quantiteInput.value = 1;
-                }
-
-                if(!selectedOption.value == ''){
-                    updateMontantTotal();
-                } // Mettre à jour le montant total lors de la perte de focus
-            });
-        }
-
-        document.getElementById('add_select').addEventListener('click', () => {
-            const contenuDiv = document.getElementById('contenu');
-
-            // Récupérer les produits à partir de l'API
-            fetch(`/api/list_produit_all`)
-                .then(response => response.json())
-                .then(data => {
-                    const produits = data.produit;
-                    // Ajouter un nouveau select avec les produits
-                    addSelect(contenuDiv, produits);
-                })
-                .catch(error => {
-                    console.error('Erreur lors du chargement des produits:', error);
-                });
-        });
-
-        function checkContenu() {
-            const contenuDiv = document.getElementById('contenu');
-            const divBtnPro = document.getElementById('div_btn_pro');
-            
-            // Si la div #contenu a un contenu, on affiche le bouton, sinon on le cache
-            if (contenuDiv.innerHTML.trim() !== "") {
-                divBtnPro.style.display = "block"; // Afficher le bouton
-            } else {
-                divBtnPro.style.display = "none";  // Cacher le bouton
-            }
-        }
-
-        function showAlertQauntite(type, message) {
-
-            var dynamicFields = document.getElementById("div_alert_produit_qu");
-            // Remove existing content
-            while (dynamicFields.firstChild) {
-                dynamicFields.removeChild(dynamicFields.firstChild);
-            }
-
-            var groupe = document.createElement("div");
-            groupe.className = `alert bg-${type} text-white alert-dismissible fade show`;
-            groupe.innerHTML = `
-                ${message}
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>   
-            `;
-            document.getElementById("div_alert_produit_qu").appendChild(groupe);
-
-            setTimeout(function() {
-                groupe.classList.remove("show");
-                groupe.classList.add("fade");
-                setTimeout(function() {
-                    groupe.remove();
-                }, 150); // Time for the fade effect to complete
-            }, 3000);
-        }
-
         // Assurez-vous que ce code soit exécuté après l'ajout du bouton "Enregistrer"
         document.getElementById('btn_eng_produit').addEventListener('click', () => {
             const selections = [];
             const selects = document.querySelectorAll('.produit-select');
-            let formIsValid = true;
 
             selects.forEach(select => {
                 const selectedOption = select.options[select.selectedIndex];
@@ -1863,7 +1526,6 @@
                     showAlertQauntite('danger', 'Veuillez sélectionner un produit.');
                     return;  // Stopper l'exécution si une erreur est trouvée
                 }
-
                 if (isNaN(quantiteDemande) || quantiteDemande <= 0) { // Si la quantité n'est pas valide
                     formIsValid = false;
                     showAlertQauntite('danger', 'Veuillez entrer une quantité valide pour chaque produit.');
@@ -1879,16 +1541,6 @@
                     });
                 }
             });
-
-            if (!Array.isArray(selections) || selections.length === 0) {
-                showAlertQauntite('danger', 'Veuillez selectionner un produit.');
-                return;
-            }
-
-            if (!formIsValid) {
-                showAlertQauntite('danger', 'Veuillez selectionner un ou des produit(s).');
-                return; // Sortir de la fonction pour éviter le calcul
-            }
 
             const montantTotal = document.getElementById('montant_total_produit').value;
             const id = document.getElementById('id_hos_produit').value;
@@ -1941,6 +1593,7 @@
         document.getElementById('close_modal_produit').addEventListener('click', () => {
             document.getElementById('montant_total_produit').value = "";
         });
+
 
         function formatDate(dateString) {
             const date = new Date(dateString);

@@ -35,6 +35,8 @@ use App\Models\detailhopital;
 use App\Models\facture;
 use App\Models\produit;
 use App\Models\soinshopital;
+use App\Models\soinsinfirmier;
+use App\Models\typesoins;
 
 class ApilistController extends Controller
 {
@@ -356,6 +358,23 @@ class ApilistController extends Controller
                 'total' => $consultation->total(),
             ]
         ]);
+    }
+
+    public function list_typesoins()
+    {
+        $typesoins = typesoins::orderBy('created_at', 'desc')->get();
+
+        return response()->json(['typesoins' => $typesoins]);
+    }
+
+    public function list_soinsIn()
+    {
+        $soinsin = soinsinfirmier::Join('typesoins', 'typesoins.id', '=', 'soinsinfirmiers.typesoins_id')
+                        ->orderBy('soinsinfirmiers.created_at', 'desc')
+                        ->select('soinsinfirmiers.*', 'typesoins.nom as nom_typesoins')
+                        ->get();
+
+        return response()->json(['soinsin' => $soinsin]);
     }
 
 }

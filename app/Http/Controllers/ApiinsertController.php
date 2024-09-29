@@ -36,6 +36,8 @@ use App\Models\natureadmission;
 use App\Models\detailhopital;
 use App\Models\produit;
 use App\Models\soinshopital;
+use App\Models\typesoins;
+use App\Models\soinsinfirmier;
 
 class ApiinsertController extends Controller
 {
@@ -324,7 +326,7 @@ class ApiinsertController extends Controller
         $add->tel2 = $request->tel2;
         $add->password = bcrypt('00000');
         $add->adresse = $request->adresse;
-        $add->matricule = 'M-'.$matricule;
+        $add->matricule = $matricule;
         $add->role_id = $role->id;
         $add->role = $role->nom;
 
@@ -681,6 +683,39 @@ class ApiinsertController extends Controller
             DB::rollback();
             return response()->json(['error' => true]);
         }
+    }
+
+    public function new_typesoins(Request $request)
+    {
+        $verf = typesoins::where('nom', '=', $request->nom)->first();
+
+        if ($verf) {
+            return response()->json(['existe' => true]);
+        }
+
+        $add = new typesoins();
+        $add->nom = $request->nom;
+
+        if($add->save()){
+            return response()->json(['success' => true]);
+        } else {
+            return response()->json(['error' => true]);
+        }
+    }
+
+    public function new_soinsIn(Request $request)
+    {
+        $add = new soinsinfirmier();
+
+        $add->nom = $request->nom_soins;
+        $add->prix = $request->prix;
+        $add->typesoins_id = $request->typesoins_id;
+
+        if ($add->save()) {
+            return response()->json(['success' => true]);
+        }
+
+        return response()->json(['error' => true]);
     }
 
 }

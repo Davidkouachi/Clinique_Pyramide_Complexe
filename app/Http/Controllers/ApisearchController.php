@@ -29,6 +29,8 @@ use App\Models\typeadmission;
 use App\Models\natureadmission;
 use App\Models\detailhopital;
 use App\Models\facture;
+use App\Models\soinsinfirmier;
+use App\Models\typesoins;
 
 class ApisearchController extends Controller
 {
@@ -157,7 +159,16 @@ class ApisearchController extends Controller
 
     public function name_patient()
     {
-        $name = patient::all();
+        $name = patient::leftJoin('assurances', 'assurances.id', '=', 'patients.assurance_id')
+                       ->leftJoin('tauxes', 'tauxes.id', '=', 'patients.taux_id')
+                       ->leftJoin('societes', 'societes.id', '=', 'patients.societe_id')
+                       ->select(
+                            'patients.*', 
+                            'assurances.nom as assurance', 
+                            'tauxes.taux as taux', 
+                            'societes.nom as societe')
+                       ->get();
+                       
         return response()->json(['name' => $name]);
     }
 
@@ -173,6 +184,13 @@ class ApisearchController extends Controller
         $natureadmission = natureadmission::where('typeadmission_id', '=', $id)->get();
 
         return response()->json(['natureadmission' => $natureadmission]); 
+    }
+
+    public function select_soinsIn($id)
+    {
+        $soinsin = soinsinfirmier::where('typesoins_id', '=', $id)->get();
+
+        return response()->json(['soinsin' => $soinsin]); 
     }
 
 }

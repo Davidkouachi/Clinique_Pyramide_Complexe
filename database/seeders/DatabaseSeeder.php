@@ -16,6 +16,8 @@ use App\Models\detailhopital;
 use App\Models\societe;
 use App\Models\assurance;
 use App\Models\produit;
+use App\Models\typesoins;
+use App\Models\soinsinfirmier;
 
 class DatabaseSeeder extends Seeder
 {
@@ -180,5 +182,42 @@ class DatabaseSeeder extends Seeder
             ]);
         }
 
+        $soins = [
+            'SOINS CURATIFS' => [
+                'typesoin' => ['TRAITEMENT INFECTION', 'SOINS POST-OPERATOIRES'],
+                'prix' => ['12.000', '15.000']
+            ],
+            'SOINS PREVENTIFS' => [
+                'typesoin' => ['VACCINATION', 'DEPISTAGE'],
+                'prix' => ['8.000', '10.000']
+            ],
+            'SOINS PALLIATIFS' => [
+                'typesoin' => ['GESTION DOULEUR', 'SOINS TERMINAUX'],
+                'prix' => ['20.000', '25.000']
+            ],
+            'SOINS DE REEDUCATION' => [
+                'typesoin' => ['KINESITHERAPIE', 'MOBILISATION'],
+                'prix' => ['30.000', '35.000']
+            ]
+        ];
+
+        // Boucle à travers chaque catégorie de soin
+        foreach ($soins as $soinName => $typesoinData) {
+            // Créer ou récupérer l'entrée de soin
+            $soin = typesoins::firstOrCreate(['nom' => $soinName]);
+
+            // Créer les entrées types de soin avec les prix correspondants
+            foreach ($typesoinData['typesoin'] as $key => $typesoinName) {
+                // Utiliser l'index pour obtenir le prix correspondant
+                $prix = isset($typesoinData['prix'][$key]) ? $typesoinData['prix'][$key] : '0.00';
+
+                // Créer l'entrée types de soin
+                soinsinfirmier::create([
+                    'nom' => $typesoinName,
+                    'prix' => $prix,
+                    'typesoins_id' => $soin->id
+                ]);
+            }
+        }
     }
 }

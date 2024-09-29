@@ -30,6 +30,8 @@ use App\Models\role;
 use App\Models\typeadmission;
 use App\Models\natureadmission;
 use App\Models\detailhopital;
+use App\Models\soinsinfirmier;
+use App\Models\typesoins;
 
 
 class ApideleteController extends Controller
@@ -131,6 +133,38 @@ class ApideleteController extends Controller
     public function delete_natureadmission($id)
     {
         $put = natureadmission::find($id);
+
+        if ($put) {
+            if ($put->delete()) {
+                return response()->json(['success' => true]);
+            }else{
+                return response()->json(['error' => true]);
+            }
+        }
+
+        return response()->json(['error' => true]);
+
+    }
+
+    public function delete_typesoins($id)
+    {
+        $put = typesoins::find($id);
+
+        if ($put) {
+            if ($put->delete()) {
+                return response()->json(['success' => true]);
+            }else{
+                return response()->json(['error' => true]);
+            }
+        }
+
+        return response()->json(['error' => true]);
+
+    }
+
+    public function delete_soinsIn($id)
+    {
+        $put = soinsinfirmier::find($id);
 
         if ($put) {
             if ($put->delete()) {

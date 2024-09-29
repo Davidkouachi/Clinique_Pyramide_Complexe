@@ -31,6 +31,8 @@ use App\Models\typeadmission;
 use App\Models\natureadmission;
 use App\Models\detailhopital;
 use App\Models\produit;
+use App\Models\soinsinfirmier;
+use App\Models\typesoins;
 
 class ApiupdateController extends Controller
 {
@@ -237,6 +239,44 @@ class ApiupdateController extends Controller
         }
 
         return response()->json(['success' => true]);
+    }
+
+    public function update_typesoins(Request $request, $id)
+    {
+        $put = typesoins::find($id);
+
+        if ($put) {
+            $put->nom = $request->nom;
+
+            if ($put->save()) {
+                return response()->json(['success' => true]);
+            }else{
+                return response()->json(['error' => true]);
+            }
+
+        }
+
+        return response()->json(['success' => true]);
+    }
+
+    public function update_soinIn(Request $request, $id)
+    {
+        $put = soinsinfirmier::find($id);
+
+        if ($put) {
+            $put->nom = $request->nomModif;
+            $put->prix = $request->prix;
+            $put->typesoins_id = $request->typesoins_id;
+
+            if ($put->save()) {
+                return response()->json(['success' => true]);
+            }else{
+                return response()->json(['error' => true]);
+            }
+
+        }
+
+        return response()->json(['error' => true]);
     }
 
 }

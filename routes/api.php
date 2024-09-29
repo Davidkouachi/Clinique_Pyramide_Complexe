@@ -23,7 +23,7 @@ use App\Http\Controllers\ApipdfController;
 // });
 
 Route::middleware(['statutchambre'])->group(function () {
-	
+
 	// recherche debut
 	Route::get('/taux_select_patient_new', [ApiController::class, 'taux_select_patient_new']);
 	Route::get('/societe_select_patient_new', [ApiController::class, 'societe_select_patient_new']);
@@ -45,6 +45,8 @@ Route::middleware(['statutchambre'])->group(function () {
 	Route::get('/hosp_new', [ApiinsertController::class, 'hosp_new']);
 	Route::get('/new_produit', [ApiinsertController::class, 'new_produit']);
 	Route::get('/add_soinshopital/{id}', [ApiinsertController::class, 'add_soinshopital']);
+	Route::get('/new_typesoins', [ApiinsertController::class, 'new_typesoins']);
+	Route::get('/new_soinsIn', [ApiinsertController::class, 'new_soinsIn']);
 	// insert debut
 
 	// search debut
@@ -58,6 +60,7 @@ Route::middleware(['statutchambre'])->group(function () {
 	Route::get('/name_patient', [ApisearchController::class, 'name_patient']);
 	Route::get('/lit_select/{id}', [ApisearchController::class, 'lit_select']);
 	Route::get('/natureadmission_select/{id}', [ApisearchController::class, 'natureadmission_select']);
+	Route::get('/select_soinsIn/{id}', [ApisearchController::class, 'select_soinsIn']);
 	// search debut
 
 	// liste day debut
@@ -75,6 +78,8 @@ Route::middleware(['statutchambre'])->group(function () {
 	Route::get('/update_natureadmission/{id}', [ApiupdateController::class, 'update_natureadmission']);
 	Route::get('/update_produit/{id}', [ApiupdateController::class, 'update_produit']);
 	Route::get('/appro_produit/{id}', [ApiupdateController::class, 'appro_produit']);
+	Route::get('/update_typesoins/{id}', [ApiupdateController::class, 'update_typesoins']);
+	Route::get('/update_soinIn/{id}', [ApiupdateController::class, 'update_soinIn']);
 	// update debut
 
 	// delete debut
@@ -85,6 +90,8 @@ Route::middleware(['statutchambre'])->group(function () {
 	Route::get('/delete_medecin/{id}', [ApideleteController::class, 'delete_medecin']);
 	Route::get('/delete_typeadmission/{id}', [ApideleteController::class, 'delete_typeadmission']);
 	Route::get('/delete_natureadmission/{id}', [ApideleteController::class, 'delete_natureadmission']);
+	Route::get('/delete_typesoins/{id}', [ApideleteController::class, 'delete_typesoins']);
+	Route::get('/delete_soinsIn/{id}', [ApideleteController::class, 'delete_soinsIn']);
 	// delete debut
 
 	// liste debut
@@ -102,6 +109,8 @@ Route::middleware(['statutchambre'])->group(function () {
 	Route::get('/list_produit_all', [ApilistController::class, 'list_produit_all']);
 	Route::get('/list_patient_all/{statut}', [ApilistController::class, 'list_patient_all']);
 	Route::get('/list_cons_all', [ApilistController::class, 'list_cons_all']);
+	Route::get('/list_typesoins', [ApilistController::class, 'list_typesoins']);
+	Route::get('/list_soinsIn', [ApilistController::class, 'list_soinsIn']);
 	// liste debut
 
 	// statistique debut

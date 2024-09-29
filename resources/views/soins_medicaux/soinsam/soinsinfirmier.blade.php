@@ -11,7 +11,7 @@
             <a href="{{route('index_accueil')}}">Espace Santé</a>
         </li>
         <li class="breadcrumb-item text-primary" aria-current="page">
-            Nouveau Type Acte
+            Nouveau Soins Infirmier
         </li>
     </ol>
 </div>
@@ -25,7 +25,7 @@
         <div class="col-12">
             <div class="card mb-3">
                 <div class="card-header">
-                    <h5 class="card-title">Formulaire Nouveau Type Acte</h5>
+                    <h5 class="card-title">Formulaire Nouveau Soins Infirmier</h5>
                 </div>
                 <div class="card-body" >
                     <!-- Row starts -->
@@ -33,18 +33,18 @@
                         <div class="col-xxl-3 col-lg-4 col-sm-6">
                             <div class="mb-3">
                                 <label class="form-label">
-                                    Acte
+                                    Type de Soins
                                 </label>
-                                <select class="form-select" id="acte_id">
+                                <select class="form-select" id="typesoins_id">
                                 </select>
                             </div>
                         </div>
                         <div class="col-xxl-3 col-lg-4 col-sm-6">
                             <div class="mb-3">
                                 <label class="form-label">
-                                    Spécialité / Type acte
+                                    Soins Infirmier
                                 </label>
-                                <input type="text" class="form-control" id="nom_acte" placeholder="Saisie Obligatoire" oninput="this.value = this.value.toUpperCase()">
+                                <input type="text" class="form-control" id="nom_soins" placeholder="Saisie Obligatoire" oninput="this.value = this.value.toUpperCase()">
                             </div>
                         </div>
                         <div class="col-xxl-3 col-lg-4 col-sm-6">
@@ -78,7 +78,7 @@
             <div class="card mb-3">
                 <div class="card-header d-flex align-items-center justify-content-between">
                     <h5 class="card-title">
-                        Liste des Type d'actes
+                        Liste des Soins Infirmiers
                     </h5>
                     <a id="btn_refresh_table" class="btn btn-outline-info ms-auto">
                         <i class="ri-loop-left-line"></i>
@@ -94,8 +94,8 @@
                                 <thead>
                                     <tr>
                                         <th scope="col">N°</th>
+                                        <th scope="col">Soins</th>
                                         <th scope="col">Type</th>
-                                        <th scope="col">Acte</th>
                                         <th scope="col">Prix</th>
                                         <th scope="col">Actions</th>
                                     </tr>
@@ -107,7 +107,7 @@
                     </div>
                     <div id="message_Table" style="display: none;">
                         <p class="text-center" >
-                            Aucun Type Acte n'a été enregistrer
+                            Aucun Soins Infirmier n'a été trouvé
                         </p>
                     </div>
                     <div id="div_Table_loader" style="display: none;">
@@ -133,7 +133,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                Voulez-vous vraiment supprimé ce Type d'acte
+                Voulez-vous vraiment supprimé ce Soins Infirmier ?
                 <input type="hidden" id="Iddelete">
             </div>
             <div class="modal-footer">
@@ -150,7 +150,7 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Modifier Lit</h5>
+                <h5 class="modal-title" id="exampleModalLabel">Mise à jour</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
@@ -160,12 +160,12 @@
                     </div>
                     <input type="hidden" id="Id"> <!-- Hidden field for the room's ID -->
                     <div class="mb-3">
-                        <label class="form-label">Spécialité / Type Acte</label>
+                        <label class="form-label">Soins Infirmier</label>
                         <input type="text" class="form-control" id="nomModif" oninput="this.value = this.value.toUpperCase()">
                     </div>
                     <div class="mb-3">
                         <label class="form-label">Acte</label>
-                        <select class="form-select" id="acte_id_modif"></select>
+                        <select class="form-select" id="typesoins_id_modif"></select>
                     </div>
                     <div class="mb-3">
                         <label class="form-label">Prix</label>
@@ -224,25 +224,25 @@
         }
 
         function select() {
-            const selectElement = document.getElementById('acte_id');
+            const selectElement = document.getElementById('typesoins_id');
 
             // Clear existing options
             selectElement.innerHTML = '';
 
             const defaultOption = document.createElement('option');
             defaultOption.value = '';
-            defaultOption.textContent = 'Sélectionner un Acte';
+            defaultOption.textContent = 'Selectionner';
             selectElement.appendChild(defaultOption);
 
             $.ajax({
-                url: '/api/list_acte',
+                url: '/api/list_typesoins',
                 method: 'GET',
                 success: function(response) {
-                    data = response.acte;
-                    data.forEach(acte => {
+                    data = response.typesoins;
+                    data.forEach(item => {
                         const option = document.createElement('option');
-                        option.value = acte.id; // Ensure 'id' is the correct key
-                        option.textContent = acte.nom; // Ensure 'nom' is the correct key
+                        option.value = item.id; // Ensure 'id' is the correct key
+                        option.textContent = item.nom; // Ensure 'nom' is the correct key
                         selectElement.appendChild(option);
                     });
                 },
@@ -253,20 +253,20 @@
         }
 
         function select_modif() {
-            const selectElement = document.getElementById('acte_id_modif');
+            const selectElement = document.getElementById('typesoins_id_modif');
 
             // Clear existing options
             selectElement.innerHTML = '';
 
             $.ajax({
-                url: '/api/list_acte',
+                url: '/api/list_typesoins',
                 method: 'GET',
                 success: function(response) {
-                    data = response.acte;
-                    data.forEach(acte => {
+                    data = response.typesoins;
+                    data.forEach(item => {
                         const option = document.createElement('option');
-                        option.value = acte.id; // Ensure 'id' is the correct key
-                        option.textContent = acte.nom; // Ensure 'nom' is the correct key
+                        option.value = item.id; // Ensure 'id' is the correct key
+                        option.textContent = item.nom; // Ensure 'nom' is the correct key
                         selectElement.appendChild(option);
                     });
                 },
@@ -353,8 +353,8 @@
 
         function eng() {
 
-            const acte_id = document.getElementById("acte_id");
-            const nom_acte = document.getElementById("nom_acte");
+            const typesoins_id = document.getElementById("typesoins_id");
+            const nom_soins = document.getElementById("nom_soins");
             const prix = document.getElementById("prix");
 
             var dynamicFields = document.getElementById("div_alert");
@@ -363,7 +363,7 @@
                 dynamicFields.removeChild(dynamicFields.firstChild);
             }
 
-            if(!acte_id.value.trim() || !nom_acte.value.trim() || !prix.value.trim()){
+            if(!typesoins_id.value.trim() || !nom_soins.value.trim() || !prix.value.trim()){
                 showAlert('warning', 'Veuillez remplir tous les champs SVP.');
                 return false;
             }
@@ -377,9 +377,9 @@
             document.body.insertAdjacentHTML('beforeend', preloader_ch);
 
             $.ajax({
-                url: '/api/typeacte_cons_new',
+                url: '/api/new_soinsIn',
                 method: 'GET',  // Use 'POST' for data creation
-                data: { id: acte_id.value, nom: nom_acte.value, prix: prix.value },
+                data: { typesoins_id: typesoins_id.value, nom_soins: nom_soins.value, prix: prix.value },
                 success: function(response) {
                     var preloader = document.getElementById('preloader_ch');
                     if (preloader) {
@@ -392,8 +392,8 @@
                         showAlert('danger', 'Une erreur est survenue lors de l\'enregistrement.');
                     }
 
-                    acte_id.value = '';
-                    nom_acte.value = '';
+                    typesoins_id.value = '';
+                    nom_soins.value = '';
                     prix.value = '';
 
                     select_modif();
@@ -407,14 +407,6 @@
                     }
 
                     showAlert('danger', 'Une erreur est survenue lors de l\'enregistrement.');
-                    
-                    acte_id.value = '';
-                    nom_acte.value = '';
-                    prix.value = '';
-                    
-                    select_modif();
-                    select();
-                    list();
                 }
             });
         }
@@ -431,30 +423,30 @@
             loaderDiv.style.display = 'block';
 
             // Fetch data from the API
-            fetch('/api/list_typeacte') // API endpoint
+            fetch('/api/list_soinsIn') // API endpoint
                 .then(response => response.json())
                 .then(data => {
                     // Access the 'chambre' array from the API response
-                    const typeactes = data.typeacte;
+                    const soinsins = data.soinsin;
 
                     // Clear any existing rows in the table body
                     tableBody.innerHTML = '';
 
-                    if (typeactes.length > 0) {
+                    if (soinsins.length > 0) {
 
                         loaderDiv.style.display = 'none';
                         messageDiv.style.display = 'none';
                         tableDiv.style.display = 'block';
 
                         // Loop through each item in the chambre array
-                        typeactes.forEach((item, index) => {
+                        soinsins.forEach((item, index) => {
                             // Create a new row
                             const row = document.createElement('tr');
                             // Create and append cells to the row based on your table's structure
                             row.innerHTML = `
                                 <td>${index + 1}</td>
                                 <td>${item.nom}</td>
-                                <td>${item.acte}</td>
+                                <td>${item.nom_typesoins}</td>
                                 <td>${item.prix} Fcfa</td>
                                 <td>
                                     <div class="d-inline-flex gap-1">
@@ -479,12 +471,12 @@
                                 document.getElementById('nomModif').value = item.nom;
                                 document.getElementById('prixModif').value = item.prix;
 
-                                const modifActeSelect = document.getElementById('acte_id_modif');
+                                const modifActeSelect = document.getElementById('typesoins_id_modif');
                                 const typeeOptions = modifActeSelect.options;
 
                                 // Loop through the options to find the matching value
                                 for (let i = 0; i < typeeOptions.length; i++) {
-                                    if (String(typeeOptions[i].value) === String(item.acte_id)) {
+                                    if (String(typeeOptions[i].value) === String(item.typesoins_id)) {
                                         typeeOptions[i].selected = true; // Set the matching option as selected
                                         break; // Stop the loop once a match is found
                                     }
@@ -517,7 +509,7 @@
 
             const id = document.getElementById('Id').value;
             const nomModif = document.getElementById('nomModif').value;
-            const acte_id_modif = document.getElementById('acte_id_modif').value;
+            const typesoins_id_modif = document.getElementById('typesoins_id_modif').value;
             const prixModif = document.getElementById('prixModif').value;
 
 
@@ -527,7 +519,7 @@
                 dynamicFields.removeChild(dynamicFields.firstChild);
             }
 
-            if(!nomModif.trim() || !acte_id_modif.trim() || !prixModif.trim()){
+            if(!nomModif.trim() || !typesoins_id_modif.trim() || !prixModif.trim()){
                 showAlertUpdate('warning', 'Veuillez remplir tous les champs SVP.');
                 return false;
             }
@@ -544,13 +536,13 @@
             document.body.insertAdjacentHTML('beforeend', preloader_ch);
 
             $.ajax({
-                url: '/api/update_typeacte/'+id,
+                url: '/api/update_soinIn/'+id,
                 method: 'GET',  // Use 'POST' for data creation
                 // headers: {
                 //     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'), // Include CSRF token if required
                 //     'Content-Type': 'application/json',  // Ensure JSON request
                 // },
-                data: { type: nomModif, acte_id: acte_id_modif, prix: prixModif,},
+                data: { nomModif: nomModif, typesoins_id: typesoins_id_modif, prix: prixModif,},
                 // data: JSON.stringify({
                 //     nbre_lit: nbreLit,
                 //     prix: prix,
@@ -561,7 +553,7 @@
                         preloader.remove();
                     }
 
-                    showAlertList('success', 'Type acte mise à jour avec succès.');
+                    showAlertList('success', 'Soins Infirmier mis à jour avec succès.');
             
                     list();
                     select();
@@ -594,7 +586,7 @@
             document.body.insertAdjacentHTML('beforeend', preloader_ch);
 
             $.ajax({
-                url: '/api/delete_typeacte/'+id,
+                url: '/api/delete_soinsIn/'+id,
                 method: 'GET',  // Use 'POST' for data creation
                 // headers: {
                 //     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'), // Include CSRF token if required
@@ -611,7 +603,7 @@
                         preloader.remove();
                     }
 
-                    showAlertList('success', 'Chambre supprimer avec succès.');
+                    showAlertList('success', 'Soins Infirmier supprimer avec succès.');
                     
                     list();
                     select();

@@ -63,7 +63,7 @@
                         <div class="col-xxl-3 col-lg-4 col-sm-6">
                             <div class="mb-3">
                                 <label class="form-label">Adresse</label>
-                                <input type="text" class="form-control" id="patient_adresse_new" placeholder="Saisie Obligatoire">
+                                <input type="text" class="form-control" id="patient_adresse_new" placeholder="facultatif">
                             </div>
                         </div>
                         <div class="col-xxl-3 col-lg-4 col-sm-6">

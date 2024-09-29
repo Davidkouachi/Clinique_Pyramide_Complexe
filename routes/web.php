@@ -78,6 +78,9 @@ Route::middleware(['auth','statutchambre'])->group(function () {
 
 	Route::get('/Soins Ambulantoires', [Controller::class, 'soinsam'])->name('soinsam');
 
+	Route::get('/Type de soins',[Controller::class,'typesoins_new'])->name('typesoins_new');
+	Route::get('/Soins Infirmiers', [Controller::class, 'soinsinfirmier_new'])->name('soinsinfirmier_new');
+
 
 	Route::get('/Analyse', [Controller::class, 'analyse'])->name('analyse');
 	Route::get('/Imagerie', [Controller::class, 'imagerie'])->name('imagerie');

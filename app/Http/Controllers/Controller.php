@@ -71,15 +71,29 @@ class Controller
         return view('soins_medicaux.hospitalisation.natureadmission');
     }
 
-    public function soinsam()
-    {
-        return view('infirmerie.nouveau.soinsam');
-    }
+    
 
     // --------------------------------------------------------
 
     public function produit_new()
     {
         return view('infirmerie.nouveau.produit_pharmacie');
+    }
+
+    // --------------------------------------------------------
+
+    public function soinsam()
+    {
+        return view('soins_medicaux.soinsam.index');
+    }
+
+    public function typesoins_new()
+    {
+        return view('soins_medicaux.soinsam.typesoins');
+    }
+
+    public function soinsinfirmier_new()
+    {
+        return view('soins_medicaux.soinsam.soinsinfirmier');
     }
 }

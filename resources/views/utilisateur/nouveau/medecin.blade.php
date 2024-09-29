@@ -505,7 +505,7 @@
                                 <td>${index + 1}</td>
                                 <td>${item.sexe}.${item.name}</td>
                                 <td>${item.email}</td>
-                                <td>${item.matricule}</td>
+                                <td>M-${item.matricule}</td>
                                 <td>${item.typeacte}</td>
                                 <td>+225 ${item.tel}</td>
                                 <td>${item.adresse}</td>

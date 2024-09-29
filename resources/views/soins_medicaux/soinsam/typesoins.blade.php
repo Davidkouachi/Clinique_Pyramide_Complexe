@@ -11,7 +11,7 @@
             <a href="{{route('index_accueil')}}">Espace Santé</a>
         </li>
         <li class="breadcrumb-item text-primary" aria-current="page">
-            Nouvel Acte
+            Nouveau Type de Soins
         </li>
     </ol>
 </div>
@@ -25,14 +25,14 @@
         <div class="col-xxl-4 col-lg-6 col-md-8 col-sm-8">
             <div class="card mb-3">
                 <div class="card-header">
-                    <h5 class="card-title">Formulaire Nouvel Acte</h5>
+                    <h5 class="card-title">Formulaire Nouveau Type de Soins</h5>
                 </div>
                 <div class="card-body" >
                     <div class="row gx-3">
                         <div class="col-12">
                             <div class="mb-3">
                                 <label class="form-label">
-                                    Nom de l'acte
+                                    Nom du type
                                 </label>
                                 <input type="text" class="form-control" id="nomA" placeholder="Saisie Obligatoire" oninput="this.value = this.value.toUpperCase()">
                             </div>
@@ -60,7 +60,7 @@
             <div class="card mb-3">
                 <div class="card-header d-flex align-items-center justify-content-between">
                     <h5 class="card-title">
-                        Liste des Actes
+                        Liste des Types de Soins
                     </h5>
                     <a id="btn_refresh_table" class="btn btn-outline-info ms-auto">
                         <i class="ri-loop-left-line"></i>
@@ -76,7 +76,7 @@
                                 <thead>
                                     <tr>
                                         <th scope="col">N°</th>
-                                        <th scope="col">Nom</th>
+                                        <th scope="col">Nom du Type</th>
                                         <th scope="col">Actions</th>
                                     </tr>
                                 </thead>
@@ -87,7 +87,7 @@
                     </div>
                     <div id="message_Table" style="display: none;">
                         <p class="text-center" >
-                            Aucun acte n'a été trouvé
+                            Aucun type soins n'a été trouvé
                         </p>
                     </div>
                     <div id="div_Table_loader" style="display: none;">
@@ -113,7 +113,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                Voulez-vous vraiment supprimé cet Acte
+                Voulez-vous vraiment supprimé cet type de soins ?
                 <input type="hidden" id="Iddelete">
             </div>
             <div class="modal-footer">
@@ -140,7 +140,7 @@
                     </div>
                     <input type="hidden" id="Id"> <!-- Hidden field for the room's ID -->
                     <div class="mb-3">
-                        <label class="form-label">Nom de l'acte</label>
+                        <label class="form-label">Nom du Type</label>
                         <div class="input-group">
                             <input type="text" class="form-control" id="nomModif" oninput="this.value = this.value.toUpperCase()">
                         </div>
@@ -265,7 +265,7 @@
             document.body.insertAdjacentHTML('beforeend', preloader_ch);
 
             $.ajax({
-                url: '/api/motif_cons_new',
+                url: '/api/new_typesoins',
                 method: 'GET',
                 data: { nom: nom.value,},
                 success: function(response) {
@@ -275,9 +275,9 @@
                     }
 
                     if (response.existe) {
-                        showAlert('warning', 'Cet Acte existe déjà.');
+                        showAlert('warning', 'Cet type existe déjà.');
                     } else if (response.success) {
-                        showAlert('success', 'Acte Enregistrée.');
+                        showAlert('success', 'Type Soins Enregistrée.');
                     } else if (response.error) {
                         showAlert('danger', 'Une erreur est survenue lors de l\'enregistrement.');
                     }
@@ -319,23 +319,23 @@
             loaderDiv.style.display = 'block';
 
             // Fetch data from the API
-            fetch('/api/list_acte') // API endpoint
+            fetch('/api/list_typesoins') // API endpoint
                 .then(response => response.json())
                 .then(data => {
                     // Access the 'chambre' array from the API response
-                    const actes = data.acte;
+                    const typesoins = data.typesoins;
 
                     // Clear any existing rows in the table body
                     tableBody.innerHTML = '';
 
-                    if (actes.length > 0) {
+                    if (typesoins.length > 0) {
 
                         loaderDiv.style.display = 'none';
                         messageDiv.style.display = 'none';
                         tableDiv.style.display = 'block';
 
                         // Loop through each item in the chambre array
-                        actes.forEach((item, index) => {
+                        typesoins.forEach((item, index) => {
                             // Create a new row
                             const row = document.createElement('tr');
                             // Create and append cells to the row based on your table's structure
@@ -420,7 +420,7 @@
             document.body.insertAdjacentHTML('beforeend', preloader_ch);
 
             $.ajax({
-                url: '/api/update_acte/'+id,
+                url: '/api/update_typesoins/'+id,
                 method: 'GET',  // Use 'POST' for data creation
                 // headers: {
                 //     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'), // Include CSRF token if required
@@ -437,7 +437,7 @@
                         preloader.remove();
                     }
 
-                    showAlertTable('success', 'Acte mise à jour avec succès.');
+                    showAlertTable('success', 'Type Soins mis à jour avec succès.');
                     // Reload the list or update the table row without a full refresh
                     list(); // Call your function to reload the table
                     // Close the modal
@@ -475,24 +475,15 @@
             document.body.insertAdjacentHTML('beforeend', preloader_ch);
 
             $.ajax({
-                url: '/api/delete_acte/'+id,
-                method: 'GET',  // Use 'POST' for data creation
-                // headers: {
-                //     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'), // Include CSRF token if required
-                //     'Content-Type': 'application/json',  // Ensure JSON request
-                // },
-                // data: { nbre_lit: nbreLit, prix: prix},
-                // data: JSON.stringify({
-                //     nbre_lit: nbreLit,
-                //     prix: prix,
-                // }),
+                url: '/api/delete_typesoins/'+id,
+                method: 'GET',
                 success: function(response) {
                     var preloader = document.getElementById('preloader_ch');
                     if (preloader) {
                         preloader.remove();
                     }
 
-                    showAlertTable('success', 'Acte supprimer avec succès.');
+                    showAlertTable('success', 'Type Soins supprimer avec succès.');
                     // Reload the list or update the table row without a full refresh
                     list(); // Call your function to reload the table
                     // Close the modal
@@ -503,7 +494,7 @@
                         preloader.remove();
                     }
 
-                    showAlertTable('error', 'Erreur lors de la suppression de la chambre.');
+                    showAlertTable('error', 'Erreur lors de la suppression du Type.');
                 }
             });
         }

@@ -159,7 +159,7 @@
                                 </li>
                                 <li>
                                     <a @if(request()->routeIs('soinsam')) class="text-primary" @endif href="{{route('soinsam')}}">
-                                        Soins Ambulantoires (en cours)
+                                        Soins Ambulantoires
                                     </a>
                                 </li>
                             </ul>
@@ -224,7 +224,7 @@
                                 </li> --}}
                             </ul>
                         </li>
-                        <li @if(request()->routeIs('medecin_new','assurance_new','taux_new','societe_new','acte_new','typeacte_new','chambre_new','lit_new','typeadmission_new','natureadmission_new','produit_new')) class="active current-page treeview" @else class="treeview" @endif>
+                        <li @if(request()->routeIs('medecin_new','assurance_new','taux_new','societe_new','acte_new','typeacte_new','chambre_new','lit_new','typeadmission_new','natureadmission_new','produit_new','typesoins_new','soinsinfirmier_new')) class="active current-page treeview" @else class="treeview" @endif>
                             <a href="#!">
                                 <i class="ri-settings-5-line"></i>
                                 <span class="menu-text">Configuration</span>
@@ -404,6 +404,12 @@
                                 </li>
                                 <li>
                                     <a @if(request()->routeIs('typeacte_new')) class="text-primary" @endif href="{{route('typeacte_new')}}">Type acte</a>
+                                </li>
+                                <li>
+                                    <a @if(request()->routeIs('typesoins_new')) class="text-primary" @endif  href="{{route('typesoins_new')}}">Type Soins</a>
+                                </li>
+                                <li>
+                                    <a @if(request()->routeIs('soinsinfirmier_new')) class="text-primary" @endif href="{{route('soinsinfirmier_new')}}">Soins Infirmier</a>
                                 </li>
                             </ul>
                         </li>
