@@ -82,6 +82,16 @@ class Controller
         return view('soins_medicaux.soinsam.index');
     }
 
+    public function encaissement_soinsam()
+    {
+        return view('finance.soinsam.encaissement');
+    }
+
+    public function liste_caisse_soinsam()
+    {
+        return view('finance.soinsam.liste_caisse');
+    }
+
     public function typesoins_new()
     {
         return view('soins_medicaux.soinsam.typesoins');

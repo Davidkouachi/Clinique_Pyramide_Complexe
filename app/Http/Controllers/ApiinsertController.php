@@ -724,19 +724,115 @@ class ApiinsertController extends Controller
     public function new_soinsam(Request $request)
     {
         $selectionsSoins = $request->input('selectionsSoins');
-
-        // Vérifier si les sélections sont bien un tableau
         if (!is_array($selectionsSoins) || empty($selectionsSoins)) {
             return response()->json(['json' => true]);
         }
 
         $selectionsProduits = $request->input('selectionsProduits');
-
-        // Vérifier si les sélections sont bien un tableau
         if (!is_array($selectionsProduits) || empty($selectionsProduits)) {
             return response()->json(['json' => true]);
         }
-        
+
+        $patient = patient::leftjoin('assurances', 'assurances.id', '=', 'patients.assurance_id')
+        ->where('patients.matricule', '=', $request->matricule_patient)
+        ->select('patients.*', 'assurances.nom as assurance')
+        ->first();
+
+        if ($patient) {
+            $patient->age = $patient->datenais ? Carbon::parse($patient->datenais)->age : 0;
+        }
+
+        if (!$patient) {
+            return response()->json(['error' => true]);
+        }
+
+        $typesoins = typesoins::find($request->typesoins_id);
+
+        if (!$typesoins) {
+            return response()->json(['error' => true]);
+        }
+
+        $code = $this->generateUniqueMatricule();
+
+        $codeFac = $this->generateUniqueFacture();
+
+        DB::beginTransaction();
+
+        try {
+
+            $fac = new facture();
+            $fac->code = $codeFac;
+            $fac->statut = 'impayer';
+
+            if (!$fac->save()) {
+                throw new \Exception('Erreur');
+            }
+
+            $add = new soinspatient();
+            $add->code = $code;
+            $add->statut = 'en cours';
+            $add->part_patient = $request->montantPatient;
+            $add->part_assurance = $request->montantAssurance;
+            $add->remise = $request->montantRemise;
+            $add->montant = $request->montantTotal;
+            $add->libelle = '';
+            $add->facture_id = $fac->id;
+            $add->patient_id = $patient->id;
+            $add->typesoins_id = $typesoins->id;
+
+            if (!$add->save()) {
+                throw new \Exception('Erreur lors de la creation du soins patient');
+            }
+
+            foreach ($selectionsSoins as $value) {
+
+                $adds = new sp_soins();
+                $adds->soinsinfirmier_id = $value['id'];
+                $adds->montant = number_format($value['montant'], 0, ',', '.');
+                $adds->soinspatient_id = $add->id;
+
+                if (!$adds->save()) {
+                    throw new \Exception('Erreur');
+                }
+            }
+
+            foreach ($selectionsProduits as $value) {
+
+                $qu = produit::find($value['id']);
+                if ($qu && $qu->quantite >= $value['quantite']) {
+                    
+                    $qu->quantite -= $value['quantite'];
+
+                    if (!$qu->save()) {
+                        throw new \Exception('Erreur lors de la mise à jour de la quantité du produit');
+                    }
+
+                }else{
+                    throw new \Exception('Quantité insuffisante pour le produit : ' . $qu->nom);
+                }
+
+                $addp = new sp_produit();
+                $addp->produit_id = $value['id'];
+                $addp->quantite = $value['quantite'];
+                $addp->montant = number_format($value['montant'], 0, ',', '.');
+                $addp->soinspatient_id = $add->id;
+
+                if (!$addp->save()) {
+                    throw new \Exception('Erreur');
+                }
+            }
+
+            // Si tout s'est bien passé, on commit les changements
+            DB::commit();
+
+            return response()->json(['success' => true]);
+            
+        } catch (Exception $e) {
+
+            DB::rollback();
+            return response()->json(['error' => true]);
+        }
+
         return response()->json(['success' => true]);
     }
 

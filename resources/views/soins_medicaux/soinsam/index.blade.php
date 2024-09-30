@@ -163,10 +163,11 @@
                                     </div>
                                     <div class="row gx-3 justify-content-center align-items-center" >
                                         <div class="col-sm-12 mb-3">
-                                        <div class="d-flex gap-2 justify-content-center">
-                                            <button id="btn_calcul" class="btn btn-warning">
-                                                Calculer le montant final
-                                            </button>
+                                            <div class="d-flex gap-2 justify-content-center">
+                                                <button id="btn_calcul" class="btn btn-warning">
+                                                    Calculer le montant final
+                                                </button>
+                                            </div>
                                         </div>
                                     </div>
                                     <div class="row gx-3" id="div_calcul" style="display: none;">
@@ -249,9 +250,6 @@
                                             <strong>Calcul en cours...</strong>
                                         </div>
                                     </div>
-                                    <div class="p-2" id="div_alert_calcul" ></div>
-                                    </div>
-                                    <div class="p-2" id="div_alert" ></div>
                                 </div>
                             </div>
                             <div class="tab-pane fade " id="oneAAA" role="tabpanel" aria-labelledby="tab-oneAAA">
@@ -260,41 +258,36 @@
                                         <div class=" mb-3">
                                             <div class="card-header d-flex align-items-center justify-content-between">
                                                 <h5 class="card-title">
-                                                    List des hospitalisation
+                                                    Liste des Soins Ambulatoires
                                                 </h5>
                                                 <div class="d-flex" >
                                                     <select class="form-select me-1" id="statut">
                                                         <option selected value="tous">Tous</option>
-                                                        <option value="Hospitaliser">Hospitaliser</option>
-                                                        <option value="Liberé">Liberé</option>
+                                                        <option value="en cours">En cours</option>
+                                                        <option value="terminé">Terminé</option>
                                                     </select>
-                                                    <a id="btn_print_table_hos" style="display: none;" class="btn btn-outline-warning ms-auto me-1">
+                                                    <a id="btn_print_table" style="display: none;" class="btn btn-outline-warning ms-auto me-1">
                                                         <i class="ri-printer-line"></i>
                                                     </a>
-                                                    <a id="btn_refresh_table_hos" class="btn btn-outline-info ms-auto">
+                                                    <a id="btn_refresh_table" class="btn btn-outline-info ms-auto">
                                                         <i class="ri-loop-left-line"></i>
                                                     </a>
                                                 </div>
                                             </div>
                                             <div class="card-body">
-                                                <div id="div_alert_table_hos" >
-                                                
-                                                </div>
-                                                <div class="table-outer" id="div_Table_hos" style="display: none;">
+                                                <div class="table-outer" id="div_Table" style="display: none;">
                                                     <div class="table-responsive">
-                                                        <table class="table align-middle table-hover m-0 truncate" id="Table_hos">
+                                                        <table class="table align-middle table-hover m-0 truncate" id="Table">
                                                             <thead>
                                                                 <tr>
                                                                     <th scope="col">N°</th>
                                                                     <th scope="col">Statut</th>
-                                                                    <th scope="col">Type</th>
-                                                                    <th scope="col">Nature</th>
+                                                                    <th scope="col">Type de Soins</th>
                                                                     <th scope="col">Nom et Prénoms</th>
-                                                                    <th scope="col">Date entrer</th>
-                                                                    <th scope="col">Date sorti</th>
-                                                                    <th scope="col">Medecin</th>
-                                                                    <th scope="col">Prix</th>
-                                                                    <th scope="col">Prix Soins</th>
+                                                                    <th scope="col">Soins Infirmiers</th>
+                                                                    <th scope="col">Produits</th>
+                                                                    <th scope="col">Montant Total</th>
+                                                                    <th scope="col">Date de création</th>
                                                                     <th scope="col"></th>
                                                                 </tr>
                                                             </thead>
@@ -303,18 +296,18 @@
                                                         </table>
                                                     </div>
                                                 </div>
-                                                <div id="message_Table_hos" style="display: none;">
+                                                <div id="message_Table" style="display: none;">
                                                     <p class="text-center" >
-                                                        Aucune hospitalisation pour le moment
+                                                        Aucun Soins Ambulatoires pour le moment
                                                     </p>
                                                 </div>
-                                                <div id="div_Table_loader_hos" style="display: none;">
+                                                <div id="div_Table_loader" style="display: none;">
                                                     <div class="d-flex justify-content-center align-items-center">
                                                         <div class="spinner-border text-warning me-2" role="status" aria-hidden="true"></div>
                                                         <strong>Chargement des données...</strong>
                                                     </div>
                                                 </div>
-                                                <div id="pagination-controls-hos" ></div>
+                                                <div id="pagination-controls" ></div>
                                             </div>
                                         </div>
                                     </div>
@@ -387,7 +380,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="exampleModalCenteredScrollableTitle">
-                    Produit Pharmacie Utilisé
+                    Détail Soins Infirmiers et Produits Utilisés
                 </h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
@@ -402,22 +395,38 @@
                     
                                         </div>
                                         <div class="table-responsive" id="div_TableP" style="display: none;">
+                                            <!-- Tableau Soins Infirmiers -->
                                             <table class="table table-bordered" id="TableP">
                                                 <thead>
                                                     <tr>
-                                                        <th>Produit utilisé</th>
-                                                        <th style="width: 150px;" >Prix unitaire</th>
-                                                        <th style="width: 50px;" >Quantité</th>
-                                                        <th style="width: 150px;" >Prix</th>
+                                                        <th>Soins Infirmiers</th>
+                                                        <th style="width: 250px;">Prix</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
                                                 </tbody>
                                             </table>
                                         </div>
+
+                                        <div class="table-responsive" id="div_TableProdP" style="display: none;">
+                                            <!-- Tableau Produits Utilisés -->
+                                            <table class="table table-bordered" id="TableProdP">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Produits Utilisés</th>
+                                                        <th style="width: 200px;">Prix Unitaire</th>
+                                                        <th style="width: 50px;" >Quantité</th>
+                                                        <th style="width: 200px;">Prix Total</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                </tbody>
+                                            </table>
+                                        </div>
+
                                         <div id="message_TableP" style="display: none;">
                                             <p class="text-center" >
-                                                Aucun Produit utilisé pour le moment
+                                                Aucun détail pour le moment
                                             </p>
                                         </div>
                                         <div id="div_Table_loaderP" style="display: none;">
@@ -445,12 +454,13 @@
 
         Name_atient();
         select_typesoins();
+        list();
 
-        
         document.getElementById("btn_calcul").addEventListener("click", CalculMontant);
         document.getElementById("assurance_utiliser").addEventListener("change", CalculMontant);
         document.getElementById("btn_eng").addEventListener("click", Eng_sa);
-
+        document.getElementById("btn_refresh_table").addEventListener("click", list);
+        document.getElementById("statut").addEventListener("change", list);
 
         function Name_atient() {
             $.ajax({
@@ -530,7 +540,6 @@
                 }
             });
         }
-
 
         // function rech_dossier()
         // {
@@ -615,31 +624,6 @@
                 text: message,
                 icon: type,
             });
-        }
-
-        function showAlertCalcul(type, message) {
-
-            var dynamicFields = document.getElementById("div_alert_calcul");
-            // Remove existing content
-            while (dynamicFields.firstChild) {
-                dynamicFields.removeChild(dynamicFields.firstChild);
-            }
-
-            var groupe = document.createElement("div");
-            groupe.className = `alert bg-${type} text-white alert-dismissible fade show`;
-            groupe.innerHTML = `
-                ${message}
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>   
-            `;
-            document.getElementById("div_alert_calcul").appendChild(groupe);
-
-            setTimeout(function() {
-                groupe.classList.remove("show");
-                groupe.classList.add("fade");
-                setTimeout(function() {
-                    groupe.remove();
-                }, 150); // Time for the fade effect to complete
-            }, 3000);
         }
 
         // -----------------------------------------------------
@@ -772,7 +756,7 @@
             const id = document.getElementById('typesoins_id').value;
 
             if (id == '') {
-                showAlertSoins('warning', `Selectionner un Type de Soins`);
+                showAlert("ALERT", "Selectionner un Type de Soins.", "warning");
             }
 
             const url = '/api/select_soinsIn/' + id;
@@ -790,31 +774,6 @@
                         console.error('Erreur lors du chargement des données:', error);
                     });
         });
-
-        function showAlertSoins(type, message) {
-
-            var dynamicFields = document.getElementById("div_alert_soins");
-            // Remove existing content
-            while (dynamicFields.firstChild) {
-                dynamicFields.removeChild(dynamicFields.firstChild);
-            }
-
-            var groupe = document.createElement("div");
-            groupe.className = `alert bg-${type} text-white alert-dismissible fade show`;
-            groupe.innerHTML = `
-                ${message}
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>   
-            `;
-            document.getElementById("div_alert_soins").appendChild(groupe);
-
-            setTimeout(function() {
-                groupe.classList.remove("show");
-                groupe.classList.add("fade");
-                setTimeout(function() {
-                    groupe.remove();
-                }, 150); // Time for the fade effect to complete
-            }, 3000);
-        }
 
         // -------------------------------------------------------
 
@@ -879,7 +838,7 @@
                 const quantiteDisponible = parseInt(selectedOption.dataset.quantite);
                 
                 if (parseInt(quantiteInput.value) > quantiteDisponible) {
-                    showAlertQauntite('warning', `La quantité demandée ne peut pas dépasser ${quantiteDisponible}.`);
+                    showAlert("ALERT",`La quantité demandée ne peut pas dépasser ${quantiteDisponible}.`, "warning");
                     quantiteInput.value = quantiteDisponible;
                 }else if(quantiteInput.value == ''){
                     quantiteInput.value = 1;
@@ -911,7 +870,6 @@
             document.getElementById('montant_total_produit').value = montantTotalFormatted;
         }
 
-
         function checkContenu() {
             const contenuDiv = document.getElementById('contenu_produit');
             const divBtnPro = document.getElementById('div_btn_pro');
@@ -941,31 +899,6 @@
                     console.error('Erreur lors du chargement des produits:', error);
                 });
         });
-
-        function showAlertQauntite(type, message) {
-
-            var dynamicFields = document.getElementById("div_alert_produit_qu");
-            // Remove existing content
-            while (dynamicFields.firstChild) {
-                dynamicFields.removeChild(dynamicFields.firstChild);
-            }
-
-            var groupe = document.createElement("div");
-            groupe.className = `alert bg-${type} text-white alert-dismissible fade show`;
-            groupe.innerHTML = `
-                ${message}
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>   
-            `;
-            document.getElementById("div_alert_produit_qu").appendChild(groupe);
-
-            setTimeout(function() {
-                groupe.classList.remove("show");
-                groupe.classList.add("fade");
-                setTimeout(function() {
-                    groupe.remove();
-                }, 150); // Time for the fade effect to complete
-            }, 3000);
-        }
 
         function formatPrice(input) {
             // Remove all non-numeric characters except the comma
@@ -1011,21 +944,21 @@
             if (matricule_patient === '') {
                 showAlert("ALERT", "Veuillez sélectionner un Patient.", "warning");
                 resetLoaderAndButton();
-                return;
+                return false;
             }
 
             // 2. Vérifier si un type de soins a été sélectionné
             if (typesoins_id === '') {
                 showAlert("ALERT", "Veuillez sélectionner un Type de Soins.", "warning");
                 resetLoaderAndButton();
-                return;
+                return false;
             }
 
             const contenuDiv = document.getElementById('contenu_soins');
             if (contenuDiv.innerHTML.trim() == "") {
-                showAlertCalcul('warning', 'Aucun Soins Infirmier n\'a été sélectionné.');
+                showAlert("ALERT", 'Aucun Soins Infirmier n\'a été sélectionné.', "warning");
                 resetLoaderAndButton();
-                return;
+                return false;
             }
 
             let formIsValid = true;
@@ -1042,15 +975,15 @@
                 const montant = parseInt(selectedOption.dataset.prix);
 
                 if (!idSoins || isNaN(montant)) {
-                    showAlertCalcul('warning', 'Veuillez sélectionner un ou plusieurs Soins Infirmiers valides.');
+                    showAlert("ALERT", 'Aucun Soins Infirmier n\'a été sélectionné.', "warning");
                     formIsValid = false;
-                    return;
+                    return false;
                 }
 
                 if (selectedSoinsIds.has(idSoins)) {
-                    showAlertCalcul('warning', 'Vous avez sélectionné le même Soins Infirmier plusieurs fois.');
+                    showAlert("ALERT", 'Vous avez sélectionné le même Soins Infirmier plusieurs fois.', "warning");
                     formIsValid = false;
-                    return;
+                    return false;
                 }
 
                 selectedSoinsIds.add(idSoins);
@@ -1062,9 +995,9 @@
 
             const contenuDivPro = document.getElementById('contenu_produit');
             if (contenuDivPro.innerHTML.trim() == "") {
-                showAlertCalcul('warning', 'Aucun Produit n\'a été sélectionné.');
+                showAlert("ALERT", 'Aucun Produit n\'a été sélectionné.', "warning");
                 resetLoaderAndButton();
-                return;
+                return false;
             }
 
             // 4. Vérifier si tous les produits ont été sélectionnés et validés
@@ -1078,15 +1011,15 @@
                 const prix = parseInt(selectedOption.dataset.prix);
 
                 if (!idProduit || isNaN(quantiteDemande) || quantiteDemande <= 0) {
-                    showAlertCalcul('warning', 'Veuillez sélectionner un ou plusieurs Produits avec une quantité valide.');
+                    showAlert("ALERT", 'Veuillez sélectionner un ou plusieurs Produits avec une quantité valide.', "warning");
                     formIsValid = false;
-                    return;
+                    return false;
                 }
 
                 if (selectedProduitIds.has(idProduit)) {
-                    showAlertCalcul('warning', 'Vous avez sélectionné le même Produit plusieurs fois.');
+                    showAlert("ALERT", 'Vous avez sélectionné le même Produit plusieurs fois.', "warning");
                     formIsValid = false;
-                    return;
+                    return false;
                 }
 
                 selectedProduitIds.add(idProduit);
@@ -1099,7 +1032,7 @@
 
             if (!formIsValid) {
                 resetLoaderAndButton();
-                return;
+                return false;
             }
 
             // 5. Calcul du montant total des soins infirmiers et des produits
@@ -1112,7 +1045,7 @@
 
             const auS = document.getElementById('assurance_utiliser').value;
             const appliq_remise = document.getElementById('appliq_remise');
-            const taux_remise = 0;
+            const taux_remise = document.getElementById('taux_remise');
 
             let montantAssurance = 0;
             let montantPatient = 0;
@@ -1144,14 +1077,15 @@
             document.getElementById('montant_patient_hidden').value = formatMontant(montantPatient);
             document.getElementById('montant_patient').value = formatMontant(montantPatient);
 
-            document.getElementById('taux_remise').value = 0;
-
             document.getElementById('btn_calcul').style.display = 'block';
             document.getElementById('div_calcul').style.display = 'flex';
             document.getElementById('div_loader').style.display = 'none';
+
+            traitRemise();
+
+            return true;
         }
 
-        // Fonction pour réinitialiser l'affichage du loader et du bouton
         function resetLoaderAndButton() {
             document.getElementById('div_loader').style.display = 'none';
             document.getElementById('btn_calcul').style.display = 'block';
@@ -1203,6 +1137,51 @@
             }
         });
 
+        function traitRemise() {
+            // Nettoyer la valeur entrée en supprimant les caractères non numériques
+            const rawValue = document.getElementById('taux_remise').value.replace(/[^0-9]/g, ''); 
+            // Ajouter des points pour les milliers
+            const formattedValue = formatPrice(rawValue);
+            
+            // Mettre à jour la valeur du champ avec la valeur formatée
+            document.getElementById('taux_remise').value = formattedValue;
+
+            const appliq_remise = document.getElementById('appliq_remise').value;
+            const assuranceUtiliser = document.getElementById('assurance_utiliser').value; // Récupérer la valeur 'oui' ou 'non'
+            
+            const montant_total = parseInt(document.getElementById('montant_total').value.replace(/\./g, '')) || 0;
+
+            if (assuranceUtiliser == 'non') {
+                // Si l'assurance n'est pas utilisée, montant_patient = montant_total
+                const montant_patient = montant_total;
+                const remise = parseInt(rawValue) || 0;
+
+                // Calculer le montant après remise
+                const montantRemis = montant_patient - remise;
+
+                // Afficher les valeurs formatées
+                document.getElementById('montant_patient_hidden').value = montant_patient; // Stocker le montant_patient
+                document.getElementById('montant_patient').value = formatPriceT(montantRemis);
+
+            } else if (appliq_remise == 'patient') {
+                // Si la remise s'applique au patient
+                const montant_patient = parseInt(document.getElementById('montant_patient_hidden').value.replace(/\./g, '')) || 0;
+                const remise = parseInt(rawValue) || 0;
+
+                // Calculer le montant après remise
+                const montantRemis = montant_patient - remise;
+                document.getElementById('montant_patient').value = formatPriceT(montantRemis);
+            
+            } else if (appliq_remise == 'assurance') {
+                // Si la remise s'applique à l'assurance
+                const montant_assurance = parseInt(document.getElementById('montant_assurance_hidden').value.replace(/\./g, '')) || 0;
+                const remise = parseInt(rawValue) || 0;
+
+                // Calculer le montant après remise
+                const montantRemis = montant_assurance - remise;
+                document.getElementById('montant_assurance').value = formatPriceT(montantRemis);
+            }
+        }
 
         document.getElementById('appliq_remise').addEventListener('change', function() {
 
@@ -1237,7 +1216,15 @@
 
         function Eng_sa() {
 
-            CalculMontant();
+            try {
+                const calculResult = CalculMontant();
+                if (!calculResult) {
+                    return false;
+                }
+            } catch (error) {
+                showAlert("ERREUR","Veuillez bien vérifier les données saisies", "error");
+                return false;
+            }
             
             const selectionsSoins = [];
             const soinsSelects = document.querySelectorAll('.soins-select');
@@ -1273,12 +1260,12 @@
             const typesoins_id = document.getElementById('typesoins_id').value;
 
             if (matricule_patient == '') {
-                showAlertCalcul('warning', 'Veuillez sélectionner un Patient.');
+                showAlert("ALERT", 'Veuillez sélectionner un Patient.', "warning");
                 return false;
             }
 
             if (typesoins_id == '') {
-                showAlertCalcul('warning', 'Veuillez sélectionner un Type de Soins.');
+                showAlert("ALERT", 'Veuillez sélectionner un Type de Soins.', "warning");
                 return false;
             }
 
@@ -1292,7 +1279,7 @@
                 !montant_total || 
                 !montant_patient) {
                 
-                showAlertCalcul('warning', 'Vérifier les montants SVP.');
+                showAlert("ALERT", 'Vérifier les montants SVP.', "warning");
                 return false; 
             }
 
@@ -1307,7 +1294,7 @@
                 montantTotalValue < 0 || 
                 montantPatientValue < 0) {
                 
-                showAlertCalcul('warning', 'Vérifier les montants SVP (les montants ne doivent pas être négatifs).');
+                showAlert("ALERT", 'Vérifier les montants SVP (les montants ne doivent pas être négatifs).', "warning");
                 return false;
             }
 
@@ -1339,14 +1326,34 @@
                     }
                     
                     if (response.success) {
-                        showAlert('success', 'Produit Pharmacie ajouter.');
+
+                        document.getElementById('div_calcul').style.display = 'none';
+                        document.getElementById('typesoins_id').value = "";
+                        document.getElementById('matricule_patient').value = "";
+                        document.getElementById('patient').value = "";
+
+                        const contenuDiv = document.getElementById('contenu_soins');
+                        contenuDiv.innerHTML = "";
+                        document.getElementById('div_btn_soins').style.display = 'none';
+
+                        const contenuDivPro = document.getElementById('contenu_produit');
+                        contenuDivPro.innerHTML = "";
+                        document.getElementById('div_btn_pro').style.display = 'none';      
+
+                        showAlert("ALERT", 'Enregistrement éffectué', "success");
+
+                        list();
+
+                        var newConsultationTab = new bootstrap.Tab(document.getElementById('tab-oneAAA'));
+                        newConsultationTab.show();
+                        newConsultationTab.active();
+
                     } else if (response.error) {
-                        showAlert('danger', 'Une erreur est survenue');
+                        showAlert("ERREUR", 'Une erreur est survenue', "error");
                     } else if (response.json) {
-                        showAlert('danger', 'Invalid selections format');
+                        showAlert("ERREUR", 'Invalid selections format', "error");
                     }
 
-                    list_hos();
                 },
                 error: function() {
                     var preloader = document.getElementById('preloader_ch');
@@ -1354,19 +1361,19 @@
                         preloader.remove();
                     }
 
-                    showAlert('danger', 'Une erreur est survenue lors de l\'enregistrement');
+                    showAlert("ERREUR", 'Une erreur est survenue lors de l\'enregistrement', "error");
                 }
             });
         };
 
         // -----------------------------------------------------
 
-        function list_hos(page = 1) {
+        function list(page = 1) {
 
-            const tableBody = document.querySelector('#Table_hos tbody');
-            const messageDiv = document.getElementById('message_Table_hos');
-            const tableDiv = document.getElementById('div_Table_hos'); // The message div
-            const loaderDiv = document.getElementById('div_Table_loader_hos');
+            const tableBody = document.querySelector('#Table tbody');
+            const messageDiv = document.getElementById('message_Table');
+            const tableDiv = document.getElementById('div_Table');
+            const loaderDiv = document.getElementById('div_Table_loader');
 
             messageDiv.style.display = 'none';
             tableDiv.style.display = 'none';
@@ -1374,12 +1381,12 @@
 
             // Fetch data from the API
             const statut = document.getElementById('statut').value;
-            const url = `/api/list_hopital/${statut}?page=${page}`;
+            const url = `/api/list_soinsam_all/${statut}?page=${page}`;
             fetch(url) // API endpoint
                 .then(response => response.json())
                 .then(data => {
 
-                    const hopitals = data.hopital || [] ;
+                    const spatients = data.spatient || [] ;
                     const pagination = data.pagination || {};
 
                     const perPage = pagination.per_page || 10;
@@ -1388,45 +1395,34 @@
                     // Clear any existing rows in the table body
                     tableBody.innerHTML = '';
 
-                    if (hopitals.length > 0) {
+                    if (spatients.length > 0) {
 
-                        document.getElementById(`btn_print_table_hos`).style.display = 'block';
+                        document.getElementById(`btn_print_table`).style.display = 'block';
 
                         loaderDiv.style.display = 'none';
                         messageDiv.style.display = 'none';
                         tableDiv.style.display = 'block';
 
                         // Loop through each item in the chambre array
-                        hopitals.forEach((item, index) => {
+                        spatients.forEach((item, index) => {
                             // Create a new row
                             const row = document.createElement('tr');
                             // Create and append cells to the row based on your table's structure
-                            let addButton = '';
-                            if (item.statut === 'Hospitaliser') {
-                                addButton = `
-                                    <a class="btn btn-outline-success btn-sm" id="add-${item.id}" data-bs-toggle="modal" data-bs-target="#Add">
-                                        <i class="ri-dossier-line"></i>
-                                    </a>
-                                `;
-                            }
                             row.innerHTML = `
                                 <td>${((currentPage - 1) * perPage) + index + 1}</td>
                                 <td>
-                                    ${item.statut === 'Hospitaliser' ? 
+                                    ${item.statut === 'en cours' ? 
                                         `<span class="badge bg-danger">${item.statut}</span>` : 
                                         `<span class="badge bg-success">${item.statut}</span>`}
                                 </td>
                                 <td>${item.type}</td>
-                                <td>${item.nature}</td>
                                 <td>${item.patient}</td>
-                                <td>${formatDate(item.date_debut)}</td>
-                                <td>${formatDate(item.date_fin)}</td>
-                                <td>${item.medecin}</td>
+                                <td>${item.nbre_soins}</td>
+                                <td>${item.nbre_produit}</td>
                                 <td>${item.montant} Fcfa</td>
-                                <td>${item.montant_soins} Fcfa</td>
+                                <td>${formatDateHeure(item.created_at)}</td>
                                 <td>
                                     <div class="d-inline-flex gap-1">
-                                        ${addButton}
                                         <a class="btn btn-outline-danger btn-sm" id="detail_produit-${item.id}" data-bs-toggle="modal" data-bs-target="#Detail_produit">
                                             <i class="ri-archive-2-fill"></i>
                                         </a>
@@ -1445,21 +1441,19 @@
 
                             document.getElementById(`detail-${item.id}`).addEventListener('click', () =>
                             {
-                                fetch(`/api/detail_hos/${item.id}`) // API endpoint
+                                fetch(`/api/detail_soinam/${item.id}`) // API endpoint
                                     .then(response => response.json())
                                     .then(data => {
                                         // Access the 'chambre' array from the API response
                                         const modal = document.getElementById('modal_detail');
                                         modal.innerHTML = '';
 
-                                        const hopital = data.hopital;
+                                        const soinspatient = data.soinspatient;
                                         const facture = data.facture;
                                         const patient = data.patient;
-                                        const nature = data.natureadmission;
-                                        const type = data.typeadmission;
-                                        const lit = data.lit;
-                                        const chambre = data.chambre;
-                                        const user = data.user;
+                                        const typesoins = data.typesoins;
+                                        const soins = data.soins;
+                                        const produit = data.produit;
 
                                         const div = document.createElement('div');
                                         div.innerHTML = `
@@ -1468,31 +1462,9 @@
                                                     <div class="">
                                                         <div class="card-body">
                                                             <div class="row justify-content-between">
-                                                                <div class="col-12 text-center">                  
-                                                                    <h6 class="fw-semibold">Docteur :</h6>
-                                                                    <p>${user.name}</p>
-                                                                    <h6 class="fw-semibold">Spécialité :</h6>
-                                                                    <p>${user.typeacte}</p>
-                                                                    <h6 class="fw-semibold">Chambre Occupé :</h6>
-                                                                    <p>CH-${chambre.code}</p>
-                                                                    <h6 class="fw-semibold">Lit Occupé :</h6>
-                                                                    <p>LIT-${lit.code}/${lit.type}</p>
-                                                                    <h6 class="fw-semibold">Prix :</h6>
-                                                                    <p>${chambre.prix} Fcfa</p>
-                                                                </div>
                                                                 <div class="col-12 text-center mt-4">
-                                                                    <h6 class="fw-semibold">Type d'admission :</h6>
-                                                                    <p>${type.nom}</p>
-                                                                    <h6 class="fw-semibold">Nature d'admission :</h6>
-                                                                    <p>${nature.nom}</p>
-                                                                    <h6 class="fw-semibold">Date d'entrer :</h6>
-                                                                    <p>${formatDate(hopital.date_debut)}</p>
-                                                                    <h6 class="fw-semibold">Date de sortie Probable :</h6>
-                                                                    <p>${formatDate(hopital.date_fin)}</p>
-                                                                    <h6 class="fw-semibold">Nombre de jours :</h6>
-                                                                    <p>${calculateDaysBetween(hopital.date_debut, hopital.date_fin)}</p>
-                                                                </div>
-                                                                <div class="col-12 text-center mt-4">
+                                                                    <h6 class="fw-semibold">Type de Soins :</h6>
+                                                                    <p>${typesoins.nom}</p>
                                                                     <h6 class="fw-semibold">N° Dossier :</h6>
                                                                     <p>${patient.matricule}</p>
                                                                     <h6 class="fw-semibold">Nom du patient :</h6>
@@ -1514,13 +1486,13 @@
                                                                 </div>
                                                                 <div class="col-12 text-center mt-4">
                                                                     <h6 class="fw-semibold">Part Patient :</h6>
-                                                                    <p>${hopital.part_patient} Fcfa</p>
+                                                                    <p>${soinspatient.part_patient} Fcfa</p>
                                                                     <h6 class="fw-semibold">Part Assurance :</h6>
-                                                                    <p>${hopital.part_assurance} Fcfa</p>
+                                                                    <p>${soinspatient.part_assurance} Fcfa</p>
                                                                     <h6 class="fw-semibold">Remise :</h6>
-                                                                    <p>${hopital.remise ? hopital.remise : '0'} Fcfa</p>
+                                                                    <p>${soinspatient.remise ? soinspatient.remise : '0'} Fcfa</p>
                                                                     <h6 class="fw-semibold">Montant Total :</h6>
-                                                                    <p>${hopital.montant} Fcfa</p>
+                                                                    <p>${soinspatient.montant} Fcfa</p>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -1539,21 +1511,18 @@
 
                             document.getElementById(`fiche-${item.id}`).addEventListener('click', () =>
                             {
-                                fetch(`/api/detail_hos/${item.id}`) // API endpoint
+                                fetch(`/api/detail_soinam/${item.id}`) // API endpoint
                                     .then(response => response.json())
                                     .then(data => {
                                         // Access the 'chambre' array from the API response
-                                        const hopital = data.hopital;
+                                        const soinspatient = data.soinspatient;
                                         const facture = data.facture;
                                         const patient = data.patient;
-                                        const nature = data.natureadmission;
-                                        const type = data.typeadmission;
-                                        const lit = data.lit;
-                                        const chambre = data.chambre;
-                                        const user = data.user;
+                                        const typesoins = data.typesoins;
+                                        const soins = data.soins;
                                         const produit = data.produit;
 
-                                        generatePDFInvoice(hopital, facture, patient, nature, type, lit, chambre, user, produit);
+                                        generatePDFInvoice(soinspatient, facture, patient, typesoins, soins, produit);
 
                                     })
                                     .catch(error => {
@@ -1561,109 +1530,130 @@
                                     });
                             });
 
-                            const deleteButton = document.getElementById(`add-${item.id}`);
-                            if (deleteButton) {
-                                deleteButton.addEventListener('click', () => {
-                                    
-                                });
-                            }
+                            document.getElementById(`detail_produit-${item.id}`).addEventListener('click', () => 
+                            {
+                                const tableBodyP = document.querySelector('#TableP tbody'); // Pour les soins infirmiers
+                                const tableBodyProdP = document.querySelector('#TableProdP tbody'); // Pour les produits
+                                const messageDivP = document.getElementById('message_TableP');
+                                const tableDivP = document.getElementById('div_TableP');
+                                const tableDivProdP = document.getElementById('div_TableProdP'); // Div pour les produits
+                                const loaderDivP = document.getElementById('div_Table_loaderP');
 
-                            document.getElementById(`detail_produit-${item.id}`).addEventListener('click',()=>
-                                {
-                                    const tableBodyP = document.querySelector('#TableP tbody');
-                                    const messageDivP = document.getElementById('message_TableP');
-                                    const tableDivP = document.getElementById('div_TableP');
-                                    const loaderDivP = document.getElementById('div_Table_loaderP');
+                                messageDivP.style.display = 'none';
+                                tableDivP.style.display = 'none';
+                                tableDivProdP.style.display = 'none'; // Cacher au départ
+                                loaderDivP.style.display = 'block';
 
-                                    messageDivP.style.display = 'none';
-                                    tableDivP.style.display = 'none';
-                                    loaderDivP.style.display = 'block';
+                                fetch(`/api/detail_soinam/${item.id}`) // API endpoint
+                                    .then(response => response.json())
+                                    .then(data => {
+                                        const soinspatient = data.soinspatient;
+                                        const soins = data.soins;
+                                        const produit = data.produit; // Assurez-vous que l'API renvoie une liste de produits
 
-                                    fetch(`/api/list_facture_hos_d/${item.id}`) // API endpoint
-                                        .then(response => response.json())
-                                        .then(data => {
-                                            // Access the 'chambre' array from the API response
-                                            const factureds = data.factured;
+                                        // Clear existing rows
+                                        tableBodyP.innerHTML = '';
+                                        tableBodyProdP.innerHTML = ''; // Pour les produits
 
-                                            // Clear any existing rows in the table body
-                                            tableBodyP.innerHTML = '';
+                                        if (soins.length > 0 || produits.length > 0) {
 
-                                            if (factureds.length > 0) {
+                                            loaderDivP.style.display = 'none';
+                                            messageDivP.style.display = 'none';
+                                            tableDivP.style.display = 'block';
+                                            tableDivProdP.style.display = 'block'; // Afficher le tableau des produits
 
-                                                loaderDivP.style.display = 'none';
-                                                messageDivP.style.display = 'none';
-                                                tableDivP.style.display = 'block';
-
-                                                // Loop through each item in the chambre array
-                                                factureds.forEach((item, index) => {
-                                                    // Create a new row
-                                                    const row = document.createElement('tr');
-                                                    // Create and append cells to the row based on your table's structure
-                                                    row.innerHTML = `
-                                                        <td>
-                                                            <h6>${item.nom_produit}</h6>
-                                                        </td>
-                                                        <td>
-                                                            <h6>${item.prix_produit} Fcfa</h6>
-                                                        </td>
-                                                        <td>
-                                                            <h6>${item.quantite}</h6>
-                                                        </td>
-                                                        <td>
-                                                            <h6>${item.montant} Fcfa</h6>
-                                                        </td>
-                                                    `;
-                                                    // Append the row to the table body
-                                                    tableBodyP.appendChild(row);
-
-                                                });
-
-                                                const row2 = document.createElement('tr');
-                                                row2.innerHTML = `
-                                                    <td colspan="2">&nbsp;</td>
-                                                    <td colspan="2" >
-                                                        <h5 class="mt-4 text-success">
-                                                            Total : ${item.montant_soins} Fcfa
-                                                        </h5>
+                                            // Remplir le tableau des soins
+                                            soins.forEach((item, index) => {
+                                                const row = document.createElement('tr');
+                                                row.innerHTML = `
+                                                    <td>
+                                                        <h6>${item.nom_si}</h6>
+                                                    </td>
+                                                    <td>
+                                                        <h6>${item.prix_si} Fcfa</h6>
                                                     </td>
                                                 `;
-                                                tableBodyP.appendChild(row2);
+                                                tableBodyP.appendChild(row);
+                                            });
 
-                                                const row3 = document.createElement('tr');
-                                                row3.innerHTML = `
-                                                    <td colspan="4">
-                                                        <h6 class="text-danger">NOTE</h6>
-                                                        <p class="small m-0">
-                                                            Le Montant Total des produits utilisés
-                                                            seront ajouter au montant total de la
-                                                            chambre occupé par le patient.
-                                                        </p>
+                                            const rowTotalSoin = document.createElement('tr');
+                                            rowTotalSoin.innerHTML = `
+                                                <td >&nbsp;</td>
+                                                <td >
+                                                    <h5 class="mt-4 text-success">
+                                                        Total Soins : ${formatPriceT(soinspatient.stotal)} Fcfa
+                                                    </h5>
+                                                </td>
+                                            `;
+                                            tableBodyP.appendChild(rowTotalSoin);
+
+                                            // Remplir le tableau des produits
+                                            produit.forEach((item, index) => {
+                                                const rowProd = document.createElement('tr');
+                                                rowProd.innerHTML = `
+                                                    <td>
+                                                        <h6>${item.nom_pro}</h6>
+                                                    </td>
+                                                    <td>
+                                                        <h6>${item.prix_pro} Fcfa</h6>
+                                                    </td>
+                                                    <td>
+                                                        <h6>${item.quantite}</h6>
+                                                    </td>
+                                                    <td>
+                                                        <h6>${item.montant} Fcfa</h6>
                                                     </td>
                                                 `;
+                                                tableBodyProdP.appendChild(rowProd);
+                                            });
 
-                                                tableBodyP.appendChild(row3);
+                                            const rowTotalProd = document.createElement('tr');
+                                            rowTotalProd.innerHTML = `
+                                                <td colspan="2" >&nbsp;</td>
+                                                <td colspan="2">
+                                                    <h5 class="mt-4 text-success">
+                                                        Total Produits : ${formatPriceT(soinspatient.prototal)} Fcfa
+                                                    </h5>
+                                                </td>
+                                            `;
+                                            tableBodyProdP.appendChild(rowTotalProd);
 
-                                            } else {
-                                                loaderDivP.style.display = 'none';
-                                                messageDivP.style.display = 'block';
-                                                tableDivP.style.display = 'none';
-                                            }
-                                        })
-                                        .catch(error => {
-                                            console.error('Erreur lors du chargement des données:', error);
-                                            loaderDivD.style.display = 'none';
-                                            messageDivD.style.display = 'block';
-                                            tableDivD.style.display = 'none';
-                                        });
-                                    
-                                });
+                                            const rowNote = document.createElement('tr');
+                                            rowNote.innerHTML = `
+                                                <td colspan="4">
+                                                    <h6 class="text-danger">NOTE</h6>
+                                                    <p class="small m-0">
+                                                        Le Montant Total des produits utilisés
+                                                        seront ajoutés au montant total des soins.
+                                                    </p>
+                                                </td>
+                                            `;
+
+                                            tableBodyProdP.appendChild(rowNote);
+
+                                        } else {
+                                            loaderDivP.style.display = 'none';
+                                            messageDivP.style.display = 'block';
+                                            tableDivP.style.display = 'none';
+                                            tableDivProdP.style.display = 'none';
+                                        }
+                                    })
+                                    .catch(error => {
+                                        console.error('Erreur lors du chargement des données:', error);
+                                        loaderDivP.style.display = 'none';
+                                        messageDivP.style.display = 'block';
+                                        tableDivP.style.display = 'none';
+                                        tableDivProdP.style.display = 'none';
+                                    });
+                            });
+
 
                         });
 
                         updatePaginationControls(pagination);
 
                     } else {
-                        document.getElementById(`btn_print_table_hos`).style.display = 'none';
+                        document.getElementById(`btn_print_table`).style.display = 'none';
                         loaderDiv.style.display = 'none';
                         messageDiv.style.display = 'block';
                         tableDiv.style.display = 'none';
@@ -1773,22 +1763,23 @@
             return `${day}-${month}-${year}`;
         }
 
-        function calculateDaysBetween(startDate, endDate) {
-            const start = new Date(startDate);
-            const end = new Date(endDate);
-            
-            // Calcul de la différence en millisecondes
-            const diffInMilliseconds = end - start;
+        function formatDateHeure(dateString) {
 
-            // Conversion en jours (millisecondes en secondes, minutes, heures, jours)
-            let diffInDays = diffInMilliseconds / (1000 * 60 * 60 * 24);
+            const date = new Date(dateString);
+                
+            const day = String(date.getDate()).padStart(2, '0');
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const year = date.getFullYear();
 
-            // Si la différence est inférieure ou égale à 0, on retourne 1 jour minimum
-            return diffInDays <= 0 ? 1 : Math.round(diffInDays); 
+            const hours = String(date.getHours()).padStart(2, '0');
+            const minutes = String(date.getMinutes()).padStart(2, '0');
+            const seconds = String(date.getSeconds()).padStart(2, '0');
+
+            return `${day}/${month}/${year} à ${hours}:${minutes}:${seconds}`;
         }
 
         function updatePaginationControls(pagination) {
-            const paginationDiv = document.getElementById('pagination-controls-hos');
+            const paginationDiv = document.getElementById('pagination-controls');
             paginationDiv.innerHTML = '';
 
             // Bootstrap pagination wrapper
@@ -1802,7 +1793,7 @@
                 prevButton.innerHTML = `<a class="page-link" href="#">Precédent</a>`;
                 prevButton.onclick = (event) => {
                     event.preventDefault(); // Empêche le défilement en haut de la page
-                    list_hos(pagination.current_page - 1);
+                    list(pagination.current_page - 1);
                 };
                 paginationWrapper.appendChild(prevButton);
             } else {
@@ -1833,7 +1824,7 @@
                 pageItem.innerHTML = `<a class="page-link" href="#">${i}</a>`;
                 pageItem.onclick = (event) => {
                     event.preventDefault(); // Empêche le défilement en haut de la page
-                    list_hos(i);
+                    list(i);
                 };
                 paginationWrapper.appendChild(pageItem);
             }
@@ -1851,7 +1842,7 @@
                 lastPageItem.innerHTML = `<a class="page-link" href="#">${totalPages}</a>`;
                 lastPageItem.onclick = (event) => {
                     event.preventDefault(); // Empêche le défilement en haut de la page
-                    list_hos(totalPages);
+                    list(totalPages);
                 };
                 paginationWrapper.appendChild(lastPageItem);
             }
@@ -1863,7 +1854,7 @@
                 nextButton.innerHTML = `<a class="page-link" href="#">Suivant</a>`;
                 nextButton.onclick = (event) => {
                     event.preventDefault(); // Empêche le défilement en haut de la page
-                    list_hos(pagination.current_page + 1);
+                    list(pagination.current_page + 1);
                 };
                 paginationWrapper.appendChild(nextButton);
             } else {
@@ -1878,7 +1869,7 @@
             paginationDiv.appendChild(paginationWrapper);
         }
 
-        function generatePDFInvoice(hopital, facture, patient, nature, type, lit, chambre, user, produit) {
+        function generatePDFInvoice(soinspatient, facture, patient, typesoins, soins, produit) {
             const { jsPDF } = window.jspdf;
             const doc = new jsPDF({ orientation: 'p', unit: 'mm', format: 'a4' });
 
@@ -1917,10 +1908,10 @@
                 doc.text(phone, phoneX, (yPos + 10));
                 doc.setFontSize(10);
                 doc.setFont("Helvetica", "normal");
-                const hopitalDate = new Date(hopital.created_at);
+                const spatientDate = new Date(soinspatient.created_at);
                 // Formatter la date et l'heure séparément
-                const formattedDate = hopitalDate.toLocaleDateString(); // Formater la date
-                const formattedTime = hopitalDate.toLocaleTimeString();
+                const formattedDate = spatientDate.toLocaleDateString(); // Formater la date
+                const formattedTime = spatientDate.toLocaleTimeString();
                 doc.text("Date: " + formattedDate, 15, (yPos + 25));
                 doc.text("Heure: " + formattedTime, 15, (yPos + 30));
 
@@ -1930,12 +1921,12 @@
                 doc.setLineWidth(0.5);
                 doc.setTextColor(255, 0, 0);
                 // doc.line(10, 35, 200, 35); 
-                const titleR = "FACTURE HOSPITALISATION";
+                const titleR = "FACTURE SOINS AMBULATOIRES";
                 const titleRWidth = doc.getTextWidth(titleR);
                 const titleRX = (doc.internal.pageSize.getWidth() - titleRWidth) / 2;
                 // Définir le padding
                 const paddingh = 0; // Padding vertical
-                const paddingw = 15; // Padding horizontal
+                const paddingw = 8; // Padding horizontal
                 // Calculer les dimensions du rectangle
                 const rectX = titleRX - paddingw; // X du rectangle
                 const rectY = (yPos + 18) - paddingh; // Y du rectangle
@@ -1987,15 +1978,13 @@
 
                 yPoss = (yPos + 40);
 
-                const medecinInfo = [
-                    { label: "Medecin", value: "Dr. "+user.name },
-                    { label: "Spécialité", value: user.typeacte },
-                    { label: "Date d'entrée le ", value: formatDate(hopital.date_debut) },
-                    { label: "Date de sortie prévu le ", value: formatDate(hopital.date_fin) },
-                    { label: "Nombre de jours ", value: calculateDaysBetween(hopital.date_debut, hopital.date_fin)+" Jour(s)" },
+                const typeInfo = [
+                    { label: "Type de Soins", value: typesoins.nom },
+                    { label: "Soins Infirmiers", value: soins.length },
+                    { label: "Produits Utilisés", value: produit.length },
                 ];
 
-                medecinInfo.forEach(info => {
+                typeInfo.forEach(info => {
                     doc.setFontSize(8);
                     doc.setFont("Helvetica", "bold");
                     doc.text(info.label, leftMargin + 100, yPoss);
@@ -2004,31 +1993,79 @@
                     yPoss += 7;
                 });
 
-                yPoss = (yPos + 90);
+                yPoss += 15;
 
-                const typeInfo = [
-                    { label: "Type d'admission", value: type.nom },
-                    { label: "Nature d'admission", value: nature.nom },
-                    { label: "Chambre Occupée", value: "CH-"+chambre.code },
-                    { label: "Lit Occupée", value: "LIT-"+lit.code+"/"+lit.type },
-                    { label: "Prix", value: chambre.prix+" Fcfa" },
-                ];
+                const donneeTables = soins;
+                let yPossT = yPoss + 10; // Initialisation de la position Y pour le tableau des soins
 
-                typeInfo.forEach(info => {
-                    doc.setFontSize(8);
-                    doc.setFont("Helvetica", "bold");
-                    doc.text(info.label, leftMargin, yPoss);
-                    doc.setFont("Helvetica", "normal");
-                    doc.text(": " + info.value, leftMargin + 35, yPoss);
-                    yPoss += 7;
+                // Tableau dynamique pour les détails des soins infirmiers
+                doc.autoTable({
+                    startY: yPossT,
+                    head: [['N°', 'Nom du Soins Infirmiers', 'Prix Unitaire']],
+                    body: donneeTables.map((item, index) => [
+                        index + 1,
+                        item.nom_si,
+                        item.prix_si + " Fcfa",
+                    ]),
+                    theme: 'striped',
                 });
 
-                yPoss = (yPos + 90);
+                // Récupérer la position Y de la dernière ligne du tableau
+                yPoss = doc.autoTable.previous.finalY || yPossT + 10;
+                yPoss = yPoss + 5;
+                // Ajout des totaux
+                const finalInfos = [];
+                if (soins.length > 0) {
+                    finalInfos.push({ label: "Total Soins", value: formatPriceT(soinspatient.stotal) });
+                }
+                finalInfos.forEach(info => {
+                    doc.setFontSize(11);
+                    doc.setFont("Helvetica", "bold");
+                    doc.text(info.label, leftMargin + 95, yPoss);
+                    doc.setFont("Helvetica", "normal");
+                    doc.text(": " + info.value + " Fcfa", leftMargin + 125, yPoss);
+                    yPoss += 7; // Espacement pour la prochaine ligne
+                });
+
+                // Répéter le processus pour les produits
+                const donneeTable = produit;
+                yPossT = yPoss + 10; // Ajuster la position Y pour le tableau des produits
+                doc.autoTable({
+                    startY: yPossT,
+                    head: [['N°', 'Nom du produit utilisé', 'Quantité', 'Prix Unitaire', 'Montant']],
+                    body: donneeTable.map((item, index) => [
+                        index + 1,
+                        item.nom_pro,
+                        item.quantite_pro,
+                        item.prix_pro + " Fcfa",
+                        item.montant + " Fcfa",
+                    ]),
+                    theme: 'striped',
+                });
+
+                // Position Y après le tableau des produits
+                yPoss = doc.autoTable.previous.finalY || yPossT + 10;
+                yPoss = yPoss + 5;
+                // Ajout des totaux pour les produits
+                const finalInfo = [];
+                if (produit.length > 0) {
+                    finalInfo.push({ label: "Total Produit", value: formatPriceT(soinspatient.prototal) });
+                }
+                finalInfo.forEach(info => {
+                    doc.setFontSize(11);
+                    doc.setFont("Helvetica", "bold");
+                    doc.text(info.label, leftMargin + 120, yPoss);
+                    doc.setFont("Helvetica", "normal");
+                    doc.text(": " + info.value + " Fcfa", leftMargin + 150, yPoss);
+                    yPoss += 7; // Espacement pour la prochaine ligne
+                });
+
+                yPoss = yPoss + 10;
 
                 const compteInfo = [
-                    { label: "Part assurance", value: hopital.part_assurance+" Fcfa"},
-                    { label: "Part Patient", value: hopital.part_patient+" Fcfa"},
-                    { label: "Remise", value: hopital.remise ? hopital.remise + " Fcfa" : "0 Fcfa" }
+                    { label: "Part assurance", value: soinspatient.part_assurance+" Fcfa"},
+                    { label: "Part Patient", value: soinspatient.part_patient+" Fcfa"},
+                    { label: "Remise", value: soinspatient.remise ? soinspatient.remise + " Fcfa" : "0 Fcfa" }
                 ];
 
                 if (patient.taux !== null) {
@@ -2043,81 +2080,12 @@
                     doc.text(": " + info.value, leftMargin + 150, yPoss);
                     yPoss += 7;
                 });
-
-                yPoss += 1;
-
                 doc.setFontSize(11);
                 doc.setFont("Helvetica", "bold");
-                doc.text('Total Chambre', leftMargin + 120, yPoss);
+                doc.text('Total', leftMargin + 120, yPoss);
                 doc.setFont("Helvetica", "bold");
-                doc.text(": "+hopital.montant+" Fcfa", leftMargin + 150, yPoss);
+                doc.text(": "+soinspatient.montant+" Fcfa", leftMargin + 150, yPoss);
 
-                const donneeTable = produit;
-                // Using autoTable to add a dynamic table for hospital stay details
-                if (donneeTable.length > 0) {
-                    yPossT = yPoss + 10;
-                    doc.autoTable({
-                        startY: yPossT, // Ajustez cette valeur pour le placer correctement sur la page
-                        head: [['N°','Nom du produit utilisé', 'Quantité', 'Prix Unitaire', 'Montant']], // En-têtes du tableau
-                        body: donneeTable.map((item, index) => [
-                            index + 1,
-                            item.nom_produit, // Nom du produit
-                            item.quantite, // Quantité
-                            item.prix_produit+" Fcfa", // Prix unitaire
-                            item.montant+" Fcfa", // Montant (quantité * prix unitaire)
-                        ]), // Remplace les lignes par les données dynamiques
-                        theme: 'striped', // Vous pouvez changer le thème en plain, grid, etc.
-                        // headStyles: { fillColor: [255, 0, 0] }, // En-tête en rouge si nécessaire
-                    });
-
-                    // Utiliser la position Y de la dernière ligne du tableau
-                    const finalY = doc.autoTable.previous.finalY || yPossT + 10;
-
-                    // Ajuster yPoss à la fin du tableau pour le placement des totaux
-                    yPoss = finalY + 10;
-
-                    // Déclarer finalInfo comme un tableau vide
-                    const finalInfo = [];
-                    
-                    // Ajouter l'entrée "Total Produit" si produit.length > 0
-                    if (produit.length > 0) {
-                        finalInfo.push({ label: "Total Produit", value: hopital.montant_soins });
-                    }
-                    
-                    // Ajouter l'entrée "Montant a payer"
-                    finalInfo.push({ label: "Montant a payer", value: hopital.total_final });
-                    
-                    // Boucler à travers finalInfo pour afficher les informations
-                    finalInfo.forEach(info => {
-                        doc.setFontSize(11);
-                        doc.setFont("Helvetica", "bold");
-                        doc.text(info.label, leftMargin + 120, yPoss);
-                        doc.setFont("Helvetica", "normal");
-                        doc.text(": " + info.value + " Fcfa", leftMargin + 150, yPoss);
-                        yPoss += 7;
-                    });
-
-                } else {
-
-                    yPoss += 7;
-                    // Déclarer finalInfo comme un tableau vide
-                    const finalInfo = [];
-                    // Ajouter l'entrée "Total Produit" si produit.length > 0
-                    if (produit.length > 0) {
-                        finalInfo.push({ label: "Total Produit", value: hopital.montant_soins });
-                    }
-                    // Ajouter l'entrée "Montant a payer"
-                    finalInfo.push({ label: "Montant a payer", value: hopital.total_final });
-                    // Boucler à travers finalInfo pour afficher les informations
-                    finalInfo.forEach(info => {
-                        doc.setFontSize(11);
-                        doc.setFont("Helvetica", "bold");
-                        doc.text(info.label, leftMargin + 120, yPoss);
-                        doc.setFont("Helvetica", "normal");
-                        doc.text(": " + info.value + " Fcfa", leftMargin + 150, yPoss);
-                        yPoss += 7;
-                    });
-                }
 
             }
 

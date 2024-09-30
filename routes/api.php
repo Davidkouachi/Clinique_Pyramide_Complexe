@@ -112,6 +112,8 @@ Route::middleware(['statutchambre'])->group(function () {
 	Route::get('/list_cons_all', [ApilistController::class, 'list_cons_all']);
 	Route::get('/list_typesoins', [ApilistController::class, 'list_typesoins']);
 	Route::get('/list_soinsIn', [ApilistController::class, 'list_soinsIn']);
+	Route::get('/list_soinsam_all/{statut}', [ApilistController::class, 'list_soinsam_all']);
+	Route::get('/detail_soinam/{id}', [ApilistController::class, 'detail_soinam']);
 	// liste debut
 
 	// statistique debut

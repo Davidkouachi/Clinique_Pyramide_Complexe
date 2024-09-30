@@ -20,6 +20,7 @@ class soinspatient extends Model
         'libelle',
         'patient_id',
         'facture_id',
+        'typesoins_id',
     ];
 
     public function patient()
@@ -30,5 +31,10 @@ class soinspatient extends Model
     public function facture()
     {
         return $this->belongsTo(facture::class, 'facture_id');
+    }
+
+    public function typesoins()
+    {
+        return $this->belongsTo(typesoins::class, 'typesoins_id');
     }
 }

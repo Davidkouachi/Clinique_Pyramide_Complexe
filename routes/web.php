@@ -77,9 +77,12 @@ Route::middleware(['auth','statutchambre'])->group(function () {
 	Route::get('/Produit Pharmacie', [Controller::class, 'produit_new'])->name('produit_new');
 
 	Route::get('/Soins Ambulantoires', [Controller::class, 'soinsam'])->name('soinsam');
+	Route::get('/Soins Ambulatoire Caisse', [Controller::class, 'encaissement_soinsam'])->name('encaissement_soinsam');
+	Route::get('/Soins Ambulatoire Liste Caisse', [Controller::class, 'liste_caisse_soinsam'])->name('liste_caisse_soinsam');
 
 	Route::get('/Type de soins',[Controller::class,'typesoins_new'])->name('typesoins_new');
 	Route::get('/Soins Infirmiers', [Controller::class, 'soinsinfirmier_new'])->name('soinsinfirmier_new');
+
 
 
 	Route::get('/Examen', [Controller::class, 'examen'])->name('examen');

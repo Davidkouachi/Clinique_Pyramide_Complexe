@@ -37,6 +37,9 @@ use App\Models\produit;
 use App\Models\soinshopital;
 use App\Models\soinsinfirmier;
 use App\Models\typesoins;
+use App\Models\soinspatient;
+use App\Models\sp_produit;
+use App\Models\sp_soins;
 
 class ApilistController extends Controller
 {
@@ -375,6 +378,96 @@ class ApilistController extends Controller
                         ->get();
 
         return response()->json(['soinsin' => $soinsin]);
+    }
+
+    public function list_soinsam_all($statut)
+    {
+        $spatientQuery = soinspatient::Join('patients', 'patients.id', '=', 'soinspatients.patient_id')
+                       ->Join('typesoins', 'typesoins.id', '=', 'soinspatients.typesoins_id')
+                       ->select(
+                            'soinspatients.*', 
+                            'patients.np as patient', 
+                            'typesoins.nom as type')
+                       ->orderBy('created_at', 'desc');
+
+        if ($statut !== 'tous') {
+            $spatientQuery->where('soinspatients.statut', '=', $statut);
+        }
+
+        $spatient = $spatientQuery->paginate(15);
+
+        foreach ($spatient->items() as $value) {
+            $value->nbre_soins = sp_soins::where('soinspatient_id', '=', $value->id)->count() ?: 0;
+            $value->nbre_produit = sp_produit::where('soinspatient_id', '=', $value->id)->count() ?: 0;
+        }
+
+        return response()->json([
+            'spatient' => $spatient->items(), // Paginated data
+            'pagination' => [
+                'current_page' => $spatient->currentPage(),
+                'last_page' => $spatient->lastPage(),
+                'per_page' => $spatient->perPage(),
+                'total' => $spatient->total(),
+            ]
+        ]);
+    }
+
+    public function detail_soinam($id)
+    {
+        $soinspatient = soinspatient::find($id);
+
+        if ($soinspatient) { // Vérifiez que le patient a bien été trouvé
+            // Total des produits
+            $produittotal = sp_produit::where('soinspatient_id', '=', $soinspatient->id)
+                ->select(DB::raw('COALESCE(SUM(REPLACE(montant, ".", "") + 0), 0) as total'))
+                ->first();
+
+            $soinspatient->prototal = $produittotal->total ?? 0; // Attribuer le total des produits au patient
+
+            // Total des soins
+            $soinstotal = sp_soins::where('soinspatient_id', '=', $soinspatient->id)
+                ->select(DB::raw('COALESCE(SUM(REPLACE(montant, ".", "") + 0), 0) as total'))
+                ->first();
+
+            $soinspatient->stotal = $soinstotal->total ?? 0; // Attribuer le total des soins au patient
+        } 
+
+        $facture = facture::find($soinspatient->facture_id);
+
+        $patient = patient::leftjoin('assurances', 'assurances.id', '=', 'patients.assurance_id')
+        ->leftjoin('tauxes', 'tauxes.id', '=', 'patients.taux_id')
+        ->where('patients.id', '=', $soinspatient->patient_id)
+        ->select('patients.*', 'assurances.nom as assurance', 'tauxes.taux as taux')
+        ->first();
+
+        if ($patient) {
+            $patient->age = $patient->datenais ? Carbon::parse($patient->datenais)->age : 0;
+        }
+
+        $typesoins = typesoins::find($soinspatient->typesoins_id);
+
+        $soins = sp_soins::join('soinsinfirmiers', 'soinsinfirmiers.id', '=', 'sp_soins.soinsinfirmier_id')
+            ->where('sp_soins.soinspatient_id', '=', $soinspatient->id)
+            ->select('sp_soins.*', 'soinsinfirmiers.nom as nom_si', 'soinsinfirmiers.prix as prix_si')
+            ->get();
+
+
+        // Récupération des produits avec les informations associées
+        $produit = sp_produit::join('produits', 'produits.id', '=', 'sp_produits.produit_id')
+            ->where('sp_produits.soinspatient_id', '=', $soinspatient->id)
+            ->select('sp_produits.*', 'produits.nom as nom_pro', 'produits.prix as prix_pro', 'produits.quantite as quantite_pro')
+            ->get();
+
+        
+        return response()->json([
+            'soinspatient' => $soinspatient,
+            'facture' => $facture,
+            'patient' => $patient,
+            'soins' => $soins,
+            'produit' => $produit,
+            'typesoins' => $typesoins,
+        ]);
+
     }
 
 }
