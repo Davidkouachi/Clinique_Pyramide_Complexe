@@ -51,14 +51,9 @@ class Controller
         return view('soins_medicaux.hospitalisation.index');
     }
 
-    public function analyse()
+    public function examen()
     {
-        return view('soins_medicaux.analyse');
-    }
-
-    public function imagerie()
-    {
-        return view('soins_medicaux.imagerie');
+        return view('soins_medicaux.examen');
     }
 
     public function typeadmission_new()

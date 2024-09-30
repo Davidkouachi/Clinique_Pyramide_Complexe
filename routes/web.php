@@ -82,8 +82,7 @@ Route::middleware(['auth','statutchambre'])->group(function () {
 	Route::get('/Soins Infirmiers', [Controller::class, 'soinsinfirmier_new'])->name('soinsinfirmier_new');
 
 
-	Route::get('/Analyse', [Controller::class, 'analyse'])->name('analyse');
-	Route::get('/Imagerie', [Controller::class, 'imagerie'])->name('imagerie');
+	Route::get('/Examen', [Controller::class, 'examen'])->name('examen');
 
 // Route::middleware(['role:ADMINISTRATEUR'])->group(function () {
 

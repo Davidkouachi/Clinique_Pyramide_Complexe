@@ -101,8 +101,12 @@
                 <div class="sidebar-profile">
                     <img src="{{asset('assets/images/user8.png')}}" class="img-shadow img-3x me-3 rounded-5" alt="Hospital Admin Templates">
                     <div class="m-0">
-                        <h5 class="mb-1 profile-name text-nowrap text-truncate">{{Auth::user()->name}}</h5>
-                        <p class="m-0 small profile-name text-nowrap text-truncate">{{Auth::user()->email}}</p>
+                        <h5 class="mb-1 profile-name text-nowrap text-truncate">
+                            {{Auth::user()->name}}
+                        </h5>
+                        <p class="m-0 small profile-name text-nowrap text-truncate">
+                            {{Auth::user()->email}}
+                        </p>
                     </div>
                 </div>
                 <div class="sidebarMenuScroll">
@@ -136,25 +140,20 @@
                                 </li>
                             </ul>
                         </li>
-                        <li @if(request()->routeIs('hospitalisation','analyse','imagerie','soinsam')) class="active current-page treeview" @else class="treeview" @endif>
+                        <li @if(request()->routeIs('hospitalisation','examen','soinsam')) class="active current-page treeview" @else class="treeview" @endif>
                             <a href="#!">
                                 <i class="ri-first-aid-kit-fill"></i>
                                 <span class="menu-text">services médicaux</span>
                             </a>
                             <ul class="treeview-menu">
                                 <li>
-                                    <a @if(request()->routeIs('analyse')) class="text-primary" @endif href="{{route('analyse')}}">
-                                        Analyse (en cours)
+                                    <a @if(request()->routeIs('examen')) class="text-primary" @endif href="{{route('examen')}}">
+                                        Examen (en cours)
                                     </a>
                                 </li>
                                 <li>
                                     <a @if(request()->routeIs('hospitalisation')) class="text-primary" @endif href="{{route('hospitalisation')}}">
                                         Hospitalisation
-                                    </a>
-                                </li>
-                                <li>
-                                    <a @if(request()->routeIs('imagerie')) class="text-primary" @endif href="{{route('imagerie')}}">
-                                        Imagerie (en cours)
                                     </a>
                                 </li>
                                 <li>
