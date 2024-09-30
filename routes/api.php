@@ -47,6 +47,7 @@ Route::middleware(['statutchambre'])->group(function () {
 	Route::get('/add_soinshopital/{id}', [ApiinsertController::class, 'add_soinshopital']);
 	Route::get('/new_typesoins', [ApiinsertController::class, 'new_typesoins']);
 	Route::get('/new_soinsIn', [ApiinsertController::class, 'new_soinsIn']);
+	Route::get('/new_soinsam', [ApiinsertController::class, 'new_soinsam']);
 	// insert debut
 
 	// search debut

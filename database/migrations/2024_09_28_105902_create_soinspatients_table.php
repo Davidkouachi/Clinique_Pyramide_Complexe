@@ -13,6 +13,17 @@ return new class extends Migration
     {
         Schema::create('soinspatients', function (Blueprint $table) {
             $table->id();
+            $table->string('code')->index()->unique();
+            $table->string('statut')->index();
+            $table->string('part_assurance');
+            $table->string('part_patient');
+            $table->string('remise');
+            $table->string('montant');
+            $table->text('libelle')->nullable();
+            $table->unsignedBigInteger('patient_id');
+            $table->foreign('patient_id')->references('id')->on('patients')->onDelete('cascade');
+            $table->unsignedBigInteger('facture_id');
+            $table->foreign('facture_id')->references('id')->on('factures')->onDelete('cascade');
             $table->timestamps();
         });
     }

@@ -50,9 +50,6 @@
                 <div class="card-header" hidden >
                     <h5 class="card-title">Hospitalisation</h5>
                 </div>
-                <div class="p-2" id="div_alert" >
-                    
-                </div>
                 <div class="card-body" style="margin-top: -30px;">
                     <div class="custom-tabs-container">
                         <ul class="nav nav-tabs justify-content-center bg-primary bg-2" id="customTab4" role="tablist" style="background: rgba(0, 0, 0, 0.7);">
@@ -71,7 +68,6 @@
                         </ul>
                         <div class="tab-content" id="customTabContent">
                             <div class="tab-pane active show fade" id="twoAAA" role="tabpanel" aria-labelledby="tab-twoAAA">
-                                <div class="p-2" id="div_alert" ></div>
                                 <div class="card-header">
                                     <h5 class="card-title text-left">
                                         Nouveau Soins Infirmier
@@ -95,7 +91,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div id="div_selectSoins" >
+                                <div id="div_selectSoins" class="border border-2 mb-3 p-2" >
                                     <div class="card-header">
                                         <h5 class="card-title text-center">
                                             Choix des Soins Infirmiers
@@ -116,7 +112,10 @@
                                                 </div>
                                                 <div class="col-12" id="div_btn_soins" style="display: none;">
                                                     <div class="input-group mb-3">
-                                                        <input type="tel" class="form-control" id="montant_total_soins" placeholder="Montant Total">
+                                                        <span class="input-group-text">
+                                                            Montant Total
+                                                        </span>
+                                                        <input readonly type="tel" class="form-control" id="montant_total_soins" placeholder="Montant Total">
                                                         <span class="input-group-text">Fcfa</span>
                                                     </div>
                                                 </div>
@@ -124,7 +123,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div id="div_selectProduit" >
+                                <div id="div_selectProduit" class="border border-2 mb-3 p-2" >
                                     <div class="card-header">
                                         <h5 class="card-title text-center">
                                             Choix des Produits Utilisés
@@ -145,7 +144,10 @@
                                                 </div>
                                                 <div class="col-12" id="div_btn_pro" style="display: none;">
                                                     <div class="input-group mb-3">
-                                                        <input type="tel" class="form-control" id="montant_total_produit" placeholder="Montant Total">
+                                                        <span class="input-group-text">
+                                                            Montant Total
+                                                        </span>
+                                                        <input readonly type="tel" class="form-control" id="montant_total_produit" placeholder="Montant Total">
                                                         <span class="input-group-text">Fcfa</span>
                                                     </div>
                                                 </div>
@@ -153,14 +155,14 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div id="div_btn_calcul mt-3" >
+                                <div id="div_btn_calcul" class="border border-2 mb-3 p-2" >
                                     <div class="card-header">
                                         <h5 class="card-title text-center">
                                             Informations Montant
                                         </h5>
                                     </div>
                                     <div class="row gx-3 justify-content-center align-items-center" >
-                                        <div class="col-sm-12">
+                                        <div class="col-sm-12 mb-3">
                                         <div class="d-flex gap-2 justify-content-center">
                                             <button id="btn_calcul" class="btn btn-warning">
                                                 Calculer le montant final
@@ -168,24 +170,12 @@
                                         </div>
                                     </div>
                                     <div class="row gx-3" id="div_calcul" style="display: none;">
-                                        <div class="card-header text-center">
-                                            <h5 class="card-title">Information Caisse</h5>
-                                        </div>
                                         <div class="col-xxl-3 col-lg-4 col-sm-6">
                                             <div class="mb-3">
                                                 <label class="form-label">Taux</label>
                                                 <div class="input-group">
                                                     <input readonly type="tel" class="form-control" id="patient_taux">
                                                     <span class="input-group-text">%</span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-xxl-3 col-lg-4 col-sm-6">
-                                            <div class="mb-3">
-                                                <label class="form-label">Prix de la chambre</label>
-                                                <div class="input-group">
-                                                    <input readonly type="tel" class="form-control" id="montant_chambre">
-                                                    <span class="input-group-text">Fcfa</span>
                                                 </div>
                                             </div>
                                         </div>
@@ -222,7 +212,7 @@
                                             <div class="mb-3">
                                                 <label class="form-label">Remise</label>
                                                 <div class="input-group">
-                                                    <input type="tel" class="form-control" id="taux_remise">
+                                                    <input type="tel" class="form-control" id="taux_remise" value="0">
                                                     <span class="input-group-text">Fcfa</span>
                                                 </div>
                                             </div>
@@ -236,9 +226,18 @@
                                                 </select>
                                             </div>
                                         </div>
+                                        <div class="col-xxl-3 col-lg-4 col-sm-6" id="div_assurance_utiliser" style="display: none;">
+                                            <div class="mb-3">
+                                                <label class="form-label">Utilisé l'assurance</label>
+                                                <select class="form-select" id="assurance_utiliser">
+                                                    <option selected value="oui">Oui</option>
+                                                    <option value="non">Non</option>
+                                                </select>
+                                            </div>
+                                        </div>
                                         <div class="col-sm-12">
                                             <div class="d-flex gap-2 justify-content-center">
-                                                <button id="btn_eng_hosp" class="btn btn-success">
+                                                <button id="btn_eng" class="btn btn-success">
                                                     Enregistrer
                                                 </button>
                                             </div>
@@ -252,6 +251,7 @@
                                     </div>
                                     <div class="p-2" id="div_alert_calcul" ></div>
                                     </div>
+                                    <div class="p-2" id="div_alert" ></div>
                                 </div>
                             </div>
                             <div class="tab-pane fade " id="oneAAA" role="tabpanel" aria-labelledby="tab-oneAAA">
@@ -446,6 +446,11 @@
         Name_atient();
         select_typesoins();
 
+        
+        document.getElementById("btn_calcul").addEventListener("click", CalculMontant);
+        document.getElementById("assurance_utiliser").addEventListener("change", CalculMontant);
+        document.getElementById("btn_eng").addEventListener("click", Eng_sa);
+
 
         function Name_atient() {
             $.ajax({
@@ -460,9 +465,12 @@
                     const suggestionsDiv = document.getElementById('suggestions_patient');
                     const patient_taux = document.getElementById('patient_taux');
                     const appliq_remise = document.getElementById('appliq_remise');
+                    
+                    let patientSelected = false;  // Variable to track if a patient was selected
 
                     // Event listener for input typing
                     input.addEventListener('input', function() {
+
                         const searchTerm = input.value.toLowerCase();
                         
                         // Clear previous suggestions
@@ -486,27 +494,28 @@
                                 // Assign patient rate (taux)
                                 patient_taux.value = item.taux ? item.taux : 0;
 
-                                // Cacher ou afficher l'option "Assurance" selon le taux
                                 if (patient_taux.value == 0) {
-                                    for (let i = 0; i < appliq_remise.options.length; i++) {
-                                        if (appliq_remise.options[i].value === 'assurance') {
-                                            appliq_remise.options[i].style.display = 'none'; // Cacher l'option
-                                        }
-                                    }
-                                } else {
-                                    for (let i = 0; i < appliq_remise.options.length; i++) {
-                                        if (appliq_remise.options[i].value === 'assurance') {
-                                            appliq_remise.options[i].style.display = 'block'; // Afficher l'option
-                                        }
-                                    }
+                                    document.getElementById('div_assurance_utiliser').style.display = 'none';
+                                }else{
+                                   document.getElementById('div_assurance_utiliser').style.display = 'block'; 
                                 }
 
+                                patientSelected = true; // Mark patient as selected
+                                document.getElementById('div_calcul').style.display = 'none';
                             });
                             suggestionsDiv.appendChild(suggestion);
                         });
 
                         // Show/hide suggestions based on results
                         suggestionsDiv.style.display = filteredData.length > 0 ? 'block' : 'none';
+
+                        // If the input is modified, reset matricule_patient and taux
+                        if (patientSelected) {
+                            matricule_patient.value = '';  // Clear matricule
+                            patient_taux.value = '';  // Clear taux
+                            patientSelected = false; // Reset patient selection flag
+                            document.getElementById('div_calcul').style.display = 'none';
+                        }
                     });
 
                     // Hide suggestions when clicking outside
@@ -517,88 +526,88 @@
                     });
                 },
                 error: function() {
-                    // Gérer l'erreur
+                    // Handle error
                 }
             });
         }
 
 
-        function rech_dossier()
-        {
-            const matricule_patient = document.getElementById("matricule_patient").value;
+        // function rech_dossier()
+        // {
+        //     const matricule_patient = document.getElementById("matricule_patient").value;
 
-            if(!matricule_patient.trim()){
-                showAlert('warning', 'Veuillez saisie le nom d\'un du patient.');
-                return false;
-            }
+        //     if(!matricule_patient.trim()){
+        //         showAlert('warning', 'Veuillez saisie le nom d\'un du patient.');
+        //         return false;
+        //     }
 
-            // Créer l'élément de préchargement
-            var preloader_ch = `
-                <div id="preloader_ch">
-                    <div class="spinner_preloader_ch"></div>
-                </div>
-            `;
+        //     // Créer l'élément de préchargement
+        //     var preloader_ch = `
+        //         <div id="preloader_ch">
+        //             <div class="spinner_preloader_ch"></div>
+        //         </div>
+        //     `;
 
-            // Ajouter le préchargeur au body
-            document.body.insertAdjacentHTML('beforeend', preloader_ch);
+        //     // Ajouter le préchargeur au body
+        //     document.body.insertAdjacentHTML('beforeend', preloader_ch);
 
-            $.ajax({
-                url: '/api/rech_patient_hos/' + matricule_patient,
-                method: 'GET',
-                success: function(response) {
-                    var preloader = document.getElementById('preloader_ch');
+        //     $.ajax({
+        //         url: '/api/rech_patient_hos/' + matricule_patient,
+        //         method: 'GET',
+        //         success: function(response) {
+        //             var preloader = document.getElementById('preloader_ch');
 
-                    if (preloader) {
-                        preloader.remove();
-                    }
+        //             if (preloader) {
+        //                 preloader.remove();
+        //             }
 
-                    if(response.existep) {
+        //             if(response.existep) {
 
-                        showAlert('warning', 'Ce patient n\'existe pas.');
-                        return false;
+        //                 showAlert('warning', 'Ce patient n\'existe pas.');
+        //                 return false;
 
-                    } else if(response.existe) {
+        //             } else if(response.existe) {
 
-                        showAlert('warning', 'Ce patient est déjà hospitaliser.');
-                        document.getElementById('patient').value = "" ;
-                        document.getElementById("matricule_patient").value = "" ;
-                        return false;
+        //                 showAlert('warning', 'Ce patient est déjà hospitaliser.');
+        //                 document.getElementById('patient').value = "" ;
+        //                 document.getElementById("matricule_patient").value = "" ;
+        //                 return false;
 
-                    } else if (response.success) {
-                        showAlert('success', 'Patient trouvé.');
+        //             } else if (response.success) {
+        //                 showAlert('success', 'Patient trouvé.');
 
-                        const patient_taux = document.getElementById('patient_taux');
-                        patient_taux.value = '';
-                        patient_taux.value = response.patient.taux ? response.patient.taux : 0;
+        //                 const patient_taux = document.getElementById('patient_taux');
+        //                 patient_taux.value = '';
+        //                 patient_taux.value = response.patient.taux ? response.patient.taux : 0;
 
-                        const appliq_remise = document.getElementById('appliq_remise');
+        //                 const appliq_remise = document.getElementById('appliq_remise');
 
-                        // Cacher l'option "Assurance" si le taux est égal à 0
-                        if (patient_taux.value == 0) {
-                            for (let i = 0; i < appliq_remise.options.length; i++) {
-                                if (appliq_remise.options[i].value === 'assurance') {
-                                    appliq_remise.options[i].style.display = 'none'; // Cacher l'option
-                                }
-                            }
-                        } else {
-                            // Afficher l'option "Assurance" si le taux est différent de 0
-                            for (let i = 0; i < appliq_remise.options.length; i++) {
-                                if (appliq_remise.options[i].value === 'assurance') {
-                                    appliq_remise.options[i].style.display = 'block'; // Afficher l'option
-                                }
-                            }
-                        }
-                    }
-                },
-                error: function() {
-                    var preloader = document.getElementById('preloader_ch');
-                    if (preloader) {
-                        preloader.remove();
-                    }
-                    showAlert('danger', 'Une erreur est survenue lors de la recherche.');
-                }
-            });
-        }
+        //                 // Cacher l'option "Assurance" si le taux est égal à 0
+        //                 if (patient_taux.value == 0) {
+        //                     for (let i = 0; i < appliq_remise.options.length; i++) {
+        //                         if (appliq_remise.options[i].value === 'assurance') {
+        //                             appliq_remise.options[i].style.display = 'none'; // Cacher l'option
+        //                         }
+        //                     }
+        //                 } else {
+        //                     // Afficher l'option "Assurance" si le taux est différent de 0
+        //                     for (let i = 0; i < appliq_remise.options.length; i++) {
+        //                         if (appliq_remise.options[i].value === 'assurance') {
+        //                             appliq_remise.options[i].style.display = 'block'; // Afficher l'option
+        //                         }
+        //                     }
+        //                 }
+        //             }
+        //         },
+        //         error: function() {
+        //             var preloader = document.getElementById('preloader_ch');
+        //             if (preloader) {
+        //                 preloader.remove();
+        //             }
+        //             showAlert('danger', 'Une erreur est survenue lors de la recherche.');
+        //         }
+        //     });
+        // }
 
         function showAlert(type, message) {
 
@@ -747,7 +756,7 @@
 
         function updateMontantTotalSoins() {
             let montantTotal = 0;
-            const selects = document.querySelectorAll('.produit-select');
+            const selects = document.querySelectorAll('.soins-select');
             
             selects.forEach(select => {
                 const selectedOption = select.options[select.selectedIndex];
@@ -983,7 +992,7 @@
             input = input.replace(',', '.');
 
             // Convert to float and round to the nearest whole number
-            let number = Math.round(parseFloat(input));
+            let number = Math.round(parseInt(input));
             if (isNaN(number)) {
                 return '';
             }
@@ -1006,55 +1015,318 @@
 
         // -----------------------------------------------------
 
-        document.getElementById('btn_eng_produit').addEventListener('click', () => {
-            const selections = [];
-            const selects = document.querySelectorAll('.produit-select');
-            let formIsValid = true;
+        function CalculMontant() {
 
-            selects.forEach(select => {
-                const selectedOption = select.options[select.selectedIndex];
-                const idProduit = selectedOption.value; // ID du produit sélectionné
-                const quantiteDemande = parseInt(select.parentElement.querySelector('#quantite_demande').value); // Quantité demandée
-                const prix = parseInt(selectedOption.dataset.prix); // Prix du produit
+            document.getElementById('div_loader').style.display = 'block';
+            document.getElementById('div_calcul').style.display = 'none';
+            document.getElementById('btn_calcul').style.display = 'none';
 
-                // Validation du produit et de la quantité
-                if (!idProduit) {  // Si aucun produit n'est sélectionné
-                    formIsValid = false;
-                    showAlertQauntite('danger', 'Veuillez sélectionner un produit.');
-                    return;  // Stopper l'exécution si une erreur est trouvée
-                }
+            const matricule_patient = document.getElementById('matricule_patient').value;
+            const typesoins_id = document.getElementById('typesoins_id').value;
 
-                if (isNaN(quantiteDemande) || quantiteDemande <= 0) { // Si la quantité n'est pas valide
-                    formIsValid = false;
-                    showAlertQauntite('danger', 'Veuillez entrer une quantité valide pour chaque produit.');
-                    return;  // Stopper l'exécution si une erreur est trouvée
-                }
-
-                // Si un produit est sélectionné, ajoutez-le au tableau
-                if (idProduit) {
-                    selections.push({
-                        id: idProduit,
-                        quantite: quantiteDemande,
-                        montant: prix * quantiteDemande // Calculer le montant
-                    });
-                }
-            });
-
-            if (!Array.isArray(selections) || selections.length === 0) {
-                showAlertQauntite('danger', 'Veuillez selectionner un produit.');
+            // 1. Vérifier si le matricule du patient est renseigné
+            if (matricule_patient === '') {
+                showAlertCalcul('warning', 'Veuillez sélectionner un Patient.');
+                resetLoaderAndButton();
                 return;
             }
 
-            if (!formIsValid) {
-                showAlertQauntite('danger', 'Veuillez selectionner un ou des produit(s).');
-                return; // Sortir de la fonction pour éviter le calcul
+            // 2. Vérifier si un type de soins a été sélectionné
+            if (typesoins_id === '') {
+                showAlertCalcul('warning', 'Veuillez sélectionner un Type de Soins.');
+                resetLoaderAndButton();
+                return;
             }
 
-            const montantTotal = document.getElementById('montant_total_produit').value;
-            const id = document.getElementById('id_hos_produit').value;
+            const contenuDiv = document.getElementById('contenu_soins');
+            if (contenuDiv.innerHTML.trim() == "") {
+                showAlertCalcul('warning', 'Aucun Soins Infirmier n\'a été sélectionné.');
+                resetLoaderAndButton();
+                return;
+            }
 
-            var modal = bootstrap.Modal.getInstance(document.getElementById('Add'));
-            modal.hide();
+            let formIsValid = true;
+            const selectionsSoins = [];
+            const selectionsProduits = [];
+
+            // 3. Vérifier si tous les soins infirmiers ont été sélectionnés
+            const soinsSelects = document.querySelectorAll('.soins-select');
+            const selectedSoinsIds = new Set();
+
+            soinsSelects.forEach(item => {
+                const selectedOption = item.options[item.selectedIndex];
+                const idSoins = selectedOption.value;
+                const montant = parseInt(selectedOption.dataset.prix);
+
+                if (!idSoins || isNaN(montant)) {
+                    showAlertCalcul('warning', 'Veuillez sélectionner un ou plusieurs Soins Infirmiers valides.');
+                    formIsValid = false;
+                    return;
+                }
+
+                if (selectedSoinsIds.has(idSoins)) {
+                    showAlertCalcul('warning', 'Vous avez sélectionné le même Soins Infirmier plusieurs fois.');
+                    formIsValid = false;
+                    return;
+                }
+
+                selectedSoinsIds.add(idSoins);
+                selectionsSoins.push({
+                    id: idSoins,
+                    montant: montant
+                });
+            });
+
+            const contenuDivPro = document.getElementById('contenu_produit');
+            if (contenuDivPro.innerHTML.trim() == "") {
+                showAlertCalcul('warning', 'Aucun Produit n\'a été sélectionné.');
+                resetLoaderAndButton();
+                return;
+            }
+
+            // 4. Vérifier si tous les produits ont été sélectionnés et validés
+            const produitsSelects = document.querySelectorAll('.produit-select');
+            const selectedProduitIds = new Set();
+
+            produitsSelects.forEach(select => {
+                const selectedOption = select.options[select.selectedIndex];
+                const idProduit = selectedOption.value;
+                const quantiteDemande = parseInt(select.parentElement.querySelector('#quantite_demande').value);
+                const prix = parseInt(selectedOption.dataset.prix);
+
+                if (!idProduit || isNaN(quantiteDemande) || quantiteDemande <= 0) {
+                    showAlertCalcul('warning', 'Veuillez sélectionner un ou plusieurs Produits avec une quantité valide.');
+                    formIsValid = false;
+                    return;
+                }
+
+                if (selectedProduitIds.has(idProduit)) {
+                    showAlertCalcul('warning', 'Vous avez sélectionné le même Produit plusieurs fois.');
+                    formIsValid = false;
+                    return;
+                }
+
+                selectedProduitIds.add(idProduit);
+                selectionsProduits.push({
+                    id: idProduit,
+                    quantite: quantiteDemande,
+                    montant: prix * quantiteDemande
+                });
+            });
+
+            if (!formIsValid) {
+                resetLoaderAndButton();
+                return;
+            }
+
+            // 5. Calcul du montant total des soins infirmiers et des produits
+            const montantTotalSoins = selectionsSoins.reduce((total, soin) => total + soin.montant, 0);
+            const montantTotalProduits = selectionsProduits.reduce((total, produit) => total + produit.montant, 0);
+            const montantTotal = montantTotalSoins + montantTotalProduits;
+
+            // 6. Calcul de la part de l'assurance et celle du patient
+            let taux = parseInt(document.getElementById('patient_taux').value) || 0;
+
+            const auS = document.getElementById('assurance_utiliser').value;
+            const appliq_remise = document.getElementById('appliq_remise');
+            const taux_remise = 0;
+
+            let montantAssurance = 0;
+            let montantPatient = 0;
+
+            if (auS === 'non' || taux === 0) {
+                taux = 0; // Exclure le taux d'assurance
+                appliq_remise.value = 'patient'; // Appliquer la remise au patient
+                appliq_remise.querySelector('option[value="assurance"]').style.display = 'none'; // Cacher l'option "Assurance"
+                
+                // Calcul du montant total payé uniquement par le patient
+                montantAssurance = 0;
+                montantPatient = Math.round(montantTotal);
+                
+            } else {
+                appliq_remise.querySelector('option[value="assurance"]').style.display = ''; // Afficher l'option "Assurance"
+
+                // Calcul de la part de l'assurance et du patient
+                montantAssurance = Math.round(montantTotal * (taux / 100));
+                montantPatient = Math.round(montantTotal - montantAssurance);
+            }
+
+            // Fonction pour formater les montants
+            const formatMontant = montant => montant.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+
+            // Afficher les résultats
+            document.getElementById('montant_total').value = formatMontant(montantTotal);
+            document.getElementById('montant_assurance_hidden').value = formatMontant(montantAssurance);
+            document.getElementById('montant_assurance').value = formatMontant(montantAssurance);
+            document.getElementById('montant_patient_hidden').value = formatMontant(montantPatient);
+            document.getElementById('montant_patient').value = formatMontant(montantPatient);
+
+            document.getElementById('taux_remise').value = 0;
+
+            document.getElementById('btn_calcul').style.display = 'block';
+            document.getElementById('div_calcul').style.display = 'flex';
+            document.getElementById('div_loader').style.display = 'none';
+        }
+
+        // Fonction pour réinitialiser l'affichage du loader et du bouton
+        function resetLoaderAndButton() {
+            document.getElementById('div_loader').style.display = 'none';
+            document.getElementById('btn_calcul').style.display = 'block';
+        }
+
+        document.getElementById('taux_remise').addEventListener('input', function() {
+            // Nettoyer la valeur entrée en supprimant les caractères non numériques
+            const rawValue = this.value.replace(/[^0-9]/g, ''); 
+            // Ajouter des points pour les milliers
+            const formattedValue = formatPrice(rawValue);
+            
+            // Mettre à jour la valeur du champ avec la valeur formatée
+            this.value = formattedValue;
+
+            const appliq_remise = document.getElementById('appliq_remise').value;
+            const assuranceUtiliser = document.getElementById('assurance_utiliser').value; // Récupérer la valeur 'oui' ou 'non'
+            
+            const montant_total = parseInt(document.getElementById('montant_total').value.replace(/\./g, '')) || 0;
+
+            if (assuranceUtiliser == 'non') {
+                // Si l'assurance n'est pas utilisée, montant_patient = montant_total
+                const montant_patient = montant_total;
+                const remise = parseInt(rawValue) || 0;
+
+                // Calculer le montant après remise
+                const montantRemis = montant_patient - remise;
+
+                // Afficher les valeurs formatées
+                document.getElementById('montant_patient_hidden').value = montant_patient; // Stocker le montant_patient
+                document.getElementById('montant_patient').value = formatPriceT(montantRemis);
+
+            } else if (appliq_remise == 'patient') {
+                // Si la remise s'applique au patient
+                const montant_patient = parseInt(document.getElementById('montant_patient_hidden').value.replace(/\./g, '')) || 0;
+                const remise = parseInt(rawValue) || 0;
+
+                // Calculer le montant après remise
+                const montantRemis = montant_patient - remise;
+                document.getElementById('montant_patient').value = formatPriceT(montantRemis);
+            
+            } else if (appliq_remise == 'assurance') {
+                // Si la remise s'applique à l'assurance
+                const montant_assurance = parseInt(document.getElementById('montant_assurance_hidden').value.replace(/\./g, '')) || 0;
+                const remise = parseInt(rawValue) || 0;
+
+                // Calculer le montant après remise
+                const montantRemis = montant_assurance - remise;
+                document.getElementById('montant_assurance').value = formatPriceT(montantRemis);
+            }
+        });
+
+
+        document.getElementById('appliq_remise').addEventListener('change', function() {
+
+            document.getElementById('montant_assurance').value = formatPrice(document.getElementById('montant_assurance_hidden').value);
+            document.getElementById('montant_patient').value = formatPrice(document.getElementById('montant_patient_hidden').value);
+
+            // Nettoyer la valeur entrée en supprimant les caractères non numériques sauf le point
+            const rawValue = document.getElementById('taux_remise').value.replace(/[^0-9]/g, ''); 
+
+            const assuranceUtiliser = document.getElementById('assurance_utiliser').value; // Récupérer la valeur 'oui' ou 'non'
+
+            if (this.value == 'patient' || assuranceUtiliser == 'non') {
+                // Convertir la valeur formatée en nombre pour les calculs
+                const montant_patient = parseInt(document.getElementById('montant_patient_hidden').value.replace(/\./g, '')) || 0;
+                const remise = parseInt(rawValue) || 0;
+
+                // Calculer le montant remis
+                const montantRemis = montant_patient - remise;
+                document.getElementById('montant_patient').value = formatPriceT(montantRemis);
+            } else if (assuranceUtiliser == 'oui') {
+                // Si l'assurance est utilisée (valeur 'oui'), calculer le montant remis pour l'assurance
+                const montant_assurance = parseInt(document.getElementById('montant_assurance_hidden').value.replace(/\./g, '')) || 0;
+                const remise = parseInt(rawValue) || 0;
+
+                // Calculer le montant remis
+                const montantRemis = montant_assurance - remise;
+                document.getElementById('montant_assurance').value = formatPriceT(montantRemis);
+            }
+        });
+
+        // -----------------------------------------------------
+
+        function Eng_sa() {
+
+            CalculMontant();
+            
+            const selectionsSoins = [];
+            const soinsSelects = document.querySelectorAll('.soins-select');
+            soinsSelects.forEach(item => {
+
+                const selectedOption = item.options[item.selectedIndex];
+                const idSoins = selectedOption.value;
+                const montant = parseInt(selectedOption.dataset.prix);
+
+                selectionsSoins.push({
+                    id: idSoins,
+                    montant: montant
+                });
+            });
+
+            const selectionsProduits = [];
+            const produitsSelects = document.querySelectorAll('.produit-select');
+            produitsSelects.forEach(select => {
+
+                const selectedOption = select.options[select.selectedIndex];
+                const idProduit = selectedOption.value;
+                const quantiteDemande = parseInt(select.parentElement.querySelector('#quantite_demande').value);
+                const prix = parseInt(selectedOption.dataset.prix);
+
+                selectionsProduits.push({
+                    id: idProduit,
+                    quantite: quantiteDemande,
+                    montant: prix * quantiteDemande
+                });
+            });
+
+            const matricule_patient = document.getElementById('matricule_patient').value;
+            const typesoins_id = document.getElementById('typesoins_id').value;
+
+            if (matricule_patient == '') {
+                showAlertCalcul('warning', 'Veuillez sélectionner un Patient.');
+                return false;
+            }
+
+            if (typesoins_id == '') {
+                showAlertCalcul('warning', 'Veuillez sélectionner un Type de Soins.');
+                return false;
+            }
+
+            var montant_assurance = document.getElementById('montant_assurance').value;
+            var taux_remise = document.getElementById('taux_remise').value;
+            var montant_total = document.getElementById('montant_total').value;
+            var montant_patient = document.getElementById('montant_patient').value;
+
+            // Validate monetary fields
+            if (!montant_assurance || 
+                !montant_total || 
+                !montant_patient) {
+                
+                showAlertCalcul('warning', 'Vérifier les montants SVP.');
+                return false; 
+            }
+
+            var montantAssuranceValue = parseFloat(montant_assurance);
+            var montantTotalValue = parseFloat(montant_total);
+            var montantPatientValue = parseFloat(montant_patient);
+
+            if (isNaN(montantAssuranceValue) || 
+                isNaN(montantTotalValue) || 
+                isNaN(montantPatientValue) || 
+                montantAssuranceValue < 0 || 
+                montantTotalValue < 0 || 
+                montantPatientValue < 0) {
+                
+                showAlertCalcul('warning', 'Vérifier les montants SVP (les montants ne doivent pas être négatifs).');
+                return false;
+            }
 
             var preloader_ch = `
                 <div id="preloader_ch">
@@ -1065,11 +1337,17 @@
             document.body.insertAdjacentHTML('beforeend', preloader_ch);
 
             $.ajax({
-                url: '/api/add_soinshopital/'+ id,
+                url: '/api/new_soinsam/',
                 method: 'GET',
                 data:{
-                    selections: selections,
-                    montantTotal: montantTotal,
+                    selectionsSoins: selectionsSoins,
+                    selectionsProduits: selectionsProduits,
+                    montantAssurance: montant_assurance,
+                    montantRemise: taux_remise,
+                    montantTotal: montant_total,
+                    montantPatient: montant_patient,
+                    matricule_patient: matricule_patient,
+                    typesoins_id: typesoins_id,
                 },
                 success: function(response) {
                     var preloader = document.getElementById('preloader_ch');
@@ -1096,99 +1374,7 @@
                     showAlert('danger', 'Une erreur est survenue lors de l\'enregistrement');
                 }
             });
-        });
-
-                        // -----------------------------------
-
-        document.getElementById('btn_calcul').addEventListener('click', () => {
-            const selectionsSoins = [];
-            const selectionsProduits = [];
-            let formIsValid = true;
-
-            // Récupération des soins infirmiers sélectionnés
-            const soinsSelects = document.querySelectorAll('.soins-select');
-            soinsSelects.forEach(select => {
-                const selectedOption = select.options[select.selectedIndex];
-                const idSoins = selectedOption.value; // ID du soin sélectionné
-                const montant = parseInt(select.dataset.montant.replace(/\./g, '')); // Supprimer les points
-
-                if (!idSoins) {  // Si aucun soin n'est sélectionné
-                    formIsValid = false;
-                    showAlert('danger', 'Veuillez sélectionner un soin infirmier.');
-                    return;  // Stopper l'exécution si une erreur est trouvée
-                }
-
-                // Si un soin est sélectionné, ajoutez-le au tableau
-                if (idSoins) {
-                    selectionsSoins.push({
-                        id: idSoins,
-                        montant: montant // Ajouter le montant sans les points
-                    });
-                }
-            });
-
-            // Récupération des produits sélectionnés
-            const produitsSelects = document.querySelectorAll('.produit-select');
-            produitsSelects.forEach(select => {
-                const selectedOption = select.options[select.selectedIndex];
-                const idProduit = selectedOption.value; // ID du produit sélectionné
-                const quantiteDemande = parseInt(select.parentElement.querySelector('#quantite_demande').value); // Quantité demandée
-                const prix = parseInt(selectedOption.dataset.prix.replace(/\./g, '')); // Supprimer les points
-
-                if (!idProduit) {  // Si aucun produit n'est sélectionné
-                    formIsValid = false;
-                    showAlert('danger', 'Veuillez sélectionner un produit.');
-                    return;  // Stopper l'exécution si une erreur est trouvée
-                }
-                if (isNaN(quantiteDemande) || quantiteDemande <= 0) { // Si la quantité n'est pas valide
-                    formIsValid = false;
-                    showAlert('danger', 'Veuillez entrer une quantité valide pour chaque produit.');
-                    return;  // Stopper l'exécution si une erreur est trouvée
-                }
-
-                // Si un produit est sélectionné, ajoutez-le au tableau
-                if (idProduit) {
-                    selectionsProduits.push({
-                        id: idProduit,
-                        quantite: quantiteDemande,
-                        montant: prix * quantiteDemande // Calculer le montant sans les points
-                    });
-                }
-            });
-
-            // Si le formulaire n'est pas valide, on ne continue pas
-            if (!formIsValid) {
-                return; // Sortir de la fonction pour éviter le calcul
-            }
-
-            // Calculer le montant total à partir des sélections
-            const montantTotalSoins = selectionsSoins.reduce((total, soin) => total + soin.montant, 0);
-            const montantTotalProduits = selectionsProduits.reduce((total, produit) => total + produit.montant, 0);
-
-            // Calculer le montant total
-            const montantTotal = montantTotalSoins + montantTotalProduits;
-
-            // Récupérer le taux d'assurance et le prix de la chambre
-            const taux = parseFloat(document.getElementById('patient_taux').value) || 0;
-            const montantChambre = parseFloat(document.getElementById('montant_chambre').value.replace(/\./g, '')) || 0; // Supprimer les points
-
-            // Calculer la part assurance et part patient
-            const montantAssurance = (montantTotal * taux / 100) + montantChambre;
-            const montantPatient = montantTotal - montantAssurance;
-
-            // Fonction pour formater les montants avec des points
-            const formatMontant = (montant) => {
-                return montant.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
-            };
-
-            // Affichage des montants dans les champs correspondants
-            document.getElementById('montant_total').value = formatMontant(montantTotal); // Montant total
-            document.getElementById('montant_assurance').value = formatMontant(montantAssurance); // Part assurance
-            document.getElementById('montant_patient').value = formatMontant(montantPatient); // Part patient
-
-            // Afficher la section de calculs si elle est cachée
-            document.getElementById('div_calcul').style.display = 'block';
-        });
+        };
 
         // -----------------------------------------------------
 

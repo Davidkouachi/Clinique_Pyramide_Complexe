@@ -38,6 +38,9 @@ use App\Models\produit;
 use App\Models\soinshopital;
 use App\Models\typesoins;
 use App\Models\soinsinfirmier;
+use App\Models\soinspatient;
+use App\Models\sp_produit;
+use App\Models\sp_soins;
 
 class ApiinsertController extends Controller
 {
@@ -716,6 +719,25 @@ class ApiinsertController extends Controller
         }
 
         return response()->json(['error' => true]);
+    }
+
+    public function new_soinsam(Request $request)
+    {
+        $selectionsSoins = $request->input('selectionsSoins');
+
+        // Vérifier si les sélections sont bien un tableau
+        if (!is_array($selectionsSoins) || empty($selectionsSoins)) {
+            return response()->json(['json' => true]);
+        }
+
+        $selectionsProduits = $request->input('selectionsProduits');
+
+        // Vérifier si les sélections sont bien un tableau
+        if (!is_array($selectionsProduits) || empty($selectionsProduits)) {
+            return response()->json(['json' => true]);
+        }
+        
+        return response()->json(['success' => true]);
     }
 
 }

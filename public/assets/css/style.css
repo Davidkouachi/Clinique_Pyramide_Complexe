@@ -99,7 +99,7 @@
     overflow-y: auto;
     position: absolute;
     background-color: #fff;
-    z-index: 100;
+    z-index: 1;
     width: 300px;
 }
 
