@@ -609,29 +609,12 @@
         //     });
         // }
 
-        function showAlert(type, message) {
-
-            var dynamicFields = document.getElementById("div_alert");
-            // Remove existing content
-            while (dynamicFields.firstChild) {
-                dynamicFields.removeChild(dynamicFields.firstChild);
-            }
-
-            var groupe = document.createElement("div");
-            groupe.className = `alert bg-${type} text-white alert-dismissible fade show`;
-            groupe.innerHTML = `
-                ${message}
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>   
-            `;
-            document.getElementById("div_alert").appendChild(groupe);
-
-            setTimeout(function() {
-                groupe.classList.remove("show");
-                groupe.classList.add("fade");
-                setTimeout(function() {
-                    groupe.remove();
-                }, 150); // Time for the fade effect to complete
-            }, 3000);
+        function showAlert(title, message, type) {
+            Swal.fire({
+                title: title,
+                text: message,
+                icon: type,
+            });
         }
 
         function showAlertCalcul(type, message) {
@@ -1026,14 +1009,14 @@
 
             // 1. Vérifier si le matricule du patient est renseigné
             if (matricule_patient === '') {
-                showAlertCalcul('warning', 'Veuillez sélectionner un Patient.');
+                showAlert("ALERT", "Veuillez sélectionner un Patient.", "warning");
                 resetLoaderAndButton();
                 return;
             }
 
             // 2. Vérifier si un type de soins a été sélectionné
             if (typesoins_id === '') {
-                showAlertCalcul('warning', 'Veuillez sélectionner un Type de Soins.');
+                showAlert("ALERT", "Veuillez sélectionner un Type de Soins.", "warning");
                 resetLoaderAndButton();
                 return;
             }

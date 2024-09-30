@@ -23,6 +23,8 @@
     ************ -->
     <!-- Scrollbar CSS -->
     <link rel="stylesheet" href="{{asset('assets/vendor/overlay-scroll/OverlayScrollbars.min.css')}}">
+
+    <script src="{{asset('sweetalert.js')}}"></script>
 </head>
 
 <body>
@@ -677,7 +679,7 @@
 
     {{-- <script src="assets/vendor/datatables/dataTables.min.js"></script>
     <script src="assets/vendor/datatables/dataTables.bootstrap.min.js"></script>
-    <script src="assets/vendor/datatables/custom/custom-datatables.js"></script> --}}
+    <script src="assets/vendor/datatables/custom/custom-datatables.js"></script> --}}   
 
     @if (session('success'))
         <div class="modal fade" id="success" tabindex="-1" aria-hidden="true">
