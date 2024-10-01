@@ -260,20 +260,6 @@
                                                 <i class="ri-arrow-right-s-line"></i>
                                             </a>
                                             <ul class="treeview-menu">
-                                                {{-- <li>
-                                                    <a href="#!">
-                                                        Soin
-                                                        <i class="ri-arrow-right-s-line"></i>
-                                                    </a>
-                                                    <ul class="treeview-menu">
-                                                        <li>
-                                                            <a href="#">Type de soin</a>
-                                                        </li>
-                                                        <li>
-                                                            <a href="#">Soin Infirmerie</a>
-                                                        </li>
-                                                    </ul>
-                                                <li> --}}
                                                 <li>
                                                     <a @if(request()->routeIs('chambre_new')) class="text-primary" @endif href="{{route('chambre_new')}}">Chambre</a>
                                                 </li>
@@ -291,7 +277,7 @@
                                                 </li>
                                             </ul>
                                         </li>
-                                        {{-- <li @if(request()->routeIs('assurance_new','taux_new','societe_new')) class="active" @endif >
+                                        <li @if(request()->routeIs('assurance_new','taux_new','societe_new')) class="active" @endif >
                                             <a href="#!">
                                                 Assurance (en cours)
                                                 <i class="ri-arrow-right-s-line"></i>
@@ -307,7 +293,7 @@
                                                     <a @if(request()->routeIs('societe_new')) class="text-primary" @endif href="{{route('societe_new')}}">Société assurer</a>
                                                 </li>
                                             </ul>
-                                        </li> --}}
+                                        </li>
                                         {{-- <li>
                                             <a href="#!">
                                                 Pharmacie
