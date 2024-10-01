@@ -150,12 +150,12 @@
                                             <input readonly type="tel" class="form-control" id="nbre_jour" value="1">
                                         </div>
                                     </div>
-                                    <div class="col-xxl-9 col-lg-4 col-sm-6">
+                                    {{-- <div class="col-xxl-9 col-lg-4 col-sm-6">
                                         <div class="mb-3">
                                             <label class="form-label">Motif</label>
                                             <input type="email" class="form-control" id="motif" placeholder="facultatif">
                                         </div>
-                                    </div>
+                                    </div> --}}
                                     <div class="col-sm-12">
                                         <div class="d-flex gap-2 justify-content-center">
                                             <button id="btn_calcul" class="btn btn-warning">
@@ -504,64 +504,6 @@
         document.getElementById("btn_refresh_table_hos").addEventListener("click", list_hos);
         document.getElementById("statut").addEventListener("change", list_hos);
 
-        // function Name_atient()
-        // {
-        //     $.ajax({
-        //         url: '/api/name_patient',
-        //         method: 'GET',
-        //         success: function(response) {
-        //             // Sample data array
-        //             const data = response.name;
-
-        //             // Elements
-        //             const input = document.getElementById('patient');
-        //             const matricule_patient = document.getElementById('matricule_patient');
-        //             const suggestionsDiv = document.getElementById('suggestions_patient');
-
-        //             // Event listener for input typing
-        //             input.addEventListener('input', function() {
-        //                 const searchTerm = input.value.toLowerCase();
-                        
-        //                 // Clear previous suggestions
-        //                 suggestionsDiv.style.display = 'block';
-        //                 suggestionsDiv.innerHTML = '';
-
-        //                 // Filter data based on input
-        //                 const filteredData = data.filter(item => item.np.toLowerCase().includes(searchTerm));
-
-        //                 // Display filtered data
-        //                 filteredData.forEach(item => {
-        //                     const suggestion = document.createElement('div');
-        //                     suggestion.innerText = item.np;
-        //                     suggestion.addEventListener('click', function() {
-        //                         // Set selected data in the input field
-        //                         input.value = `${item.np}`;
-        //                         matricule_patient.value = `${item.matricule}`;
-        //                         suggestionsDiv.innerHTML = ''; // Clear suggestions
-        //                         suggestionsDiv.style.display = 'none';
-
-        //                         rech_dossier();
-
-        //                     });
-        //                     suggestionsDiv.appendChild(suggestion);
-        //                 });
-
-        //                 // Show/hide suggestions based on results
-        //                 suggestionsDiv.style.display = filteredData.length > 0 ? 'block' : 'none';
-        //             });
-
-        //             // Hide suggestions when clicking outside
-        //             document.addEventListener('click', function(e) {
-        //                 if (!suggestionsDiv.contains(e.target) && e.target !== input) {
-        //                     suggestionsDiv.style.display = 'none';
-        //                 }
-        //             });
-        //         },
-        //         error: function() {
-        //         }
-        //     });
-        // }
-
         function Name_atient() {
             $.ajax({
                 url: '/api/name_patient',
@@ -637,131 +579,12 @@
             });
         }
 
-        // function rech_dossier()
-        // {
-        //     const matricule_patient = document.getElementById("matricule_patient").value;
-
-        //     if(!matricule_patient.trim()){
-        //         showAlert('warning', 'Veuillez saisie le nom d\'un du patient.');
-        //         return false;
-        //     }
-
-        //     // Créer l'élément de préchargement
-        //     var preloader_ch = `
-        //         <div id="preloader_ch">
-        //             <div class="spinner_preloader_ch"></div>
-        //         </div>
-        //     `;
-
-        //     // Ajouter le préchargeur au body
-        //     document.body.insertAdjacentHTML('beforeend', preloader_ch);
-
-        //     $.ajax({
-        //         url: '/api/rech_patient_hos/' + matricule_patient,
-        //         method: 'GET',
-        //         success: function(response) {
-        //             var preloader = document.getElementById('preloader_ch');
-
-        //             if (preloader) {
-        //                 preloader.remove();
-        //             }
-
-        //             if(response.existep) {
-
-        //                 showAlert('warning', 'Ce patient n\'existe pas.');
-        //                 return false;
-
-        //             } else if(response.existe) {
-
-        //                 showAlert('warning', 'Ce patient est déjà hospitaliser.');
-        //                 document.getElementById('patient').value = "" ;
-        //                 document.getElementById("matricule_patient").value = "" ;
-        //                 return false;
-
-        //             } else if (response.success) {
-        //                 showAlert('success', 'Patient trouvé.');
-
-        //                 const patient_taux = document.getElementById('patient_taux');
-        //                 patient_taux.value = '';
-        //                 patient_taux.value = response.patient.taux ? response.patient.taux : 0;
-
-        //                 const appliq_remise = document.getElementById('appliq_remise');
-
-        //                 // Cacher l'option "Assurance" si le taux est égal à 0
-        //                 if (patient_taux.value == 0) {
-        //                     for (let i = 0; i < appliq_remise.options.length; i++) {
-        //                         if (appliq_remise.options[i].value === 'assurance') {
-        //                             appliq_remise.options[i].style.display = 'none'; // Cacher l'option
-        //                         }
-        //                     }
-        //                 } else {
-        //                     // Afficher l'option "Assurance" si le taux est différent de 0
-        //                     for (let i = 0; i < appliq_remise.options.length; i++) {
-        //                         if (appliq_remise.options[i].value === 'assurance') {
-        //                             appliq_remise.options[i].style.display = 'block'; // Afficher l'option
-        //                         }
-        //                     }
-        //                 }
-        //             }
-        //         },
-        //         error: function() {
-        //             var preloader = document.getElementById('preloader_ch');
-        //             if (preloader) {
-        //                 preloader.remove();
-        //             }
-        //             showAlert('danger', 'Une erreur est survenue lors de la recherche.');
-        //         }
-        //     });
-        // }
-
-        function showAlert(type, message) {
-
-            var dynamicFields = document.getElementById("div_alert");
-            // Remove existing content
-            while (dynamicFields.firstChild) {
-                dynamicFields.removeChild(dynamicFields.firstChild);
-            }
-
-            var groupe = document.createElement("div");
-            groupe.className = `alert bg-${type} text-white alert-dismissible fade show`;
-            groupe.innerHTML = `
-                ${message}
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>   
-            `;
-            document.getElementById("div_alert").appendChild(groupe);
-
-            setTimeout(function() {
-                groupe.classList.remove("show");
-                groupe.classList.add("fade");
-                setTimeout(function() {
-                    groupe.remove();
-                }, 150); // Time for the fade effect to complete
-            }, 3000);
-        }
-
-        function showAlertCalcul(type, message) {
-
-            var dynamicFields = document.getElementById("div_alert_calcul");
-            // Remove existing content
-            while (dynamicFields.firstChild) {
-                dynamicFields.removeChild(dynamicFields.firstChild);
-            }
-
-            var groupe = document.createElement("div");
-            groupe.className = `alert bg-${type} text-white alert-dismissible fade show`;
-            groupe.innerHTML = `
-                ${message}
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>   
-            `;
-            document.getElementById("div_alert_calcul").appendChild(groupe);
-
-            setTimeout(function() {
-                groupe.classList.remove("show");
-                groupe.classList.add("fade");
-                setTimeout(function() {
-                    groupe.remove();
-                }, 150); // Time for the fade effect to complete
-            }, 3000);
+        function showAlert(title, message, type) {
+            Swal.fire({
+                title: title,
+                text: message,
+                icon: type,
+            });
         }
 
         function select_medecin()
@@ -967,11 +790,12 @@
             // Validate inputs
             if (patient_taux === '' || nbre_jour === '' || montant_chambre === '') {
 
-                showAlertCalcul('warning', 'Veuillez remplir tous les champs SVP.');
+                showAlert('Alert', 'Veuillez remplir tous les champs SVP.','warning');
 
                 document.getElementById('div_loader').style.display = 'none';
                 document.getElementById('div_calcul').style.display = 'none';
                 document.getElementById('btn_calcul').style.display = 'block';
+
                 return false;
             }
 
@@ -982,7 +806,7 @@
             if (isNaN(prixFloat) || isNaN(joursInt)) {
                 console.error('Invalid price or number of days');
                 montant_total.value = '';  // Clear the field if values are invalid
-                return;
+                return false;
             }
 
             // Calculate total price
@@ -1212,7 +1036,6 @@
             var id_lit = document.getElementById('id_lit').value;
             var date_entrer = document.getElementById('date_entrer').value;
             var date_sortie = document.getElementById('date_sortie').value;
-            var motif = document.getElementById('motif').value;
 
 
             if (!matricule_patient.trim() || 
@@ -1222,9 +1045,8 @@
                 !id_chambre.trim() || 
                 !id_lit.trim() || 
                 !date_entrer.trim() || 
-                !date_sortie.trim() || 
-                !motif.trim()) {
-                showAlertCalcul('warning', 'Tous les champs sont obligatoires.');
+                !date_sortie.trim()) {
+                showAlert('Alert', 'Tous les champs sont obligatoires.','warning');
                 return false; 
             }
 
@@ -1244,7 +1066,7 @@
                 !nbre_jour || 
                 !montant_chambre) {
                 
-                showAlertCalcul('warning', 'Vérifier les montants SVP.');
+                showAlert('Alert', 'Vérifier les montants SVP.','warning');
                 return false; 
             }
 
@@ -1262,7 +1084,7 @@
                 montantPatientValue < 0 || 
                 montantChambreValue < 0) {
                 
-                showAlertCalcul('warning', 'Vérifier les montants SVP (les montants ne doivent pas être négatifs).');
+                showAlert('Alert', 'Vérifier les montants SVP (les montants ne doivent pas être négatifs).','warning');
                 return false;
             }
 
@@ -1286,7 +1108,6 @@
                     id_lit: id_lit,
                     date_entrer: date_entrer,
                     date_sortie: date_sortie,
-                    motif: motif,
                     montant_assurance: montant_assurance,
                     taux_remise: taux_remise,
                     montant_total: montant_total,
@@ -1302,9 +1123,9 @@
                     }
                     
                     if (response.success) {
-                        showAlert('success', 'Patient Hospitaliser.');
+                        showAlert('Succès', 'Patient Hospitaliser.', 'success');
                     } else if (response.error) {
-                        showAlert('danger', 'Une erreur est survenue lors de l\'hospitalisation.');
+                        showAlert('Alert', 'Une erreur est survenue lors de l\'hospitalisation.','error');
                     }
 
                     list_hos();
@@ -1328,7 +1149,7 @@
                         preloader.remove();
                     }
 
-                    showAlert('danger', 'Une erreur est survenue lors de l\'hospitalisation.');
+                    showAlert('Alert', 'Une erreur est survenue lors de l\'hospitalisation.','error');
 
                     reset();
                     
@@ -1780,7 +1601,7 @@
                 const quantiteDisponible = parseInt(selectedOption.dataset.quantite);
                 
                 if (parseInt(quantiteInput.value) > quantiteDisponible) {
-                    showAlertQauntite('warning', `La quantité demandée ne peut pas dépasser ${quantiteDisponible}.`);
+                    showAlert('Alert', `La quantité demandée ne peut pas dépasser ${quantiteDisponible}.`,'warning');
                     quantiteInput.value = quantiteDisponible;
                 }else if(quantiteInput.value == ''){
                     quantiteInput.value = 1;
@@ -1820,31 +1641,6 @@
             }
         }
 
-        function showAlertQauntite(type, message) {
-
-            var dynamicFields = document.getElementById("div_alert_produit_qu");
-            // Remove existing content
-            while (dynamicFields.firstChild) {
-                dynamicFields.removeChild(dynamicFields.firstChild);
-            }
-
-            var groupe = document.createElement("div");
-            groupe.className = `alert bg-${type} text-white alert-dismissible fade show`;
-            groupe.innerHTML = `
-                ${message}
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>   
-            `;
-            document.getElementById("div_alert_produit_qu").appendChild(groupe);
-
-            setTimeout(function() {
-                groupe.classList.remove("show");
-                groupe.classList.add("fade");
-                setTimeout(function() {
-                    groupe.remove();
-                }, 150); // Time for the fade effect to complete
-            }, 3000);
-        }
-
         // Assurez-vous que ce code soit exécuté après l'ajout du bouton "Enregistrer"
         document.getElementById('btn_eng_produit').addEventListener('click', () => {
             const selections = [];
@@ -1860,14 +1656,14 @@
                 // Validation du produit et de la quantité
                 if (!idProduit) {  // Si aucun produit n'est sélectionné
                     formIsValid = false;
-                    showAlertQauntite('danger', 'Veuillez sélectionner un produit.');
-                    return;  // Stopper l'exécution si une erreur est trouvée
+                    showAlert('Alert', 'Veuillez sélectionner un produit.','warning');
+                    return false;  // Stopper l'exécution si une erreur est trouvée
                 }
 
                 if (isNaN(quantiteDemande) || quantiteDemande <= 0) { // Si la quantité n'est pas valide
                     formIsValid = false;
-                    showAlertQauntite('danger', 'Veuillez entrer une quantité valide pour chaque produit.');
-                    return;  // Stopper l'exécution si une erreur est trouvée
+                    showAlert('Alert', 'Veuillez entrer une quantité valide pour chaque produit.','warning');
+                    return false;  // Stopper l'exécution si une erreur est trouvée
                 }
 
                 // Si un produit est sélectionné, ajoutez-le au tableau
@@ -1881,12 +1677,12 @@
             });
 
             if (!Array.isArray(selections) || selections.length === 0) {
-                showAlertQauntite('danger', 'Veuillez selectionner un produit.');
+                showAlert('Alert', 'Veuillez selectionner un produit.','warning');
                 return;
             }
 
             if (!formIsValid) {
-                showAlertQauntite('danger', 'Veuillez selectionner un ou des produit(s).');
+                showAlert('Alert', 'Veuillez selectionner un ou des produit(s).','warning');
                 return; // Sortir de la fonction pour éviter le calcul
             }
 
@@ -1918,11 +1714,11 @@
                     }
                     
                     if (response.success) {
-                        showAlert('success', 'Produit Pharmacie ajouter.');
+                        showAlert('Succès', 'Produit Pharmacie ajouter.','success');
                     } else if (response.error) {
-                        showAlert('danger', 'Une erreur est survenue');
+                        showAlert('Alert', 'Une erreur est survenue','error');
                     } else if (response.json) {
-                        showAlert('danger', 'Invalid selections format');
+                        showAlert('Alert', 'Invalid selections format','error');
                     }
 
                     list_hos();
@@ -1933,7 +1729,7 @@
                         preloader.remove();
                     }
 
-                    showAlert('danger', 'Une erreur est survenue lors de l\'enregistrement');
+                    showAlert('Alert', 'Une erreur est survenue lors de l\'enregistrement','error');
                 }
             });
         });

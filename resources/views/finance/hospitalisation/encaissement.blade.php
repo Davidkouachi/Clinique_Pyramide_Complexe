@@ -54,7 +54,7 @@
                                         <th scope="col">Remise</th>
                                         <th scope="col">Montant Chambre</th>
                                         <th scope="col">Montant Soins</th>
-                                        <th scope="col">Total</th>
+                                        <th scope="col">Montant a payer</th>
                                         <th scope="col">Date de création</th>
                                         <th scope="col">Actions</th>
                                     </tr>
@@ -267,54 +267,12 @@
             return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
         }
 
-        function showAlertList(type, message) {
-
-            var dynamicFields = document.getElementById("div_alert_table");
-            // Remove existing content
-            while (dynamicFields.firstChild) {
-                dynamicFields.removeChild(dynamicFields.firstChild);
-            }
-
-            var groupe = document.createElement("div");
-            groupe.className = `alert bg-${type} text-white alert-dismissible fade show`;
-            groupe.innerHTML = `
-                ${message}
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>   
-            `;
-            document.getElementById("div_alert_table").appendChild(groupe);
-
-            setTimeout(function() {
-                groupe.classList.remove("show");
-                groupe.classList.add("fade");
-                setTimeout(function() {
-                    groupe.remove();
-                }, 150); // Time for the fade effect to complete
-            }, 3000);
-        }
-
-        function showAlertListD(type, message) {
-
-            var dynamicFields = document.getElementById("div_alert_tableD");
-            // Remove existing content
-            while (dynamicFields.firstChild) {
-                dynamicFields.removeChild(dynamicFields.firstChild);
-            }
-
-            var groupe = document.createElement("div");
-            groupe.className = `alert bg-${type} text-white alert-dismissible fade show`;
-            groupe.innerHTML = `
-                ${message}
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>   
-            `;
-            document.getElementById("div_alert_tableD").appendChild(groupe);
-
-            setTimeout(function() {
-                groupe.classList.remove("show");
-                groupe.classList.add("fade");
-                setTimeout(function() {
-                    groupe.remove();
-                }, 150); // Time for the fade effect to complete
-            }, 3000);
+        function showAlert(title, message, type) {
+            Swal.fire({
+                title: title,
+                text: message,
+                icon: type,
+            });
         }
 
         function formatDate(dateString) {
@@ -346,7 +304,7 @@
                 if (preloader) {
                     preloader.remove();
                 }
-                showAlertList('warning', 'Impossible d\'éffectuée le paiement.');
+                showAlert('Alert', 'Impossible d\'éffectuée le paiement.','error');
                 return false;
             }
 
@@ -363,7 +321,7 @@
 
                     if (response.success) {
 
-                        showAlertList('success', 'Paiement éffectuée.');
+                        showAlert('Succès', 'Paiement éffectuée.','success');
 
                         const hopital = response.hopital;
                         const facture = response.facture;
@@ -380,7 +338,7 @@
                         generatePDFInvoicePayer(hopital, facture, patient, nature, type, lit, chambre, user, produit);
 
                     } else if (response.error) {
-                        showAlertList('danger', 'Une erreur est survenue lors du paiement, Veuillez ressayer.');
+                        showAlert('Alert', 'Une erreur est survenue lors du paiement, Veuillez ressayer.','error');
                     }
 
                 },
@@ -389,7 +347,7 @@
                     if (preloader) {
                         preloader.remove();
                     }
-                    showAlertList('danger', 'Une erreur est survenue lors du paiement.');
+                    showAlert('Alert', 'Une erreur est survenue lors du paiement.','error');
                 }
             });
         }

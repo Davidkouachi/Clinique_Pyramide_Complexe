@@ -22,40 +22,6 @@
 <div class="app-body">
     <!-- Row starts -->
     <div class="row justify-content-center">
-        {{-- <div class="col-xxl-4 col-lg-4 col-md-6 col-sm-8">
-            <div class="card mb-3">
-                <div class="card-header">
-                    <h5 class="card-title">Formulaire Nouveau Produit</h5>
-                </div>
-                <div class="card-body" >
-                    <div class="row gx-3">
-                        <div class="col-12">
-                            <div class="mb-3">
-                                <label class="form-label">Numéro Consultation</label>
-                                <div class="input-group">
-                                    <span class="input-group-text">C-</span>
-                                    <input type="text" class="form-control" id="matricule_patient" placeholder="Saisie Obligatoire" maxlength="6">
-                                    <button id="btn_rech_num_dossier" class="btn btn-outline-success">
-                                        <i class="ri-search-line"></i>
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="col-12">
-                            <div class="d-flex gap-2 justify-content-start">
-                                <button type="reset" class="btn btn-outline-danger">
-                                    Rémise à zéro
-                                </button>
-                                <button type="submit" class="btn btn-success">
-                                    Enregistrer
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div> --}}
         <div class="col-12">
             <div class="card mb-3">
                 <div class="card-header d-flex align-items-center justify-content-between">
@@ -287,54 +253,12 @@
             return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
         }
 
-        function showAlertList(type, message) {
-
-            var dynamicFields = document.getElementById("div_alert_table");
-            // Remove existing content
-            while (dynamicFields.firstChild) {
-                dynamicFields.removeChild(dynamicFields.firstChild);
-            }
-
-            var groupe = document.createElement("div");
-            groupe.className = `alert bg-${type} text-white alert-dismissible fade show`;
-            groupe.innerHTML = `
-                ${message}
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>   
-            `;
-            document.getElementById("div_alert_table").appendChild(groupe);
-
-            setTimeout(function() {
-                groupe.classList.remove("show");
-                groupe.classList.add("fade");
-                setTimeout(function() {
-                    groupe.remove();
-                }, 150); // Time for the fade effect to complete
-            }, 3000);
-        }
-
-        function showAlertListD(type, message) {
-
-            var dynamicFields = document.getElementById("div_alert_tableD");
-            // Remove existing content
-            while (dynamicFields.firstChild) {
-                dynamicFields.removeChild(dynamicFields.firstChild);
-            }
-
-            var groupe = document.createElement("div");
-            groupe.className = `alert bg-${type} text-white alert-dismissible fade show`;
-            groupe.innerHTML = `
-                ${message}
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>   
-            `;
-            document.getElementById("div_alert_tableD").appendChild(groupe);
-
-            setTimeout(function() {
-                groupe.classList.remove("show");
-                groupe.classList.add("fade");
-                setTimeout(function() {
-                    groupe.remove();
-                }, 150); // Time for the fade effect to complete
-            }, 3000);
+        function showAlert(title, message, type) {
+            Swal.fire({
+                title: title,
+                text: message,
+                icon: type,
+            });
         }
 
         function formatDate(dateString) {
@@ -366,7 +290,7 @@
                 if (preloader) {
                     preloader.remove();
                 }
-                showAlertList('warning', 'Impossible d\'éffectuée le paiement.');
+                showAlert('Alert', 'Impossible d\'éffectuée le paiement.','error');
                 return false;
             }
 
@@ -383,8 +307,6 @@
 
                     if (response.success) {
 
-                        showAlertList('success', 'Paiement éffectuée.');
-
                         const patient = response.patient;
                         const typeacte = response.typeacte;
                         const user = response.user;
@@ -394,8 +316,10 @@
 
                         generatePDFInvoice(patient, user, typeacte, consultation);
 
+                        showAlert('Succès', 'Paiement éffectuée.','success');
+
                     } else if (response.error) {
-                        showAlertList('danger', 'Une erreur est survenue lors du paiement.');
+                        showAlert('Alert', 'Une erreur est survenue lors du paiement.','error');
                     }
 
                 },
@@ -404,7 +328,7 @@
                     if (preloader) {
                         preloader.remove();
                     }
-                    showAlertList('danger', 'Une erreur est survenue lors du paiement.');
+                    showAlert('Alert', 'Une erreur est survenue lors du paiement.','error');
                 }
             });
         }

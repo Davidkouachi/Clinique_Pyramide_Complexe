@@ -297,79 +297,12 @@
             });
         }
 
-        function showAlert(type, message) {
-
-            var dynamicFields = document.getElementById("div_alert");
-            // Remove existing content
-            while (dynamicFields.firstChild) {
-                dynamicFields.removeChild(dynamicFields.firstChild);
-            }
-
-            var groupe = document.createElement("div");
-            groupe.className = `alert bg-${type} text-white alert-dismissible fade show`;
-            groupe.innerHTML = `
-                ${message}
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>   
-            `;
-            document.getElementById("div_alert").appendChild(groupe);
-
-            setTimeout(function() {
-                groupe.classList.remove("show");
-                groupe.classList.add("fade");
-                setTimeout(function() {
-                    groupe.remove();
-                }, 150); // Time for the fade effect to complete
-            }, 3000);
-        }
-
-        function showAlertUpdate(type, message) {
-
-            var dynamicFields = document.getElementById("alert_update");
-            // Remove existing content
-            while (dynamicFields.firstChild) {
-                dynamicFields.removeChild(dynamicFields.firstChild);
-            }
-
-            var groupe = document.createElement("div");
-            groupe.className = `alert bg-${type} text-white alert-dismissible fade show`;
-            groupe.innerHTML = `
-                ${message}
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>   
-            `;
-            document.getElementById("alert_update").appendChild(groupe);
-
-            setTimeout(function() {
-                groupe.classList.remove("show");
-                groupe.classList.add("fade");
-                setTimeout(function() {
-                    groupe.remove();
-                }, 150); // Time for the fade effect to complete
-            }, 3000);
-        }
-
-        function showAlertList(type, message) {
-
-            var dynamicFields = document.getElementById("div_alert_table");
-            // Remove existing content
-            while (dynamicFields.firstChild) {
-                dynamicFields.removeChild(dynamicFields.firstChild);
-            }
-
-            var groupe = document.createElement("div");
-            groupe.className = `alert bg-${type} text-white alert-dismissible fade show`;
-            groupe.innerHTML = `
-                ${message}
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>   
-            `;
-            document.getElementById("div_alert_table").appendChild(groupe);
-
-            setTimeout(function() {
-                groupe.classList.remove("show");
-                groupe.classList.add("fade");
-                setTimeout(function() {
-                    groupe.remove();
-                }, 150); // Time for the fade effect to complete
-            }, 3000);
+        function showAlert(title, message, type) {
+            Swal.fire({
+                title: title,
+                text: message,
+                icon: type,
+            });
         }
 
         function eng() {
@@ -389,18 +322,18 @@
             }
 
             if (!nom.value.trim() || !email.value.trim() || !tel.value.trim() || !sexe.value.trim() || !adresse.value.trim() || !typeacte_id.value.trim()) {
-                showAlert('warning', 'Veuillez remplir tous les champs SVP.');
+                showAlert('Alert', 'Veuillez remplir tous les champs SVP.','warning');
                 return false;
             }
 
             var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
             if (!emailRegex.test(email.value.trim())) { 
-                showAlert('warning', 'Email incorrect.');
+                showAlert('Alert', 'Email incorrect.','warning');
                 return false;
             }
 
             if (tel.value.length !== 10 || (tel2.value.trim() && tel2.value.length !== 10)) {
-                showAlert('warning', 'Contact incomplet.');
+                showAlert('Alert', 'Contact incomplet.','warning');
                 return false;
             }
 
@@ -423,15 +356,15 @@
                     }
 
                     if (response.tel_existe) {
-                        showAlert('warning', 'Ce numéro de téléphone appartient déjà a un utilisateur.');
+                        showAlert('Alert', 'Ce numéro de téléphone appartient déjà a un utilisateur.','warning');
                     }else if (response.email_existe) {
-                        showAlert('warning', 'Cet email appartient déjà a un utilisateur.');
+                        showAlert('Alert', 'Cet email appartient déjà a un utilisateur.','warning');
                     }else if (response.nom_existe) {
-                        showAlert('warning', 'Cet utilisateur existe déjà.');
+                        showAlert('Alert', 'Cet utilisateur existe déjà.','warning');
                     } else if (response.success) {
-                        showAlert('success', 'utilisateur Enregistrée.');
+                        showAlert('Succès', 'utilisateur Enregistrée.','success');
                     } else if (response.error) {
-                        showAlert('danger', 'Une erreur est survenue lors de l\'enregistrement.');
+                        showAlert('Erreur', 'Une erreur est survenue lors de l\'enregistrement.','error');
                     }
 
                     nom.value = '';
@@ -452,7 +385,7 @@
                         preloader.remove();
                     }
 
-                    showAlert('danger', 'Une erreur est survenue lors de l\'enregistrement.');
+                    showAlert('Erreur', 'Une erreur est survenue lors de l\'enregistrement.','error');
                     
                     nom.value = '';
                     email.value = '';
@@ -594,20 +527,20 @@
 
             // Field validation
             if (!nom.value.trim() || !email.value.trim() || !tel.value.trim() || !sexe.value.trim() || !adresse.value.trim() || !typeacte_id.value.trim()) {
-                showAlertUpdate('warning', 'Veuillez remplir tous les champs SVP.');
+                showAlert('Alert', 'Veuillez remplir tous les champs SVP.','warning');
                 return false;
             }
 
             // Email validation
             var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
             if (!emailRegex.test(email.value.trim())) {
-                showAlertUpdate('warning', 'Email incorrect.');
+                showAlert('Alert', 'Email incorrect.','warning');
                 return false;
             }
 
             // Phone validation
             if (tel.value.length !== 10 || (tel2.value !== '' && tel2.value.length !== 10)) {
-                showAlertUpdate('warning', 'Contact incomplet.');
+                showAlert('Alert', 'Contact incomplet.','warning');
                 return false;
             }
 
@@ -638,15 +571,15 @@
                     document.getElementById('preloader_ch').remove();
 
                     if (response.tel_existe) {
-                        showAlertList('warning', 'Ce numéro de téléphone appartient déjà à un utilisateur.');
+                        showAlert('Alert', 'Ce numéro de téléphone appartient déjà à un utilisateur.','warning');
                     } else if (response.email_existe) {
-                        showAlertList('warning', 'Cet email appartient déjà à un utilisateur.');
+                        showAlert('Alert', 'Cet email appartient déjà à un utilisateur.','warning');
                     } else if (response.nom_existe) {
-                        showAlertList('warning', 'Cet utilisateur existe déjà.');
+                        showAlert('Alert', 'Cet utilisateur existe déjà.','warning');
                     } else if (response.success) {
-                        showAlertList('success', 'Utilisateur mis à jour avec succès.');
+                        showAlert('Succès', 'Utilisateur mis à jour avec succès.','success');
                     } else if (response.error) {
-                        showAlertList('danger', 'Une erreur est survenue lors de la mise à jour.');
+                        showAlert('Erreur', 'Une erreur est survenue lors de la mise à jour.','error');
                     }
 
                     // Refresh the list or any UI components
@@ -656,7 +589,7 @@
                 },
                 error: function() {
                     document.getElementById('preloader_ch').remove();
-                    showAlertList('danger', 'Erreur lors de la mise à jour.');
+                    showAlert('Erreur', 'Erreur lors de la mise à jour.','error');
                 }
             });
         }
@@ -695,7 +628,7 @@
                         preloader.remove();
                     }
 
-                    showAlertList('success', 'Chambre supprimer avec succès.');
+                    showAlert('Succès', 'Chambre supprimer avec succès.','success');
                     
                     list();
                     select();
@@ -707,7 +640,7 @@
                         preloader.remove();
                     }
 
-                    showAlertList('error', 'Erreur lors de la suppression de la chambre.');
+                    showAlert('Erreur', 'Erreur lors de la suppression de la chambre.','error');
                 }
             });
         }

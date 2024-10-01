@@ -55,7 +55,7 @@
                                         <th scope="col">Remise</th>
                                         <th scope="col">Montant Chambre</th>
                                         <th scope="col">Montant Soins</th>
-                                        <th scope="col">Total</th>
+                                        <th scope="col">Montant a payer</th>
                                         <th scope="col">Date de création</th>
                                         <th scope="col">Actions</th>
                                     </tr>

@@ -291,32 +291,23 @@
                                                 </li>
                                             </ul>
                                         </li>
-                                        <li @if(request()->routeIs('assurance_new','taux_new','societe_new')) class="active" @endif >
+                                        {{-- <li @if(request()->routeIs('assurance_new','taux_new','societe_new')) class="active" @endif >
                                             <a href="#!">
-                                                Assurance
+                                                Assurance (en cours)
                                                 <i class="ri-arrow-right-s-line"></i>
                                             </a>
                                             <ul class="treeview-menu">
                                                 <li>
                                                     <a @if(request()->routeIs('assurance_new')) class="text-primary" @endif href="{{route('assurance_new')}}">Assurance</a>
                                                 </li>
-                                                {{-- <li>
-                                                    <a href="{{route('produit_new')}}">Produit</a>
-                                                </li> --}}
                                                 <li>
                                                     <a @if(request()->routeIs('taux_new')) class="text-primary" @endif href="{{route('taux_new')}}">Taux</a>
                                                 </li>
-                                                {{-- <li>
-                                                    <a href="{{route('typeproduit_new')}}">Type Produit</a>
-                                                </li> --}}
-                                                {{-- <li>
-                                                    <a href="{{route('assureur_new')}}">Assureur</a>
-                                                </li> --}}
                                                 <li>
                                                     <a @if(request()->routeIs('societe_new')) class="text-primary" @endif href="{{route('societe_new')}}">Société assurer</a>
                                                 </li>
                                             </ul>
-                                        </li>
+                                        </li> --}}
                                         {{-- <li>
                                             <a href="#!">
                                                 Pharmacie

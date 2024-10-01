@@ -422,17 +422,28 @@ class ApilistController extends Controller
                 ->select(DB::raw('COALESCE(SUM(REPLACE(montant, ".", "") + 0), 0) as total'))
                 ->first();
 
-            $soinspatient->prototal = $produittotal->total ?? 0; // Attribuer le total des produits au patient
+            $soinspatient->prototal = $produittotal->total ?? 0;
 
             // Total des soins
             $soinstotal = sp_soins::where('soinspatient_id', '=', $soinspatient->id)
                 ->select(DB::raw('COALESCE(SUM(REPLACE(montant, ".", "") + 0), 0) as total'))
                 ->first();
 
-            $soinspatient->stotal = $soinstotal->total ?? 0; // Attribuer le total des soins au patient
+            $soinspatient->stotal = $soinstotal->total ?? 0;
         } 
 
         $facture = facture::find($soinspatient->facture_id);
+
+        $total_amount = intval(str_replace('.', '', $facture->montant_verser));
+        $paid_amount = intval(str_replace('.', '', $soinspatient->part_patient));
+        $remis_amount = intval(str_replace('.', '', $facture->montant_remis));
+
+        $remaining_amount = $total_amount - ($paid_amount + $remis_amount);
+
+        function formatWithPeriods($number) {
+        return number_format($number, 0, '', '.');
+        }
+        $facture->montant_restant = formatWithPeriods($remaining_amount);
 
         $patient = patient::leftjoin('assurances', 'assurances.id', '=', 'patients.assurance_id')
         ->leftjoin('tauxes', 'tauxes.id', '=', 'patients.taux_id')

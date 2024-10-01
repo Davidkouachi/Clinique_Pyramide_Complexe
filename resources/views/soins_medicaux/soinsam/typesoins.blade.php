@@ -165,79 +165,12 @@
         document.getElementById("updateBtn").addEventListener("click", updatee);
         document.getElementById("deleteBtn").addEventListener("click", deletee);
 
-        function showAlert(type, message) {
-
-            var dynamicFields = document.getElementById("div_alert");
-            // Remove existing content
-            while (dynamicFields.firstChild) {
-                dynamicFields.removeChild(dynamicFields.firstChild);
-            }
-
-            var groupe = document.createElement("div");
-            groupe.className = `alert bg-${type} text-white alert-dismissible fade show`;
-            groupe.innerHTML = `
-                ${message}
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>   
-            `;
-            document.getElementById("div_alert").appendChild(groupe);
-
-            setTimeout(function() {
-                groupe.classList.remove("show");
-                groupe.classList.add("fade");
-                setTimeout(function() {
-                    groupe.remove();
-                }, 150); // Time for the fade effect to complete
-            }, 3000);
-        }
-
-        function showAlertUpdate(type, message) {
-
-            var dynamicFields = document.getElementById("alert_update");
-            // Remove existing content
-            while (dynamicFields.firstChild) {
-                dynamicFields.removeChild(dynamicFields.firstChild);
-            }
-
-            var groupe = document.createElement("div");
-            groupe.className = `alert bg-${type} text-white alert-dismissible fade show`;
-            groupe.innerHTML = `
-                ${message}
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>   
-            `;
-            document.getElementById("alert_update").appendChild(groupe);
-
-            setTimeout(function() {
-                groupe.classList.remove("show");
-                groupe.classList.add("fade");
-                setTimeout(function() {
-                    groupe.remove();
-                }, 150); // Time for the fade effect to complete
-            }, 3000);
-        }
-
-        function showAlertTable(type, message) {
-
-            var dynamicFields = document.getElementById("div_alert_table");
-            // Remove existing content
-            while (dynamicFields.firstChild) {
-                dynamicFields.removeChild(dynamicFields.firstChild);
-            }
-
-            var groupe = document.createElement("div");
-            groupe.className = `alert bg-${type} text-white alert-dismissible fade show`;
-            groupe.innerHTML = `
-                ${message}
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>   
-            `;
-            document.getElementById("div_alert_table").appendChild(groupe);
-
-            setTimeout(function() {
-                groupe.classList.remove("show");
-                groupe.classList.add("fade");
-                setTimeout(function() {
-                    groupe.remove();
-                }, 150); // Time for the fade effect to complete
-            }, 3000);
+        function showAlert(title, message, type) {
+            Swal.fire({
+                title: title,
+                text: message,
+                icon: type,
+            });
         }
 
         function eng() 
@@ -252,7 +185,7 @@
             }
 
             if(!nom.value.trim()){
-                showAlert('warning', 'Veuillez remplir tous les champs SVP.');
+                showAlert('Alert', 'Veuillez remplir tous les champs SVP.','warning');
                 return false;
             }
 
@@ -275,11 +208,11 @@
                     }
 
                     if (response.existe) {
-                        showAlert('warning', 'Cet type existe déjà.');
+                        showAlert('Alert', 'Cet type existe déjà.','warning');
                     } else if (response.success) {
-                        showAlert('success', 'Type Soins Enregistrée.');
+                        showAlert('Succès', 'Type Soins Enregistrée.','success');
                     } else if (response.error) {
-                        showAlert('danger', 'Une erreur est survenue lors de l\'enregistrement.');
+                        showAlert('Erreur', 'Une erreur est survenue lors de l\'enregistrement.','error');
                     }
 
                     nom.value = '';
@@ -297,9 +230,9 @@
 
                     // Display a more specific error message
                     if (xhr.responseText) {
-                        showAlert('danger', `Erreur: ${xhr.responseText}`);
+                        showAlert('Erreur', `Erreur: ${xhr.responseText}`,'error');
                     } else {
-                        showAlert('danger', `Erreur: ${status} - ${error}`);
+                        showAlert('Erreur', `Erreur: ${status} - ${error}`,'error');
                     }
 
                     nom.value = '';
@@ -404,7 +337,7 @@
             }
 
             if(!nom.trim()){
-                showAlertUpdate('warning', 'Veuillez remplir tous les champs SVP.');
+                showAlert('Alert', 'Veuillez remplir tous les champs SVP.','warning');
                 return false;
             }
 
@@ -437,7 +370,7 @@
                         preloader.remove();
                     }
 
-                    showAlertTable('success', 'Type Soins mis à jour avec succès.');
+                    showAlert('Succès', 'Type Soins mis à jour avec succès.','success');
                     // Reload the list or update the table row without a full refresh
                     list(); // Call your function to reload the table
                     // Close the modal
@@ -448,7 +381,7 @@
                         preloader.remove();
                     }
 
-                    showAlertTable('error', 'Erreur lors de la mise à jour de l\'acte.');
+                    showAlert('Erreur', 'Erreur lors de la mise à jour de l\'acte.','error');
                 }
             });
         }
@@ -483,7 +416,7 @@
                         preloader.remove();
                     }
 
-                    showAlertTable('success', 'Type Soins supprimer avec succès.');
+                    showAlert('Succès', 'Type Soins supprimer avec succès.','success');
                     // Reload the list or update the table row without a full refresh
                     list(); // Call your function to reload the table
                     // Close the modal
@@ -494,7 +427,7 @@
                         preloader.remove();
                     }
 
-                    showAlertTable('error', 'Erreur lors de la suppression du Type.');
+                    showAlert('Erreur', 'Erreur lors de la suppression du Type.','error');
                 }
             });
         }

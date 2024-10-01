@@ -188,41 +188,6 @@
     </div>
 </div>
 
-<div class="modal fade" id="Mappro" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Réapprovisionement</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <div>
-                    <div class="mb-3" id="alert_update_appro">
-                        
-                    </div>
-                    <input type="hidden" id="IdAppro"> <!-- Hidden field for the room's ID -->
-                    <div class="mb-3">
-                        <label class="form-label">Nom du Produit</label>
-                        <div class="input-group">
-                            <input readonly type="text" class="form-control" id="nomAppro" oninput="this.value = this.value.toUpperCase()">
-                        </div>
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Quantité</label>
-                        <input type="tel" class="form-control" id="approAppro" placeholder="Saisie Obligatoire">
-                    </div>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
-                <button type="button" class="btn btn-primary" id="approBtn">
-                    Enregistrer
-                </button>
-            </div>
-        </div>
-    </div>
-</div>
-
 <script>
     document.addEventListener('DOMContentLoaded', function() {
 
@@ -231,7 +196,7 @@
         document.getElementById("btn_eng").addEventListener("click", eng);
         document.getElementById("btn_refresh_table").addEventListener("click", list);
         document.getElementById("updateBtn").addEventListener("click", updatee);
-        document.getElementById("deleteBtn").addEventListener("click", deletee);
+        // document.getElementById("deleteBtn").addEventListener("click", deletee);
 
         document.getElementById('prix').addEventListener('input', function() {
             this.value = formatPrice(this.value);
@@ -263,12 +228,6 @@
                 event.preventDefault();
             }
         });
-        document.getElementById('approAppro').addEventListener('keypress', function(event) {
-            const key = event.key;
-            if (isNaN(key)) {
-                event.preventDefault();
-            }
-        });
 
         function formatPrice(input) {
             // Supprimer tous les points existants
@@ -277,104 +236,12 @@
             return input.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
         }
 
-        function showAlert(type, message) {
-
-            var dynamicFields = document.getElementById("div_alert");
-            // Remove existing content
-            while (dynamicFields.firstChild) {
-                dynamicFields.removeChild(dynamicFields.firstChild);
-            }
-
-            var groupe = document.createElement("div");
-            groupe.className = `alert bg-${type} text-white alert-dismissible fade show`;
-            groupe.innerHTML = `
-                ${message}
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>   
-            `;
-            document.getElementById("div_alert").appendChild(groupe);
-
-            setTimeout(function() {
-                groupe.classList.remove("show");
-                groupe.classList.add("fade");
-                setTimeout(function() {
-                    groupe.remove();
-                }, 150); // Time for the fade effect to complete
-            }, 3000);
-        }
-
-        function showAlertUpdate(type, message) {
-
-            var dynamicFields = document.getElementById("alert_update");
-            // Remove existing content
-            while (dynamicFields.firstChild) {
-                dynamicFields.removeChild(dynamicFields.firstChild);
-            }
-
-            var groupe = document.createElement("div");
-            groupe.className = `alert bg-${type} text-white alert-dismissible fade show`;
-            groupe.innerHTML = `
-                ${message}
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>   
-            `;
-            document.getElementById("alert_update").appendChild(groupe);
-
-            setTimeout(function() {
-                groupe.classList.remove("show");
-                groupe.classList.add("fade");
-                setTimeout(function() {
-                    groupe.remove();
-                }, 150); // Time for the fade effect to complete
-            }, 3000);
-        }
-
-        function showAlertAppro(type, message) {
-
-            var dynamicFields = document.getElementById("alert_update_appro");
-            // Remove existing content
-            while (dynamicFields.firstChild) {
-                dynamicFields.removeChild(dynamicFields.firstChild);
-            }
-
-            var groupe = document.createElement("div");
-            groupe.className = `alert bg-${type} text-white alert-dismissible fade show`;
-            groupe.innerHTML = `
-                ${message}
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>   
-            `;
-            document.getElementById("alert_update_appro").appendChild(groupe);
-
-            setTimeout(function() {
-                groupe.classList.remove("show");
-                groupe.classList.add("fade");
-                setTimeout(function() {
-                    groupe.remove();
-                }, 150); // Time for the fade effect to complete
-            }, 3000);
-        }
-
-        function showAlertTable(type, message) {
-
-            var dynamicFields = document.getElementById("div_alert_table");
-            // Remove existing content
-            while (dynamicFields.firstChild) {
-                dynamicFields.removeChild(dynamicFields.firstChild);
-            }
-
-            var groupe = document.createElement("div");
-            groupe.className = `alert bg-${type} text-white alert-dismissible fade show`;
-            groupe.innerHTML = `
-                ${message}
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>   
-            `;
-            document.getElementById("div_alert_table").appendChild(groupe);
-
-            setTimeout(function() {
-                groupe.classList.remove("show");
-                groupe.classList.add("fade");
-                setTimeout(function() {
-                    groupe.remove();
-                }, 150); // Time for the fade effect to complete
-            }, 3000);
+        function showAlert(title, message, type) {
+            Swal.fire({
+                title: title,
+                text: message,
+                icon: type,
+            });
         }
 
         function eng() 
@@ -389,7 +256,7 @@
             }
 
             if(!nom.value.trim() || !prix.value.trim() || !quantite.value.trim()){
-                showAlert('warning', 'Veuillez remplir tous les champs SVP.');
+                showAlert('Alert', 'Veuillez remplir tous les champs SVP.','warning');
                 return false;
             }
 
@@ -416,11 +283,11 @@
                     }
 
                     if (response.existe) {
-                        showAlert('warning', 'Cet Produit existe déjà.');
+                        showAlert('Alert', 'Cet Produit existe déjà.','warning');
                     } else if (response.success) {
-                        showAlert('success', 'Produit Enregistrée.');
+                        showAlert('Succès', 'Produit Enregistrée.','success');
                     } else if (response.error) {
-                        showAlert('danger', 'Une erreur est survenue lors de l\'enregistrement.');
+                        showAlert('Erreur', 'Une erreur est survenue lors de l\'enregistrement.','error');
                     }
 
                     nom.value = '';
@@ -437,7 +304,7 @@
 
                     console.log(xhr, status, error);
 
-                    showAlert('danger', 'Une erreur est survenue lors de l\'enregistrement.');
+                    showAlert('Erreur', 'Une erreur est survenue lors de l\'enregistrement.','error');
 
                     nom.value = '';
                     prix.value = '';
@@ -653,7 +520,7 @@
             }
 
             if(!nom.trim() || !prix.trim() || !quantite.trim()){
-                showAlertUpdate('warning', 'Veuillez remplir tous les champs SVP.');
+                showAlert('Alert', 'Veuillez remplir tous les champs SVP.','warning');
                 return false;
             }
 
@@ -683,9 +550,9 @@
                     }
 
                     if (response.success) {
-                        showAlertTable('success', 'Produit mis à jour avec succès.');
+                        showAlert('Succès', 'Produit mis à jour avec succès.','success');
                     } else if (response.error) {
-                        showAlertTable('error', 'Erreur lors de la mise à jour du produit.');
+                        showAlert('Erreur', 'Erreur lors de la mise à jour du produit.','error');
                     }
                     // Reload the list or update the table row without a full refresh
                     list(); // Call your function to reload the table
@@ -697,7 +564,7 @@
                         preloader.remove();
                     }
 
-                    showAlertTable('error', 'Erreur lors de la mise à jour du produit.');
+                    showAlert('Erreur', 'Erreur lors de la mise à jour du produit.','error');
                 }
             });
         }
@@ -732,7 +599,7 @@
         //                 preloader.remove();
         //             }
 
-        //             showAlertTable('success', 'Produit supprimer avec succès.');
+        //             showAlert('Succès', 'Produit supprimer avec succès.','success');
         //             // Reload the list or update the table row without a full refresh
         //             list(); // Call your function to reload the table
         //             // Close the modal
@@ -743,7 +610,7 @@
         //                 preloader.remove();
         //             }
 
-        //             showAlertTable('error', 'Erreur lors de la suppression de la chambre.');
+        //             showAlert('Erreur', 'Erreur lors de la suppression de la chambre.','error');
         //         }
         //     });
         // }

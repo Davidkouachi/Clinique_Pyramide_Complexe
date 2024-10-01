@@ -24,13 +24,22 @@ use App\Models\chambre;
 use App\Models\lit;
 use App\Models\acte;
 use App\Models\typeacte;
+use App\Models\typemedecin;
 use App\Models\user;
 use App\Models\role;
-use App\Models\typemedecin;
 use App\Models\consultation;
 use App\Models\detailconsultation;
-use App\Models\facture;
+use App\Models\typeadmission;
+use App\Models\natureadmission;
 use App\Models\detailhopital;
+use App\Models\facture;
+use App\Models\produit;
+use App\Models\soinshopital;
+use App\Models\soinsinfirmier;
+use App\Models\typesoins;
+use App\Models\soinspatient;
+use App\Models\sp_produit;
+use App\Models\sp_soins;
 
 class ApilistfactureController extends Controller
 {
@@ -209,6 +218,84 @@ class ApilistfactureController extends Controller
                 'last_page' => $hopital->lastPage(),
                 'per_page' => $hopital->perPage(),
                 'total' => $hopital->total(),
+            ]
+        ]);
+    }
+
+    public function list_facture_soinsam()
+    {
+        $spatientQuery = soinspatient::join('factures', 'factures.id','=','soinspatients.facture_id')
+                                ->where('factures.statut', '=', 'impayer')
+                                ->select(
+                                    'soinspatients.*',
+                                    'factures.code as code_fac',
+                                    'factures.statut as statut_fac',
+                                )->orderBy('soinspatients.created_at', 'desc');
+
+        $soinspatient = $spatientQuery->paginate(15);
+
+        foreach ($soinspatient->items() as $value) {
+            $produittotal = sp_produit::where('soinspatient_id', '=', $value->id)
+                ->select(DB::raw('COALESCE(SUM(REPLACE(montant, ".", "") + 0), 0) as total'))
+                ->first();
+
+            $value->prototal = $produittotal->total ?? 0;
+
+            // Total des soins
+            $soinstotal = sp_soins::where('soinspatient_id', '=', $value->id)
+                ->select(DB::raw('COALESCE(SUM(REPLACE(montant, ".", "") + 0), 0) as total'))
+                ->first();
+
+            $value->stotal = $soinstotal->total ?? 0;
+        }
+
+        return response()->json([
+            'soinspatient' => $soinspatient->items(), // Paginated data
+            'pagination' => [
+                'current_page' => $soinspatient->currentPage(),
+                'last_page' => $soinspatient->lastPage(),
+                'per_page' => $soinspatient->perPage(),
+                'total' => $soinspatient->total(),
+            ]
+        ]);
+    }
+
+    public function list_facture_soinsam_all()
+    {
+        $spatientQuery = soinspatient::join('factures', 'factures.id','=','soinspatients.facture_id')
+                                ->select(
+                                    'soinspatients.*',
+                                    'factures.code as code_fac',
+                                    'factures.statut as statut_fac',
+                                    'factures.montant_verser as montant_verser',
+                                    'factures.montant_remis as montant_remis',
+                                )->orderBy('soinspatients.created_at', 'desc');
+
+        $soinspatient = $spatientQuery->paginate(15);
+
+        foreach ($soinspatient->items() as $value) {
+            $produittotal = sp_produit::where('soinspatient_id', '=', $value->id)
+                ->select(DB::raw('COALESCE(SUM(REPLACE(montant, ".", "") + 0), 0) as total'))
+                ->first();
+
+            $value->prototal = $produittotal->total ?? 0;
+
+            // Total des soins
+            $soinstotal = sp_soins::where('soinspatient_id', '=', $value->id)
+                ->select(DB::raw('COALESCE(SUM(REPLACE(montant, ".", "") + 0), 0) as total'))
+                ->first();
+
+            $value->stotal = $soinstotal->total ?? 0;
+
+        }
+
+        return response()->json([
+            'soinspatient' => $soinspatient->items(), // Paginated data
+            'pagination' => [
+                'current_page' => $soinspatient->currentPage(),
+                'last_page' => $soinspatient->lastPage(),
+                'per_page' => $soinspatient->perPage(),
+                'total' => $soinspatient->total(),
             ]
         ]);
     }

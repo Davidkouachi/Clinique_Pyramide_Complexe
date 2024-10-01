@@ -259,79 +259,12 @@
             });
         }
 
-        function showAlert(type, message) {
-
-            var dynamicFields = document.getElementById("div_alert");
-            // Remove existing content
-            while (dynamicFields.firstChild) {
-                dynamicFields.removeChild(dynamicFields.firstChild);
-            }
-
-            var groupe = document.createElement("div");
-            groupe.className = `alert bg-${type} text-white alert-dismissible fade show`;
-            groupe.innerHTML = `
-                ${message}
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>   
-            `;
-            document.getElementById("div_alert").appendChild(groupe);
-
-            setTimeout(function() {
-                groupe.classList.remove("show");
-                groupe.classList.add("fade");
-                setTimeout(function() {
-                    groupe.remove();
-                }, 150); // Time for the fade effect to complete
-            }, 3000);
-        }
-
-        function showAlertUpdate(type, message) {
-
-            var dynamicFields = document.getElementById("alert_update");
-            // Remove existing content
-            while (dynamicFields.firstChild) {
-                dynamicFields.removeChild(dynamicFields.firstChild);
-            }
-
-            var groupe = document.createElement("div");
-            groupe.className = `alert bg-${type} text-white alert-dismissible fade show`;
-            groupe.innerHTML = `
-                ${message}
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>   
-            `;
-            document.getElementById("alert_update").appendChild(groupe);
-
-            setTimeout(function() {
-                groupe.classList.remove("show");
-                groupe.classList.add("fade");
-                setTimeout(function() {
-                    groupe.remove();
-                }, 150); // Time for the fade effect to complete
-            }, 3000);
-        }
-
-        function showAlertList(type, message) {
-
-            var dynamicFields = document.getElementById("div_alert_table");
-            // Remove existing content
-            while (dynamicFields.firstChild) {
-                dynamicFields.removeChild(dynamicFields.firstChild);
-            }
-
-            var groupe = document.createElement("div");
-            groupe.className = `alert bg-${type} text-white alert-dismissible fade show`;
-            groupe.innerHTML = `
-                ${message}
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>   
-            `;
-            document.getElementById("div_alert_table").appendChild(groupe);
-
-            setTimeout(function() {
-                groupe.classList.remove("show");
-                groupe.classList.add("fade");
-                setTimeout(function() {
-                    groupe.remove();
-                }, 150); // Time for the fade effect to complete
-            }, 3000);
+        function showAlert(title, message, type) {
+            Swal.fire({
+                title: title,
+                text: message,
+                icon: type,
+            });
         }
 
         function eng_lit() {
@@ -347,7 +280,7 @@
             }
 
             if(!num_lit.value.trim() || !type.value.trim() || !chambre_id.value.trim()){
-                showAlert('warning', 'Veuillez remplir tous les champs SVP.');
+                showAlert('Alert', 'Veuillez remplir tous les champs SVP.','warning');
                 return false;
             }
 
@@ -370,9 +303,9 @@
                     }
 
                     if (response.success) {
-                        showAlert('success', 'Lit Enregistrée.');
+                        showAlert('Succès', 'Lit Enregistrée.','success');
                     } else if (response.error) {
-                        showAlert('danger', 'Une erreur est survenue lors de l\'enregistrement.');
+                        showAlert('Erreur', 'Une erreur est survenue lors de l\'enregistrement.','error');
                     }
 
                     num_lit.value = '';
@@ -389,7 +322,7 @@
                         preloader.remove();
                     }
 
-                    showAlert('danger', 'Une erreur est survenue lors de l\'enregistrement.');
+                    showAlert('Erreur', 'Une erreur est survenue lors de l\'enregistrement.','error');
                     
                     num_lit.value = '';
                     type.value = '';
@@ -515,7 +448,7 @@
             }
 
             if(!typeLit.trim()){
-                showAlertUpdate('warning', 'Veuillez remplir tous les champs SVP.');
+                showAlert('Alert', 'Veuillez remplir tous les champs SVP.','warning');
                 return false;
             }
 
@@ -548,7 +481,7 @@
                         preloader.remove();
                     }
 
-                    showAlertList('success', 'Lit mise à jour avec succès.');
+                    showAlert('Succès', 'Lit mise à jour avec succès.','success');
 
                     refresh_num();
                     select_lit();
@@ -560,7 +493,7 @@
                         preloader.remove();
                     }
 
-                    showAlertList('error', 'Erreur lors de la mise à jour de la chambre.');
+                    showAlert('Erreur', 'Erreur lors de la mise à jour de la chambre.','error');
                 }
             });
         }
@@ -598,7 +531,7 @@
                         preloader.remove();
                     }
 
-                    showAlertList('success', 'Chambre supprimer avec succès.');
+                    showAlert('Succès', 'Chambre supprimer avec succès.','success');
                     
                     refresh_num();
                     select_lit();
@@ -610,7 +543,7 @@
                         preloader.remove();
                     }
 
-                    showAlertList('error', 'Erreur lors de la suppression de la chambre.');
+                    showAlert('Erreur', 'Erreur lors de la suppression de la chambre.','error');
                 }
             });
         }

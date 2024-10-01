@@ -35,6 +35,11 @@ use App\Models\detailhopital;
 use App\Models\facture;
 use App\Models\produit;
 use App\Models\soinshopital;
+use App\Models\soinsinfirmier;
+use App\Models\typesoins;
+use App\Models\soinspatient;
+use App\Models\sp_produit;
+use App\Models\sp_soins;
 
 class ApiinsertfactureController extends Controller
 {
@@ -207,6 +212,104 @@ class ApiinsertfactureController extends Controller
 
             }else{
                 throw new \Exception('Erreur');
+            }
+            
+        } catch (Exception $e) {
+            DB::rollback();
+            return response()->json(['error' => true]);
+        }
+
+    }
+
+    public function facture_payer_soinsam(Request $request,$code_fac)
+    {
+        DB::beginTransaction();
+
+        $fac = facture::where('code', '=', $code_fac)->first();
+
+        try {
+
+            if ($fac) {
+
+               $fac->montant_verser = $request->montant_verser;
+               $fac->montant_remis = $request->montant_remis;
+               $fac->statut = 'payer';
+               $fac->date_payer = Carbon::now();
+
+                if (!$fac->save()) {
+                    throw new \Exception('Erreur');
+                }
+
+                $spatient = soinspatient::where('facture_id', '=', $fac->id)->first();
+                $spatient->statut = 'terminé';
+
+                if (!$spatient->save()) {
+                    throw new \Exception('Erreur');
+                }
+
+                // ------------------------------------------------------------
+
+                $soinspatient = soinspatient::find($spatient->id);
+
+                if ($soinspatient) { // Vérifiez que le patient a bien été trouvé
+                    // Total des produits
+                    $produittotal = sp_produit::where('soinspatient_id', '=', $soinspatient->id)
+                        ->select(DB::raw('COALESCE(SUM(REPLACE(montant, ".", "") + 0), 0) as total'))
+                        ->first();
+
+                    $soinspatient->prototal = $produittotal->total ?? 0;
+
+                    // Total des soins
+                    $soinstotal = sp_soins::where('soinspatient_id', '=', $soinspatient->id)
+                        ->select(DB::raw('COALESCE(SUM(REPLACE(montant, ".", "") + 0), 0) as total'))
+                        ->first();
+
+                    $soinspatient->stotal = $soinstotal->total ?? 0;
+                } 
+
+                $facture = facture::find($soinspatient->facture_id);
+
+                $patient = patient::leftjoin('assurances', 'assurances.id', '=', 'patients.assurance_id')
+                ->leftjoin('tauxes', 'tauxes.id', '=', 'patients.taux_id')
+                ->where('patients.id', '=', $soinspatient->patient_id)
+                ->select('patients.*', 'assurances.nom as assurance', 'tauxes.taux as taux')
+                ->first();
+
+                if ($patient) {
+                    $patient->age = $patient->datenais ? Carbon::parse($patient->datenais)->age : 0;
+                }
+
+                $typesoins = typesoins::find($soinspatient->typesoins_id);
+
+                $soins = sp_soins::join('soinsinfirmiers', 'soinsinfirmiers.id', '=', 'sp_soins.soinsinfirmier_id')
+                    ->where('sp_soins.soinspatient_id', '=', $soinspatient->id)
+                    ->select('sp_soins.*', 'soinsinfirmiers.nom as nom_si', 'soinsinfirmiers.prix as prix_si')
+                    ->get();
+
+
+                // Récupération des produits avec les informations associées
+                $produit = sp_produit::join('produits', 'produits.id', '=', 'sp_produits.produit_id')
+                    ->where('sp_produits.soinspatient_id', '=', $soinspatient->id)
+                    ->select('sp_produits.*', 'produits.nom as nom_pro', 'produits.prix as prix_pro', 'produits.quantite as quantite_pro')
+                    ->get();
+
+                // ------------------------------------------------------------
+
+                DB::commit();
+                return response()->json([
+                    'success' => true,
+                    'soinspatient' => $soinspatient,
+                    'facture' => $facture,
+                    'patient' => $patient,
+                    'soins' => $soins,
+                    'produit' => $produit,
+                    'typesoins' => $typesoins,
+                ]);
+
+            }else{
+
+                throw new \Exception('Erreur');
+                
             }
             
         } catch (Exception $e) {

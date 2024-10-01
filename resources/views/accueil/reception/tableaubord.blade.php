@@ -321,7 +321,7 @@
                                     <div class="col-xxl-3 col-lg-4 col-sm-6">
                                         <div class="mb-3">
                                             <label class="form-label">Adresse</label>
-                                            <input type="text" class="form-control" id="patient_adresse_new" placeholder="Saisie Obligatoire">
+                                            <input type="text" class="form-control" id="patient_adresse_new" placeholder="facultatif">
                                         </div>
                                     </div>
                                     <div class="col-xxl-3 col-lg-4 col-sm-6">
@@ -665,7 +665,6 @@
             }
         });
 
-
         function formatPrice(input) {
             // Remove all non-numeric characters except the comma
             input = input.replace(/[^\d,]/g, '');
@@ -766,7 +765,7 @@
             const matricule_patient = document.getElementById("matricule_patient");
 
             if(!matricule_patient.value.trim()){
-                showAlert('warning', 'Veuillez saisie le nom d\'un du patient.');
+                showAlert('Alert', 'Veuillez saisie le nom d\'un du patient.', 'warning');
                 return false;
             }
 
@@ -790,11 +789,10 @@
                         preloader.remove();
                     }
                     if(response.existep) {
-
-                        showAlert('warning', 'Ce patient n\'existe pas.');
+                        showAlert('Alert', 'Ce patient n\'existe pas.', 'error');
                         Reset();
                     } else if (response.success) {
-                        showAlert('success', 'Patient trouvé.');
+                        showAlert('Succés', 'Patient trouvé.', 'success');
 
                         addGroup(response.patient);
 
@@ -830,8 +828,6 @@
                             }
                         }
 
-
-
                         select_list_typeacte();
                     }
                 },
@@ -840,8 +836,7 @@
                     if (preloader) {
                         preloader.remove();
                     }
-                    showAlert('danger', 'Une erreur est survenue lors de la recherche.');
-                    societeInput.value = '';
+                    showAlert('Alert', 'Une erreur est survenue lors de la recherche.', 'error');
                 }
             });
         }
@@ -942,79 +937,12 @@
             dynamicFields.appendChild(groupe);
         }
 
-        function showAlert(type, message) {
-
-            var dynamicFields = document.getElementById("div_alert");
-            // Remove existing content
-            while (dynamicFields.firstChild) {
-                dynamicFields.removeChild(dynamicFields.firstChild);
-            }
-
-            var groupe = document.createElement("div");
-            groupe.className = `alert bg-${type} text-white alert-dismissible fade show`;
-            groupe.innerHTML = `
-                ${message}
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>   
-            `;
-            document.getElementById("div_alert").appendChild(groupe);
-
-            setTimeout(function() {
-                groupe.classList.remove("show");
-                groupe.classList.add("fade");
-                setTimeout(function() {
-                    groupe.remove();
-                }, 150); // Time for the fade effect to complete
-            }, 3000);
-        }
-
-        function showAlertConsultation(type, message) {
-
-            var dynamicFields = document.getElementById("div_alert_consultation");
-            // Remove existing content
-            while (dynamicFields.firstChild) {
-                dynamicFields.removeChild(dynamicFields.firstChild);
-            }
-
-            var groupe = document.createElement("div");
-            groupe.className = `alert bg-${type} text-white alert-dismissible fade show`;
-            groupe.innerHTML = `
-                ${message}
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>   
-            `;
-            document.getElementById("div_alert_consultation").appendChild(groupe);
-
-            setTimeout(function() {
-                groupe.classList.remove("show");
-                groupe.classList.add("fade");
-                setTimeout(function() {
-                    groupe.remove();
-                }, 150); // Time for the fade effect to complete
-            }, 3000);
-        }
-
-        function showAlertList(type, message) {
-
-            var dynamicFields = document.getElementById("div_alert_table");
-            // Remove existing content
-            while (dynamicFields.firstChild) {
-                dynamicFields.removeChild(dynamicFields.firstChild);
-            }
-
-            var groupe = document.createElement("div");
-            groupe.className = `alert bg-${type} text-white alert-dismissible fade show`;
-            groupe.innerHTML = `
-                ${message}
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>   
-            `;
-            document.getElementById("div_alert_table").appendChild(groupe);
-
-            setTimeout(function() {
-                groupe.classList.remove("show");
-                groupe.classList.add("fade");
-                setTimeout(function() {
-                    groupe.remove();
-                }, 150); // Time for the fade effect to complete
-            }, 3000);
+        function showAlert(title, message, type) {
+            Swal.fire({
+                title: title,
+                text: message,
+                icon: type,
+            });
         }
 
         function Reset() {
@@ -1337,7 +1265,7 @@
             }
 
             if(societeInput.value == ''){
-                showAlert('warning', 'Veuillez saisie le nom de la société SVP.');
+                showAlert('Alert', 'Veuillez saisie le nom de la société SVP.', 'warning');
                 return false;
             }
 
@@ -1359,11 +1287,11 @@
                         preloader.remove();
                     }
                     if (response.warning) {
-                        showAlert('warning', 'Cette société existe déjà.');
+                        showAlert('Alert', 'Cette société existe déjà.', 'warning');
                     } else if (response.success) {
-                        showAlert('success', 'Société Enregistrée.');
+                        showAlert('Succès', 'Société Enregistrée.', 'success');
                     } else if (response.error) {
-                        showAlert('danger', 'Une erreur est survenue lors de l\'enregistrement.');
+                        showAlert('Alert', 'Une erreur est survenue lors de l\'enregistrement.','error');
                     }
                     societeInput.value = '';
                     select_societe_patient();
@@ -1373,7 +1301,7 @@
                     if (preloader) {
                         preloader.remove();
                     }
-                    showAlert('danger', 'Une erreur est survenue lors de l\'enregistrement.');
+                    showAlert('Alert', 'Une erreur est survenue lors de l\'enregistrement.', 'error');
                     societeInput.value = '';
                 }
             });
@@ -1391,19 +1319,19 @@
             var fax = document.getElementById("fax_assurance_new");
 
             if (!nom.value.trim() || !email.value.trim() || !phone.value.trim() || !adresse.value.trim() || !fax.value.trim()) {
-                showAlert('warning', 'Tous les champs sont obligatoires.');
+                showAlert('Alert', 'Tous les champs sont obligatoires.','warning');
                 return false; 
             }
 
             var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
             if (!emailRegex.test(email.value.trim())) {  // Use email.value.trim() to check the actual input
-                showAlert('warning', 'Email incorrect.');
+                showAlert('Alert', 'Email incorrect.','warning');
                 return false;
             }
 
 
             if (phone.value.length !== 10 || (phone2.value !== '' && phone2.value.length !== 10)) {
-                showAlert('warning', 'Contact incomplet.');
+                showAlert('Alert', 'Contact incomplet.','warning');
                 return false;
             }
 
@@ -1433,17 +1361,17 @@
                     }
                     
                     if (response.tel_existe) {
-                        showAlert('warning', 'Ce numéro de téléphone appartient déjà a une assurance.');
+                        showAlert('Alert', 'Ce numéro de téléphone appartient déjà a une assurance.','warning');
                     }else if (response.email_existe) {
-                        showAlert('warning', 'Ce email appartient déjà a une assurance.');
+                        showAlert('Alert', 'Ce email appartient déjà a une assurance.','warning');
                     }else if (response.nom_existe) {
-                        showAlert('warning', 'Cette assurance existe déjà.');
+                        showAlert('Alert', 'Cette assurance existe déjà.','warning');
                     }else if (response.fax_existe) {
-                        showAlert('warning', 'Ce fax appartient déjà a une assurance.');
+                        showAlert('Alert', 'Ce fax appartient déjà a une assurance.','warning');
                     } else if (response.success) {
-                        showAlert('success', 'Assurance Enregistrée.');
+                        showAlert('Succès', 'Assurance Enregistrée.','success');
                     } else if (response.error) {
-                        showAlert('danger', 'Une erreur est survenue lors de l\'enregistrement.');
+                        showAlert('Alert', 'Une erreur est survenue lors de l\'enregistrement.','error');
                     }
 
                     nom.value = '';
@@ -1462,7 +1390,7 @@
                         preloader.remove();
                     }
 
-                    showAlert('danger', 'Une erreur est survenue lors de l\'enregistrement.');
+                    showAlert('Alert', 'Une erreur est survenue lors de l\'enregistrement.','error');
 
                     nom.value = '';
                     email.value = '';
@@ -1497,18 +1425,18 @@
             var societe_id = document.getElementById("patient_societe_id_new");
 
             if (!nom.value.trim() || !phone.value.trim() || !datenais.value.trim() || !sexe.value.trim()) {
-                showAlert('warning', 'Tous les champs sont obligatoires.');
+                showAlert('Alert', 'Tous les champs sont obligatoires.','warning');
                 return false; 
             }
 
             var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
             if (email.value.trim() && !emailRegex.test(email.value.trim())) {  // Use email.value.trim() to check the actual input
-                showAlert('warning', 'Email incorrect.');
+                showAlert('Alert', 'Email incorrect.','warning');
                 return false;
             }
 
             if (phone.value.length !== 10 || (phone2.value !== '' && phone2.value.length !== 10)) {
-                showAlert('warning', 'Contact incomplet.');
+                showAlert('Alert', 'Contact incomplet.','warning');
                 return false;
             }
 
@@ -1516,7 +1444,7 @@
                 if (assurance_id.value !== '' && taux_id.value !== '' && societe_id.value !== '' || filiation.value !== '' || matricule_assurance.value !== '') {
                     // Do something when all the fields have values
                 } else {
-                    showAlert('warning', 'Veuillez remplir tous les champs relatifs à l\'assurance');
+                    showAlert('Alert', 'Veuillez remplir tous les champs relatifs à l\'assurance','warning');
                     return false; // Prevent form submission
                 }
             }
@@ -1540,15 +1468,15 @@
                     }
                     
                     if (response.tel_existe) {
-                        showAlert('warning', 'Ce numéro de téléphone appartient déjà a un patient.');
+                        showAlert('Alert', 'Ce numéro de téléphone appartient déjà a un patient.','warning');
                     }else if (response.email_existe) {
-                        showAlert('warning', 'Cet email appartient déjà a un patient.');
+                        showAlert('Alert', 'Cet email appartient déjà a un patient.','warning');
                     }else if (response.nom_existe) {
-                        showAlert('warning', 'Cet patient existe déjà.');
+                        showAlert('Alert', 'Cet patient existe déjà.','warning');
                     } else if (response.success) {
-                        showAlert('success', 'Patient Enregistrée.');
+                        showAlert('Succès', 'Patient Enregistrée.','success');
                     } else if (response.error) {
-                        showAlert('danger', 'Une erreur est survenue lors de l\'enregistrement.');
+                        showAlert('Alert', 'Une erreur est survenue lors de l\'enregistrement.','error');
                     }
 
                     nom.value = '';
@@ -1583,7 +1511,7 @@
                         preloader.remove();
                     }
 
-                    showAlert('danger', 'Une erreur est survenue lors de l\'enregistrement.');
+                    showAlert('Alert', 'Une erreur est survenue lors de l\'enregistrement.','error');
                 }
             });
         }
@@ -1612,12 +1540,12 @@
             }
 
             if (!num_patient.value.trim() || acte_id =='' || typeacte_idS.value =='' || medecin_id.value =='' || !taux_remise.value.trim()) {
-                showAlertConsultation('warning', 'Tous les champs sont obligatoires.');
+                showAlert('Alert', 'Tous les champs sont obligatoires.','warning');
                 return false; 
             }
 
             if (montant_assurance.value < 0 || montant_patient.value < 0 || taux_remise.value < 0) {
-                showAlertConsultation('warning', 'Veullez vérifier le montant de la remise.');
+                showAlert('Alert', 'Veullez vérifier le montant de la remise.','warning');
                 return false; 
             }
 
@@ -1641,7 +1569,7 @@
                     
                     if (response.success) {
 
-                        showAlertConsultation('success', 'Patient Enregistrée.');
+                        showAlert('Succès', 'Patient Enregistrée.', 'success');
 
                         const patient = response.patient;
                         const typeacte = response.typeacte;
@@ -1656,7 +1584,7 @@
                         generatePDFficheCons(patient, user, typeacte, consultation);
 
                     } else if (response.error) {
-                        showAlertConsultation('danger', 'Une erreur est survenue lors de l\'enregistrement.');
+                        showAlert('Alert', 'Une erreur est survenue lors de l\'enregistrement.','error');
                     }
 
                     jourO.checked = true;
@@ -1679,7 +1607,7 @@
                         preloader.remove();
                     }
 
-                    showAlertConsultation('danger', ' Une erreur est survenue lors de l\'enregistrement.');
+                    showAlert('Alert', ' Une erreur est survenue lors de l\'enregistrement.','error');
                 }
             });
         }

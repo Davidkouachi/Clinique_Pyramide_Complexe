@@ -11,7 +11,7 @@
             <a href="{{route('index_accueil')}}">Espace Santé</a>
         </li>
         <li class="breadcrumb-item text-primary" aria-current="page">
-            Nouveau Produit
+            Liste des factures
         </li>
     </ol>
 </div>
@@ -26,7 +26,7 @@
             <div class="card mb-3">
                 <div class="card-header d-flex align-items-center justify-content-between">
                     <h5 class="card-title">
-                        Facture non réglée
+                        Liste des factures
                     </h5>
                     <div class="d-flex" >
                         <input type="text" id="searchInput" placeholder="N° facture" class="form-control me-1" >
@@ -39,9 +39,6 @@
                     </div>
                 </div>
                 <div class="card-body">
-                    <div id="div_alert_table" >
-                    
-                    </div>
                     <div class="table-outer" id="div_Table" style="display: none;">
                         <div class="table-responsive">
                             <table class="table align-middle table-hover m-0 truncate" id="Table">
@@ -50,12 +47,12 @@
                                         <th scope="col">N°</th>
                                         <th scope="col">Id facture</th>
                                         <th scope="col">Statut</th>
+                                        <th scope="col">Montant Soins</th>
+                                        <th scope="col">Montant Produit</th>
                                         <th scope="col">Part Assurance</th>
                                         <th scope="col">Part Patient</th>
                                         <th scope="col">Remise</th>
-                                        <th scope="col">Montant Chambre</th>
-                                        <th scope="col">Montant Soins</th>
-                                        <th scope="col">Total</th>
+                                        <th scope="col">Montant Total</th>
                                         <th scope="col">Date de création</th>
                                         <th scope="col">Actions</th>
                                     </tr>
@@ -88,7 +85,7 @@
     <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" >
+                <h5 class="modal-title" id="exampleModalCenteredScrollableTitle">
                     Détails
                 </h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -103,8 +100,8 @@
     <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalCenteredScrollableTitle">
-                    Produit Pharmacie Utilisé
+                <h5 class="modal-title" >
+                    Détail Soins Infirmiers et Produits Utilisés
                 </h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
@@ -119,22 +116,38 @@
                     
                                         </div>
                                         <div class="table-responsive" id="div_TableP" style="display: none;">
+                                            <!-- Tableau Soins Infirmiers -->
                                             <table class="table table-bordered" id="TableP">
                                                 <thead>
                                                     <tr>
-                                                        <th>Produit utilisé</th>
-                                                        <th style="width: 150px;" >Prix unitaire</th>
-                                                        <th style="width: 50px;" >Quantité</th>
-                                                        <th style="width: 150px;" >Prix</th>
+                                                        <th>Soins Infirmiers</th>
+                                                        <th style="width: 250px;">Prix</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
                                                 </tbody>
                                             </table>
                                         </div>
+
+                                        <div class="table-responsive" id="div_TableProdP" style="display: none;">
+                                            <!-- Tableau Produits Utilisés -->
+                                            <table class="table table-bordered" id="TableProdP">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Produits Utilisés</th>
+                                                        <th style="width: 200px;">Prix Unitaire</th>
+                                                        <th style="width: 50px;" >Quantité</th>
+                                                        <th style="width: 200px;">Prix Total</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                </tbody>
+                                            </table>
+                                        </div>
+
                                         <div id="message_TableP" style="display: none;">
                                             <p class="text-center" >
-                                                Aucun Produit utilisé pour le moment
+                                                Aucun détail pour le moment
                                             </p>
                                         </div>
                                         <div id="div_Table_loaderP" style="display: none;">
@@ -154,7 +167,6 @@
     </div>
 </div>
 
-
 {{-- <script src="{{ asset('js/app.js') }}"></script> --}}
 {{-- <script src="https://unpkg.com/jspdf-invoice-template@1.4.4/dist/index.js"></script> --}}
 <script src="{{asset('assets/js/app/js/jspdfinvoicetemplate/dist/index.js')}}" ></script>
@@ -170,8 +182,52 @@
 
         document.getElementById("btn_refresh_table").addEventListener("click", list);
         document.getElementById("btn_valider").addEventListener("click", payer);
+
+        // ->----------------------------
+
+        document.getElementById('input_montant_verser').addEventListener('input', function() {
+            // Nettoyer la valeur entrée en supprimant les caractères non numériques sauf le point
+            const rawValue = this.value.replace(/[^0-9]/g, ''); // Supprimer tous les caractères non numériques
+            
+            // Ajouter des points pour les milliers
+            const formattedValue = formatPrice(rawValue);
+            
+            // Mettre à jour la valeur du champ avec la valeur formatée
+            this.value = formattedValue;
+
+            // Convertir la valeur formatée en nombre pour les calculs
+            const montantPayer = parseFloat(document.getElementById('input_montant_payer').value.replace(/\./g, '')) || 0;
+            const montantVerser = parseFloat(rawValue) || 0;
+
+            // Calculer le montant remis
+            const montantRemis = montantVerser - montantPayer;
+            document.getElementById('input_montant_remis').value = `${formatPrice(montantRemis)}`;
+
+            const btnValider = document.getElementById('div_btn_valider');
+            if (montantRemis >= 0) {
+                btnValider.style.display = 'block';
+            } else {
+                btnValider.style.display = 'none';
+            }
+        });
+
+        document.getElementById('input_montant_verser').addEventListener('keypress', function(event) {
+            // Permettre uniquement les chiffres et le point
+            const key = event.key;
+            if (isNaN(key)) {
+                event.preventDefault();
+            }
+        });
         
         // -----------------------------------------
+
+        function showAlert(title, message, type) {
+            Swal.fire({
+                title: title,
+                text: message,
+                icon: type,
+            });
+        }
 
         function formatPrice(price) {
 
@@ -185,54 +241,16 @@
             return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
         }
 
-        function showAlertList(type, message) {
+        function formatPriceT(price) {
 
-            var dynamicFields = document.getElementById("div_alert_table");
-            // Remove existing content
-            while (dynamicFields.firstChild) {
-                dynamicFields.removeChild(dynamicFields.firstChild);
+            // Convert to float and round to the nearest whole number
+            let number = Math.round(parseInt(price));
+            if (isNaN(number)) {
+                return '';
             }
 
-            var groupe = document.createElement("div");
-            groupe.className = `alert bg-${type} text-white alert-dismissible fade show`;
-            groupe.innerHTML = `
-                ${message}
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>   
-            `;
-            document.getElementById("div_alert_table").appendChild(groupe);
-
-            setTimeout(function() {
-                groupe.classList.remove("show");
-                groupe.classList.add("fade");
-                setTimeout(function() {
-                    groupe.remove();
-                }, 150); // Time for the fade effect to complete
-            }, 3000);
-        }
-
-        function showAlertListD(type, message) {
-
-            var dynamicFields = document.getElementById("div_alert_tableD");
-            // Remove existing content
-            while (dynamicFields.firstChild) {
-                dynamicFields.removeChild(dynamicFields.firstChild);
-            }
-
-            var groupe = document.createElement("div");
-            groupe.className = `alert bg-${type} text-white alert-dismissible fade show`;
-            groupe.innerHTML = `
-                ${message}
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>   
-            `;
-            document.getElementById("div_alert_tableD").appendChild(groupe);
-
-            setTimeout(function() {
-                groupe.classList.remove("show");
-                groupe.classList.add("fade");
-                setTimeout(function() {
-                    groupe.remove();
-                }, 150); // Time for the fade effect to complete
-            }, 3000);
+            // Format the number with dot as thousands separator
+            return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
         }
 
         function formatDate(dateString) {
@@ -245,7 +263,23 @@
             return `${day}/${month}/${year}`; // Format as dd/mm/yyyy
         }
 
+        function formatDateHeure(dateString) {
+
+            const date = new Date(dateString);
+                
+            const day = String(date.getDate()).padStart(2, '0');
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const year = date.getFullYear();
+
+            const hours = String(date.getHours()).padStart(2, '0');
+            const minutes = String(date.getMinutes()).padStart(2, '0');
+            const seconds = String(date.getSeconds()).padStart(2, '0');
+
+            return `${day}/${month}/${year} à ${hours}:${minutes}:${seconds}`;
+        }
+
         function list(page = 1) {
+
             const tableBody = document.querySelector('#Table tbody');
             const messageDiv = document.getElementById('message_Table');
             const tableDiv = document.getElementById('div_Table');
@@ -259,11 +293,11 @@
             loaderDiv.style.display = 'block';
 
             // Fetch data from the API
-            const url = `/api/list_facture_hos_all?page=${page}`;
+            const url = `/api/list_facture_soinsam_all?page=${page}`;
             fetch(url)
                 .then(response => response.json())
                 .then(data => {
-                    allFactures = data.hopital || [];
+                    allFactures = data.soinspatient || [];
                     const pagination = data.pagination || {};
 
                     const perPage = pagination.per_page || 10;
@@ -290,6 +324,12 @@
                                         </span>
                                     </td>
                                     <td class="text-primary">
+                                        ${formatPrice(item.stotal) ?? 0} Fcfa
+                                    </td>
+                                    <td class="text-primary">
+                                        ${formatPrice(item.prototal) ?? 0} Fcfa
+                                    </td>
+                                    <td class="text-primary">
                                         ${item.part_assurance ?? 0} Fcfa
                                     </td>
                                     <td class="text-success">
@@ -301,13 +341,7 @@
                                     <td class="text-primary">
                                         ${item.montant ?? 0} Fcfa
                                     </td>
-                                    <td class="text-primary">
-                                        ${item.montant_soins ?? 0} Fcfa
-                                    </td>
-                                    <td class="text-primary">
-                                        ${item.total ?? 0} Fcfa
-                                    </td>
-                                    <td>${formatDate(item.created_at)}</td>
+                                    <td>${formatDateHeure(item.created_at)}</td>
                                     <td>
                                         <div class="d-inline-flex gap-1">
                                             <a class="btn btn-outline-warning btn-sm rounded-5" id="detail-${item.id}" data-bs-toggle="modal" data-bs-target="#Detail">
@@ -326,21 +360,19 @@
 
                                 document.getElementById(`detail-${item.id}`).addEventListener('click', () =>
                                 {
-                                    fetch(`/api/detail_hos/${item.id}`) // API endpoint
+                                    fetch(`/api/detail_soinam/${item.id}`) // API endpoint
                                         .then(response => response.json())
                                         .then(data => {
                                             // Access the 'chambre' array from the API response
-                                            const modalD = document.getElementById('modal_detail');
-                                            modalD.innerHTML = '';
+                                            const modal = document.getElementById('modal_detail');
+                                            modal.innerHTML = '';
 
-                                            const hopital = data.hopital;
+                                            const soinspatient = data.soinspatient;
                                             const facture = data.facture;
                                             const patient = data.patient;
-                                            const nature = data.natureadmission;
-                                            const type = data.typeadmission;
-                                            const lit = data.lit;
-                                            const chambre = data.chambre;
-                                            const user = data.user;
+                                            const typesoins = data.typesoins;
+                                            const soins = data.soins;
+                                            const produit = data.produit;
 
                                             const div = document.createElement('div');
                                             div.innerHTML = `
@@ -349,31 +381,9 @@
                                                         <div class="">
                                                             <div class="card-body">
                                                                 <div class="row justify-content-between">
-                                                                    <div class="col-12 text-center">                  
-                                                                        <h6 class="fw-semibold">Docteur :</h6>
-                                                                        <p>${user.name}</p>
-                                                                        <h6 class="fw-semibold">Spécialité :</h6>
-                                                                        <p>${user.typeacte}</p>
-                                                                        <h6 class="fw-semibold">Chambre Occupé :</h6>
-                                                                        <p>CH-${chambre.code}</p>
-                                                                        <h6 class="fw-semibold">Lit Occupé :</h6>
-                                                                        <p>LIT-${lit.code}/${lit.type}</p>
-                                                                        <h6 class="fw-semibold">Prix :</h6>
-                                                                        <p>${chambre.prix} Fcfa</p>
-                                                                    </div>
                                                                     <div class="col-12 text-center mt-4">
-                                                                        <h6 class="fw-semibold">Type d'admission :</h6>
-                                                                        <p>${type.nom}</p>
-                                                                        <h6 class="fw-semibold">Nature d'admission :</h6>
-                                                                        <p>${nature.nom}</p>
-                                                                        <h6 class="fw-semibold">Date d'entrer :</h6>
-                                                                        <p>${formatDate(hopital.date_debut)}</p>
-                                                                        <h6 class="fw-semibold">Date de sortie Probable :</h6>
-                                                                        <p>${formatDate(hopital.date_fin)}</p>
-                                                                        <h6 class="fw-semibold">Nombre de jours :</h6>
-                                                                        <p>${calculateDaysBetween(hopital.date_debut, hopital.date_fin)}</p>
-                                                                    </div>
-                                                                    <div class="col-12 text-center mt-4">
+                                                                        <h6 class="fw-semibold">Type de Soins :</h6>
+                                                                        <p>${typesoins.nom}</p>
                                                                         <h6 class="fw-semibold">N° Dossier :</h6>
                                                                         <p>${patient.matricule}</p>
                                                                         <h6 class="fw-semibold">Nom du patient :</h6>
@@ -395,13 +405,13 @@
                                                                     </div>
                                                                     <div class="col-12 text-center mt-4">
                                                                         <h6 class="fw-semibold">Part Patient :</h6>
-                                                                        <p>${hopital.part_patient} Fcfa</p>
+                                                                        <p>${soinspatient.part_patient} Fcfa</p>
                                                                         <h6 class="fw-semibold">Part Assurance :</h6>
-                                                                        <p>${hopital.part_assurance} Fcfa</p>
+                                                                        <p>${soinspatient.part_assurance} Fcfa</p>
                                                                         <h6 class="fw-semibold">Remise :</h6>
-                                                                        <p>${hopital.remise ? hopital.remise : '0'} Fcfa</p>
+                                                                        <p>${soinspatient.remise ? soinspatient.remise : '0'} Fcfa</p>
                                                                         <h6 class="fw-semibold">Montant Total :</h6>
-                                                                        <p>${hopital.montant} Fcfa</p>
+                                                                        <p>${soinspatient.montant} Fcfa</p>
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -410,7 +420,7 @@
                                                 </div>
                                             `;
 
-                                            modalD.appendChild(div);
+                                            modal.appendChild(div);
 
                                         })
                                         .catch(error => {
@@ -421,40 +431,69 @@
                                 document.getElementById(`detail_produit-${item.id}`).addEventListener('click',()=>
                                 {
                                     const tableBodyP = document.querySelector('#TableP tbody');
+                                    const tableBodyProdP=document.querySelector('#TableProdP tbody');
                                     const messageDivP = document.getElementById('message_TableP');
                                     const tableDivP = document.getElementById('div_TableP');
+                                    const tableDivProdP = document.getElementById('div_TableProdP');
                                     const loaderDivP = document.getElementById('div_Table_loaderP');
 
                                     messageDivP.style.display = 'none';
                                     tableDivP.style.display = 'none';
+                                    tableDivProdP.style.display = 'none';
                                     loaderDivP.style.display = 'block';
 
-                                    fetch(`/api/list_facture_hos_d/${item.id}`) // API endpoint
+                                    fetch(`/api/detail_soinam/${item.id}`)
                                         .then(response => response.json())
                                         .then(data => {
-                                            // Access the 'chambre' array from the API response
-                                            const factureds = data.factured;
+                                            const soinspatient = data.soinspatient;
+                                            const soins = data.soins;
+                                            const produit = data.produit;
 
-                                            // Clear any existing rows in the table body
+                                            // Clear existing rows
                                             tableBodyP.innerHTML = '';
+                                            tableBodyProdP.innerHTML = ''; // Pour les produits
 
-                                            if (factureds.length > 0) {
+                                            if (soins.length > 0 || produits.length > 0) {
 
                                                 loaderDivP.style.display = 'none';
                                                 messageDivP.style.display = 'none';
                                                 tableDivP.style.display = 'block';
+                                                tableDivProdP.style.display = 'block';
 
-                                                // Loop through each item in the chambre array
-                                                factureds.forEach((item, index) => {
-                                                    // Create a new row
+                                                // Remplir le tableau des soins
+                                                soins.forEach((item, index) => {
                                                     const row = document.createElement('tr');
-                                                    // Create and append cells to the row based on your table's structure
                                                     row.innerHTML = `
                                                         <td>
-                                                            <h6>${item.nom_produit}</h6>
+                                                            <h6>${item.nom_si}</h6>
                                                         </td>
                                                         <td>
-                                                            <h6>${item.prix_produit} Fcfa</h6>
+                                                            <h6>${item.prix_si} Fcfa</h6>
+                                                        </td>
+                                                    `;
+                                                    tableBodyP.appendChild(row);
+                                                });
+
+                                                const rowTotalSoin = document.createElement('tr');
+                                                rowTotalSoin.innerHTML = `
+                                                    <td >&nbsp;</td>
+                                                    <td >
+                                                        <h5 class="mt-4 text-success">
+                                                            Total Soins : ${formatPriceT(soinspatient.stotal)} Fcfa
+                                                        </h5>
+                                                    </td>
+                                                `;
+                                                tableBodyP.appendChild(rowTotalSoin);
+
+                                                // Remplir le tableau des produits
+                                                produit.forEach((item, index) => {
+                                                    const rowProd = document.createElement('tr');
+                                                    rowProd.innerHTML = `
+                                                        <td>
+                                                            <h6>${item.nom_pro}</h6>
+                                                        </td>
+                                                        <td>
+                                                            <h6>${item.prix_pro} Fcfa</h6>
                                                         </td>
                                                         <td>
                                                             <h6>${item.quantite}</h6>
@@ -463,71 +502,66 @@
                                                             <h6>${item.montant} Fcfa</h6>
                                                         </td>
                                                     `;
-                                                    // Append the row to the table body
-                                                    tableBodyP.appendChild(row);
-
+                                                    tableBodyProdP.appendChild(rowProd);
                                                 });
 
-                                                const row2 = document.createElement('tr');
-                                                row2.innerHTML = `
-                                                    <td colspan="2">&nbsp;</td>
-                                                    <td colspan="2" >
+                                                const rowTotalProd = document.createElement('tr');
+                                                rowTotalProd.innerHTML = `
+                                                    <td colspan="2" >&nbsp;</td>
+                                                    <td colspan="2">
                                                         <h5 class="mt-4 text-success">
-                                                            Total : ${item.montant_soins} Fcfa
+                                                            Total Produits : ${formatPriceT(soinspatient.prototal)} Fcfa
                                                         </h5>
                                                     </td>
                                                 `;
-                                                tableBodyP.appendChild(row2);
+                                                tableBodyProdP.appendChild(rowTotalProd);
 
-                                                const row3 = document.createElement('tr');
-                                                row3.innerHTML = `
+                                                const rowNote = document.createElement('tr');
+                                                rowNote.innerHTML = `
                                                     <td colspan="4">
                                                         <h6 class="text-danger">NOTE</h6>
                                                         <p class="small m-0">
                                                             Le Montant Total des produits utilisés
-                                                            seront ajouter au montant total de la
-                                                            chambre occupé par le patient.
+                                                            seront ajoutés au montant total des soins.
                                                         </p>
                                                     </td>
                                                 `;
 
-                                                tableBodyP.appendChild(row3);
+                                                tableBodyProdP.appendChild(rowNote);
 
                                             } else {
                                                 loaderDivP.style.display = 'none';
                                                 messageDivP.style.display = 'block';
                                                 tableDivP.style.display = 'none';
+                                                tableDivProdP.style.display = 'none';
                                             }
                                         })
                                         .catch(error => {
                                             console.error('Erreur lors du chargement des données:', error);
-                                            loaderDivD.style.display = 'none';
-                                            messageDivD.style.display = 'block';
-                                            tableDivD.style.display = 'none';
+                                            loaderDivP.style.display = 'none';
+                                            messageDivP.style.display = 'block';
+                                            tableDivP.style.display = 'none';
+                                            tableDivProdP.style.display = 'none';
                                         });
-                                    
                                 });
 
                                 document.getElementById(`printer-${item.id}`).addEventListener('click', () =>
                                 {
-                                    fetch(`/api/detail_hos/${item.id}`) // API endpoint
+                                    fetch(`/api/detail_soinam/${item.id}`) // API endpoint
                                         .then(response => response.json())
                                         .then(data => {
                                             // Access the 'chambre' array from the API response
-                                            const hopital = data.hopital;
+                                            const soinspatient = data.soinspatient;
                                             const facture = data.facture;
                                             const patient = data.patient;
-                                            const nature = data.natureadmission;
-                                            const type = data.typeadmission;
-                                            const lit = data.lit;
-                                            const chambre = data.chambre;
-                                            const user = data.user;
+                                            const typesoins = data.typesoins;
+                                            const soins = data.soins;
                                             const produit = data.produit;
 
                                             if (facture.statut == 'payer') {
-                                                generatePDFInvoicePayer(hopital, facture, patient, nature, type, lit, chambre, user, produit);
+                                                generatePDFInvoicePayer(soinspatient, facture, patient, typesoins, soins, produit);
                                             }else {
-                                               generatePDFInvoice(hopital, facture, patient, nature, type, lit, chambre, user, produit); 
+                                               generatePDFInvoice(soinspatient, facture, patient, typesoins, soins, produit); 
                                             }
 
                                         })
@@ -567,7 +601,6 @@
                     tableDiv.style.display = 'none';
                 });
         }
-
 
         function updatePaginationControls(pagination) {
             const paginationDiv = document.getElementById('pagination-controls');
@@ -660,30 +693,7 @@
             paginationDiv.appendChild(paginationWrapper);
         }
 
-        function formatDate(dateString) {
-            const date = new Date(dateString);
-            const day = String(date.getDate()).padStart(2, '0');  // Ajoute un '0' si le jour est à un chiffre
-            const month = String(date.getMonth() + 1).padStart(2, '0');  // Les mois sont indexés de 0, donc +1
-            const year = date.getFullYear();
-            
-            return `${day}-${month}-${year}`;
-        }
-
-        function calculateDaysBetween(startDate, endDate) {
-            const start = new Date(startDate);
-            const end = new Date(endDate);
-            
-            // Calcul de la différence en millisecondes
-            const diffInMilliseconds = end - start;
-
-            // Conversion en jours (millisecondes en secondes, minutes, heures, jours)
-            let diffInDays = diffInMilliseconds / (1000 * 60 * 60 * 24);
-
-            // Si la différence est inférieure ou égale à 0, on retourne 1 jour minimum
-            return diffInDays <= 0 ? 1 : Math.round(diffInDays); 
-        }
-
-        function generatePDFInvoice(hopital, facture, patient, nature, type, lit, chambre, user, produit) {
+        function generatePDFInvoice(soinspatient, facture, patient, typesoins, soins, produit) {
             const { jsPDF } = window.jspdf;
             const doc = new jsPDF({ orientation: 'p', unit: 'mm', format: 'a4' });
 
@@ -722,10 +732,10 @@
                 doc.text(phone, phoneX, (yPos + 10));
                 doc.setFontSize(10);
                 doc.setFont("Helvetica", "normal");
-                const hopitalDate = new Date(hopital.created_at);
+                const spatientDate = new Date(soinspatient.created_at);
                 // Formatter la date et l'heure séparément
-                const formattedDate = hopitalDate.toLocaleDateString(); // Formater la date
-                const formattedTime = hopitalDate.toLocaleTimeString();
+                const formattedDate = spatientDate.toLocaleDateString(); // Formater la date
+                const formattedTime = spatientDate.toLocaleTimeString();
                 doc.text("Date: " + formattedDate, 15, (yPos + 25));
                 doc.text("Heure: " + formattedTime, 15, (yPos + 30));
 
@@ -735,12 +745,12 @@
                 doc.setLineWidth(0.5);
                 doc.setTextColor(0, 0, 0);
                 // doc.line(10, 35, 200, 35); 
-                const titleR = "FACTURE HOSPITALISATION";
+                const titleR = "FACTURE SOINS AMBULATOIRES";
                 const titleRWidth = doc.getTextWidth(titleR);
                 const titleRX = (doc.internal.pageSize.getWidth() - titleRWidth) / 2;
                 // Définir le padding
                 const paddingh = 0; // Padding vertical
-                const paddingw = 15; // Padding horizontal
+                const paddingw = 8; // Padding horizontal
                 // Calculer les dimensions du rectangle
                 const rectX = titleRX - paddingw; // X du rectangle
                 const rectY = (yPos + 18) - paddingh; // Y du rectangle
@@ -792,15 +802,13 @@
 
                 yPoss = (yPos + 40);
 
-                const medecinInfo = [
-                    { label: "Medecin", value: "Dr. "+user.name },
-                    { label: "Spécialité", value: user.typeacte },
-                    { label: "Date d'entrée le ", value: formatDate(hopital.date_debut) },
-                    { label: "Date de sortie prévu le ", value: formatDate(hopital.date_fin) },
-                    { label: "Nombre de jours ", value: calculateDaysBetween(hopital.date_debut, hopital.date_fin)+" Jour(s)" },
+                const typeInfo = [
+                    { label: "Type de Soins", value: typesoins.nom },
+                    { label: "Soins Infirmiers", value: soins.length },
+                    { label: "Produits Utilisés", value: produit.length },
                 ];
 
-                medecinInfo.forEach(info => {
+                typeInfo.forEach(info => {
                     doc.setFontSize(8);
                     doc.setFont("Helvetica", "bold");
                     doc.text(info.label, leftMargin + 100, yPoss);
@@ -809,31 +817,79 @@
                     yPoss += 7;
                 });
 
-                yPoss = (yPos + 90);
+                yPoss += 15;
 
-                const typeInfo = [
-                    { label: "Type d'admission", value: type.nom },
-                    { label: "Nature d'admission", value: nature.nom },
-                    { label: "Chambre Occupée", value: "CH-"+chambre.code },
-                    { label: "Lit Occupée", value: "LIT-"+lit.code+"/"+lit.type },
-                    { label: "Prix", value: chambre.prix+" Fcfa" },
-                ];
+                const donneeTables = soins;
+                let yPossT = yPoss + 10; // Initialisation de la position Y pour le tableau des soins
 
-                typeInfo.forEach(info => {
-                    doc.setFontSize(8);
-                    doc.setFont("Helvetica", "bold");
-                    doc.text(info.label, leftMargin, yPoss);
-                    doc.setFont("Helvetica", "normal");
-                    doc.text(": " + info.value, leftMargin + 35, yPoss);
-                    yPoss += 7;
+                // Tableau dynamique pour les détails des soins infirmiers
+                doc.autoTable({
+                    startY: yPossT,
+                    head: [['N°', 'Nom du Soins Infirmiers', 'Prix Unitaire']],
+                    body: donneeTables.map((item, index) => [
+                        index + 1,
+                        item.nom_si,
+                        item.prix_si + " Fcfa",
+                    ]),
+                    theme: 'striped',
                 });
 
-                yPoss = (yPos + 90);
+                // Récupérer la position Y de la dernière ligne du tableau
+                yPoss = doc.autoTable.previous.finalY || yPossT + 10;
+                yPoss = yPoss + 5;
+                // Ajout des totaux
+                const finalInfos = [];
+                if (soins.length > 0) {
+                    finalInfos.push({ label: "Total Soins", value: formatPriceT(soinspatient.stotal) });
+                }
+                finalInfos.forEach(info => {
+                    doc.setFontSize(11);
+                    doc.setFont("Helvetica", "bold");
+                    doc.text(info.label, leftMargin + 95, yPoss);
+                    doc.setFont("Helvetica", "normal");
+                    doc.text(": " + info.value + " Fcfa", leftMargin + 125, yPoss);
+                    yPoss += 7; // Espacement pour la prochaine ligne
+                });
+
+                // Répéter le processus pour les produits
+                const donneeTable = produit;
+                yPossT = yPoss + 10; // Ajuster la position Y pour le tableau des produits
+                doc.autoTable({
+                    startY: yPossT,
+                    head: [['N°', 'Nom du produit utilisé', 'Quantité', 'Prix Unitaire', 'Montant']],
+                    body: donneeTable.map((item, index) => [
+                        index + 1,
+                        item.nom_pro,
+                        item.quantite_pro,
+                        item.prix_pro + " Fcfa",
+                        item.montant + " Fcfa",
+                    ]),
+                    theme: 'striped',
+                });
+
+                // Position Y après le tableau des produits
+                yPoss = doc.autoTable.previous.finalY || yPossT + 10;
+                yPoss = yPoss + 5;
+                // Ajout des totaux pour les produits
+                const finalInfo = [];
+                if (produit.length > 0) {
+                    finalInfo.push({ label: "Total Produit", value: formatPriceT(soinspatient.prototal) });
+                }
+                finalInfo.forEach(info => {
+                    doc.setFontSize(11);
+                    doc.setFont("Helvetica", "bold");
+                    doc.text(info.label, leftMargin + 120, yPoss);
+                    doc.setFont("Helvetica", "normal");
+                    doc.text(": " + info.value + " Fcfa", leftMargin + 150, yPoss);
+                    yPoss += 7; // Espacement pour la prochaine ligne
+                });
+
+                yPoss = yPoss + 10;
 
                 const compteInfo = [
-                    { label: "Part assurance", value: hopital.part_assurance+" Fcfa"},
-                    { label: "Part Patient", value: hopital.part_patient+" Fcfa"},
-                    { label: "Remise", value: hopital.remise ? hopital.remise + " Fcfa" : "0 Fcfa" }
+                    { label: "Part assurance", value: soinspatient.part_assurance+" Fcfa"},
+                    { label: "Part Patient", value: soinspatient.part_patient+" Fcfa"},
+                    { label: "Remise", value: soinspatient.remise ? soinspatient.remise + " Fcfa" : "0 Fcfa" }
                 ];
 
                 if (patient.taux !== null) {
@@ -848,81 +904,12 @@
                     doc.text(": " + info.value, leftMargin + 150, yPoss);
                     yPoss += 7;
                 });
-
-                yPoss += 1;
-
                 doc.setFontSize(11);
                 doc.setFont("Helvetica", "bold");
-                doc.text('Total Chambre', leftMargin + 120, yPoss);
+                doc.text('Total', leftMargin + 120, yPoss);
                 doc.setFont("Helvetica", "bold");
-                doc.text(": "+hopital.montant+" Fcfa", leftMargin + 150, yPoss);
+                doc.text(": "+soinspatient.montant+" Fcfa", leftMargin + 150, yPoss);
 
-                const donneeTable = produit;
-                // Using autoTable to add a dynamic table for hospital stay details
-                if (donneeTable.length > 0) {
-                    yPossT = yPoss + 10;
-                    doc.autoTable({
-                        startY: yPossT, // Ajustez cette valeur pour le placer correctement sur la page
-                        head: [['N°','Nom du produit utilisé', 'Quantité', 'Prix Unitaire', 'Montant']], // En-têtes du tableau
-                        body: donneeTable.map((item, index) => [
-                            index + 1,
-                            item.nom_produit, // Nom du produit
-                            item.quantite, // Quantité
-                            item.prix_produit+" Fcfa", // Prix unitaire
-                            item.montant+" Fcfa", // Montant (quantité * prix unitaire)
-                        ]), // Remplace les lignes par les données dynamiques
-                        theme: 'striped', // Vous pouvez changer le thème en plain, grid, etc.
-                        // headStyles: { fillColor: [255, 0, 0] }, // En-tête en rouge si nécessaire
-                    });
-
-                    // Utiliser la position Y de la dernière ligne du tableau
-                    const finalY = doc.autoTable.previous.finalY || yPossT + 10;
-
-                    // Ajuster yPoss à la fin du tableau pour le placement des totaux
-                    yPoss = finalY + 10;
-
-                    // Déclarer finalInfo comme un tableau vide
-                    const finalInfo = [];
-                    
-                    // Ajouter l'entrée "Total Produit" si produit.length > 0
-                    if (produit.length > 0) {
-                        finalInfo.push({ label: "Total Produit", value: hopital.montant_soins });
-                    }
-                    
-                    // Ajouter l'entrée "Montant a payer"
-                    finalInfo.push({ label: "Montant a payer", value: hopital.total_final });
-                    
-                    // Boucler à travers finalInfo pour afficher les informations
-                    finalInfo.forEach(info => {
-                        doc.setFontSize(11);
-                        doc.setFont("Helvetica", "bold");
-                        doc.text(info.label, leftMargin + 120, yPoss);
-                        doc.setFont("Helvetica", "normal");
-                        doc.text(": " + info.value + " Fcfa", leftMargin + 150, yPoss);
-                        yPoss += 7;
-                    });
-
-                } else {
-
-                    yPoss += 7;
-                    // Déclarer finalInfo comme un tableau vide
-                    const finalInfo = [];
-                    // Ajouter l'entrée "Total Produit" si produit.length > 0
-                    if (produit.length > 0) {
-                        finalInfo.push({ label: "Total Produit", value: hopital.montant_soins });
-                    }
-                    // Ajouter l'entrée "Montant a payer"
-                    finalInfo.push({ label: "Montant a payer", value: hopital.total_final });
-                    // Boucler à travers finalInfo pour afficher les informations
-                    finalInfo.forEach(info => {
-                        doc.setFontSize(11);
-                        doc.setFont("Helvetica", "bold");
-                        doc.text(info.label, leftMargin + 120, yPoss);
-                        doc.setFont("Helvetica", "normal");
-                        doc.text(": " + info.value + " Fcfa", leftMargin + 150, yPoss);
-                        yPoss += 7;
-                    });
-                }
 
             }
 
@@ -945,7 +932,7 @@
             doc.output('dataurlnewwindow');
         }
 
-        function generatePDFInvoicePayer(hopital, facture, patient, nature, type, lit, chambre, user, produit) {
+        function generatePDFInvoicePayer(soinspatient, facture, patient, typesoins, soins, produit) {
             const { jsPDF } = window.jspdf;
             const doc = new jsPDF({ orientation: 'p', unit: 'mm', format: 'a4' });
 
@@ -984,10 +971,10 @@
                 doc.text(phone, phoneX, (yPos + 10));
                 doc.setFontSize(10);
                 doc.setFont("Helvetica", "normal");
-                const hopitalDate = new Date(hopital.created_at);
+                const spatientDate = new Date(soinspatient.created_at);
                 // Formatter la date et l'heure séparément
-                const formattedDate = hopitalDate.toLocaleDateString(); // Formater la date
-                const formattedTime = hopitalDate.toLocaleTimeString();
+                const formattedDate = spatientDate.toLocaleDateString(); // Formater la date
+                const formattedTime = spatientDate.toLocaleTimeString();
                 doc.text("Date: " + formattedDate, 15, (yPos + 25));
                 doc.text("Heure: " + formattedTime, 15, (yPos + 30));
 
@@ -997,12 +984,12 @@
                 doc.setLineWidth(0.5);
                 doc.setTextColor(0, 0, 0);
                 // doc.line(10, 35, 200, 35); 
-                const titleR = "FACTURE HOSPITALISATION";
+                const titleR = "FACTURE SOINS AMBULATOIRES";
                 const titleRWidth = doc.getTextWidth(titleR);
                 const titleRX = (doc.internal.pageSize.getWidth() - titleRWidth) / 2;
                 // Définir le padding
                 const paddingh = 0; // Padding vertical
-                const paddingw = 15; // Padding horizontal
+                const paddingw = 8; // Padding horizontal
                 // Calculer les dimensions du rectangle
                 const rectX = titleRX - paddingw; // X du rectangle
                 const rectY = (yPos + 18) - paddingh; // Y du rectangle
@@ -1054,15 +1041,13 @@
 
                 yPoss = (yPos + 40);
 
-                const medecinInfo = [
-                    { label: "Medecin", value: "Dr. "+user.name },
-                    { label: "Spécialité", value: user.typeacte },
-                    { label: "Date d'entrée le ", value: formatDate(hopital.date_debut) },
-                    { label: "Date de sortie prévu le ", value: formatDate(hopital.date_fin) },
-                    { label: "Nombre de jours ", value: calculateDaysBetween(hopital.date_debut, hopital.date_fin)+" Jour(s)" },
+                const typeInfo = [
+                    { label: "Type de Soins", value: typesoins.nom },
+                    { label: "Soins Infirmiers", value: soins.length },
+                    { label: "Produits Utilisés", value: produit.length },
                 ];
 
-                medecinInfo.forEach(info => {
+                typeInfo.forEach(info => {
                     doc.setFontSize(8);
                     doc.setFont("Helvetica", "bold");
                     doc.text(info.label, leftMargin + 100, yPoss);
@@ -1071,31 +1056,79 @@
                     yPoss += 7;
                 });
 
-                yPoss = (yPos + 90);
+                yPoss += 15;
 
-                const typeInfo = [
-                    { label: "Type d'admission", value: type.nom },
-                    { label: "Nature d'admission", value: nature.nom },
-                    { label: "Chambre Occupée", value: "CH-"+chambre.code },
-                    { label: "Lit Occupée", value: "LIT-"+lit.code+"/"+lit.type },
-                    { label: "Prix", value: chambre.prix+" Fcfa" },
-                ];
+                const donneeTables = soins;
+                let yPossT = yPoss + 10; // Initialisation de la position Y pour le tableau des soins
 
-                typeInfo.forEach(info => {
-                    doc.setFontSize(8);
-                    doc.setFont("Helvetica", "bold");
-                    doc.text(info.label, leftMargin, yPoss);
-                    doc.setFont("Helvetica", "normal");
-                    doc.text(": " + info.value, leftMargin + 35, yPoss);
-                    yPoss += 7;
+                // Tableau dynamique pour les détails des soins infirmiers
+                doc.autoTable({
+                    startY: yPossT,
+                    head: [['N°', 'Nom du Soins Infirmiers', 'Prix Unitaire']],
+                    body: donneeTables.map((item, index) => [
+                        index + 1,
+                        item.nom_si,
+                        item.prix_si + " Fcfa",
+                    ]),
+                    theme: 'striped',
                 });
 
-                yPoss = (yPos + 90);
+                // Récupérer la position Y de la dernière ligne du tableau
+                yPoss = doc.autoTable.previous.finalY || yPossT + 10;
+                yPoss = yPoss + 5;
+                // Ajout des totaux
+                const finalInfos = [];
+                if (soins.length > 0) {
+                    finalInfos.push({ label: "Total Soins", value: formatPriceT(soinspatient.stotal) });
+                }
+                finalInfos.forEach(info => {
+                    doc.setFontSize(11);
+                    doc.setFont("Helvetica", "bold");
+                    doc.text(info.label, leftMargin + 95, yPoss);
+                    doc.setFont("Helvetica", "normal");
+                    doc.text(": " + info.value + " Fcfa", leftMargin + 125, yPoss);
+                    yPoss += 7; // Espacement pour la prochaine ligne
+                });
+
+                // Répéter le processus pour les produits
+                const donneeTable = produit;
+                yPossT = yPoss + 10; // Ajuster la position Y pour le tableau des produits
+                doc.autoTable({
+                    startY: yPossT,
+                    head: [['N°', 'Nom du produit utilisé', 'Quantité', 'Prix Unitaire', 'Montant']],
+                    body: donneeTable.map((item, index) => [
+                        index + 1,
+                        item.nom_pro,
+                        item.quantite_pro,
+                        item.prix_pro + " Fcfa",
+                        item.montant + " Fcfa",
+                    ]),
+                    theme: 'striped',
+                });
+
+                // Position Y après le tableau des produits
+                yPoss = doc.autoTable.previous.finalY || yPossT + 10;
+                yPoss = yPoss + 5;
+                // Ajout des totaux pour les produits
+                const finalInfo = [];
+                if (produit.length > 0) {
+                    finalInfo.push({ label: "Total Produit", value: formatPriceT(soinspatient.prototal) });
+                }
+                finalInfo.forEach(info => {
+                    doc.setFontSize(11);
+                    doc.setFont("Helvetica", "bold");
+                    doc.text(info.label, leftMargin + 120, yPoss);
+                    doc.setFont("Helvetica", "normal");
+                    doc.text(": " + info.value + " Fcfa", leftMargin + 150, yPoss);
+                    yPoss += 7; // Espacement pour la prochaine ligne
+                });
+
+                yPoss = yPoss + 10;
 
                 const compteInfo = [
-                    { label: "Part assurance", value: hopital.part_assurance+" Fcfa"},
-                    { label: "Part Patient", value: hopital.part_patient+" Fcfa"},
-                    { label: "Remise", value: hopital.remise ? hopital.remise + " Fcfa" : "0 Fcfa" }
+                    { label: "Part assurance", value: soinspatient.part_assurance+" Fcfa"},
+                    { label: "Part Patient", value: soinspatient.part_patient+" Fcfa"},
+                    { label: "Remise", value: soinspatient.remise ? soinspatient.remise + " Fcfa" : "0 Fcfa" }
                 ];
 
                 if (patient.taux !== null) {
@@ -1111,87 +1144,30 @@
                     yPoss += 7;
                 });
 
-                yPoss += 1;
-
                 doc.setFontSize(11);
                 doc.setFont("Helvetica", "bold");
-                doc.text('Total Chambre', leftMargin + 120, yPoss);
+                doc.text('Total', leftMargin + 120, yPoss);
                 doc.setFont("Helvetica", "bold");
-                doc.text(": "+hopital.montant+" Fcfa", leftMargin + 150, yPoss);
+                doc.text(": "+soinspatient.montant+" Fcfa", leftMargin + 150, yPoss);
 
-                const donneeTable = produit;
-                // Using autoTable to add a dynamic table for hospital stay details
-                if (donneeTable.length > 0) {
-                    yPossT = yPoss + 10;
-                    doc.autoTable({
-                        startY: yPossT, // Ajustez cette valeur pour le placer correctement sur la page
-                        head: [['N°','Nom du produit utilisé', 'Quantité', 'Prix Unitaire', 'Montant']], // En-têtes du tableau
-                        body: donneeTable.map((item, index) => [
-                            index + 1,
-                            item.nom_produit, // Nom du produit
-                            item.quantite, // Quantité
-                            item.prix_produit+" Fcfa", // Prix unitaire
-                            item.montant+" Fcfa", // Montant (quantité * prix unitaire)
-                        ]), // Remplace les lignes par les données dynamiques
-                        theme: 'striped', // Vous pouvez changer le thème en plain, grid, etc.
-                        // headStyles: { fillColor: [255, 0, 0] }, // En-tête en rouge si nécessaire
-                    });
+                yPoss = yPoss - 20;
 
-                    // Utiliser la position Y de la dernière ligne du tableau
-                    const finalY = doc.autoTable.previous.finalY || yPossT + 10;
+                const compteInfoP = [
+                    { label: "Montant a payer", value: soinspatient.part_patient+" Fcfa"},
+                    { label: "Montant Verser", value: facture.montant_verser+" Fcfa"},
+                    { label: "Montant Remis", value: facture.montant_remis+" Fcfa"},
+                    { label: "Reste a payer", value: facture.montant_restant+" Fcfa"},
+                ];
 
-                    // Ajuster yPoss à la fin du tableau pour le placement des totaux
-                    yPoss = finalY + 10;
-
-                    // Déclarer finalInfo comme un tableau vide
-                    const finalInfo = [];
-                    
-                    // Ajouter l'entrée "Total Produit" si produit.length > 0
-                    if (produit.length > 0) {
-                        finalInfo.push({ label: "Total Produit", value: hopital.montant_soins });
-                    }
-                    
-                    // Ajouter l'entrée "Montant a payer"
-                    finalInfo.push({ label: "Montant a payer", value: hopital.total_final });
-                    
-                    if (facture) {
-                        finalInfo.push(
-                            { label: "Montant Verser", value: facture.montant_verser },
-                            { label: "Montant Remis", value: facture.montant_remis },
-                            );
-                    }
-
-                    // Boucler à travers finalInfo pour afficher les informations
-                    finalInfo.forEach(info => {
-                        doc.setFontSize(11);
-                        doc.setFont("Helvetica", "bold");
-                        doc.text(info.label, leftMargin + 120, yPoss);
-                        doc.setFont("Helvetica", "normal");
-                        doc.text(": " + info.value + " Fcfa", leftMargin + 150, yPoss);
-                        yPoss += 7;
-                    });
-
-                } else {
-
+                compteInfoP.forEach(info => {
+                    doc.setFontSize(9);
+                    doc.setFont("Helvetica", "bold");
+                    doc.text(info.label, leftMargin, yPoss);
+                    doc.setFont("Helvetica", "normal");
+                    doc.text(": " + info.value, leftMargin + 30, yPoss);
                     yPoss += 7;
-                    // Déclarer finalInfo comme un tableau vide
-                    const finalInfo = [];
-                    // Ajouter l'entrée "Total Produit" si produit.length > 0
-                    if (produit.length > 0) {
-                        finalInfo.push({ label: "Total Produit", value: hopital.montant_soins });
-                    }
-                    // Ajouter l'entrée "Montant a payer"
-                    finalInfo.push({ label: "Montant a payer", value: hopital.total_final });
-                    // Boucler à travers finalInfo pour afficher les informations
-                    finalInfo.forEach(info => {
-                        doc.setFontSize(11);
-                        doc.setFont("Helvetica", "bold");
-                        doc.text(info.label, leftMargin + 120, yPoss);
-                        doc.setFont("Helvetica", "normal");
-                        doc.text(": " + info.value + " Fcfa", leftMargin + 150, yPoss);
-                        yPoss += 7;
-                    });
-                }
+                });
+
 
             }
 

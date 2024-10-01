@@ -362,29 +362,12 @@
             dynamicFields.appendChild(groupe);
         }
 
-        function showAlert(type, message) {
-
-            var dynamicFields = document.getElementById("div_alert");
-            // Remove existing content
-            while (dynamicFields.firstChild) {
-                dynamicFields.removeChild(dynamicFields.firstChild);
-            }
-
-            var groupe = document.createElement("div");
-            groupe.className = `alert bg-${type} text-white alert-dismissible fade show`;
-            groupe.innerHTML = `
-                ${message}
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>   
-            `;
-            document.getElementById("div_alert").appendChild(groupe);
-
-            setTimeout(function() {
-                groupe.classList.remove("show");
-                groupe.classList.add("fade");
-                setTimeout(function() {
-                    groupe.remove();
-                }, 150); // Time for the fade effect to complete
-            }, 3000);
+        function showAlert(title, message, type) {
+            Swal.fire({
+                title: title,
+                text: message,
+                icon: type,
+            });
         }
 
         function select_taux()
@@ -482,25 +465,25 @@
             var societe_id = document.getElementById("patient_societe_id_new");
 
             if (!nom.value.trim() || !phone.value.trim() || !datenais.value.trim() || !sexe.value.trim()) {
-                showAlert('warning', 'Tous les champs sont obligatoires.');
+                showAlert('Alert', 'Tous les champs sont obligatoires.','warning');
                 return false; 
             }
 
             var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
             if (email.value.trim() && !emailRegex.test(email.value.trim())) {
-                showAlert('warning', 'Email incorrect.');
+                showAlert('Alert', 'Email incorrect.','warning');
                 return false;
             }
 
             if (phone.value.length !== 10 || (phone2.value !== '' && phone2.value.length !== 10)) {
-                showAlert('warning', 'Contact incomplet.');
+                showAlert('Alert', 'Contact incomplet.','warning');
                 return false;
             }
 
             if (assurer.value == 'oui') {
                 if (assurance_id.value !== '' && taux_id.value !== '' && societe_id.value !== '' || filiation.value !== '' || matricule_assurance.value !== '') {
                 } else {
-                    showAlert('warning', 'Veuillez remplir tous les champs relatifs à l\'assurance');
+                    showAlert('Alert', 'Veuillez remplir tous les champs relatifs à l\'assurance','warning');
                     return false;
                 }
             }
@@ -524,15 +507,15 @@
                     }
                     
                     if (response.tel_existe) {
-                        showAlert('warning', 'Ce numéro de téléphone appartient déjà a un patient.');
+                        showAlert('Alert', 'Ce numéro de téléphone appartient déjà a un patient.','warning');
                     }else if (response.email_existe) {
-                        showAlert('warning', 'Cet email appartient déjà a un patient.');
+                        showAlert('Alert', 'Cet email appartient déjà a un patient.','warning');
                     }else if (response.nom_existe) {
-                        showAlert('warning', 'Cet patient existe déjà.');
+                        showAlert('Alert', 'Cet patient existe déjà.','warning');
                     } else if (response.success) {
-                        showAlert('success', 'Patient Enregistrée.');
+                        showAlert('Succès', 'Patient Enregistrée.','success');
                     } else if (response.error) {
-                        showAlert('danger', 'Une erreur est survenue lors de l\'enregistrement.');
+                        showAlert('Alert', 'Une erreur est survenue lors de l\'enregistrement.','error');
                     }
 
                     nom.value = '';
@@ -560,7 +543,7 @@
                         preloader.remove();
                     }
 
-                    showAlert('danger', 'Une erreur est survenue lors de l\'enregistrement.');
+                    showAlert('Alert', 'Une erreur est survenue lors de l\'enregistrement.','error');
                 }
             });
         }

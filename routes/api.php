@@ -130,6 +130,8 @@ Route::middleware(['statutchambre'])->group(function () {
 	Route::get('/list_facture/{statut}', [ApilistfactureController::class, 'list_facture']);
 	Route::get('/list_facture_hos', [ApilistfactureController::class, 'list_facture_hos']);
 	Route::get('/list_facture_hos_all', [ApilistfactureController::class, 'list_facture_hos_all']);
+	Route::get('/list_facture_soinsam', [ApilistfactureController::class, 'list_facture_soinsam']);
+	Route::get('/list_facture_soinsam_all', [ApilistfactureController::class, 'list_facture_soinsam_all']);
 	// List facture fin
 
 	// List facture detail debut
@@ -140,6 +142,7 @@ Route::middleware(['statutchambre'])->group(function () {
 	// paiement facture debut
 	Route::get('/facture_payer/{code_fac}', [ApiinsertfactureController::class, 'facture_payer']);
 	Route::get('/facture_payer_hos/{code_fac}', [ApiinsertfactureController::class, 'facture_payer_hos']);
+	Route::get('/facture_payer_soinsam/{code_fac}', [ApiinsertfactureController::class, 'facture_payer_soinsam']);
 	// paiement facture fin
 
 	// PDF debut
