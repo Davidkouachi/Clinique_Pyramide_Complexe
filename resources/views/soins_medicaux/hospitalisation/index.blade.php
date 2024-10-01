@@ -26,16 +26,16 @@
                 <div class="card-body" style="background: rgba(0, 0, 0, 0.7);">
                     <div class="py-4 px-3 text-white">
                         <h6>Bienvenue,</h6>
-                        <h2>Dr. Patrick Kim</h2>
-                        <h5>Votre emploi du temps aujourd'hui.</h5>
+                        <h2>{{Auth::user()->sexe.'. '.Auth::user()->name}}</h2>
+                        <h5>Les statistiques d'aujourd'hui.</h5>
                         <div class="mt-4 d-flex gap-3">
                             <div class="d-flex align-items-center">
                                 <div class="icon-box lg bg-info rounded-5 me-3">
                                     <i class="ri-walk-line fs-1"></i>
                                 </div>
                                 <div class="d-flex flex-column">
-                                    <h2 class="m-0 lh-1">9</h2>
-                                    <p class="m-0">Hospitaliés</p>
+                                    <h2 class="m-0 lh-1" id="nbre_hos"></h2>
+                                    <p class="m-0">Hospitalisation</p>
                                 </div>
                             </div>
                         </div>
@@ -485,6 +485,7 @@
 <script>
     document.addEventListener("DOMContentLoaded", function() {
 
+        Statistique();
         Name_atient();
         calculerJours();
         select_medecin();
@@ -1123,6 +1124,7 @@
                     }
                     
                     if (response.success) {
+                        Statistique();
                         showAlert('Succès', 'Patient Hospitaliser.', 'success');
                     } else if (response.error) {
                         showAlert('Alert', 'Une erreur est survenue lors de l\'hospitalisation.','error');
@@ -2112,6 +2114,24 @@
             addFooter();
 
             doc.output('dataurlnewwindow');
+        }
+
+        function Statistique() {
+
+            const nbre_day = document.getElementById("nbre_hos");
+
+            $.ajax({
+                url: '/api/statistique_hos',
+                method: 'GET',
+                success: function(response) {
+                    // Set the text content of each element
+                    nbre_day.textContent = response.stat_hos_day;
+                },
+                error: function() {
+                    // Set default values in case of an error
+                    nbre_day.textContent = '0';
+                }
+            });
         }
 
     });

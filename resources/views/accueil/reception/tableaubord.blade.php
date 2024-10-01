@@ -573,7 +573,6 @@
                     event.preventDefault();
                 }
             });
-
             // Alternatively, for more comprehensive input validation, use input event listener
             inputElement.addEventListener('input', function() {
                 this.value = this.value.replace(/[^0-9]/g, ''); // Allow only numbers
@@ -792,7 +791,7 @@
                         showAlert('Alert', 'Ce patient n\'existe pas.', 'error');
                         Reset();
                     } else if (response.success) {
-                        showAlert('Succés', 'Patient trouvé.', 'success');
+                        // showAlert('Succés', 'Patient trouvé.', 'success');
 
                         addGroup(response.patient);
 

@@ -193,6 +193,12 @@ class ApiinsertController extends Controller
 
     public function chambre_new(Request $request)
     {
+        $verf = chambre::where('code', '=', $request->num_chambre)->get();
+
+        if ($verf) {
+            return response()->json(['existe' => true]);
+        }
+
         $add = new chambre();
         $add->code = $request->num_chambre;
         $add->nbre_lit = $request->nbre_lit;
@@ -208,8 +214,13 @@ class ApiinsertController extends Controller
 
     public function lit_new(Request $request)
     {
-        $add = new lit();
+        $verf = lit::where('code', '=', $request->num_lit)->get();
 
+        if ($verf) {
+            return response()->json(['existe' => true]);
+        }
+        
+        $add = new lit();
         $add->code = $request->num_lit;
         $add->type = $request->type;
         $add->chambre_id = $request->chambre_id;

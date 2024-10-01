@@ -302,7 +302,9 @@
                         preloader.remove();
                     }
 
-                    if (response.success) {
+                    if (response.existe) {
+                        showAlert('Alert', 'Cet Lit Existe déjà.','warning');
+                    }else if (response.success) {
                         showAlert('Succès', 'Lit Enregistrée.','success');
                     } else if (response.error) {
                         showAlert('Erreur', 'Une erreur est survenue lors de l\'enregistrement.','error');

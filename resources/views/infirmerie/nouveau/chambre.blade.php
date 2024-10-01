@@ -295,7 +295,9 @@
                         preloader.remove();
                     }
 
-                    if (response.success) {
+                    if (response.existe) {
+                        showAlert('Alert', 'Cette chambre Existe déjà.','warning');
+                    }else if (response.success) {
                         showAlert('Succès', 'Chambre Enregistrée.','success');
                     } else if (response.error) {
                         showAlert('Erreur', 'Une erreur est survenue lors de l\'enregistrement.','error');

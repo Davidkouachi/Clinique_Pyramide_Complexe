@@ -123,6 +123,8 @@ Route::middleware(['statutchambre'])->group(function () {
 	Route::get('/statistique_cons', [ApistatController::class, 'statistique_cons']);
 	Route::get('/getWeeklyConsultations', [ApistatController::class, 'getWeeklyConsultations']);
 	Route::get('/getConsultationComparison', [ApistatController::class, 'getConsultationComparison']);
+	Route::get('/statistique_hos', [ApistatController::class, 'statistique_hos']);
+	Route::get('/statistique_soinsam', [ApistatController::class, 'statistique_soinsam']);
 	// statistique fin
 
 	// List facture debut

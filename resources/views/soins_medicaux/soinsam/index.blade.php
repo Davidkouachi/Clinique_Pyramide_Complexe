@@ -26,15 +26,15 @@
                 <div class="card-body" style="background: rgba(0, 0, 0, 0.7);">
                     <div class="py-4 px-3 text-white">
                         <h6>Bienvenue,</h6>
-                        <h2>Dr. Patrick Kim</h2>
-                        <h5>Votre emploi du temps aujourd'hui.</h5>
+                        <h2>{{Auth::user()->sexe.'. '.Auth::user()->name}}</h2>
+                        <h5>Les statistiques d'aujourd'hui.</h5>
                         <div class="mt-4 d-flex gap-3">
                             <div class="d-flex align-items-center">
                                 <div class="icon-box lg bg-info rounded-5 me-3">
                                     <i class="ri-walk-line fs-1"></i>
                                 </div>
                                 <div class="d-flex flex-column">
-                                    <h2 class="m-0 lh-1">9</h2>
+                                    <h2 class="m-0 lh-1" id="nbre_soinsam" ></h2>
                                     <p class="m-0">Patients Traités</p>
                                 </div>
                             </div>
@@ -331,7 +331,18 @@
                 </h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="modal-body" id="modal_detail">
+            <div class="modal-body" id="modal_detail" style="display: none;">
+            </div>
+            <div id="message_detail" style="display: none;">
+                <p class="text-center" >
+                    Aucun détail pour le moment
+                </p>
+            </div>
+            <div id="div_detail_loader" style="display: none;">
+                <div class="d-flex justify-content-center align-items-center">
+                    <div class="spinner-border text-warning me-2" role="status" aria-hidden="true"></div>
+                    <strong>Chargement des données...</strong>
+                </div>
             </div>
         </div>
     </div>
@@ -346,7 +357,6 @@
                 </h5>
                 <button type="button" id="close_modal_produit" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div id="div_alert_produit_qu" ></div>
             <div class="modal-body" id="modal_add">
                 <div class="row gx-3 justify-content-center align-items-center">
                     <div class="col-12 mb-3">
@@ -452,6 +462,7 @@
 <script>
     document.addEventListener("DOMContentLoaded", function() {
 
+        Statistique();
         Name_atient();
         select_typesoins();
         list();
@@ -540,83 +551,6 @@
                 }
             });
         }
-
-        // function rech_dossier()
-        // {
-        //     const matricule_patient = document.getElementById("matricule_patient").value;
-
-        //     if(!matricule_patient.trim()){
-        //         showAlert('warning', 'Veuillez saisie le nom d\'un du patient.');
-        //         return false;
-        //     }
-
-        //     // Créer l'élément de préchargement
-        //     var preloader_ch = `
-        //         <div id="preloader_ch">
-        //             <div class="spinner_preloader_ch"></div>
-        //         </div>
-        //     `;
-
-        //     // Ajouter le préchargeur au body
-        //     document.body.insertAdjacentHTML('beforeend', preloader_ch);
-
-        //     $.ajax({
-        //         url: '/api/rech_patient_hos/' + matricule_patient,
-        //         method: 'GET',
-        //         success: function(response) {
-        //             var preloader = document.getElementById('preloader_ch');
-
-        //             if (preloader) {
-        //                 preloader.remove();
-        //             }
-
-        //             if(response.existep) {
-
-        //                 showAlert('warning', 'Ce patient n\'existe pas.');
-        //                 return false;
-
-        //             } else if(response.existe) {
-
-        //                 showAlert('warning', 'Ce patient est déjà hospitaliser.');
-        //                 document.getElementById('patient').value = "" ;
-        //                 document.getElementById("matricule_patient").value = "" ;
-        //                 return false;
-
-        //             } else if (response.success) {
-        //                 showAlert('success', 'Patient trouvé.');
-
-        //                 const patient_taux = document.getElementById('patient_taux');
-        //                 patient_taux.value = '';
-        //                 patient_taux.value = response.patient.taux ? response.patient.taux : 0;
-
-        //                 const appliq_remise = document.getElementById('appliq_remise');
-
-        //                 // Cacher l'option "Assurance" si le taux est égal à 0
-        //                 if (patient_taux.value == 0) {
-        //                     for (let i = 0; i < appliq_remise.options.length; i++) {
-        //                         if (appliq_remise.options[i].value === 'assurance') {
-        //                             appliq_remise.options[i].style.display = 'none'; // Cacher l'option
-        //                         }
-        //                     }
-        //                 } else {
-        //                     // Afficher l'option "Assurance" si le taux est différent de 0
-        //                     for (let i = 0; i < appliq_remise.options.length; i++) {
-        //                         if (appliq_remise.options[i].value === 'assurance') {
-        //                             appliq_remise.options[i].style.display = 'block'; // Afficher l'option
-        //                         }
-        //                     }
-        //                 }
-        //             }
-        //         },
-        //         error: function() {
-        //             var preloader = document.getElementById('preloader_ch');
-        //             if (preloader) {
-        //                 preloader.remove();
-        //             }
-        //             showAlert('danger', 'Une erreur est survenue lors de la recherche.');
-        //         }
-        //     });
-        // }
 
         function showAlert(title, message, type) {
             Swal.fire({
@@ -1343,6 +1277,7 @@
                         showAlert("ALERT", 'Enregistrement éffectué', "success");
 
                         list();
+                        Statistique();
 
                         var newConsultationTab = new bootstrap.Tab(document.getElementById('tab-oneAAA'));
                         newConsultationTab.show();
@@ -1444,6 +1379,14 @@
                                 fetch(`/api/detail_soinam/${item.id}`) // API endpoint
                                     .then(response => response.json())
                                     .then(data => {
+                                        const message_detail =document.getElementById('message_detail');
+                                        const modal_detail = document.getElementById('modal_detail');
+                                        const div_detail_loader=document.getElementById('div_detail_loader');
+
+                                        message_detail.style.display = 'none';
+                                        modal_detail.style.display = 'none';
+                                        div_detail_loader.style.display = 'block';
+
                                         // Access the 'chambre' array from the API response
                                         const modal = document.getElementById('modal_detail');
                                         modal.innerHTML = '';
@@ -1503,8 +1446,15 @@
 
                                         modal.appendChild(div);
 
+                                        message_detail.style.display = 'none';
+                                        modal_detail.style.display = 'block';
+                                        div_detail_loader.style.display = 'none';
+
                                     })
                                     .catch(error => {
+                                        message_detail.style.display = 'block';
+                                        modal_detail.style.display = 'none';
+                                        div_detail_loader.style.display = 'none';
                                         console.error('Erreur lors du chargement des données:', error);
                                     });
                             });
@@ -2106,6 +2056,24 @@
             addFooter();
 
             doc.output('dataurlnewwindow');
+        }
+
+        function Statistique() {
+
+            const nbre_day = document.getElementById("nbre_soinsam");
+
+            $.ajax({
+                url: '/api/statistique_soinsam',
+                method: 'GET',
+                success: function(response) {
+                    // Set the text content of each element
+                    nbre_day.textContent = response.stat_soinsam_day;
+                },
+                error: function() {
+                    // Set default values in case of an error
+                    nbre_day.textContent = '0';
+                }
+            });
         }
 
     });

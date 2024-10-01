@@ -30,6 +30,7 @@ use App\Models\role;
 use App\Models\consultation;
 use App\Models\detailconsultation;
 use App\Models\facture;
+use App\Models\detailhopital;
 
 class ApistatController extends Controller
 {
@@ -179,6 +180,29 @@ class ApistatController extends Controller
         ]);
     }
 
+    public function statistique_hos()
+    {
+        $today = Carbon::today();
+        // Combine the queries into a single query to improve performance
+        $stat_hos_day = detailhopital::whereDate('created_at', '=', $today)->count();
+
+        // Return the results as JSON
+        return response()->json([
+            'stat_hos_day' => $stat_hos_day ?? 0,
+        ]);
+    }
+
+    public function statistique_soinsam()
+    {
+        $today = Carbon::today();
+        // Combine the queries into a single query to improve performance
+        $stat_soinsam_day = soinspatient::whereDate('created_at', '=', $today)->count();
+
+        // Return the results as JSON
+        return response()->json([
+            'stat_soinsam_day' => $stat_soinsam_day ?? 0,
+        ]);
+    }
 
 
 }
