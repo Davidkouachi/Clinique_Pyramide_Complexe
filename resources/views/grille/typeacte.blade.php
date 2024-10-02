@@ -398,13 +398,9 @@
                                     </div>
                                 </td>
                             `;
-                            // <a class="btn btn-outline-danger btn-sm rounded-5" data-bs-toggle="modal" data-bs-target="#Mdelete" id="delete-${item.id}">
-                            //                 <i class="ri-delete-bin-line"></i>
-                            //             </a>
-                            // Append the row to the table body
+
                             tableBody.appendChild(row);
 
-                            // Add event listener to the edit button to open the modal with pre-filled data
                             document.getElementById(`edit-${item.id}`).addEventListener('click', () =>
                             {
                                 // Set the values in the modal form
@@ -423,12 +419,6 @@
                                     }
                                 }
                             });
-
-                            // Add event listener to the edit button to open the modal with pre-filled data
-                            // document.getElementById(`delete-${item.id}`).addEventListener('click', () => {
-                            //     // Set the values in the modal form
-                            //     document.getElementById('Iddelete').value = item.id;
-                            // });
 
                         });
                     } else {

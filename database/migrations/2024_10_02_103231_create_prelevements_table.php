@@ -11,15 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('typeactes', function (Blueprint $table) {
+        Schema::create('prelevements', function (Blueprint $table) {
             $table->id();
-            $table->string('nom');
             $table->string('prix');
-            $table->unsignedBigInteger('acte_id');
-            $table->foreign('acte_id')->references('id')->on('actes')->onDelete('cascade');
-            $table->string('cotation')->nullable();
-            $table->string('valeur')->nullable();
-            $table->string('montant')->nullable();
             $table->timestamps();
         });
     }
@@ -29,6 +23,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('typeactes');
+        Schema::dropIfExists('prelevements');
     }
 };

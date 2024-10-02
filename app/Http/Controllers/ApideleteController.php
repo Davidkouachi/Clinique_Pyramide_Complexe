@@ -177,4 +177,20 @@ class ApideleteController extends Controller
         return response()->json(['error' => true]);
 
     }
+
+    public function delete_societe($id)
+    {
+        $put = societe::find($id);
+
+        if ($put) {
+            if ($put->delete()) {
+                return response()->json(['success' => true]);
+            }else{
+                return response()->json(['error' => true]);
+            }
+        }
+
+        return response()->json(['error' => true]);
+
+    }
 }

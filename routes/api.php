@@ -48,6 +48,7 @@ Route::middleware(['statutchambre'])->group(function () {
 	Route::get('/new_typesoins', [ApiinsertController::class, 'new_typesoins']);
 	Route::get('/new_soinsIn', [ApiinsertController::class, 'new_soinsIn']);
 	Route::get('/new_soinsam', [ApiinsertController::class, 'new_soinsam']);
+	Route::get('/examen_new', [ApiinsertController::class, 'examen_new']);
 	// insert debut
 
 	// search debut
@@ -62,6 +63,7 @@ Route::middleware(['statutchambre'])->group(function () {
 	Route::get('/lit_select/{id}', [ApisearchController::class, 'lit_select']);
 	Route::get('/natureadmission_select/{id}', [ApisearchController::class, 'natureadmission_select']);
 	Route::get('/select_soinsIn/{id}', [ApisearchController::class, 'select_soinsIn']);
+	Route::get('/list_acte_ex', [ApisearchController::class, 'list_acte_ex']);
 	// search debut
 
 	// liste day debut
@@ -81,6 +83,7 @@ Route::middleware(['statutchambre'])->group(function () {
 	Route::get('/appro_produit/{id}', [ApiupdateController::class, 'appro_produit']);
 	Route::get('/update_typesoins/{id}', [ApiupdateController::class, 'update_typesoins']);
 	Route::get('/update_soinIn/{id}', [ApiupdateController::class, 'update_soinIn']);
+	Route::get('/update_societe/{id}', [ApiupdateController::class, 'update_societe']);
 	// update debut
 
 	// delete debut
@@ -93,6 +96,7 @@ Route::middleware(['statutchambre'])->group(function () {
 	Route::get('/delete_natureadmission/{id}', [ApideleteController::class, 'delete_natureadmission']);
 	Route::get('/delete_typesoins/{id}', [ApideleteController::class, 'delete_typesoins']);
 	Route::get('/delete_soinsIn/{id}', [ApideleteController::class, 'delete_soinsIn']);
+	Route::get('/delete_societe/{id}', [ApideleteController::class, 'delete_societe']);
 	// delete debut
 
 	// liste debut
@@ -114,6 +118,8 @@ Route::middleware(['statutchambre'])->group(function () {
 	Route::get('/list_soinsIn', [ApilistController::class, 'list_soinsIn']);
 	Route::get('/list_soinsam_all/{statut}', [ApilistController::class, 'list_soinsam_all']);
 	Route::get('/detail_soinam/{id}', [ApilistController::class, 'detail_soinam']);
+	Route::get('/list_societe_all', [ApilistController::class, 'list_societe_all']);
+	Route::get('/list_examen_all', [ApilistController::class, 'list_examen_all']);
 	// liste debut
 
 	// statistique debut

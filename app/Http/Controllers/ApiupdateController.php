@@ -279,4 +279,22 @@ class ApiupdateController extends Controller
         return response()->json(['error' => true]);
     }
 
+    public function update_societe(Request $request, $id)
+    {
+        $put = societe::find($id);
+
+        if ($put) {
+            $put->nom = $request->nom;
+
+            if ($put->save()) {
+                return response()->json(['success' => true]);
+            }else{
+                return response()->json(['error' => true]);
+            }
+
+        }
+
+        return response()->json(['error' => true]);
+    }
+
 }

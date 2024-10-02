@@ -193,4 +193,11 @@ class ApisearchController extends Controller
         return response()->json(['soinsin' => $soinsin]); 
     }
 
+    public function list_acte_ex()
+    {
+        $acte = acte::where('nom', '=', 'ANALYSE')->Orwhere('nom', '=', 'IMAGERIE')->get();
+
+        return response()->json(['acte' => $acte]); 
+    }
+
 }

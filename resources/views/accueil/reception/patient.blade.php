@@ -729,10 +729,20 @@
                         // Update table with filtered factures
                         function applySearchFilter() {
                             const searchTerm = searchInputP.value.toLowerCase();
+
+                            // Filtrer les patients en vérifiant plusieurs champs
                             const filteredPatients = allPatients.filter(item =>
-                                item.matricule.toLowerCase().includes(searchTerm)
+                                item.matricule.toLowerCase().includes(searchTerm) ||
+                                item.np.toLowerCase().includes(searchTerm) ||
+                                item.sexe.toLowerCase().includes(searchTerm) ||
+                                item.tel.toLowerCase().includes(searchTerm) ||
+                                formatDate(item.datenais).toLowerCase().includes(searchTerm) ||
+                                item.age.toString().toLowerCase().includes(searchTerm) ||
+                                item.assurer.toLowerCase().includes(searchTerm) ||
+                                formatDateHeure(item.created_at).toLowerCase().includes(searchTerm)
                             );
-                            displayRows(filteredPatients); // Display only filtered factures
+
+                            displayRows(filteredPatients); // Afficher seulement les patients filtrés
                         }
 
                         searchInputP.addEventListener('input', applySearchFilter);

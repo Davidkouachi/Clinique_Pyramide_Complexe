@@ -67,12 +67,9 @@
                     </a>
                 </div>
                 <div class="card-body">
-                    <div id="div_alert_table" >
-                    
-                    </div>
                     <div class="table-outer" id="div_Table" style="display: none;" >
                         <div class="table-responsive">
-                            <table class="table align-middle table-hover m-0 truncate" id="Table_day">
+                            <table class="table truncate m-0 align-middle" id="Table_day">
                                 <thead>
                                     <tr>
                                         <th scope="col">N°</th>

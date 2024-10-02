@@ -41,6 +41,9 @@ use App\Models\soinsinfirmier;
 use App\Models\soinspatient;
 use App\Models\sp_produit;
 use App\Models\sp_soins;
+use App\Models\examenpatient;
+use App\Models\examen;
+use App\Models\prelevement;
 
 class ApiinsertController extends Controller
 {
@@ -845,6 +848,33 @@ class ApiinsertController extends Controller
         }
 
         return response()->json(['success' => true]);
+    }
+
+    public function examen_new(Request $request)
+    {
+        // Vérification de l'existence d'un enregistrement avec le même nom et acte_id
+        $verf = typeacte::where('nom', '=', $request->nom)
+                        ->where('acte_id', '=', $request->id)
+                        ->exists();
+
+        if ($verf) {
+            return response()->json(['existe' => true]);
+        }
+
+        // Ajouter un nouvel enregistrement si la combinaison (nom, acte_id) n'existe pas
+        $add = new typeacte();
+        $add->nom = $request->nom;
+        $add->cotation = $request->cotation;
+        $add->valeur = $request->valeur;
+        $add->prix = $request->prix;
+        $add->montant = $request->montant;
+        $add->acte_id = $request->id;
+
+        if ($add->save()) {
+            return response()->json(['success' => true]);
+        }
+
+        return response()->json(['error' => true]);
     }
 
 }

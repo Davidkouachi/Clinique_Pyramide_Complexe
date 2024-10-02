@@ -23,6 +23,10 @@
     ************ -->
     <!-- Scrollbar CSS -->
     <link rel="stylesheet" href="{{asset('assets/vendor/overlay-scroll/OverlayScrollbars.min.css')}}">
+    <!-- Data Tables -->
+    <link rel="stylesheet" href="{{asset('assets/vendor/datatables/dataTables.bs5.css')}}">
+    <link rel="stylesheet" href="{{asset('assets/vendor/datatables/dataTables.bs5-custom.css')}}">
+    <link rel="stylesheet" href="{{asset('assets/vendor/datatables/buttons/dataTables.bs5-custom.css')}}">
 
     <script src="{{asset('sweetalert.js')}}"></script>
 </head>
@@ -119,7 +123,7 @@
                                 <span class="menu-text">Accueil</span>
                             </a>
                         </li>
-                        <li @if(request()->routeIs('index_reception','consultation_liste','patient_liste')) class="active current-page treeview" @else class="treeview" @endif >
+                        <li @if(request()->routeIs('index_reception','consultation_liste','patient_liste','societe_liste')) class="active current-page treeview" @else class="treeview" @endif >
                             <a href="#!">
                                 <i class="ri-computer-line"></i>
                                 <span class="menu-text">Réception</span>
@@ -140,6 +144,9 @@
                                         Patient
                                     </a>
                                 </li>
+                                <li>
+                                    <a @if(request()->routeIs('societe_liste')) class="text-primary" @endif href="{{route('societe_liste')}}">Société</a>
+                                </li>
                             </ul>
                         </li>
                         <li @if(request()->routeIs('hospitalisation','examen','soinsam')) class="active current-page treeview" @else class="treeview" @endif>
@@ -150,7 +157,7 @@
                             <ul class="treeview-menu">
                                 <li>
                                     <a @if(request()->routeIs('examen')) class="text-primary" @endif href="{{route('examen')}}">
-                                        Examen (en cours)
+                                        Examen
                                     </a>
                                 </li>
                                 <li>
@@ -277,7 +284,7 @@
                                                 </li>
                                             </ul>
                                         </li>
-                                        <li @if(request()->routeIs('assurance_new','taux_new','societe_new')) class="active" @endif >
+                                        {{-- <li @if(request()->routeIs('assurance_new','taux_new','societe_new')) class="active" @endif >
                                             <a href="#!">
                                                 Assurance (en cours)
                                                 <i class="ri-arrow-right-s-line"></i>
@@ -293,7 +300,7 @@
                                                     <a @if(request()->routeIs('societe_new')) class="text-primary" @endif href="{{route('societe_new')}}">Société assurer</a>
                                                 </li>
                                             </ul>
-                                        </li>
+                                        </li> --}}
                                         {{-- <li>
                                             <a href="#!">
                                                 Pharmacie
@@ -657,9 +664,6 @@
     <script src="{{asset('assets/js/jquery.min.js')}}"></script>
     <script src="{{asset('assets/js/bootstrap.bundle.min.js')}}"></script>
     <script src="{{asset('assets/js/moment.min.js')}}"></script>
-    <!-- *************
-            ************ Vendor Js Files *************
-        ************* -->
     <!-- Overlay Scroll JS -->
     <script src="{{asset('assets/vendor/overlay-scroll/jquery.overlayScrollbars.min.js')}}"></script>
     <script src="{{asset('assets/vendor/overlay-scroll/custom-scrollbar.js')}}"></script>
@@ -667,10 +671,10 @@
     <script src="{{asset('assets/vendor/apex/apexcharts.min.js')}}"></script>
     <!-- Custom JS files -->
     <script src="{{asset('assets/js/custom.js')}}"></script>
-
-    {{-- <script src="assets/vendor/datatables/dataTables.min.js"></script>
-    <script src="assets/vendor/datatables/dataTables.bootstrap.min.js"></script>
-    <script src="assets/vendor/datatables/custom/custom-datatables.js"></script> --}}   
+    <!-- Data Tables -->
+    <script src="{{asset('assets/vendor/datatables/dataTables.min.js')}}"></script>
+    <script src="{{asset('assets/vendor/datatables/dataTables.bootstrap.min.js')}}"></script>
+    <script src="{{asset('assets/vendor/datatables/custom/custom-datatables.js')}}"></script>
 
     @if (session('success'))
         <div class="modal fade" id="success" tabindex="-1" aria-hidden="true">

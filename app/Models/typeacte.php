@@ -13,6 +13,9 @@ class typeacte extends Model
         'nom',
         'prix',
         'acte_id',
+        'cotation',
+        'valeur',
+        'montant',
     ];
 
     public function acte()

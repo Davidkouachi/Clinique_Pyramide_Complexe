@@ -51,9 +51,9 @@ class Controller
         return view('soins_medicaux.hospitalisation.index');
     }
 
-    public function examen()
+    public function societe_liste()
     {
-        return view('soins_medicaux.examen');
+        return view('accueil.reception.societe');
     }
 
     public function typeadmission_new()
@@ -65,8 +65,6 @@ class Controller
     {
         return view('soins_medicaux.hospitalisation.natureadmission');
     }
-
-    
 
     // --------------------------------------------------------
 
@@ -100,5 +98,12 @@ class Controller
     public function soinsinfirmier_new()
     {
         return view('soins_medicaux.soinsam.soinsinfirmier');
+    }
+
+    // -----------------------------------------------------
+
+    public function examen()
+    {
+        return view('soins_medicaux.examen.index');
     }
 }

@@ -47,29 +47,42 @@ class DatabaseSeeder extends Seeder
             ],
             'ANALYSE' => [
                 'typeacte' => ['BLOOD TEST', 'URINE TEST'],
-                'prix' => ['15.000', '10.000']
+                'prix' => ['100', '300'],
+                'cotation' => ['B', 'Z'],
+                'valeur' => ['300', '500'],
+                'montant' => ['30.000', '150.000'],
             ],
             'IMAGERIE' => [
                 'typeacte' => ['ECG', 'ECHO','X-RAY', 'ULTRASOUND'],
-                'prix' => ['25.000', '35.000','20.000', '30.000']
+                'prix' => ['100', '300','200','200'],
+                'cotation' => ['B', 'Z','C','A'],
+                'valeur' => ['300', '500','400','400'],
+                'montant' => ['30.000', '150.000','80.000','80.000'],
             ]
         ];
 
-        // Loop through each acte category
         foreach ($actes as $acteName => $typeacteData) {
             // Create or get the acte entry
             $acte = acte::firstOrCreate(['nom' => $acteName]);
 
-            // Create typeacte entries with corresponding prices
+            // Loop through typeacte entries
             foreach ($typeacteData['typeacte'] as $key => $typeacteName) {
                 // Use index to get corresponding price
                 $prix = isset($typeacteData['prix'][$key]) ? $typeacteData['prix'][$key] : '0.00';
 
-                // Create typeacte entry
+                // Prepare additional fields if they exist
+                $cotation = isset($typeacteData['cotation'][$key]) ? $typeacteData['cotation'][$key] : null;
+                $valeur = isset($typeacteData['valeur'][$key]) ? $typeacteData['valeur'][$key] : null;
+                $montant = isset($typeacteData['montant'][$key]) ? $typeacteData['montant'][$key] : null;
+
+                // Create the typeacte entry with additional fields
                 typeacte::create([
                     'nom' => $typeacteName,
                     'prix' => $prix,
-                    'acte_id' => $acte->id
+                    'acte_id' => $acte->id,
+                    'cotation' => $cotation,
+                    'valeur' => $valeur,
+                    'montant' => $montant
                 ]);
             }
         }

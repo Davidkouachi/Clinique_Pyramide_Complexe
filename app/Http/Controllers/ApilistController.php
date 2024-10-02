@@ -40,6 +40,9 @@ use App\Models\typesoins;
 use App\Models\soinspatient;
 use App\Models\sp_produit;
 use App\Models\sp_soins;
+use App\Models\examenpatient;
+use App\Models\examen;
+use App\Models\prelevement;
 
 class ApilistController extends Controller
 {
@@ -478,7 +481,47 @@ class ApilistController extends Controller
             'produit' => $produit,
             'typesoins' => $typesoins,
         ]);
+    }
 
+    public function list_societe_all()
+    {
+        $societeQuery = societe::orderBy('created_at', 'desc');
+
+        $societe = $societeQuery->paginate(15);
+
+        return response()->json([
+            'societe' => $societe->items(), // Paginated data
+            'pagination' => [
+                'current_page' => $societe->currentPage(),
+                'last_page' => $societe->lastPage(),
+                'per_page' => $societe->perPage(),
+                'total' => $societe->total(),
+            ]
+        ]);
+    }
+
+    public function list_examen_all()
+    {
+        $examenQuery = typeacte::join('actes', 'actes.id', '=', 'typeactes.acte_id')
+                            ->where('actes.nom', '=', 'ANALYSE')
+                            ->Orwhere('actes.nom', '=', 'IMAGERIE')
+                            ->select(
+                                'typeactes.*',
+                                'actes.nom as acte',
+                            )
+                            ->orderBy('created_at', 'desc');
+
+        $examen = $examenQuery->paginate(15);
+
+        return response()->json([
+            'examen' => $examen->items(),
+            'pagination' => [
+                'current_page' => $examen->currentPage(),
+                'last_page' => $examen->lastPage(),
+                'per_page' => $examen->perPage(),
+                'total' => $examen->total(),
+            ]
+        ]);
     }
 
 }

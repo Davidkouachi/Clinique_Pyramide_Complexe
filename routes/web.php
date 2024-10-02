@@ -47,9 +47,7 @@ Route::middleware(['auth','statutchambre'])->group(function () {
 	Route::post('/insert lit', [litController::class, 'insert_lit'])->name('insert_lit');
 	Route::post('/update lit/{id}', [litController::class, 'update_lit'])->name('update_lit');
 
-	Route::get('/Nouvel Societe', [societeController::class, 'societe_new'])->name('societe_new');
-	Route::post('/insert societe', [societeController::class, 'insert_societe'])->name('insert_societe');
-	Route::post('/update societe/{id}', [societeController::class, 'update_societe'])->name('update_societe');
+	Route::get('/Société', [Controller::class, 'societe_liste'])->name('societe_liste');
 
 	Route::get('/Nouvel Taux', [tauxController::class, 'taux_new'])->name('taux_new');
 	Route::post('/insert taux', [tauxController::class, 'insert_taux'])->name('insert_taux');
@@ -82,8 +80,6 @@ Route::middleware(['auth','statutchambre'])->group(function () {
 
 	Route::get('/Type de soins',[Controller::class,'typesoins_new'])->name('typesoins_new');
 	Route::get('/Soins Infirmiers', [Controller::class, 'soinsinfirmier_new'])->name('soinsinfirmier_new');
-
-
 
 	Route::get('/Examen', [Controller::class, 'examen'])->name('examen');
 
