@@ -125,6 +125,8 @@ Route::middleware(['statutchambre'])->group(function () {
 	Route::get('/detail_soinam/{id}', [ApilistController::class, 'detail_soinam']);
 	Route::get('/list_societe_all', [ApilistController::class, 'list_societe_all']);
 	Route::get('/list_examen_all', [ApilistController::class, 'list_examen_all']);
+	Route::get('/list_examend_all', [ApilistController::class, 'list_examend_all']);
+	Route::get('/detail_examen/{id}', [ApilistController::class, 'detail_examen']);
 	// liste debut
 
 	// statistique debut
@@ -136,6 +138,7 @@ Route::middleware(['statutchambre'])->group(function () {
 	Route::get('/getConsultationComparison', [ApistatController::class, 'getConsultationComparison']);
 	Route::get('/statistique_hos', [ApistatController::class, 'statistique_hos']);
 	Route::get('/statistique_soinsam', [ApistatController::class, 'statistique_soinsam']);
+	Route::get('/statistique_examen', [ApistatController::class, 'statistique_examen']);
 	// statistique fin
 
 	// List facture debut
@@ -145,17 +148,21 @@ Route::middleware(['statutchambre'])->group(function () {
 	Route::get('/list_facture_hos_all', [ApilistfactureController::class, 'list_facture_hos_all']);
 	Route::get('/list_facture_soinsam', [ApilistfactureController::class, 'list_facture_soinsam']);
 	Route::get('/list_facture_soinsam_all', [ApilistfactureController::class, 'list_facture_soinsam_all']);
+	Route::get('/list_facture_examen', [ApilistfactureController::class, 'list_facture_examen']);
+	Route::get('/list_facture_examen_all/{statut}', [ApilistfactureController::class, 'list_facture_examen_all']);
 	// List facture fin
 
 	// List facture detail debut
 	Route::get('/list_facture_inpayer_d/{id}', [ApilistfacturedetailController::class, 'list_facture_inpayer_d']);
 	Route::get('/list_facture_hos_d/{id}', [ApilistfacturedetailController::class, 'list_facture_hos_d']);
+	Route::get('/list_facture_exam_d/{id}', [ApilistfacturedetailController::class, 'list_facture_exam_d']);
 	// List facture fin
 
 	// paiement facture debut
 	Route::get('/facture_payer/{code_fac}', [ApiinsertfactureController::class, 'facture_payer']);
 	Route::get('/facture_payer_hos/{code_fac}', [ApiinsertfactureController::class, 'facture_payer_hos']);
 	Route::get('/facture_payer_soinsam/{code_fac}', [ApiinsertfactureController::class, 'facture_payer_soinsam']);
+	Route::get('/facture_payer_examen/{code_fac}', [ApiinsertfactureController::class, 'facture_payer_examen']);
 	// paiement facture fin
 
 	// PDF debut

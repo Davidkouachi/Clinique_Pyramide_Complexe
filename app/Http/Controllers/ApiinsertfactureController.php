@@ -40,6 +40,9 @@ use App\Models\typesoins;
 use App\Models\soinspatient;
 use App\Models\sp_produit;
 use App\Models\sp_soins;
+use App\Models\examenpatient;
+use App\Models\examen;
+use App\Models\prelevement;
 
 class ApiinsertfactureController extends Controller
 {
@@ -304,6 +307,110 @@ class ApiinsertfactureController extends Controller
                     'soins' => $soins,
                     'produit' => $produit,
                     'typesoins' => $typesoins,
+                ]);
+
+            }else{
+
+                throw new \Exception('Erreur');
+                
+            }
+            
+        } catch (Exception $e) {
+            DB::rollback();
+            return response()->json(['error' => true]);
+        }
+
+    }
+
+    public function facture_payer_examen(Request $request,$code_fac)
+    {
+        DB::beginTransaction();
+
+        $fac = facture::where('code', '=', $code_fac)->first();
+
+        try {
+
+            if ($fac) {
+
+               $fac->montant_verser = $request->montant_verser;
+               $fac->montant_remis = $request->montant_remis;
+               $fac->statut = 'payer';
+               $fac->date_payer = Carbon::now();
+
+                if (!$fac->save()) {
+                    throw new \Exception('Erreur');
+                }
+
+                $statut = examen::where('facture_id', '=', $fac->id)->first();
+                $statut->statut = 'terminé';
+
+                if (!$statut->save()) {
+                    throw new \Exception('Erreur');
+                }
+
+                // ------------------------------------------------------------
+
+                $examen = examen::find($statut->id);
+
+                    $partPatient = str_replace('.', '', $examen->part_patient);
+                    $prelevement = str_replace('.', '', $examen->prelevement);
+
+                    // Conversion en entier
+                    $partPatient = (int)$partPatient;
+                    $prelevement = (int)$prelevement;
+
+                    // Calcul de la somme
+                    $examen->total_patient = $partPatient + $prelevement;
+
+                $facture = facture::find($examen->facture_id);
+
+                $total_amount = intval(str_replace('.', '', $facture->montant_verser));
+                $remis_amount = intval(str_replace('.', '', $facture->montant_remis));
+                $paid_amount = intval(str_replace('.', '', $examen->total_patient));
+
+                $remaining_amount = $total_amount - ($paid_amount + $remis_amount);
+
+                function formatWithPeriods($number) {
+                return number_format($number, 0, '', '.');
+                }
+
+                $facture->montant_restant = formatWithPeriods($remaining_amount);
+
+                $patient = patient::leftjoin('assurances', 'assurances.id', '=', 'patients.assurance_id')
+                ->leftjoin('tauxes', 'tauxes.id', '=', 'patients.taux_id')
+                ->where('patients.id', '=', $examen->patient_id)
+                ->select('patients.*', 'assurances.nom as assurance', 'tauxes.taux as taux')
+                ->first();
+
+                if ($patient) {
+                    $patient->age = $patient->datenais ? Carbon::parse($patient->datenais)->age : 0;
+                }
+
+                $acte = acte::find($examen->acte_id);
+
+                $examenpatient = examenpatient::join('typeactes', 'typeactes.id', '=', 'examenpatients.typeacte_id')
+                                    ->where('examenpatients.examen_id', '=', $examen->id)
+                                    ->select(
+                                        'examenpatients.*',
+                                        'typeactes.nom as nom_ex',
+                                        'typeactes.prix as prix_ex',
+                                        'typeactes.cotation as cotation_ex',
+                                        'typeactes.valeur as valeur_ex',
+                                        'typeactes.montant as montant_ex',
+                                    )
+                                    ->orderBy('examenpatients.created_at', 'desc')
+                                    ->get();
+
+                // ------------------------------------------------------------
+
+                DB::commit();
+                return response()->json([
+                    'success' => true,
+                    'examen' => $examen,
+                    'facture' => $facture,
+                    'patient' => $patient,
+                    'acte' => $acte,
+                    'examenpatient' => $examenpatient,
                 ]);
 
             }else{

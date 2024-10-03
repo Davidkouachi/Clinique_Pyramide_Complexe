@@ -106,4 +106,14 @@ class Controller
     {
         return view('soins_medicaux.examen.index');
     }
+
+    public function encaissement_examen()
+    {
+        return view('finance.examen.encaissement');
+    }
+
+    public function liste_caisse_examen()
+    {
+        return view('finance.examen.liste_caisse');
+    }
 }

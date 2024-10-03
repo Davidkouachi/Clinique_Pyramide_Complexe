@@ -1943,7 +1943,7 @@
                     yPoss += 7;
                 });
 
-                yPoss += 15;
+                yPoss += 30;
 
                 const donneeTables = soins;
                 let yPossT = yPoss + 10; // Initialisation de la position Y pour le tableau des soins

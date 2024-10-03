@@ -24,14 +24,25 @@ use App\Models\chambre;
 use App\Models\lit;
 use App\Models\acte;
 use App\Models\typeacte;
+use App\Models\typemedecin;
 use App\Models\user;
 use App\Models\role;
-use App\Models\typemedecin;
 use App\Models\consultation;
 use App\Models\detailconsultation;
-use App\Models\facture;
-use App\Models\soinshopital;
+use App\Models\typeadmission;
+use App\Models\natureadmission;
 use App\Models\detailhopital;
+use App\Models\facture;
+use App\Models\produit;
+use App\Models\soinshopital;
+use App\Models\soinsinfirmier;
+use App\Models\typesoins;
+use App\Models\soinspatient;
+use App\Models\sp_produit;
+use App\Models\sp_soins;
+use App\Models\examenpatient;
+use App\Models\examen;
+use App\Models\prelevement;
 
 class ApilistfacturedetailController extends Controller
 {
@@ -86,5 +97,30 @@ class ApilistfacturedetailController extends Controller
                             ->get();
 
         return response()->json(['factured' => $factured]);
+    }
+
+    public function list_facture_exam_d($id)
+    {
+        $factured = examenpatient::join('typeactes', 'typeactes.id', '=', 'examenpatients.typeacte_id')
+                            ->where('examenpatients.examen_id', '=', $id)
+                            ->select(
+                                'examenpatients.*',
+                                'typeactes.nom as nom_ex',
+                                'typeactes.prix as prix_ex',
+                                'typeactes.cotation as cotation_ex',
+                                'typeactes.valeur as valeur_ex',
+                                'typeactes.montant as montant_ex',
+                            )
+                            ->orderBy('examenpatients.created_at', 'desc')
+                            ->get();
+
+        // Calculer la somme de 'montant_ex' après avoir retiré les points
+        $sumMontantEx = $factured->sum(function ($item) {
+            // Retirer le point du montant et le convertir en entier
+            $montantEx = str_replace('.', '', $item->montant_ex);
+            return (int) $montantEx;
+        });
+
+        return response()->json(['factured' => $factured, 'sumMontantEx' => $sumMontantEx]);
     }
 }

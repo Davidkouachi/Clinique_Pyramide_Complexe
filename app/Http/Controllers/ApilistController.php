@@ -524,4 +524,85 @@ class ApilistController extends Controller
         ]);
     }
 
+    public function list_examend_all()
+    {
+        $examenQuery = examen::join('patients', 'patients.id', '=', 'examens.patient_id')
+                            ->join('actes', 'actes.id', '=', 'examens.acte_id')
+                            ->select(
+                                'examens.*',
+                                'actes.nom as acte',
+                                'patients.np as patient',
+                            )
+                            ->orderBy('created_at', 'desc');
+
+        $examen = $examenQuery->paginate(15);
+
+        foreach ($examen->items() as $value) {
+            $nbre = examenpatient::where('examen_id', '=', $value->id)->count();
+            $value->nbre =  $nbre ?? 0;
+        }
+
+        return response()->json([
+            'examen' => $examen->items(),
+            'pagination' => [
+                'current_page' => $examen->currentPage(),
+                'last_page' => $examen->lastPage(),
+                'per_page' => $examen->perPage(),
+                'total' => $examen->total(),
+            ]
+        ]);
+    }
+
+    public function detail_examen($id)
+    {
+        $examen = examen::find($id);
+
+        $facture = facture::find($examen->facture_id);
+
+        $total_amount = intval(str_replace('.', '', $facture->montant_verser));
+        $paid_amount = intval(str_replace('.', '', $examen->part_patient));
+        $remis_amount = intval(str_replace('.', '', $facture->montant_remis));
+
+        $remaining_amount = $total_amount - ($paid_amount + $remis_amount);
+
+        function formatWithPeriods($number) {
+        return number_format($number, 0, '', '.');
+        }
+        $facture->montant_restant = formatWithPeriods($remaining_amount);
+
+        $patient = patient::leftjoin('assurances', 'assurances.id', '=', 'patients.assurance_id')
+        ->leftjoin('tauxes', 'tauxes.id', '=', 'patients.taux_id')
+        ->where('patients.id', '=', $examen->patient_id)
+        ->select('patients.*', 'assurances.nom as assurance', 'tauxes.taux as taux')
+        ->first();
+
+        if ($patient) {
+            $patient->age = $patient->datenais ? Carbon::parse($patient->datenais)->age : 0;
+        }
+
+        $acte = acte::find($examen->acte_id);
+
+        $examenpatient = examenpatient::join('typeactes', 'typeactes.id', '=', 'examenpatients.typeacte_id')
+                            ->where('examenpatients.examen_id', '=', $id)
+                            ->select(
+                                'examenpatients.*',
+                                'typeactes.nom as nom_ex',
+                                'typeactes.prix as prix_ex',
+                                'typeactes.cotation as cotation_ex',
+                                'typeactes.valeur as valeur_ex',
+                                'typeactes.montant as montant_ex',
+                            )
+                            ->orderBy('examenpatients.created_at', 'desc')
+                            ->get();
+
+        
+        return response()->json([
+            'examen' => $examen,
+            'facture' => $facture,
+            'patient' => $patient,
+            'acte' => $acte,
+            'examenpatient' => $examenpatient,
+        ]);
+    }
+
 }

@@ -40,6 +40,9 @@ use App\Models\typesoins;
 use App\Models\soinspatient;
 use App\Models\sp_produit;
 use App\Models\sp_soins;
+use App\Models\examenpatient;
+use App\Models\examen;
+use App\Models\prelevement;
 
 class ApilistfactureController extends Controller
 {
@@ -296,6 +299,91 @@ class ApilistfactureController extends Controller
                 'last_page' => $soinspatient->lastPage(),
                 'per_page' => $soinspatient->perPage(),
                 'total' => $soinspatient->total(),
+            ]
+        ]);
+    }
+
+    public function list_facture_examen()
+    {
+        $examenQuery = examen::join('factures', 'factures.id', '=', 'examens.facture_id')
+                            ->join('actes', 'actes.id', '=', 'examens.acte_id')
+                            ->where('factures.statut', '=', 'impayer')
+                            ->select(
+                                'examens.*',
+                                'actes.nom as acte',
+                                'factures.code as code_fac',
+                                'factures.statut as statut_fac',
+                            )
+                            ->orderBy('created_at', 'desc');
+
+        $examen = $examenQuery->paginate(15);
+
+        foreach ($examen->items() as $value) {
+            $nbre = examenpatient::where('examen_id', '=', $value->id)->count();
+            $value->nbre =  $nbre ?? 0;
+
+            $partPatient = str_replace('.', '', $value->part_patient);
+            $prelevement = str_replace('.', '', $value->prelevement);
+
+            // Conversion en entier
+            $partPatient = (int)$partPatient;
+            $prelevement = (int)$prelevement;
+
+            // Calcul de la somme
+            $value->total_patient = $partPatient + $prelevement;
+        }
+
+        return response()->json([
+            'examen' => $examen->items(),
+            'pagination' => [
+                'current_page' => $examen->currentPage(),
+                'last_page' => $examen->lastPage(),
+                'per_page' => $examen->perPage(),
+                'total' => $examen->total(),
+            ]
+        ]);
+    }
+
+    public function list_facture_examen_all($statut)
+    {
+        $examenQuery = examen::join('factures', 'factures.id', '=', 'examens.facture_id')
+                            ->join('actes', 'actes.id', '=', 'examens.acte_id')
+                            ->select(
+                                'examens.*',
+                                'actes.nom as acte',
+                                'factures.code as code_fac',
+                                'factures.statut as statut_fac',
+                            )
+                            ->orderBy('created_at', 'desc');
+
+        if ($statut !== 'tous') {
+            $examenQuery->where('factures.statut', '=', $statut);
+        }
+
+        $examen = $examenQuery->paginate(15);
+
+        foreach ($examen->items() as $value) {
+            $nbre = examenpatient::where('examen_id', '=', $value->id)->count();
+            $value->nbre =  $nbre ?? 0;
+
+            $partPatient = str_replace('.', '', $value->part_patient);
+            $prelevement = str_replace('.', '', $value->prelevement);
+
+            // Conversion en entier
+            $partPatient = (int)$partPatient;
+            $prelevement = (int)$prelevement;
+
+            // Calcul de la somme
+            $value->total_patient = $partPatient + $prelevement;
+        }
+
+        return response()->json([
+            'examen' => $examen->items(),
+            'pagination' => [
+                'current_page' => $examen->currentPage(),
+                'last_page' => $examen->lastPage(),
+                'per_page' => $examen->perPage(),
+                'total' => $examen->total(),
             ]
         ]);
     }

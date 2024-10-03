@@ -172,7 +172,7 @@
                                 </li>
                             </ul>
                         </li>
-                        <li @if(request()->routeIs('encaissement_cons','liste_caisse_cons','encaissement_hos','liste_caisse_hos','encaissement_soinsam','liste_caisse_soinsam')) class="active current-page treeview" @else class="treeview" @endif>
+                        <li @if(request()->routeIs('encaissement_cons','liste_caisse_cons','encaissement_hos','liste_caisse_hos','encaissement_soinsam','liste_caisse_soinsam','encaissement_examen','liste_caisse_examen')) class="active current-page treeview" @else class="treeview" @endif>
                             <a href="#!">
                                 <i class="ri-safe-2-line"></i>
                                 <span class="menu-text">Caisse</span>
@@ -217,6 +217,20 @@
                                         </li>
                                         <li>
                                             <a @if(request()->routeIs('liste_caisse_soinsam')) class="text-primary" @endif href="{{route('liste_caisse_soinsam')}}">Liste facture</a>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li @if(request()->routeIs('encaissement_examen','liste_caisse_examen')) class="active" @endif >
+                                    <a href="#!">
+                                        Examen
+                                        <i class="ri-arrow-right-s-line"></i>
+                                    </a>
+                                    <ul class="treeview-menu">
+                                        <li>
+                                            <a @if(request()->routeIs('encaissement_examen')) class="text-primary" @endif href="{{route('encaissement_examen')}}">Facture non-réglée</a>
+                                        </li>
+                                        <li>
+                                            <a @if(request()->routeIs('liste_caisse_examen')) class="text-primary" @endif href="{{route('liste_caisse_examen')}}">Liste facture</a>
                                         </li>
                                     </ul>
                                 </li>

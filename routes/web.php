@@ -81,7 +81,9 @@ Route::middleware(['auth','statutchambre'])->group(function () {
 	Route::get('/Type de soins',[Controller::class,'typesoins_new'])->name('typesoins_new');
 	Route::get('/Soins Infirmiers', [Controller::class, 'soinsinfirmier_new'])->name('soinsinfirmier_new');
 
-	Route::get('/Examen', [Controller::class, 'examen'])->name('examen');
+	Route::get('/Examens', [Controller::class, 'examen'])->name('examen');
+	Route::get('/Examens Caisse', [Controller::class, 'encaissement_examen'])->name('encaissement_examen');
+	Route::get('/Examens Liste Caisse', [Controller::class, 'liste_caisse_examen'])->name('liste_caisse_examen');
 
 // Route::middleware(['role:ADMINISTRATEUR'])->group(function () {
 

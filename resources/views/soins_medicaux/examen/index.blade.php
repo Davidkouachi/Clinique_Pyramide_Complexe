@@ -34,7 +34,7 @@
                                     <i class="ri-walk-line fs-1"></i>
                                 </div>
                                 <div class="d-flex flex-column">
-                                    <h2 class="m-0 lh-1" id="nbre_analyse" >0</h2>
+                                    <h2 class="m-0 lh-1" id="nbre_analyse" ></h2>
                                     <p class="m-0">Analyse</p>
                                 </div>
                             </div>
@@ -43,7 +43,7 @@
                                     <i class="ri-walk-line fs-1"></i>
                                 </div>
                                 <div class="d-flex flex-column">
-                                    <h2 class="m-0 lh-1" id="nbre_imagerie" >0</h2>
+                                    <h2 class="m-0 lh-1" id="nbre_imagerie" ></h2>
                                     <p class="m-0">Imagerie</p>
                                 </div>
                             </div>
@@ -56,39 +56,36 @@
     <div class="row gx-3" >
         <div class="col-sm-12">
             <div class="card mb-3">
-                <div class="card-header" hidden >
-                    <h5 class="card-title">Hospitalisation</h5>
-                </div>
                 <div class="card-body" style="margin-top: -30px;">
                     <div class="custom-tabs-container">
                         <ul class="nav nav-tabs justify-content-center bg-primary bg-2" id="customTab4" role="tablist" style="background: rgba(0, 0, 0, 0.7);">
                             <li class="nav-item" role="presentation">
                                 <a class="nav-link active text-white" id="tab-twoAAAN" data-bs-toggle="tab" href="#twoAAAN" role="tab" aria-controls="twoAAAN" aria-selected="false" tabindex="-1">
-                                    <i class="ri-walk-line me-2"></i>
+                                    <i class="ri-dossier-line me-2"></i>
                                     Demande d'examen
                                 </a>
                             </li>
                             <li class="nav-item" role="presentation">
                                 <a class="nav-link text-white" id="tab-twoAAA" data-bs-toggle="tab" href="#twoAAA" role="tab" aria-controls="twoAAA" aria-selected="false" tabindex="-1">
-                                    <i class="ri-walk-line me-2"></i>
+                                    <i class="ri-hand-sanitizer-line me-2"></i>
                                     Nouvel Examen
                                 </a>
                             </li>
                             <li class="nav-item" role="presentation">
                                 <a class="nav-link text-white" id="tab-oneAAAD" data-bs-toggle="tab" href="#oneAAAD" role="tab" aria-controls="oneAAAD" aria-selected="false" tabindex="-1">
-                                    <i class="ri-walk-line me-2"></i>
+                                    <i class="ri-health-book-line me-2"></i>
                                     Liste des demandes d'examens
                                 </a>
                             </li>
                             <li class="nav-item" role="presentation">
                                 <a class="nav-link text-white" id="tab-oneAAA" data-bs-toggle="tab" href="#oneAAA" role="tab" aria-controls="oneAAA" aria-selected="false" tabindex="-1">
-                                    <i class="ri-walk-line me-2"></i>
+                                    <i class="ri-folder-open-line me-2"></i>
                                     Liste des Examens
                                 </a>
                             </li>
                             <li class="nav-item" role="presentation">
                                 <a class="nav-link text-white" id="tab-oneAAAP" data-bs-toggle="tab" href="#oneAAAP" role="tab" aria-controls="oneAAAP" aria-selected="false" tabindex="-1">
-                                    <i class="ri-walk-line me-2"></i>
+                                    <i class="ri-syringe-line me-"></i>
                                     Prélévement
                                 </a>
                             </li>
@@ -280,31 +277,27 @@
                                                     Liste des Examens Demandées
                                                 </h5>
                                                 <div class="d-flex" >
-                                                    <select class="form-select me-1" id="statut">
-                                                        <option selected value="tous">Tous</option>
-                                                        <option value="en cours">En cours</option>
-                                                        <option value="terminé">Terminé</option>
-                                                    </select>
-                                                    <a id="btn_print_table" style="display: none;" class="btn btn-outline-warning ms-auto me-1">
+                                                    <input type="text" id="searchInputd" placeholder="Recherche" class="form-control me-1">
+                                                    <a id="btn_print_tableED" style="display: none;" class="btn btn-outline-warning ms-auto me-1">
                                                         <i class="ri-printer-line"></i>
                                                     </a>
-                                                    <a id="btn_refresh_table" class="btn btn-outline-info ms-auto">
+                                                    <a id="btn_refresh_tableED" class="btn btn-outline-info ms-auto">
                                                         <i class="ri-loop-left-line"></i>
                                                     </a>
                                                 </div>
                                             </div>
                                             <div class="card-body">
-                                                <div class="table-outer" id="div_Table" style="display: none;">
+                                                <div class="table-outer" id="div_TableED" style="display: none;">
                                                     <div class="table-responsive">
-                                                        <table class="table align-middle table-hover m-0 truncate" id="Table">
+                                                        <table class="table align-middle table-hover m-0 truncate" id="TableED">
                                                             <thead>
                                                                 <tr>
                                                                     <th scope="col">N°</th>
-                                                                    <th scope="col">Statut</th>
-                                                                    <th scope="col">Type de Soins</th>
                                                                     <th scope="col">Nom et Prénoms</th>
-                                                                    <th scope="col">Soins Infirmiers</th>
-                                                                    <th scope="col">Produits</th>
+                                                                    <th scope="col">Type d'examen</th>
+                                                                    <th scope="col">Médecin</th>
+                                                                    <th scope="col">Nombre d'examen</th>
+                                                                    <th scope="col">Prélevement</th>
                                                                     <th scope="col">Montant Total</th>
                                                                     <th scope="col">Date de création</th>
                                                                     <th scope="col"></th>
@@ -315,18 +308,18 @@
                                                         </table>
                                                     </div>
                                                 </div>
-                                                <div id="message_Table" style="display: none;">
+                                                <div id="message_TableED" style="display: none;">
                                                     <p class="text-center" >
-                                                        Aucun Soins Ambulatoires pour le moment
+                                                        Aucun examen demandé pour le moment
                                                     </p>
                                                 </div>
-                                                <div id="div_Table_loader" style="display: none;">
+                                                <div id="div_Table_loaderED" style="display: none;">
                                                     <div class="d-flex justify-content-center align-items-center">
                                                         <div class="spinner-border text-warning me-2" role="status" aria-hidden="true"></div>
                                                         <strong>Chargement des données...</strong>
                                                     </div>
                                                 </div>
-                                                <div id="pagination-controls" ></div>
+                                                <div id="pagination-controlsED" ></div>
                                             </div>
                                         </div>
                                     </div>
@@ -424,143 +417,6 @@
     </div>
 </div>
 
-<div class="modal fade" id="Detail" tabindex="-1" aria-labelledby="exampleModalCenteredScrollableTitle" aria-modal="true" role="dialog">
-    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalCenteredScrollableTitle">
-                    Détails
-                </h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body" id="modal_detail" style="display: none;">
-            </div>
-            <div id="message_detail" style="display: none;">
-                <p class="text-center" >
-                    Aucun détail pour le moment
-                </p>
-            </div>
-            <div id="div_detail_loader" style="display: none;">
-                <div class="d-flex justify-content-center align-items-center">
-                    <div class="spinner-border text-warning me-2" role="status" aria-hidden="true"></div>
-                    <strong>Chargement des données...</strong>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class="modal fade" id="Add" tabindex="-1" aria-modal="true" role="dialog">
-    <div class="modal-dialog modal-dialog modal-dialog-scrollable modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" >
-                    Produits Pharmacie
-                </h5>
-                <button type="button" id="close_modal_produit" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body" id="modal_add">
-                <div class="row gx-3 justify-content-center align-items-center">
-                    <div class="col-12 mb-3">
-                        <button type="button" id="add_select" class="btn btn-info">
-                            <i class="ri-sticky-note-add-line"></i>
-                            Ajouter un Produit
-                        </button>
-                    </div>
-                    <div class="col-12" id="contenu">
-
-                    </div>
-                    <div class="col-12" id="div_btn_pro">
-                        <div class="input-group mb-3">
-                            <input type="tel" class="form-control" id="montant_total_produit" placeholder="Montant Total">
-                            <span class="input-group-text">Fcfa</span>
-                        </div>
-                        <input type="hidden" id="id_hos_produit">
-                        <button type="button" id="btn_eng_produit" class="btn btn-outline-success">
-                            Enregistrer
-                            <i class="ri-send-plane-fill"></i>
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class="modal fade" id="Detail_produit" tabindex="-1" aria-modal="true" role="dialog">
-    <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalCenteredScrollableTitle">
-                    Détail Soins Infirmiers et Produits Utilisés
-                </h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <div class="row">
-                    <div class="col-xl-12">
-                        <div class="">
-                            <div class="card-body">
-                                <div class="row">
-                                    <div class="col-12">
-                                        <div id="div_alert_tableP" >
-                    
-                                        </div>
-                                        <div class="table-responsive" id="div_TableP" style="display: none;">
-                                            <!-- Tableau Soins Infirmiers -->
-                                            <table class="table table-bordered" id="TableP">
-                                                <thead>
-                                                    <tr>
-                                                        <th>Soins Infirmiers</th>
-                                                        <th style="width: 250px;">Prix</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                </tbody>
-                                            </table>
-                                        </div>
-
-                                        <div class="table-responsive" id="div_TableProdP" style="display: none;">
-                                            <!-- Tableau Produits Utilisés -->
-                                            <table class="table table-bordered" id="TableProdP">
-                                                <thead>
-                                                    <tr>
-                                                        <th>Produits Utilisés</th>
-                                                        <th style="width: 200px;">Prix Unitaire</th>
-                                                        <th style="width: 50px;" >Quantité</th>
-                                                        <th style="width: 200px;">Prix Total</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                </tbody>
-                                            </table>
-                                        </div>
-
-                                        <div id="message_TableP" style="display: none;">
-                                            <p class="text-center" >
-                                                Aucun détail pour le moment
-                                            </p>
-                                        </div>
-                                        <div id="div_Table_loaderP" style="display: none;">
-                                            <div class="d-flex justify-content-center align-items-center">
-                                                <div class="spinner-border text-warning me-2" role="status" aria-hidden="true"></div>
-                                                <strong>Chargement des données...</strong>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-{{-- aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa --}}
-
-
 <div class="modal fade" id="MmodifE" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -638,17 +494,75 @@
     </div>
 </div>
 
+<div class="modal fade" id="Detail" tabindex="-1" aria-modal="true" role="dialog">
+    <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalCenteredScrollableTitle">
+                    Examens Demandés
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-xl-12">
+                        <div class="">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-12">
+                                        <div id="div_alert_tableP" >
+                    
+                                        </div>
+                                        <div class="table-responsive" id="div_TableP" style="display: none;">
+                                            <table class="table table-bordered" id="TableP">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Examen</th>
+                                                        <th>Cotation</th>
+                                                        <th>Prix</th>
+                                                        <th>Accepté ?</th>
+                                                        <th>Total</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <div id="message_TableP" style="display: none;">
+                                            <p class="text-center" >
+                                                Aucun Produit utilisé pour le moment
+                                            </p>
+                                        </div>
+                                        <div id="div_Table_loaderP" style="display: none;">
+                                            <div class="d-flex justify-content-center align-items-center">
+                                                <div class="spinner-border text-warning me-2" role="status" aria-hidden="true"></div>
+                                                <strong>Chargement des données...</strong>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script src="{{asset('jsPDF-master/dist/jspdf.umd.js')}}"></script>
 <script src="{{asset('jsPDF-AutoTable/dist/jspdf.plugin.autotable.min.js')}}"></script>
 
 <script>
     document.addEventListener("DOMContentLoaded", function() {
 
+        Statistique();
         Name_atient();
         select_acte();
         listE();
+        listED();
         montant_prelevement();
-        Name_atient();
+        Statistique();
 
         document.getElementById("btn_eng_ex").addEventListener("click", eng_ex);
         document.getElementById("updateBtnE").addEventListener("click", eng_exM);
@@ -656,6 +570,7 @@
         document.getElementById("btn_eng_pre").addEventListener("click", eng_pre);
         document.getElementById("add_select_examen").addEventListener("click", add_select);
         document.getElementById("btn_eng_exd").addEventListener("click", eng_exd);
+        document.getElementById("btn_refresh_tableED").addEventListener("click", listED);
 
 
         function allowOnlyLetters(event) {
@@ -1167,12 +1082,7 @@
                                 item.acte.toLowerCase().includes(searchTerm) ||
                                 item.nom.toLowerCase().includes(searchTerm) ||
                                 item.cotation.toLowerCase().includes(searchTerm) ||
-                                item.valeur.toLowerCase().includes(searchTerm) ||
-                                item.prix.toLowerCase().includes(searchTerm) ||
-                                item.prix.replace(/[^0-9]/g, '').toLowerCase().includes(searchTerm) ||
-                                item.montant.toLowerCase().includes(searchTerm) ||
-                                item.montant.replace(/[^0-9]/g, '').toLowerCase().includes(searchTerm) ||
-                                formatDateHeure(item.created_at).toLowerCase().includes(searchTerm)
+                                item.valeur.toLowerCase().includes(searchTerm)
                             );
                             displayRows(filteredExamens);
                         }
@@ -1276,8 +1186,6 @@
             // Append pagination controls to the DOM
             paginationDiv.appendChild(paginationWrapper);
         }
-
-        // -----------------------------------------------------------------------------------------
 
         function Name_atient() {
             $.ajax({
@@ -1701,13 +1609,15 @@
                         document.getElementById('patient').value = "";
                         document.getElementById('medecin').value = "";
                         document.getElementById('select_examen_div').style.display = "none";
-                        document.getElementById('div_Examen').style.display = "none";     
+                        document.getElementById('div_Examen').style.display = "none";
+
+                        listED();   
 
                         showAlert("ALERT", 'Enregistrement éffectué', "success");
 
-                        // var newConsultationTab = new bootstrap.Tab(document.getElementById('tab-oneAAA'));
-                        // newConsultationTab.show();
-                        // newConsultationTab.active();
+                        var newTab = new bootstrap.Tab(document.getElementById('tab-oneAAAD'));
+                        newTab.show();
+                        newTab.active();
 
                     } else if (response.error) {
                         showAlert("ERREUR", 'Une erreur est survenue', "error");
@@ -1727,8 +1637,501 @@
             });
         };
 
+        function listED(page = 1) {
 
-        // ---------------------------------------------------------------------------------------
+            const tableBody = document.querySelector('#TableED tbody');
+            const messageDiv = document.getElementById('message_TableED');
+            const tableDiv = document.getElementById('div_TableED');
+            const loaderDiv = document.getElementById('div_Table_loaderED');
+
+            let allExamens = [];
+
+            messageDiv.style.display = 'none';
+            tableDiv.style.display = 'none';
+            loaderDiv.style.display = 'block';
+
+            const url = `/api/list_examend_all?page=${page}`;
+
+            fetch(url)
+                .then(response => response.json())
+                .then(data => {
+                    allExamens = data.examen || [] ;
+                    const pagination = data.pagination || {};
+
+                    const perPage = pagination.per_page || 10;
+                    const currentPage = pagination.current_page || 1;
+
+                    tableBody.innerHTML = '';
+
+                    if (allExamens.length > 0) {
+                        document.getElementById('btn_print_tableED').style.display = 'block';
+
+                        loaderDiv.style.display = 'none';
+                        messageDiv.style.display = 'none';
+                        tableDiv.style.display = 'block';
+
+                        function displayRows(filteredExamens) {
+                            tableBody.innerHTML = ''; 
+
+                            filteredExamens.forEach((item, index) => {
+                                const row = document.createElement('tr');
+                                row.innerHTML = `
+                                    <td>${((currentPage - 1) * perPage) + index + 1}</td>
+                                    <td>${item.patient}</td>
+                                    <td>${item.acte}</td>
+                                    <td>Dr. ${item.medecin}</td>
+                                    <td>${item.nbre}</td>
+                                    <td>${item.prelevement} Fcfa</td>
+                                    <td>${item.montant} Fcfa</td>
+                                    <td>${formatDateHeure(item.created_at)}</td>
+                                    <td>
+                                        <div class="d-inline-flex gap-1">
+                                            <a class="btn btn-outline-warning btn-sm rounded-5" data-bs-toggle="modal" data-bs-target="#Detail" id="detail-${item.id}">
+                                                <i class="ri-archive-2-line"></i>
+                                            </a>
+                                            <a class="btn btn-outline-info btn-sm rounded-5" id="fiche-${item.id}">
+                                                <i class="ri-file-line"></i>
+                                            </a>
+                                        </div>
+                                    </td>
+                                `;
+                                tableBody.appendChild(row);
+
+                                document.getElementById(`fiche-${item.id}`).addEventListener('click', () =>
+                                {
+                                    fetch(`/api/detail_examen/${item.id}`) // API endpoint
+                                        .then(response => response.json())
+                                        .then(data => {
+                                            // Access the 'chambre' array from the API response
+                                            const examen = data.examen;
+                                            const facture = data.facture;
+                                            const patient = data.patient;
+                                            const acte = data.acte;
+                                            const examenpatient = data.examenpatient;
+
+                                            generatePDFInvoice(examen, facture, patient, acte, examenpatient);
+
+                                        })
+                                        .catch(error => {
+                                            console.error('Erreur lors du chargement des données:', error);
+                                        });
+                                });
+
+                                document.getElementById(`detail-${item.id}`).addEventListener('click',()=>
+                                {
+                                    const tableBodyP = document.querySelector('#TableP tbody');
+                                    const messageDivP = document.getElementById('message_TableP');
+                                    const tableDivP = document.getElementById('div_TableP');
+                                    const loaderDivP = document.getElementById('div_Table_loaderP');
+
+                                    messageDivP.style.display = 'none';
+                                    tableDivP.style.display = 'none';
+                                    loaderDivP.style.display = 'block';
+
+                                    fetch(`/api/list_facture_exam_d/${item.id}`) // API endpoint
+                                        .then(response => response.json())
+                                        .then(data => {
+                                            // Access the 'chambre' array from the API response
+                                            const factureds = data.factured;
+                                            const sumMontantEx = data.sumMontantEx;
+
+                                            // Clear any existing rows in the table body
+                                            tableBodyP.innerHTML = '';
+
+                                            if (factureds.length > 0) {
+
+                                                loaderDivP.style.display = 'none';
+                                                messageDivP.style.display = 'none';
+                                                tableDivP.style.display = 'block';
+
+                                                // Loop through each item in the chambre array
+                                                factureds.forEach((item, index) => {
+                                                    // Create a new row
+                                                    const row = document.createElement('tr');
+                                                    // Create and append cells to the row based on your table's structure
+                                                    row.innerHTML = `
+                                                        <td>
+                                                            <h6>${item.nom_ex}</h6>
+                                                        </td>
+                                                        <td>
+                                                            <h6>${item.cotation_ex}${item.valeur_ex}</h6>
+                                                        </td>
+                                                        <td>
+                                                            <h6>${item.prix_ex} Fcfa</h6>
+                                                        </td>
+                                                        <td>
+                                                            <h6>${item.accepte}</h6>
+                                                        </td>
+                                                        <td>
+                                                            <h6>${item.montant_ex} Fcfa</h6>
+                                                        </td>
+                                                    `;
+                                                    // Append the row to the table body
+                                                    tableBodyP.appendChild(row);
+
+                                                });
+
+                                                const row2 = document.createElement('tr');
+                                                row2.innerHTML = `
+                                                    <td colspan="3">&nbsp;</td>
+                                                    <td colspan="2" >
+                                                        <h5 class="mt-4 text-success">
+                                                            Total : ${formatPriceT(sumMontantEx)} Fcfa
+                                                        </h5>
+                                                    </td>
+                                                `;
+                                                tableBodyP.appendChild(row2);
+
+                                                const row3 = document.createElement('tr');
+                                                row3.innerHTML = `
+                                                    <td colspan="5">
+                                                        <h6 class="text-danger">NOTE</h6>
+                                                        <p class="small m-0">
+                                                            Le Montant Total des examens  ajouter au montant du prélevement.
+                                                        </p>
+                                                    </td>
+                                                `;
+
+                                                tableBodyP.appendChild(row3);
+
+                                            } else {
+                                                loaderDivP.style.display = 'none';
+                                                messageDivP.style.display = 'block';
+                                                tableDivP.style.display = 'none';
+                                            }
+                                        })
+                                        .catch(error => {
+                                            console.error('Erreur lors du chargement des données:', error);
+                                            loaderDivD.style.display = 'none';
+                                            messageDivD.style.display = 'block';
+                                            tableDivD.style.display = 'none';
+                                        });
+                                    
+                                });
+
+                            });
+                        };
+
+                        function applySearchFilter() {
+                            const searchTerm = searchInputd.value.toLowerCase();
+                            const filteredExamens = allExamens.filter(item =>
+                                item.patient.toLowerCase().includes(searchTerm) ||
+                                item.acte.toLowerCase().includes(searchTerm) ||
+                                item.medecin.toLowerCase().includes(searchTerm)
+                            );
+                            displayRows(filteredExamens);
+                        }
+
+                        searchInputd.addEventListener('input', applySearchFilter);
+
+                        displayRows(allExamens);
+
+                        updatePaginationControlsED(pagination);
+
+                    } else {
+                        tableDiv.style.display = 'none';
+                        loaderDiv.style.display = 'none';
+                        messageDiv.style.display = 'block';
+                    }
+                })
+                .catch(error => {
+                    console.error('Erreur lors du chargement des données:', error);
+                    loaderDiv.style.display = 'none';
+                    tableDiv.style.display = 'none';
+                    messageDiv.style.display = 'block';
+                });
+        }
+
+        function updatePaginationControlsED(pagination)
+        {
+            const paginationDiv = document.getElementById('pagination-controlsED');
+            paginationDiv.innerHTML = '';
+
+            // Bootstrap pagination wrapper
+            const paginationWrapper = document.createElement('ul');
+            paginationWrapper.className = 'pagination justify-content-center';
+
+            // Previous button
+            if (pagination.current_page > 1) {
+                const prevButton = document.createElement('li');
+                prevButton.className = 'page-item';
+                prevButton.innerHTML = `<a class="page-link" href="#">Precédent</a>`;
+                prevButton.onclick = () => listED(pagination.current_page - 1);
+                paginationWrapper.appendChild(prevButton);
+            } else {
+                // Disable the previous button if on the first page
+                const prevButton = document.createElement('li');
+                prevButton.className = 'page-item disabled';
+                prevButton.innerHTML = `<a class="page-link" href="#">Precédent</a>`;
+                paginationWrapper.appendChild(prevButton);
+            }
+
+            // Page number links (show a few around the current page)
+            const totalPages = pagination.last_page;
+            const currentPage = pagination.current_page;
+            const maxVisiblePages = 5; // Max number of page links to display
+
+            let startPage = Math.max(1, currentPage - Math.floor(maxVisiblePages / 2));
+            let endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
+
+            // Adjust start page if end page exceeds the total pages
+            if (endPage - startPage < maxVisiblePages - 1) {
+                startPage = Math.max(1, endPage - maxVisiblePages + 1);
+            }
+
+            // Loop through pages and create page links
+            for (let i = startPage; i <= endPage; i++) {
+                const pageItem = document.createElement('li');
+                pageItem.className = `page-item ${i === currentPage ? 'active' : ''}`;
+                pageItem.innerHTML = `<a class="page-link" href="#">${i}</a>`;
+                pageItem.onclick = () => listED(i);
+                paginationWrapper.appendChild(pageItem);
+            }
+
+            // Ellipsis (...) if not all pages are shown
+            if (endPage < totalPages) {
+                const ellipsis = document.createElement('li');
+                ellipsis.className = 'page-item disabled';
+                ellipsis.innerHTML = `<a class="page-link" href="#">...</a>`;
+                paginationWrapper.appendChild(ellipsis);
+
+                // Add the last page link
+                const lastPageItem = document.createElement('li');
+                lastPageItem.className = `page-item`;
+                lastPageItem.innerHTML = `<a class="page-link" href="#">${totalPages}</a>`;
+                lastPageItem.onclick = () => listED(totalPages);
+                paginationWrapper.appendChild(lastPageItem);
+            }
+
+            // Next button
+            if (pagination.current_page < pagination.last_page) {
+                const nextButton = document.createElement('li');
+                nextButton.className = 'page-item';
+                nextButton.innerHTML = `<a class="page-link" href="#">Suivant</a>`;
+                nextButton.onclick = () => listED(pagination.current_page + 1);
+                paginationWrapper.appendChild(nextButton);
+            } else {
+                // Disable the next button if on the last page
+                const nextButton = document.createElement('li');
+                nextButton.className = 'page-item disabled';
+                nextButton.innerHTML = `<a class="page-link" href="#">Suivant</a>`;
+                paginationWrapper.appendChild(nextButton);
+            }
+
+            // Append pagination controls to the DOM
+            paginationDiv.appendChild(paginationWrapper);
+        }
+
+        function generatePDFInvoice(examen, facture, patient, acte, examenpatient) {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF({ orientation: 'p', unit: 'mm', format: 'a4' });
+
+            let yPos = 10;
+
+            function drawConsultationSection(yPos) {
+                rightMargin = 15;
+                leftMargin = 15;
+                pdfWidth = doc.internal.pageSize.getWidth();
+
+                const titlea = "Facture";
+                doc.setFontSize(100);
+                doc.setTextColor(242, 242, 242); // Gray color for background effect
+                doc.setFont("Helvetica", "bold");
+                doc.text(titlea, 120, yPos + 120, { align: 'center', angle: 40 });
+
+                // Informations de l'entreprise
+                doc.setFontSize(10);
+                doc.setTextColor(0, 0, 0);
+                doc.setFont("Helvetica", "bold");
+                // Texte de l'entreprise
+                const title = "ESPACE MEDICO SOCIAL LA PYRAMIDE DU COMPLEXE";
+                const titleWidth = doc.getTextWidth(title);
+                const titleX = (doc.internal.pageSize.getWidth() - titleWidth) / 2;
+                doc.text(title, titleX, yPos);
+                // Texte de l'adresse
+                doc.setFont("Helvetica", "normal");
+                const address = "Abidjan Yopougon Selmer, Non loin du complexe sportif Jesse-Jackson - 04 BP 1523";
+                const addressWidth = doc.getTextWidth(address);
+                const addressX = (doc.internal.pageSize.getWidth() - addressWidth) / 2;
+                doc.text(address, addressX, (yPos + 5));
+                // Texte du téléphone
+                const phone = "Tél.: 20 24 44 70 / 20 21 71 92 - Cel.: 01 01 01 63 43";
+                const phoneWidth = doc.getTextWidth(phone);
+                const phoneX = (doc.internal.pageSize.getWidth() - phoneWidth) / 2;
+                doc.text(phone, phoneX, (yPos + 10));
+                doc.setFontSize(10);
+                doc.setFont("Helvetica", "normal");
+                const examenDate = new Date(examen.created_at);
+                // Formatter la date et l'heure séparément
+                const formattedDate = examenDate.toLocaleDateString(); // Formater la date
+                const formattedTime = examenDate.toLocaleTimeString();
+                doc.text("Date: " + formattedDate, 15, (yPos + 25));
+                doc.text("Heure: " + formattedTime, 15, (yPos + 30));
+
+                //Ligne de séparation
+                doc.setFontSize(15);
+                doc.setFont("Helvetica", "bold");
+                doc.setLineWidth(0.5);
+                doc.setTextColor(255, 0, 0);
+                // doc.line(10, 35, 200, 35); 
+                const titleR = "FACTURE EXAMEN";
+                const titleRWidth = doc.getTextWidth(titleR);
+                const titleRX = (doc.internal.pageSize.getWidth() - titleRWidth) / 2;
+                // Définir le padding
+                const paddingh = 0; // Padding vertical
+                const paddingw = 8; // Padding horizontal
+                // Calculer les dimensions du rectangle
+                const rectX = titleRX - paddingw; // X du rectangle
+                const rectY = (yPos + 18) - paddingh; // Y du rectangle
+                const rectWidth = titleRWidth + (paddingw * 2); // Largeur du rectangle
+                const rectHeight = 15 + (paddingh * 2); // Hauteur du rectangle
+                // Définir la couleur pour le cadre (noir)
+                doc.setDrawColor(0, 0, 0);
+                doc.rect(rectX, rectY, rectWidth, rectHeight); // Dessiner le rectangle
+                // Ajouter le texte centré en gras
+                doc.setFontSize(15);
+                doc.setFont("Helvetica", "bold");
+                doc.setTextColor(255, 0, 0); // Couleur du texte rouge
+                doc.text(titleR, titleRX, (yPos + 25)); // Positionner le texte
+                const titleN = "N° "+facture.code;
+                doc.text(titleN, (doc.internal.pageSize.getWidth() - doc.getTextWidth(titleN)) / 2, (yPos + 31));
+
+                doc.setFontSize(10);
+                doc.setFont("Helvetica", "bold");
+                doc.setTextColor(0, 0, 0);
+                const numDossier = "N° Dossier : P-"+ patient.matricule;
+                const numDossierWidth = doc.getTextWidth(numDossier);
+                doc.text(numDossier, pdfWidth - rightMargin - numDossierWidth, yPos + 28);
+
+                yPoss = (yPos + 40);
+
+                const patientInfo = [
+                    { label: "Nom et Prénoms", value: patient.np },
+                    { label: "Assurer", value: patient.assurer },
+                    { label: "Age", value: patient.age+" an(s)" },
+                    { label: "Domicile", value: patient.adresse },
+                    { label: "Contact", value: "+225 "+patient.tel }
+                ];
+
+                if (patient.assurer == 'oui') {
+                    patientInfo.push(
+                        { label: "Assurance", value: patient.assurance },
+                        { label: "Matricule", value: patient.matricule_assurance },
+                    );
+                }
+
+                patientInfo.forEach(info => {
+                    doc.setFontSize(8);
+                    doc.setFont("Helvetica", "bold");
+                    doc.text(info.label, leftMargin, yPoss);
+                    doc.setFont("Helvetica", "normal");
+                    doc.text(": " + info.value, leftMargin + 35, yPoss);
+                    yPoss += 7;
+                });
+
+                yPoss = (yPos + 40);
+
+                const typeInfo = [
+                    { label: "Type d'examen", value: acte.nom },
+                ];
+
+                typeInfo.forEach(info => {
+                    doc.setFontSize(8);
+                    doc.setFont("Helvetica", "bold");
+                    doc.text(info.label, leftMargin + 100, yPoss);
+                    doc.setFont("Helvetica", "normal");
+                    doc.text(": " + info.value, leftMargin + 135, yPoss);
+                    yPoss += 7;
+                });
+
+                yPoss += 30;
+
+                const donneeTables = examenpatient;
+                let yPossT = yPoss + 10; // Initialisation de la position Y pour le tableau des soins
+
+                // Tableau dynamique pour les détails des soins infirmiers
+                doc.autoTable({
+                    startY: yPossT,
+                    head: [['N°', 'Examen', 'Cotation', 'Prix', 'Accepté ?', 'Total']],
+                    body: donneeTables.map((item, index) => [
+                        index + 1,
+                        item.nom_ex,
+                        item.cotation_ex+""+item.valeur_ex,
+                        item.prix_ex + " Fcfa",
+                        item.accepte,
+                        item.montant_ex + " Fcfa",
+                    ]),
+                    theme: 'striped',
+                });
+
+                yPoss = doc.autoTable.previous.finalY || yPossT + 10;
+                yPoss = yPoss + 5;
+
+                const compteInfo = [
+                    { label: "Part assurance", value: examen.part_assurance+" Fcfa"},
+                    { label: "Part Patient", value: examen.part_patient+" Fcfa"},
+                    { label: "Prélevement", value: examen.prelevement+ " Fcfa" }
+                ];
+
+                if (patient.taux !== null) {
+                    compteInfo.push({ label: "Taux", value: patient.taux + "%" });
+                }
+
+                compteInfo.forEach(info => {
+                    doc.setFontSize(9);
+                    doc.setFont("Helvetica", "bold");
+                    doc.text(info.label, leftMargin + 110, yPoss);
+                    doc.setFont("Helvetica", "normal");
+                    doc.text(": " + info.value, leftMargin + 142, yPoss);
+                    yPoss += 7;
+                });
+                doc.setFontSize(11);
+                doc.setFont("Helvetica", "bold");
+                doc.text('Total', leftMargin + 110, yPoss);
+                doc.setFont("Helvetica", "bold");
+                doc.text(": "+examen.montant+" Fcfa", leftMargin + 142, yPoss);
+
+            }
+
+            function addFooter() {
+                const pageCount = doc.internal.getNumberOfPages();
+                for (let i = 1; i <= pageCount; i++) {
+                    doc.setPage(i);
+                    const footerText = "Imprimer le " + new Date().toLocaleDateString() + " à " + new Date().toLocaleTimeString();
+                    doc.setFontSize(7);
+                    doc.setFont("Helvetica", "bold");
+                    doc.setTextColor(0, 0, 0);
+                    doc.text(footerText, 5, 295); // Position near the bottom of the page (5mm from the left, 290mm from the top)
+                }
+            }
+
+            drawConsultationSection(yPos);
+
+            addFooter();
+
+            doc.output('dataurlnewwindow');
+        }
+
+        function Statistique() {
+
+            const nbre_analyse = document.getElementById("nbre_analyse");
+            const nbre_imagerie = document.getElementById("nbre_imagerie");
+
+            $.ajax({
+                url: '/api/statistique_examen',
+                method: 'GET',
+                success: function(response) {
+                    // Set the text content of each element
+                    nbre_analyse.textContent = response.nbre_analyse_day;
+                    nbre_imagerie.textContent = response.nbre_imagerie_day;
+                },
+                error: function() {
+                    // Set default values in case of an error
+                    nbre_analyse.textContent = '0';
+                    nbre_imagerie.textContent = '0';
+                }
+            });
+        }
 
     });
 </script>

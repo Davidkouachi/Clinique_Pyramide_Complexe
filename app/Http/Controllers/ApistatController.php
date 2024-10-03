@@ -24,13 +24,25 @@ use App\Models\chambre;
 use App\Models\lit;
 use App\Models\acte;
 use App\Models\typeacte;
-use App\Models\typemedecin;
 use App\Models\user;
 use App\Models\role;
+use App\Models\typemedecin;
 use App\Models\consultation;
 use App\Models\detailconsultation;
 use App\Models\facture;
+use App\Models\typeadmission;
+use App\Models\natureadmission;
 use App\Models\detailhopital;
+use App\Models\produit;
+use App\Models\soinshopital;
+use App\Models\typesoins;
+use App\Models\soinsinfirmier;
+use App\Models\soinspatient;
+use App\Models\sp_produit;
+use App\Models\sp_soins;
+use App\Models\examenpatient;
+use App\Models\examen;
+use App\Models\prelevement;
 
 class ApistatController extends Controller
 {
@@ -204,5 +216,25 @@ class ApistatController extends Controller
         ]);
     }
 
+    public function statistique_examen()
+    {
+        $today = Carbon::today();
+        $ida = acte::where('nom', '=', 'ANALYSE')->first();
+        $idi = acte::where('nom', '=', 'IMAGERIE')->first();
+
+        $imagerie_day = examen::where('acte_id', '=', $idi->id)
+                            ->whereDate('created_at', '=', $today)
+                            ->count();
+
+        $analyse_day = examen::where('acte_id', '=', $ida->id)
+                            ->whereDate('created_at', '=', $today)
+                            ->count();
+
+        // Return the results as JSON
+        return response()->json([
+            'nbre_analyse_day' => $analyse_day ?? 0,
+            'nbre_imagerie_day' => $imagerie_day ?? 0,
+        ]);
+    }
 
 }
