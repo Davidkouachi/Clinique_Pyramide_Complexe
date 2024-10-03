@@ -11,5 +11,6 @@ class prelevement extends Model
 
     protected $fillable = [
         'prix',
+        'code',
     ];
 }

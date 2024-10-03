@@ -15,15 +15,18 @@ return new class extends Migration
             $table->id();
             $table->string('part_assurance');
             $table->string('part_patient');
-            $table->string('remise');
             $table->string('montant');
+            $table->string('statut');
             $table->text('libelle');
             $table->string('code')->index()->unique();
             $table->string('medecin');
+            $table->string('prelevement');
             $table->unsignedBigInteger('patient_id');
             $table->foreign('patient_id')->references('id')->on('patients')->onDelete('cascade');
             $table->unsignedBigInteger('facture_id');
             $table->foreign('facture_id')->references('id')->on('factures')->onDelete('cascade');
+            $table->unsignedBigInteger('acte_id');
+            $table->foreign('acte_id')->references('id')->on('actes')->onDelete('cascade');
             $table->timestamps();
         });
     }

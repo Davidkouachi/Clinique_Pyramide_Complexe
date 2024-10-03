@@ -33,6 +33,9 @@ use App\Models\detailhopital;
 use App\Models\produit;
 use App\Models\soinsinfirmier;
 use App\Models\typesoins;
+use App\Models\examenpatient;
+use App\Models\examen;
+use App\Models\prelevement;
 
 class ApiupdateController extends Controller
 {
@@ -296,5 +299,59 @@ class ApiupdateController extends Controller
 
         return response()->json(['error' => true]);
     }
+
+    public function examen_Modif(Request $request, $id)
+    {
+        // Log to check the values of nom and acte_id
+        \Log::info('Nom: ' . $request->nom);
+        \Log::info('Acte ID: ' . $request->acte_id);
+        \Log::info('ID: ' . $id);
+        
+        // Check if there's another typeacte with the same name and acte_id but a different ID
+        $verf = typeacte::where('nom', '=', $request->nom)
+                        ->where('acte_id', '=', $request->acte_id)  // Ensure you're using acte_id correctly
+                        ->where('id', '!=', $id)  // Exclude the current typeacte
+                        ->exists();
+
+        if ($verf) {
+            return response()->json(['existe' => true]);  // If a duplicate exists, return response
+        }
+
+        // Find the typeacte by ID
+        $add = typeacte::find($id);
+
+        // Check if the typeacte was found
+        if (!$add) {
+            return response()->json(['error' => 'Typeacte not found']);
+        }
+
+        // Update the typeacte with new values
+        $add->nom = $request->nom;
+        $add->cotation = $request->cotation;
+        $add->valeur = $request->valeur;
+        $add->prix = $request->prix;
+        $add->montant = $request->montant;
+        $add->acte_id = $request->acte_id;  // Corrected to use acte_id
+
+        // Save and return success or error response
+        if ($add->save()) {
+            return response()->json(['success' => true]);
+        }
+
+        return response()->json(['error' => true]);
+    }
+
+    public function prelevement_Modif(Request $request)
+    {
+        $add = prelevement::where('code', '=', '1')->first();
+        $add->prix = $request->prix;
+
+        if ($add->save()) {
+            return response()->json(['success' => true]);
+        }
+
+        return response()->json(['error' => true]);
+    }
+
 
 }

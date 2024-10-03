@@ -31,6 +31,9 @@ use App\Models\detailhopital;
 use App\Models\facture;
 use App\Models\soinsinfirmier;
 use App\Models\typesoins;
+use App\Models\examenpatient;
+use App\Models\examen;
+use App\Models\prelevement;
 
 class ApisearchController extends Controller
 {
@@ -198,6 +201,20 @@ class ApisearchController extends Controller
         $acte = acte::where('nom', '=', 'ANALYSE')->Orwhere('nom', '=', 'IMAGERIE')->get();
 
         return response()->json(['acte' => $acte]); 
+    }
+
+    public function montant_prelevement()
+    {
+        $prelevement = prelevement::where('code', '=', '1')->first();
+
+        return response()->json(['prelevement' => $prelevement]); 
+    }
+
+    public function select_examen($id)
+    {
+        $examen = Typeacte::where('acte_id', '=', $id)->get();
+
+        return response()->json(['examen' => $examen]); 
     }
 
 }

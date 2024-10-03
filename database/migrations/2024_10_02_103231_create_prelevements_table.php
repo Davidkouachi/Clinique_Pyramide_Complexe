@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('prelevements', function (Blueprint $table) {
             $table->id();
             $table->string('prix');
+            $table->string('code')->unique();
             $table->timestamps();
         });
     }

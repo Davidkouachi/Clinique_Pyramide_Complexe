@@ -110,171 +110,94 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="row gx-3 justify-content-center align-items-center mb-4">
-                                    <div class="col-xxl-3 col-lg-4 col-sm-6">
-                                        <div class="mb-3">
-                                            <label class="form-label">Type de Soins Infirmer</label>
-                                            <select class="form-select" id="typesoins_id"></select>
+                                <div id="select_examen_div" style="display: none;">
+                                    <div class="row gx-3 justify-content-center align-items-center mb-4">
+                                        <div class="col-xxl-3 col-lg-4 col-sm-6">
+                                            <div class="mb-3">
+                                                <label class="form-label">Type d'examen</label>
+                                                <select class="form-select" id="typeacte_id_exd"></select>
+                                            </div>
+                                        </div>
+                                        <div class="col-xxl-3 col-lg-4 col-sm-6">
+                                            <div class="mb-3">
+                                                <label class="form-label">Medecin</label>
+                                                <input type="text" class="form-control" id="medecin" autocomplete="off" placeholder="saisie obligatoire" oninput="this.value = this.value.toUpperCase()">
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                                <div id="div_selectSoins" class="border border-2 mb-3 p-2" >
-                                    <div class="card-header">
-                                        <h5 class="card-title text-center">
-                                            Choix des Soins Infirmiers
-                                        </h5>
-                                    </div>
-                                    <div class="row gx-3 justify-content-center align-items-center">
-                                        <div class="col-lg-8 col-12">
-                                            <div class="row gx-3 justify-content-center align-items-center">
-                                                <div id="div_alert_soins" ></div>
-                                                <div class="col-12 mb-3 text-center">
-                                                    <button type="button" id="add_select_soins" class="btn btn-info">
-                                                        <i class="ri-sticky-note-add-line"></i>
-                                                        Ajouter un Soins
-                                                    </button>
-                                                </div>
-                                                <div class="col-12" id="contenu_soins">
+                                    <div id="div_Examen" class="mb-3 p-2" style="display: none;" >
+                                        <div class="card-header">
+                                            <h5 class="card-title text-center">
+                                                Choix des Examens
+                                            </h5>
+                                        </div>
+                                        <div class="row gx-3 justify-content-center align-items-center">
+                                            <div class="col-12">
+                                                <div class="row gx-3 justify-content-center align-items-center">
+                                                    <div class="col-12 mb-3 text-center">
+                                                        <button type="button" id="add_select_examen" class="btn btn-info">
+                                                            <i class="ri-sticky-note-add-line"></i>
+                                                            Ajouter un Examen
+                                                        </button>
+                                                    </div>
+                                                    <div class="col-12" id="contenu_examen">
 
-                                                </div>
-                                                <div class="col-12" id="div_btn_soins" style="display: none;">
-                                                    <div class="input-group mb-3">
-                                                        <span class="input-group-text">
-                                                            Montant Total
-                                                        </span>
-                                                        <input readonly type="tel" class="form-control" id="montant_total_soins" placeholder="Montant Total">
-                                                        <span class="input-group-text">Fcfa</span>
+                                                    </div>
+                                                    <div class="row gx-3" id="div_btn_examen" style="display: none;">
+                                                        <div class="col-xxl-4 col-lg-4 col-sm-6">
+                                                            <div class="input-group mb-3">
+                                                                <span class="input-group-text w-25">
+                                                                    Prélevement
+                                                                </span>
+                                                                <input readonly type="tel" class="form-control" id="montant_pre_examen" placeholder="Taux de Couverture">
+                                                                <span class="input-group-text w-25">Fcfa</span>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-xxl-4 col-lg-4 col-sm-6">
+                                                            <div class="input-group mb-3">
+                                                                <span class="input-group-text w-25">
+                                                                    Taux
+                                                                </span>
+                                                                <input readonly type="tel" class="form-control" id="patient_taux" placeholder="Taux de Couverture">
+                                                                <span class="input-group-text w-25">%</span>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-xxl-4 col-lg-4 col-sm-6">
+                                                            <div class="input-group mb-3">
+                                                                <span class="input-group-text w-25">
+                                                                    Assurance
+                                                                </span>
+                                                                <input readonly type="tel" class="form-control" id="montant_assurance_examen" placeholder="Part Assurance">
+                                                                <span class="input-group-text w-25">Fcfa</span>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-xxl-4 col-lg-4 col-sm-6">
+                                                            <div class="input-group mb-3">
+                                                                <span class="input-group-text w-25">
+                                                                    Patient
+                                                                </span>
+                                                                <input readonly type="tel" class="form-control" id="montant_patient_examen" placeholder="Part Patient">
+                                                                <span class="input-group-text w-25">Fcfa</span>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-xxl-4 col-lg-4 col-sm-6">
+                                                            <div class="input-group mb-3">
+                                                                <span class="input-group-text w-25">
+                                                                    Total
+                                                                </span>
+                                                                <input readonly type="tel" class="form-control" id="montant_total_examen" placeholder="Montant Total">
+                                                                <span class="input-group-text w-25">Fcfa</span>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-12 mb-3 text-center">
+                                                            <button type="button" id="btn_eng_exd" class="btn btn-success">
+                                                                Enregistrer
+                                                                <i class="ri-send-plane-fill"></i>
+                                                            </button>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div id="div_selectProduit" class="border border-2 mb-3 p-2" >
-                                    <div class="card-header">
-                                        <h5 class="card-title text-center">
-                                            Choix des Produits Utilisés
-                                        </h5>
-                                    </div>
-                                    <div class="row gx-3 justify-content-center align-items-center" >
-                                        <div class="col-lg-8 col-12">
-                                            <div class="row gx-3 justify-content-center align-items-center">
-                                                <div id="div_alert_produit_qu" ></div>
-                                                <div class="col-12 mb-3 text-center">
-                                                    <button type="button" id="add_select_produit" class="btn btn-info">
-                                                        <i class="ri-sticky-note-add-line"></i>
-                                                        Ajouter un Produit
-                                                    </button>
-                                                </div>
-                                                <div class="col-12" id="contenu_produit">
-
-                                                </div>
-                                                <div class="col-12" id="div_btn_pro" style="display: none;">
-                                                    <div class="input-group mb-3">
-                                                        <span class="input-group-text">
-                                                            Montant Total
-                                                        </span>
-                                                        <input readonly type="tel" class="form-control" id="montant_total_produit" placeholder="Montant Total">
-                                                        <span class="input-group-text">Fcfa</span>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div id="div_btn_calcul" class="border border-2 mb-3 p-2" >
-                                    <div class="card-header">
-                                        <h5 class="card-title text-center">
-                                            Informations Montant
-                                        </h5>
-                                    </div>
-                                    <div class="row gx-3 justify-content-center align-items-center" >
-                                        <div class="col-sm-12 mb-3">
-                                            <div class="d-flex gap-2 justify-content-center">
-                                                <button id="btn_calcul" class="btn btn-warning">
-                                                    Calculer le montant final
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="row gx-3" id="div_calcul" style="display: none;">
-                                        <div class="col-xxl-3 col-lg-4 col-sm-6">
-                                            <div class="mb-3">
-                                                <label class="form-label">Taux</label>
-                                                <div class="input-group">
-                                                    <input readonly type="tel" class="form-control" id="patient_taux">
-                                                    <span class="input-group-text">%</span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-xxl-3 col-lg-4 col-sm-6">
-                                            <div class="mb-3">
-                                                <label class="form-label">Part Assurance</label>
-                                                <div class="input-group">
-                                                    <input readonly type="tel" class="form-control" id="montant_assurance">
-                                                    <input type="hidden" class="form-control" id="montant_assurance_hidden">
-                                                    <span class="input-group-text">Fcfa</span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-xxl-3 col-lg-4 col-sm-6">
-                                            <div class="mb-3">
-                                                <label class="form-label">Part Patient</label>
-                                                <div class="input-group">
-                                                    <input readonly type="tel" class="form-control" id="montant_patient">
-                                                    <input type="hidden" class="form-control" id="montant_patient_hidden">
-                                                    <span class="input-group-text">Fcfa</span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-xxl-3 col-lg-4 col-sm-6">
-                                            <div class="mb-3">
-                                                <label class="form-label">Montant Total</label>
-                                                <div class="input-group">
-                                                    <input readonly type="tel" class="form-control" id="montant_total">
-                                                    <span class="input-group-text">Fcfa</span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-xxl-3 col-lg-4 col-sm-6">
-                                            <div class="mb-3">
-                                                <label class="form-label">Remise</label>
-                                                <div class="input-group">
-                                                    <input type="tel" class="form-control" id="taux_remise" value="0">
-                                                    <span class="input-group-text">Fcfa</span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-xxl-3 col-lg-4 col-sm-6">
-                                            <div class="mb-3">
-                                                <label class="form-label">Application de la remise</label>
-                                                <select class="form-select" id="appliq_remise">
-                                                    <option selected value="patient">Patient</option>
-                                                    <option value="assurance">Assurance</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <div class="col-xxl-3 col-lg-4 col-sm-6" id="div_assurance_utiliser" style="display: none;">
-                                            <div class="mb-3">
-                                                <label class="form-label">Utilisé l'assurance</label>
-                                                <select class="form-select" id="assurance_utiliser">
-                                                    <option selected value="oui">Oui</option>
-                                                    <option value="non">Non</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <div class="col-sm-12">
-                                            <div class="d-flex gap-2 justify-content-center">
-                                                <button id="btn_eng" class="btn btn-success">
-                                                    Enregistrer
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div id="div_loader" style="display: none;">
-                                        <div class="d-flex justify-content-center align-items-center">
-                                            <div class="spinner-border text-warning me-2" role="status" aria-hidden="true"></div>
-                                            <strong>Calcul en cours...</strong>
                                         </div>
                                     </div>
                                 </div>
@@ -418,7 +341,7 @@
                                                     Liste des Examens
                                                 </h5>
                                                 <div class="d-flex" >
-                                                    <input type="text" id="searchInputE" placeholder="Recherche" class="form-control me-1">
+                                                    <input type="text" id="searchInpute" placeholder="Recherche" class="form-control me-1">
                                                     <a id="btn_print_tableE" style="display: none;" class="btn btn-outline-warning ms-auto me-1">
                                                         <i class="ri-printer-line"></i>
                                                     </a>
@@ -477,7 +400,7 @@
                                         <div class="mb-3">
                                             <label class="form-label">Prix</label>
                                             <div class="input-group">
-                                                <input type="tel" class="form-control" id="prix" placeholder="Saisie Obligatoire">
+                                                <input type="tel" class="form-control" id="prix_preleve" placeholder="Saisie Obligatoire">
                                                 <span class="input-group-text">Fcfa</span>
                                             </div>
                                         </div>
@@ -485,7 +408,7 @@
                                     <div class="col-sm-12">
                                         <div class="mb-3">
                                             <div class="d-flex gap-2 justify-content-center">
-                                                <button id="btn_eng" class="btn btn-success">
+                                                <button id="btn_eng_pre" class="btn btn-success">
                                                     Enregistrer
                                                 </button>
                                             </div>
@@ -638,7 +561,7 @@
 {{-- aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa --}}
 
 
-<div class="modal fade" id="MmodifE" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="MmodifE" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -721,52 +644,50 @@
 <script>
     document.addEventListener("DOMContentLoaded", function() {
 
+        Name_atient();
         select_acte();
         listE();
+        montant_prelevement();
+        Name_atient();
 
         document.getElementById("btn_eng_ex").addEventListener("click", eng_ex);
+        document.getElementById("updateBtnE").addEventListener("click", eng_exM);
+        document.getElementById("btn_refresh_tableE").addEventListener("click", listE);
+        document.getElementById("btn_eng_pre").addEventListener("click", eng_pre);
+        document.getElementById("add_select_examen").addEventListener("click", add_select);
+        document.getElementById("btn_eng_exd").addEventListener("click", eng_exd);
 
-        document.getElementById('cotation_ex').addEventListener('keypress', function(event) {
+
+        function allowOnlyLetters(event) {
             const key = event.key;
             if (!/^[a-zA-Z]+$/.test(key)) {
-                event.preventDefault(); // Empêche la saisie si ce n'est pas une lettre
+                event.preventDefault();
             }
-        });
-        document.getElementById('cotation_exM').addEventListener('keypress', function(event) {
+        }
+
+        function allowOnlyNumbers(event) {
             const key = event.key;
-            if (!/^[a-zA-Z]+$/.test(key)) {
-                event.preventDefault(); // Empêche la saisie si ce n'est pas une lettre
+            if (isNaN(key)) {
+                event.preventDefault();
             }
-        });
-        document.getElementById('prix_ex').addEventListener('input', function() {
+        }
+
+        function formatPriceInput(event) {
             this.value = formatPrice(this.value);
+        }
+
+        // Attach event listeners
+        ['cotation_ex', 'cotation_exM'].forEach(id => {
+            document.getElementById(id).addEventListener('keypress', allowOnlyLetters);
         });
-        document.getElementById('prix_ex').addEventListener('keypress', function(event) {
-            const key = event.key;  
-            if (isNaN(key)) {
-                event.preventDefault();
-            }
+
+        ['prix_ex', 'prix_exM','prix_preleve'].forEach(id => {
+            document.getElementById(id).addEventListener('input', formatPriceInput);
+            document.getElementById(id).addEventListener('keypress', allowOnlyNumbers);
         });
-        document.getElementById('prix_exM').addEventListener('input', function() {
-            this.value = formatPrice(this.value);
-        });
-        document.getElementById('prix_exM').addEventListener('keypress', function(event) {
-            const key = event.key;  
-            if (isNaN(key)) {
-                event.preventDefault();
-            }
-        });
-        document.getElementById('valeur_ex').addEventListener('keypress', function(event) {
-            const key = event.key;
-            if (isNaN(key)) {
-                event.preventDefault();
-            }
-        });
-        document.getElementById('valeur_exM').addEventListener('keypress', function(event) {
-            const key = event.key;
-            if (isNaN(key)) {
-                event.preventDefault();
-            }
+
+        ['valeur_ex', 'valeur_exM'].forEach(id => {
+            document.getElementById(id).addEventListener('keypress', allowOnlyNumbers);
         });
 
         var inputs = ['prix_ex','valeur_ex'];
@@ -853,14 +774,21 @@
 
             const selectElement = document.getElementById('acte_id_ex');
             const selectElementM = document.getElementById('acte_id_exM');
+            const selectElementexd = document.getElementById('typeacte_id_exd');
 
             selectElement.innerHTML = '';
             selectElementM.innerHTML = '';
+            selectElementexd.innerHTML = '';
 
             const defaultOption = document.createElement('option');
             defaultOption.value = '';
             defaultOption.textContent = 'Selectionner';
             selectElement.appendChild(defaultOption);
+
+            const defaultOption2 = document.createElement('option');
+            defaultOption2.value = '';
+            defaultOption2.textContent = 'Selectionner';
+            selectElementexd.appendChild(defaultOption2);
 
             $.ajax({
                 url: '/api/list_acte_ex',
@@ -877,7 +805,62 @@
                         option2.value = acte.id;
                         option2.textContent = acte.nom;
                         selectElementM.appendChild(option2);
+
+                        const option3 = document.createElement('option');
+                        option3.value = acte.id;
+                        option3.textContent = acte.nom;
+                        selectElementexd.appendChild(option3);
                     });
+                },
+                error: function() {
+                    // showAlert('danger', 'Impossible de generer le code automatiquement');
+                }
+            });
+
+            selectElementexd.addEventListener('change', function() {
+                const id = this.value;
+                if (id) {
+
+                    const url = '/api/select_examen/' + id;
+                    fetch(url)
+                        .then(response => response.json())
+                        .then(data => {
+
+                            const examens = data.examen;
+
+                            const contenuDiv = document.getElementById('contenu_examen');
+                            contenuDiv.innerHTML = '';
+
+                            document.getElementById('montant_total_examen').value ='';
+                            document.getElementById('montant_patient_examen').value ='';
+                            document.getElementById('montant_assurance_examen').value ='';
+                                                    
+                            addSelectExamen(contenuDiv, examens);
+
+                            document.getElementById('div_Examen').style.display = "block";
+                        })
+                        .catch(error => {
+                            console.error('Erreur lors du chargement des données:', error);
+                        });
+                }else{
+                    const contenuDiv = document.getElementById('contenu_examen');
+                    contenuDiv.innerHTML = '';
+                    document.getElementById('div_Examen').style.display = "none";
+                }
+                
+            });
+        }
+
+        function montant_prelevement() {
+
+            $.ajax({
+                url: '/api/montant_prelevement',
+                method: 'GET',
+                success: function(response) {
+                    data = response.prelevement;
+                    document.getElementById('prix_preleve').value = data.prix;
+                    document.getElementById('montant_pre_examen').value = data.prix;
+                    montant_prelevement();
                 },
                 error: function() {
                     // showAlert('danger', 'Impossible de generer le code automatiquement');
@@ -975,6 +958,130 @@
             });
         }
 
+        function eng_exM()
+        {
+            const id = document.getElementById("Id_exM").value;
+            const acte_id = document.getElementById("acte_id_exM");
+            const nom = document.getElementById("nom_exM");
+            const cotation = document.getElementById("cotation_exM");
+            const valeur = document.getElementById("valeur_exM");
+            const prix = document.getElementById("prix_exM");
+            const montant = document.getElementById("montant_exM");
+
+            if(!acte_id.value.trim() || !nom.value.trim() || !cotation.value.trim() || !valeur.value.trim() || !prix.value.trim() || !montant.value.trim()){
+                showAlert('Alert', 'Veuillez remplir tous les champs SVP.','warning');
+                return false;
+            }
+
+            var modal = bootstrap.Modal.getInstance(document.getElementById('MmodifE'));
+            modal.hide();
+
+            var preloader_ch = `
+                <div id="preloader_ch">
+                    <div class="spinner_preloader_ch"></div>
+                </div>
+            `;
+
+            document.body.insertAdjacentHTML('beforeend', preloader_ch);
+
+            $.ajax({
+                url: '/api/examen_Modif/'+id,
+                method: 'GET',
+                data: { 
+                    acte_id: acte_id.value, 
+                    nom: nom.value, 
+                    prix: prix.value ,
+                    cotation: cotation.value, 
+                    valeur: valeur.value, 
+                    montant: montant.value ,
+                },
+                success: function(response) {
+
+                    var preloader = document.getElementById('preloader_ch');
+                    if (preloader) {
+                        preloader.remove();
+                    }
+
+                    if (response.existe) {
+
+                        showAlert('Alert', 'Cet Examen existe déjà.','warning');
+
+                    }else if (response.success) {
+
+                        listE();
+
+                        showAlert('Succès', 'Mise à jour éffectuée.','success');
+                    } else if (response.error) {
+
+                        showAlert('Erreur', 'Une erreur est survenue','error');
+                    }
+
+                },
+                error: function() {
+
+                    var preloader = document.getElementById('preloader_ch');
+                    if (preloader) {
+                        preloader.remove();
+                    }
+
+                    showAlert('Erreur', 'Une erreur est survenue lors de l\'enregistrement.','error');
+                }
+            });
+        }
+
+        function eng_pre()
+        {
+            const prix = document.getElementById("prix_preleve");
+
+            if(!prix.value.trim()){
+                showAlert('Alert', 'Saisie le montant du prélevement SVP.','warning');
+                return false;
+            }
+
+            var preloader_ch = `
+                <div id="preloader_ch">
+                    <div class="spinner_preloader_ch"></div>
+                </div>
+            `;
+
+            document.body.insertAdjacentHTML('beforeend', preloader_ch);
+
+            $.ajax({
+                url: '/api/prelevement_Modif',
+                method: 'GET',
+                data: { 
+                    prix: prix.value,
+                },
+                success: function(response) {
+
+                    var preloader = document.getElementById('preloader_ch');
+                    if (preloader) {
+                        preloader.remove();
+                    }
+
+                    if (response.success) {
+
+                        montant_prelevement();
+
+                        showAlert('Succès', 'Mise à jour éffectuée.','success');
+                    } else if (response.error) {
+
+                        showAlert('Erreur', 'Une erreur est survenue','error');
+                    }
+
+                },
+                error: function() {
+
+                    var preloader = document.getElementById('preloader_ch');
+                    if (preloader) {
+                        preloader.remove();
+                    }
+
+                    showAlert('Erreur', 'Une erreur est survenue lors de l\'enregistrement.','error');
+                }
+            });
+        }
+
         function listE(page = 1) {
 
             const tableBody = document.querySelector('#TableE tbody');
@@ -1034,13 +1141,12 @@
 
                                 document.getElementById(`modif-${item.id}`).addEventListener('click', () =>
                                 {
-                                    // Set the values in the modal form
                                     document.getElementById('Id_exM').value = item.id;
-                                    document.getElementById("nom_exM") = item.nom;
-                                    document.getElementById("cotation_exM") = item.cotation;
-                                    document.getElementById("valeur_exM") = item.valeur;
-                                    document.getElementById("prix_exM") = item.prix;
-                                    document.getElementById("montant_exM") = item.montant;
+                                    document.getElementById("nom_exM").value = item.nom;
+                                    document.getElementById("cotation_exM").value = item.cotation;
+                                    document.getElementById("valeur_exM").value = item.valeur;
+                                    document.getElementById("prix_exM").value = item.prix;
+                                    document.getElementById("montant_exM").value = item.montant;
 
                                     const modifActeSelect = document.getElementById("acte_id_exM");
                                     const typeeOptions = modifActeSelect.options;
@@ -1052,25 +1158,26 @@
                                         }
                                     }
                                 });
-
                             });
                         };
 
                         function applySearchFilter() {
-                            const searchTerm = searchInputE.value.toLowerCase();
+                            const searchTerm = searchInpute.value.toLowerCase();
                             const filteredExamens = allExamens.filter(item =>
-                                item.type.toLowerCase().includes(searchTerm) ||
+                                item.acte.toLowerCase().includes(searchTerm) ||
                                 item.nom.toLowerCase().includes(searchTerm) ||
                                 item.cotation.toLowerCase().includes(searchTerm) ||
                                 item.valeur.toLowerCase().includes(searchTerm) ||
-                                item.prix.toLowerCase().includes(searchTerm)||
+                                item.prix.toLowerCase().includes(searchTerm) ||
+                                item.prix.replace(/[^0-9]/g, '').toLowerCase().includes(searchTerm) ||
                                 item.montant.toLowerCase().includes(searchTerm) ||
+                                item.montant.replace(/[^0-9]/g, '').toLowerCase().includes(searchTerm) ||
                                 formatDateHeure(item.created_at).toLowerCase().includes(searchTerm)
                             );
                             displayRows(filteredExamens);
                         }
 
-                        searchInputE.addEventListener('input', applySearchFilter);
+                        searchInpute.addEventListener('input', applySearchFilter);
 
                         displayRows(allExamens);
 
@@ -1090,7 +1197,8 @@
                 });
         }
 
-        function updatePaginationControlsE(pagination) {
+        function updatePaginationControlsE(pagination)
+        {
             const paginationDiv = document.getElementById('pagination-controlsE');
             paginationDiv.innerHTML = '';
 
@@ -1168,6 +1276,459 @@
             // Append pagination controls to the DOM
             paginationDiv.appendChild(paginationWrapper);
         }
+
+        // -----------------------------------------------------------------------------------------
+
+        function Name_atient() {
+            $.ajax({
+                url: '/api/name_patient',
+                method: 'GET',
+                success: function(response) {
+                    const data = response.name;
+
+                    // Elements
+                    const input = document.getElementById('patient');
+                    const matricule_patient = document.getElementById('matricule_patient');
+                    const suggestionsDiv = document.getElementById('suggestions_patient');
+                    const patient_taux = document.getElementById('patient_taux');
+                    
+                    let patientSelected = false;  // Variable to track if a patient was selected
+
+                    // Event listener for input typing
+                    input.addEventListener('input', function() {
+
+                        const searchTerm = input.value.toLowerCase();
+                        
+                        // Clear previous suggestions
+                        suggestionsDiv.style.display = 'block';
+                        suggestionsDiv.innerHTML = '';
+
+                        // Filter data based on input
+                        const filteredData = data.filter(item => item.np.toLowerCase().includes(searchTerm));
+
+                        // Display filtered data
+                        filteredData.forEach(item => {
+                            const suggestion = document.createElement('div');
+                            suggestion.innerText = item.np;
+                            suggestion.addEventListener('click', function() {
+                                document.getElementById('select_examen_div').style.display = "block";
+                                // Set selected data in the input field
+                                input.value = item.np;
+                                matricule_patient.value = item.matricule;
+                                suggestionsDiv.innerHTML = ''; // Clear suggestions
+                                suggestionsDiv.style.display = 'none';
+
+                                // Assign patient rate (taux)
+                                patient_taux.value = item.taux ? item.taux : 0;
+
+                                document.getElementById('contenu_examen').innerHTML = "";
+                                document.getElementById('div_btn_examen').style.display = "none";
+                                document.getElementById('div_Examen').style.display = "none";
+                                document.getElementById('typeacte_id_exd').value = "";
+
+                                updateMontantTotalExamen();
+
+                                patientSelected = true;
+                            });
+                            suggestionsDiv.appendChild(suggestion);
+                        });
+
+                        // Show/hide suggestions based on results
+                        suggestionsDiv.style.display = filteredData.length > 0 ? 'block' : 'none';
+
+                        // If the input is modified, reset matricule_patient and taux
+                        if (patientSelected) {
+                            matricule_patient.value = '';  // Clear matricule
+                            patient_taux.value = '';  // Clear taux
+                            patientSelected = false; // Reset patient selection flag
+                            document.getElementById('select_examen_div').style.display = "none";
+                            document.getElementById('div_calcul').style.display = 'none';
+                            document.getElementById('contenu_examen').innerHTML = "";
+                            document.getElementById('div_btn_examen').style.display = "none";
+                            document.getElementById('div_Examen').style.display = "none";
+                            document.getElementById('typeacte_id_exd').value = "";
+                            updateMontantTotalExamen();
+                        }
+                    });
+
+                    // Hide suggestions when clicking outside
+                    document.addEventListener('click', function(e) {
+                        if (!suggestionsDiv.contains(e.target) && e.target !== input) {
+                            suggestionsDiv.style.display = 'none';
+                        }
+                    });
+                },
+                error: function() {
+                    // Handle error
+                }
+            });
+        }
+
+        function addSelectExamen(contenuDiv, examens) {
+
+            const patientTaux = document.getElementById('patient_taux').value;
+
+            const div = document.createElement('div');
+            div.className = 'mb-3';
+
+            // Créer le groupe de contrôle contenant le select et le bouton supprimer
+            div.innerHTML = `
+                <div class="input-group">
+                    <select class="form-select examen-select-assurer">
+                        ${patientTaux == 0 ? `
+                            <option selected value="oui">Oui</option>
+                        ` : `
+                            <option selected value="oui">Oui</option>
+                            <option value="non">Non</option>
+                        `}
+                    </select>
+                    <select class="form-select examen-select w-50">
+                        <option value="">Selectionner</option>
+                        ${examens.map(item => 
+                            `<option value="${item.id}" 
+                                     data-cotation="${item.cotation}" 
+                                     data-valeur="${item.valeur}" 
+                                     data-prix="${item.prix}" 
+                                     data-montant="${item.montant}"
+                                     data-assurer="oui"
+                                     data-montantr="${item.montant.replace(/\./g, '')}">
+                                ${item.nom}
+                            </option>`).join('')}
+                    </select>
+                    <input readonly type="tel" class="form-control cotation-field" placeholder="Cotation">
+                    <input readonly type="tel" class="form-control valeur-field" placeholder="Valeur">
+                    <input readonly type="tel" class="form-control prix-field" placeholder="Prix">
+                    <input readonly type="tel" class="form-control montant-field" placeholder="Montant">
+                    <button class="btn btn-outline-danger suppr-btn">Supprimer</button>
+                </div>
+            `;
+
+            // Ajouter l'élément dans le parent (contenu div)
+            contenuDiv.appendChild(div);
+
+            checkContenuExamen();
+
+            // Ajouter un event listener pour le bouton supprimer
+            div.querySelector('.suppr-btn').addEventListener('click', () => {
+                div.remove(); // Supprimer l'élément div parent
+                checkContenuExamen(); // Re-vérifier le contenu
+                updateMontantTotalExamen(); // Mettre à jour le montant total après la suppression
+            });
+
+            // Event listener pour le select 'examen-select-assurer'
+            const assurerSelect = div.querySelector('.examen-select-assurer');
+            assurerSelect.addEventListener('change', function() {
+                const selectedValue = assurerSelect.value; // Obtenez la valeur sélectionnée
+                const examenSelect = div.querySelector('.examen-select');
+                const selectedOption = examenSelect.options[examenSelect.selectedIndex];
+
+                if (selectedOption) {
+                    selectedOption.setAttribute('data-assurer', selectedValue);
+                }
+
+                updateMontantTotalExamen();
+            });
+
+
+            // Event listener pour le select
+            const examenSelect = div.querySelector('.examen-select');
+            examenSelect.addEventListener('change', function() {
+                const selectedOption = examenSelect.options[examenSelect.selectedIndex];
+
+                // Mettre à jour les champs en fonction de l'examen sélectionné
+                div.querySelector('.cotation-field').value = selectedOption.getAttribute('data-cotation') || '';
+                div.querySelector('.valeur-field').value = selectedOption.getAttribute('data-valeur') || '';
+                div.querySelector('.prix-field').value = selectedOption.getAttribute('data-prix') || '' + ' Fcfa';
+                div.querySelector('.montant-field').value = selectedOption.getAttribute('data-montant') || '' + ' Fcfa';
+
+                updateMontantTotalExamen(); // Mettre à jour le montant total après sélection
+            });
+        }
+
+        function updateMontantTotalExamen() {
+            let montantTotal = 0;        // Montant total à payer
+            let montantPatient = 0;      // Montant à la charge du patient
+            let montantAssurance = 0;    // Montant à la charge de l'assurance
+            const selects = document.querySelectorAll('.examen-select');
+            
+            const patientTaux = parseInt(document.getElementById('patient_taux').value) || 0;
+            const preleve = parseInt(document.getElementById('montant_pre_examen').value.replace(/\./g, '')) || 0;
+
+            selects.forEach(select => {
+                const selectedOption = select.options[select.selectedIndex];
+                const montant = selectedOption.getAttribute('data-montantr');
+                const assurerSelect = select.closest('.input-group').querySelector('.examen-select-assurer');
+                const assurance = assurerSelect.value; // Récupérer la valeur d'assurance
+
+                if (montant) {
+                    let montantExamen = parseInt(montant);
+
+                    // Appliquer une logique en fonction de l'assurance
+                    if (assurance === 'non') {
+                        // Si l'assurance est "non", le montant est entièrement à la charge du patient
+                        montantPatient += montantExamen;
+                    } else {
+                        // Si l'assurance est "oui", appliquer le taux pour le montant de l'assurance
+                        let montantCouvert = (montantExamen * patientTaux) / 100; // Montant couvert par l'assurance
+                        montantAssurance += montantCouvert; // Ajoute au montant de l'assurance
+                        montantPatient += (montantExamen - montantCouvert); // Montant restant à la charge du patient
+                    }
+
+                    // Montant total est la somme des montants du patient et de l'assurance
+                    montantTotal += montantExamen; 
+                }
+            });
+
+            // Ajouter le prélèvement au montant total une seule fois après la boucle
+            montantTotal += preleve;
+
+            // Formater les montants avec des points
+            const formatMontant = (montant) => montant.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+
+            // Mettre à jour les champs avec les montants formatés
+            document.getElementById('montant_total_examen').value = formatMontant(montantTotal);
+            document.getElementById('montant_patient_examen').value = formatMontant(montantPatient);
+            document.getElementById('montant_assurance_examen').value = formatMontant(montantAssurance);
+        }
+
+        function checkContenuExamen() {
+            const contenuDiv = document.getElementById('contenu_examen');
+            const divBtn = document.getElementById('div_btn_examen');
+            
+            // Si la div #contenu a un contenu, on affiche le bouton, sinon on le cache
+            if (contenuDiv.innerHTML.trim() !== "") {
+                divBtn.style.display = "block"; // Afficher le bouton
+            } else {
+                divBtn.style.display = "none";  // Cacher le bouton
+            }
+        }
+
+        function add_select() {
+            const contenuDiv = document.getElementById('contenu_examen');
+            const id = document.getElementById('typeacte_id_exd').value;
+
+            if (id == '') {
+                showAlert("ALERT", "Selectionner un Type d'examen.", "warning");
+                return false;
+            }
+
+            const url = '/api/select_examen/' + id;
+                fetch(url)
+                    .then(response => response.json())
+                    .then(data => {
+
+                        const examens = data.examen;
+                                                
+                        addSelectExamen(contenuDiv, examens); // Ajouter le premier select
+                    })
+                    .catch(error => {
+                        console.error('Erreur lors du chargement des données:', error);
+                    });
+        }
+
+        function CalculMontant() {
+
+            const matricule_patient = document.getElementById('matricule_patient').value;
+            const typeacte_id_exd = document.getElementById('typeacte_id_exd').value;
+
+            // 1. Vérifier si le matricule du patient est renseigné
+            if (matricule_patient === '') {
+                showAlert("ALERT", "Veuillez sélectionner un Patient.", "warning");
+                return false;
+            }
+
+            // 2. Vérifier si un type de soins a été sélectionné
+            if (typeacte_id_exd === '') {
+                showAlert("ALERT", "Veuillez sélectionner un Type d'examen'.", "warning");
+                return false;
+            }
+
+            const contenuDiv = document.getElementById('contenu_examen');
+            if (contenuDiv.innerHTML.trim() == "") {
+                showAlert("ALERT", 'Aucun examen n\'a été sélectionné.', "warning");
+                return false;
+            }
+
+            let formIsValid = true;
+            const selectionsExamen = [];
+
+            // 3. Vérifier si tous les soins infirmiers ont été sélectionnés
+            const examenSelects = document.querySelectorAll('.examen-select');
+            const selectedExamenIds = new Set();
+
+            examenSelects.forEach(item => {
+                const selectedOption = item.options[item.selectedIndex];
+                const idExamen = selectedOption.value;
+                const montant = parseInt(selectedOption.dataset.montantr);
+
+                if (!idExamen || isNaN(montant)) {
+                    showAlert("ALERT", 'Aucun Soins Infirmier n\'a été sélectionné.', "warning");
+                    formIsValid = false;
+                    return false;
+                }
+
+                if (selectedExamenIds.has(idExamen)) {
+                    showAlert("ALERT", 'Vous avez sélectionné le même Soins Infirmier plusieurs fois.', "warning");
+                    formIsValid = false;
+                    return false;
+                }
+
+                selectedExamenIds.add(idExamen);
+                selectionsExamen.push({
+                    id: idExamen,
+                    montant: montant
+                });
+            });
+
+            if (!formIsValid) {
+                resetLoaderAndButton();
+                return false;
+            }
+
+            return true;
+        }
+
+        function eng_exd() {
+
+            try {
+                const calculResult = CalculMontant();
+                if (!calculResult) {
+                    return false;
+                }
+            } catch (error) {
+                showAlert("ERREUR","Veuillez bien vérifier les données saisies", "error");
+                return false;
+            }
+            
+            const selectionsExamen = [];
+            const examenSelects = document.querySelectorAll('.examen-select');
+            examenSelects.forEach(item => {
+
+                const selectedOption = item.options[item.selectedIndex];
+                const idExamen = selectedOption.value;
+                // const montant = parseInt(selectedOption.dataset.prix);
+                const accepte = selectedOption.dataset.assurer;
+
+                selectionsExamen.push({
+                    id: idExamen,
+                    // montant: montant
+                    accepte: accepte,
+                });
+            });
+
+            const matricule_patient = document.getElementById('matricule_patient').value;
+            const typeacte_id_exd = document.getElementById('typeacte_id_exd').value;
+            const medecin = document.getElementById('medecin').value;
+
+            if (matricule_patient == '') {
+                showAlert("ALERT", 'Veuillez sélectionner un Patient.', "warning");
+                return false;
+            }
+
+            if (typeacte_id_exd == '') {
+                showAlert("ALERT", 'Veuillez sélectionner un Type d\'examen.', "warning");
+                return false;
+            }
+
+            if (medecin == '') {
+                showAlert("ALERT", 'Veuillez saisie le nom du médecin.', "warning");
+                return false;
+            }
+
+            var montant_assurance = document.getElementById('montant_assurance_examen').value;
+            var montant_patient = document.getElementById('montant_patient_examen').value;
+            var montant_total = document.getElementById('montant_total_examen').value;
+            var montant_pre = document.getElementById('montant_pre_examen').value;
+            // Validate monetary fields
+            if (!montant_assurance || 
+                !montant_total || 
+                !montant_patient ||
+                !montant_pre) {
+                
+                showAlert("ALERT", 'Vérifier les montants SVP.', "warning");
+                return false; 
+            }
+
+            var montantAssuranceValue = parseFloat(montant_assurance);
+            var montantTotalValue = parseFloat(montant_total);
+            var montantPatientValue = parseFloat(montant_patient);
+            var montantPreValue = parseFloat(montant_pre);
+
+            if (isNaN(montantAssuranceValue) || 
+                isNaN(montantTotalValue) || 
+                isNaN(montantPatientValue) ||
+                isNaN(montantPreValue) || 
+                montantAssuranceValue < 0 || 
+                montantTotalValue < 0 || 
+                montantPatientValue < 0 ||
+                montantPreValue < 0) {
+                
+                showAlert("ALERT", 'Vérifier les montants SVP (les montants ne doivent pas être négatifs).', "warning");
+                return false;
+            }
+
+            var preloader_ch = `
+                <div id="preloader_ch">
+                    <div class="spinner_preloader_ch"></div>
+                </div>
+            `;
+            // Add the preloader to the body
+            document.body.insertAdjacentHTML('beforeend', preloader_ch);
+
+            $.ajax({
+                url: '/api/new_examend',
+                method: 'GET',
+                data:{
+                    selectionsExamen: selectionsExamen,
+                    montantA: montant_assurance,
+                    montantT: montant_total,
+                    montantP: montant_patient,
+                    montant_pre: montant_pre,
+                    matricule: matricule_patient,
+                    acte_id: typeacte_id_exd,
+                    medecin: medecin,
+                },
+                success: function(response) {
+
+                    var preloader = document.getElementById('preloader_ch');
+                    if (preloader) {
+                        preloader.remove();
+                    }
+                    
+                    if (response.success) {
+
+                        document.getElementById('typeacte_id_exd').value = "";
+                        document.getElementById('patient').value = "";
+                        document.getElementById('medecin').value = "";
+                        document.getElementById('select_examen_div').style.display = "none";
+                        document.getElementById('div_Examen').style.display = "none";     
+
+                        showAlert("ALERT", 'Enregistrement éffectué', "success");
+
+                        // var newConsultationTab = new bootstrap.Tab(document.getElementById('tab-oneAAA'));
+                        // newConsultationTab.show();
+                        // newConsultationTab.active();
+
+                    } else if (response.error) {
+                        showAlert("ERREUR", 'Une erreur est survenue', "error");
+                    } else if (response.json) {
+                        showAlert("ERREUR", 'Invalid selections format', "error");
+                    }
+
+                },
+                error: function() {
+                    var preloader = document.getElementById('preloader_ch');
+                    if (preloader) {
+                        preloader.remove();
+                    }
+
+                    showAlert("ERREUR", 'Une erreur est survenue lors de l\'enregistrement', "error");
+                }
+            });
+        };
+
+
+        // ---------------------------------------------------------------------------------------
 
     });
 </script>

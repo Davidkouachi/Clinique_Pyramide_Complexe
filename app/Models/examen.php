@@ -12,13 +12,15 @@ class examen extends Model
     protected $fillable = [
         'part_assurance',
         'part_patient',
-        'remise',
+        'statut',
         'montant',
         'libelle',
         'code',
         'medecin',
+        'prelevement',
         'facture_id',
-        'patient_id'
+        'patient_id',
+        'acte_id',
     ];
 
     public function facture()
@@ -29,5 +31,10 @@ class examen extends Model
     public function patient()
     {
         return $this->belongsTo(patient::class, 'patient_id');
+    }
+
+    public function acte()
+    {
+        return $this->belongsTo(acte::class, 'acte_id');
     }
 }

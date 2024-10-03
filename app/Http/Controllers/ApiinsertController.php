@@ -877,4 +877,89 @@ class ApiinsertController extends Controller
         return response()->json(['error' => true]);
     }
 
+    public function new_examend(Request $request)
+    {
+        $selections = $request->input('selectionsExamen');
+        if (!is_array($selections) || empty($selections)) {
+            return response()->json(['json' => true]);
+        }
+
+        $patient = patient::leftjoin('assurances', 'assurances.id', '=', 'patients.assurance_id')
+        ->where('patients.matricule', '=', $request->matricule)
+        ->select('patients.*', 'assurances.nom as assurance')
+        ->first();
+
+        if ($patient) {
+            $patient->age = $patient->datenais ? Carbon::parse($patient->datenais)->age : 0;
+        }
+
+        if (!$patient) {
+            return response()->json(['error' => true]);
+        }
+
+        $acte = acte::find($request->acte_id);
+
+        if (!$acte) {
+            return response()->json(['error' => true]);
+        }
+
+        $code = $this->generateUniqueMatricule();
+
+        $codeFac = $this->generateUniqueFacture();
+
+        DB::beginTransaction();
+
+        try {
+
+            $fac = new facture();
+            $fac->code = $codeFac;
+            $fac->statut = 'impayer';
+
+            if (!$fac->save()) {
+                throw new \Exception('Erreur');
+            }
+
+            $add = new examen();
+            $add->code = $code;
+            $add->statut = 'en cours';
+            $add->part_patient = $request->montantP;
+            $add->part_assurance = $request->montantA;
+            $add->montant = $request->montantT;
+            $add->libelle = '';
+            $add->facture_id = $fac->id;
+            $add->patient_id = $patient->id;
+            $add->acte_id = $acte->id;
+            $add->medecin = $request->medecin;
+            $add->prelevement = $request->montant_pre;
+
+            if (!$add->save()) {
+                throw new \Exception('Erreur');
+            }
+
+            foreach ($selections as $value) {
+
+                $adds = new examenpatient();
+                $adds->typeacte_id = $value['id'];
+                $adds->accepte = $value['accepte'];
+                $adds->examen_id = $add->id;
+
+                if (!$adds->save()) {
+                    throw new \Exception('Erreur');
+                }
+            }
+
+            // Si tout s'est bien passé, on commit les changements
+            DB::commit();
+
+            return response()->json(['success' => true]);
+            
+        } catch (Exception $e) {
+
+            DB::rollback();
+            return response()->json(['error' => true]);
+        }
+
+        return response()->json(['success' => true]);
+    }
+
 }

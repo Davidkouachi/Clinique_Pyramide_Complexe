@@ -49,6 +49,7 @@ Route::middleware(['statutchambre'])->group(function () {
 	Route::get('/new_soinsIn', [ApiinsertController::class, 'new_soinsIn']);
 	Route::get('/new_soinsam', [ApiinsertController::class, 'new_soinsam']);
 	Route::get('/examen_new', [ApiinsertController::class, 'examen_new']);
+	Route::get('/new_examend', [ApiinsertController::class, 'new_examend']);
 	// insert debut
 
 	// search debut
@@ -64,6 +65,8 @@ Route::middleware(['statutchambre'])->group(function () {
 	Route::get('/natureadmission_select/{id}', [ApisearchController::class, 'natureadmission_select']);
 	Route::get('/select_soinsIn/{id}', [ApisearchController::class, 'select_soinsIn']);
 	Route::get('/list_acte_ex', [ApisearchController::class, 'list_acte_ex']);
+	Route::get('/montant_prelevement', [ApisearchController::class, 'montant_prelevement']);
+	Route::get('/select_examen/{id}', [ApisearchController::class, 'select_examen']);
 	// search debut
 
 	// liste day debut
@@ -84,6 +87,8 @@ Route::middleware(['statutchambre'])->group(function () {
 	Route::get('/update_typesoins/{id}', [ApiupdateController::class, 'update_typesoins']);
 	Route::get('/update_soinIn/{id}', [ApiupdateController::class, 'update_soinIn']);
 	Route::get('/update_societe/{id}', [ApiupdateController::class, 'update_societe']);
+	Route::get('/examen_Modif/{id}', [ApiupdateController::class, 'examen_Modif']);
+	Route::get('/prelevement_Modif', [ApiupdateController::class, 'prelevement_Modif']);
 	// update debut
 
 	// delete debut

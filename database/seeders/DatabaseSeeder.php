@@ -18,6 +18,7 @@ use App\Models\assurance;
 use App\Models\produit;
 use App\Models\typesoins;
 use App\Models\soinsinfirmier;
+use App\Models\prelevement;
 
 class DatabaseSeeder extends Seeder
 {
@@ -27,6 +28,8 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         // User::factory(10)->create();
+
+        prelevement::create(['prix' => '1.500','code' => '1']);
 
         $role_medecin = role::create(['nom' => 'MEDECIN']);
         $role_admin = role::create(['nom' => 'ADMINISTRATEUR']);
