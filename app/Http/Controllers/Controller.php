@@ -116,4 +116,11 @@ class Controller
     {
         return view('finance.examen.liste_caisse');
     }
+
+    // ---------------------------------------------------
+
+    public function horaire_medecin()
+    {
+        return view('accueil.reception.horairemedecin');
+    }
 }

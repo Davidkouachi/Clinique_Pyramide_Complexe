@@ -85,6 +85,8 @@ Route::middleware(['auth','statutchambre'])->group(function () {
 	Route::get('/Examens Caisse', [Controller::class, 'encaissement_examen'])->name('encaissement_examen');
 	Route::get('/Examens Liste Caisse', [Controller::class, 'liste_caisse_examen'])->name('liste_caisse_examen');
 
+	Route::get('/Horaires Médecin', [Controller::class, 'horaire_medecin'])->name('horaire_medecin');
+
 // Route::middleware(['role:ADMINISTRATEUR'])->group(function () {
 
 // });

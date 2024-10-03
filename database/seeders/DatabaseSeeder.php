@@ -19,6 +19,7 @@ use App\Models\produit;
 use App\Models\typesoins;
 use App\Models\soinsinfirmier;
 use App\Models\prelevement;
+use App\Models\joursemaine;
 
 class DatabaseSeeder extends Seeder
 {
@@ -234,6 +235,11 @@ class DatabaseSeeder extends Seeder
                     'typesoins_id' => $soin->id
                 ]);
             }
+        }
+
+        $jours = ['LUNDI', 'MARDI', 'MERCREDI', 'JEUDI', 'VENDREDI', 'SAMEDI', 'DIMANCHE'];
+        foreach ($jours as $value) {
+            joursemaine::create(['jour' => $value]); 
         }
     }
 }

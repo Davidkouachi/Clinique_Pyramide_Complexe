@@ -123,7 +123,7 @@
                                 <span class="menu-text">Accueil</span>
                             </a>
                         </li>
-                        <li @if(request()->routeIs('index_reception','consultation_liste','patient_liste','societe_liste')) class="active current-page treeview" @else class="treeview" @endif >
+                        <li @if(request()->routeIs('index_reception','consultation_liste','patient_liste','societe_liste','horaire_medecin')) class="active current-page treeview" @else class="treeview" @endif >
                             <a href="#!">
                                 <i class="ri-computer-line"></i>
                                 <span class="menu-text">Réception</span>
@@ -142,6 +142,11 @@
                                 <li>
                                     <a @if(request()->routeIs('patient_liste')) class="text-primary" @endif href="{{route('patient_liste')}}">
                                         Patient
+                                    </a>
+                                </li>
+                                <li>
+                                    <a @if(request()->routeIs('horaire_medecin')) class="text-primary" @endif href="{{route('horaire_medecin')}}">
+                                        Horaires Médecins
                                     </a>
                                 </li>
                                 <li>
