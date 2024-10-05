@@ -20,40 +20,20 @@
 @section('content')
 
 <div class="app-body">
-    <div class="row gx-3">
+    <div class="row gx-3 mb-3">
         <div class="col-xxl-12 col-sm-12">
             <div class="card mb-3 bg-3">
                 <div class="card-body" style="background: rgba(0, 0, 0, 0.7);">
                     <div class="py-4 px-3 text-white">
                         <h6>Bienvenue,</h6>
                         <h2>{{Auth::user()->sexe.'. '.Auth::user()->name}}</h2>
-                        <h5>Les statistiques d'aujourd'hui.</h5>
-                        <div class="mt-4 d-flex gap-3">
-                            <div class="d-flex align-items-center">
-                                <div class="icon-box lg bg-info rounded-5 me-3">
-                                    <i class="ri-walk-line fs-1"></i>
-                                </div>
-                                <div class="d-flex flex-column">
-                                    <h2 class="m-0 lh-1" id="nbre_analyse" ></h2>
-                                    <p class="m-0">Analyse</p>
-                                </div>
-                            </div>
-                            <div class="d-flex align-items-center">
-                                <div class="icon-box lg bg-info rounded-5 me-3">
-                                    <i class="ri-walk-line fs-1"></i>
-                                </div>
-                                <div class="d-flex flex-column">
-                                    <h2 class="m-0 lh-1" id="nbre_imagerie" ></h2>
-                                    <p class="m-0">Imagerie</p>
-                                </div>
-                            </div>
-                        </div>
+                        <h5>Horaires des Médecins.</h5>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    <div class="row gx-3" >
+    <div class="row gx-3 mb-3" >
         <div class="col-sm-12">
             <div class="card mb-3">
                 <div class="card-body" style="margin-top: -30px;">
@@ -62,114 +42,43 @@
                             <li class="nav-item" role="presentation">
                                 <a class="nav-link active text-white" id="tab-twoAAAN" data-bs-toggle="tab" href="#twoAAAN" role="tab" aria-controls="twoAAAN" aria-selected="false" tabindex="-1">
                                     <i class="ri-dossier-line me-2"></i>
-                                    Demande d'examen
+                                    Nouvel horaire
                                 </a>
                             </li>
                             <li class="nav-item" role="presentation">
-                                <a class="nav-link text-white" id="tab-oneAAAD" data-bs-toggle="tab" href="#oneAAAD" role="tab" aria-controls="oneAAAD" aria-selected="false" tabindex="-1">
-                                    <i class="ri-health-book-line me-2"></i>
-                                    Liste des demandes d'examens
+                                <a class="nav-link text-white" id="tab-twoAAAL" data-bs-toggle="tab" href="#twoAAAL" role="tab" aria-controls="twoAAAL" aria-selected="false" tabindex="-1">
+                                    <i class="ri-dossier-line me-2"></i>
+                                    Liste des rendez-vous
                                 </a>
                             </li>
                         </ul>
                         <div class="tab-content" id="customTabContent">
                             <div class="tab-pane active show fade" id="twoAAAN" role="tabpanel" aria-labelledby="tab-twoAAAN">
-                                <div class="card-header">
-                                    <h5 class="card-title text-left">
-                                        Nouvelle Demande d'examen
-                                    </h5>
-                                </div>
                                 <div class="row gx-3 justify-content-center align-items-center mb-4">
-                                    <div class="col-xxl-3 col-lg-4 col-sm-6">
+                                    <div class="col-xxl-3 col-lg-4 col-sm-6" id="div_medecin" >
                                         <div class="mb-3">
-                                            <label class="form-label">Patient</label>
-                                            <input type="hidden" class="form-control" id="matricule_patient" autocomplete="off">
-                                            <input type="text" class="form-control" id="patient" placeholder="saisie obligatoire" autocomplete="off">
-                                            <div class="suggestions" id="suggestions_patient" style="display: none;"></div>
+                                            <label class="form-label">Medecin</label>
+                                            <select class="form-select" id="medecin_id"></select>
                                         </div>
                                     </div>
                                 </div>
-                                <div id="select_examen_div" style="display: none;">
-                                    <div class="row gx-3 justify-content-center align-items-center mb-4">
-                                        <div class="col-xxl-3 col-lg-4 col-sm-6">
-                                            <div class="mb-3">
-                                                <label class="form-label">Type d'examen</label>
-                                                <select class="form-select" id="typeacte_id_exd"></select>
-                                            </div>
-                                        </div>
-                                        <div class="col-xxl-3 col-lg-4 col-sm-6">
-                                            <div class="mb-3">
-                                                <label class="form-label">Medecin</label>
-                                                <input type="text" class="form-control" id="medecin" autocomplete="off" placeholder="saisie obligatoire" oninput="this.value = this.value.toUpperCase()">
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div id="div_Examen" class="mb-3 p-2" style="display: none;" >
-                                        <div class="card-header">
-                                            <h5 class="card-title text-center">
-                                                Choix des Examens
-                                            </h5>
-                                        </div>
+                                <div id="div_Horaire" style="display: none;">
+                                    <div class="mb-3 p-2" >
                                         <div class="row gx-3 justify-content-center align-items-center">
                                             <div class="col-12">
                                                 <div class="row gx-3 justify-content-center align-items-center">
                                                     <div class="col-12 mb-3 text-center">
-                                                        <button type="button" id="add_select_examen" class="btn btn-info">
+                                                        <button type="button" id="add_horaire" class="btn btn-info">
                                                             <i class="ri-sticky-note-add-line"></i>
-                                                            Ajouter un Examen
+                                                            Ajouter un horaire
                                                         </button>
                                                     </div>
-                                                    <div class="col-12" id="contenu_examen">
+                                                    <div class="col-12" id="contenu_horaire">
 
                                                     </div>
-                                                    <div class="row gx-3" id="div_btn_examen" style="display: none;">
-                                                        <div class="col-xxl-4 col-lg-4 col-sm-6">
-                                                            <div class="input-group mb-3">
-                                                                <span class="input-group-text w-25">
-                                                                    Prélevement
-                                                                </span>
-                                                                <input readonly type="tel" class="form-control" id="montant_pre_examen" placeholder="Taux de Couverture">
-                                                                <span class="input-group-text w-25">Fcfa</span>
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-xxl-4 col-lg-4 col-sm-6">
-                                                            <div class="input-group mb-3">
-                                                                <span class="input-group-text w-25">
-                                                                    Taux
-                                                                </span>
-                                                                <input readonly type="tel" class="form-control" id="patient_taux" placeholder="Taux de Couverture">
-                                                                <span class="input-group-text w-25">%</span>
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-xxl-4 col-lg-4 col-sm-6">
-                                                            <div class="input-group mb-3">
-                                                                <span class="input-group-text w-25">
-                                                                    Assurance
-                                                                </span>
-                                                                <input readonly type="tel" class="form-control" id="montant_assurance_examen" placeholder="Part Assurance">
-                                                                <span class="input-group-text w-25">Fcfa</span>
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-xxl-4 col-lg-4 col-sm-6">
-                                                            <div class="input-group mb-3">
-                                                                <span class="input-group-text w-25">
-                                                                    Patient
-                                                                </span>
-                                                                <input readonly type="tel" class="form-control" id="montant_patient_examen" placeholder="Part Patient">
-                                                                <span class="input-group-text w-25">Fcfa</span>
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-xxl-4 col-lg-4 col-sm-6">
-                                                            <div class="input-group mb-3">
-                                                                <span class="input-group-text w-25">
-                                                                    Total
-                                                                </span>
-                                                                <input readonly type="tel" class="form-control" id="montant_total_examen" placeholder="Montant Total">
-                                                                <span class="input-group-text w-25">Fcfa</span>
-                                                            </div>
-                                                        </div>
+                                                    <div class="row gx-3" id="div_btn_horaire" style="display: none;">
                                                         <div class="col-12 mb-3 text-center">
-                                                            <button type="button" id="btn_eng_exd" class="btn btn-success">
+                                                            <button type="button" id="btn_eng" class="btn btn-success">
                                                                 Enregistrer
                                                                 <i class="ri-send-plane-fill"></i>
                                                             </button>
@@ -181,61 +90,55 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="tab-pane fade " id="oneAAAD" role="tabpanel" aria-labelledby="tab-oneAAAD">
-                                <div class="row gx-3" >
-                                    <div class="col-12">
-                                        <div class=" mb-3">
-                                            <div class="card-header d-flex align-items-center justify-content-between">
-                                                <h5 class="card-title">
-                                                    Liste des Examens Demandées
-                                                </h5>
-                                                <div class="d-flex" >
-                                                    <input type="text" id="searchInputd" placeholder="Recherche" class="form-control me-1">
-                                                    <a id="btn_print_tableED" style="display: none;" class="btn btn-outline-warning ms-auto me-1">
-                                                        <i class="ri-printer-line"></i>
-                                                    </a>
-                                                    <a id="btn_refresh_tableED" class="btn btn-outline-info ms-auto">
-                                                        <i class="ri-loop-left-line"></i>
-                                                    </a>
-                                                </div>
-                                            </div>
-                                            <div class="card-body">
-                                                <div class="table-outer" id="div_TableED" style="display: none;">
-                                                    <div class="table-responsive">
-                                                        <table class="table align-middle table-hover m-0 truncate" id="TableED">
-                                                            <thead>
-                                                                <tr>
-                                                                    <th scope="col">N°</th>
-                                                                    <th scope="col">Nom et Prénoms</th>
-                                                                    <th scope="col">Type d'examen</th>
-                                                                    <th scope="col">Médecin</th>
-                                                                    <th scope="col">Nombre d'examen</th>
-                                                                    <th scope="col">Prélevement</th>
-                                                                    <th scope="col">Montant Total</th>
-                                                                    <th scope="col">Date de création</th>
-                                                                    <th scope="col"></th>
-                                                                </tr>
-                                                            </thead>
-                                                            <tbody>
-                                                            </tbody>
-                                                        </table>
-                                                    </div>
-                                                </div>
-                                                <div id="message_TableED" style="display: none;">
-                                                    <p class="text-center" >
-                                                        Aucun examen demandé pour le moment
-                                                    </p>
-                                                </div>
-                                                <div id="div_Table_loaderED" style="display: none;">
-                                                    <div class="d-flex justify-content-center align-items-center">
-                                                        <div class="spinner-border text-warning me-2" role="status" aria-hidden="true"></div>
-                                                        <strong>Chargement des données...</strong>
-                                                    </div>
-                                                </div>
-                                                <div id="pagination-controlsED" ></div>
-                                            </div>
+                        </div>
+                        <div class="tab-content" id="customTabContent">
+                            <div class="tab-pane fade" id="twoAAAL" role="tabpanel" aria-labelledby="tab-twoAAAL">
+                                <div class="card-header d-flex align-items-center justify-content-between">
+                                    <div class="d-flex">
+                                        <select class="form-select me-1" id="statut_rdv">
+                                            <option selected value="tous">Tous</option>
+                                            <option value="en cours">en cours</option>
+                                            <option value="terminer">terminer</option>
+                                        </select>
+                                        <a id="btn_refresh_table_rdv" class="btn btn-outline-info ms-auto">
+                                            <i class="ri-loop-left-line"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="card-body">
+                                    <div class="table-outer" id="div_Table_rdv" style="display: none;">
+                                        <div class="table-responsive">
+                                            <table class="table m-0 align-middle" id="Table_rdv">
+                                                <thead>
+                                                    <tr>
+                                                        <th>N°</th>
+                                                        <th>Patient</th>
+                                                        <th>Médecin</th>
+                                                        <th>Spécialité</th>
+                                                        <th>Rdv prévu</th>
+                                                        <th>Période</th>
+                                                        <th>Statut</th>
+                                                        <th>Date de création</th>
+                                                        <th>Actions</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                </tbody>
+                                            </table>
                                         </div>
                                     </div>
+                                    <div id="message_Table_rdv" style="display: none;">
+                                        <p class="text-center">
+                                            Aucun Rendez-Vous n'a été trouvée
+                                        </p>
+                                    </div>
+                                    <div id="div_Table_loader_rdv" style="display: none;">
+                                        <div class="d-flex justify-content-center align-items-center">
+                                            <div class="spinner-border text-warning me-2" role="status" aria-hidden="true"></div>
+                                            <strong>Chargement des données...</strong>
+                                        </div>
+                                    </div>
+                                    <div id="pagination-controls_rdv"></div>
                                 </div>
                             </div>
                         </div>
@@ -244,135 +147,137 @@
             </div>
         </div>
     </div>
-</div>
-
-<div class="modal fade" id="MmodifE" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Mise à jour</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <form id="updateForm">
-                    <input type="hidden" id="Id_exM"> <!-- Hidden field for the room's ID -->
-                    <div class="row gx-3 justify-content-center align-items-center">
-                        <div class="col-12">
-                            <div class="mb-3">
-                                <label class="form-label">
-                                    Type d'examen
-                                </label>
-                                <select class="form-select" id="acte_id_exM">
-                                </select>
-                            </div>
+    <div class="row gx-3 mb-3">
+        <div class="col-sm-12 col-12">
+            <div class="card mb-3">
+                <div class="card-body">
+                    <!-- Row starts -->
+                    <div class="d-flex align-items-end gap-2">
+                        <div class="m-0">
+                            <button id="btn_refresh" class="btn btn-outline-primary">
+                                <i class="ri-loop-left-line" ></i>
+                            </button>
                         </div>
-                        <div class="col-12">
-                            <div class="mb-3">
-                                <label class="form-label">
-                                    Nom
-                                </label>
-                                <input type="text" class="form-control" id="nom_exM" placeholder="Saisie Obligatoire" oninput="this.value = this.value.toUpperCase()">
-                            </div>
+                        <div class="m-0">
+                            <label class="form-label">Médecins</label>
+                            <select class="form-select" id="rech_medecin">
+                            </select>
                         </div>
-                        <div class="col-12">
-                            <div class="mb-3">
-                                <label class="form-label">
-                                    Cotation
-                                </label>
-                                <input type="text" class="form-control" id="cotation_exM" placeholder="Saisie Obligatoire" oninput="this.value = this.value.toUpperCase()" maxlength="1">
-                            </div>
+                        <div class="m-0">
+                            <label class="form-label">Spécialités</label>
+                            <select class="form-select" id="rech_specialite">
+                            </select>
                         </div>
-                        <div class="col-12">
-                            <div class="mb-3">
-                                <label class="form-label">
-                                    Valeur
-                                </label>
-                                <input type="text" class="form-control" id="valeur_exM" placeholder="Saisie Obligatoire">
-                            </div>
+                        <div class="m-0">
+                            <label class="form-label">Jours</label>
+                            <select class="form-select" id="rech_jour">
+                            </select>
                         </div>
-                        <div class="col-12">
-                            <div class="mb-3">
-                                <label class="form-label">Prix</label>
-                                <div class="input-group">
-                                    <input type="tel" class="form-control" id="prix_exM" placeholder="Saisie Obligatoire">
-                                    <span class="input-group-text">Fcfa</span>
-                                </div>
-                            </div>
+                        <div class="m-0">
+                            <label class="form-label">Périodes</label>
+                            <select class="form-select" id="rech_periode">
+                                <option selected value="tout">Tout</option>
+                                <option value="Matin">Matin</option>
+                                <option value="Soir">Soir</option>
+                            </select>
                         </div>
-                        <div class="col-12">
-                            <div class="mb-3">
-                                <label class="form-label">Total</label>
-                                <div class="input-group">
-                                    <input readonly type="tel" class="form-control" id="montant_exM" placeholder="Montant Total">
-                                    <span class="input-group-text">Fcfa</span>
-                                </div>
-                            </div>
-                        </div>
+                        {{-- <div class="m-0">
+                            <button id="btn_rech" class="btn btn-outline-warning">
+                                <i class="ri-search-2-line"></i>
+                            </button>
+                        </div> --}}
                     </div>
-                </form>
+                </div>
             </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                    Fermer
-                </button>
-                <button type="button" class="btn btn-primary" id="updateBtnE">
-                    Mettre à jour
-                </button>
+        </div>
+        <div class="col-12 row gx-3 d-flex mb-3" id="table" style="display: none;" >
+            
+        </div>
+        <div id="message" style="display: none;" class="mb-3">
+            <p class="text-center">Aucune donnée n'a été trouvée</p>
+        </div>
+        <div id="loader" style="display: none;" class="mb-3">
+            <div class="d-flex justify-content-center align-items-center">
+                <div class="spinner-border text-warning me-2" role="status" aria-hidden="true"></div>
+                <strong>Chargement des données...</strong>
             </div>
         </div>
     </div>
 </div>
 
-<div class="modal fade" id="Detail" tabindex="-1" aria-modal="true" role="dialog">
-    <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+<div class="modal fade" id="Detail_motif" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-body" id="modal_Detail_motif"></div>
+    </div>
+</div>
+
+<div class="modal fade" id="Rdv_modal" tabindex="-1" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalCenteredScrollableTitle">
-                    Examens Demandés
+                <h5 class="modal-title" id="exampleModalLabel">Nouveau Rendez-Vous</h5>
+            </div>
+            <div class="modal-body">
+                <form id="updateForm">
+                    <input type="hidden" id="medecin_id_rdv">
+                    <div class="mb-3">
+                        <label class="form-label">Médecin</label>
+                        <input readonly type="text" class="form-control" id="medecin_rdv">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Spécialité</label>
+                        <input readonly type="text" class="form-control" id="specialite_rdv">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Patient</label>
+                        <input type="text" class="form-control" id="patient_rdv" placeholder="Saisie Obligatoire" autocomplete="off">
+                        <input type="hidden" id="patient_id_rdv">
+                        <div class="suggestions" id="suggestions_patient" style="display: none;">
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Date</label>
+                        <input type="date" class="form-control" id="date_rdv" placeholder="Saisie Obligatoire" min="{{ date('Y-m-d') }}" value="{{ date('Y-m-d') }}">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Période</label>
+                        <select class="form-select" id="periode_rdv">
+                            <option value="">Selectionner</option>
+                            <option value="Matin">Matin</option>
+                            <option value="Soir">Soir</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Motif</label>
+                        <textarea class="form-control" id="motif_rdv" rows="3" style="resize: none;"></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-danger" id="close_M_rdv" data-bs-dismiss="modal">Fermer</button>
+                <button type="button" class="btn btn-success" id="btn_eng_rdv">Enregistrer</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="Mdelete" tabindex="-1" aria-labelledby="delRowLabel" aria-modal="true" role="dialog">
+    <div class="modal-dialog modal-sm modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="delRowLabel">
+                    Confirmation
                 </h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <div class="row">
-                    <div class="col-xl-12">
-                        <div class="">
-                            <div class="card-body">
-                                <div class="row">
-                                    <div class="col-12">
-                                        <div id="div_alert_tableP" >
-                    
-                                        </div>
-                                        <div class="table-responsive" id="div_TableP" style="display: none;">
-                                            <table class="table table-bordered" id="TableP">
-                                                <thead>
-                                                    <tr>
-                                                        <th>Examen</th>
-                                                        <th>Cotation</th>
-                                                        <th>Prix</th>
-                                                        <th>Accepté ?</th>
-                                                        <th>Total</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                        <div id="message_TableP" style="display: none;">
-                                            <p class="text-center" >
-                                                Aucun Produit utilisé pour le moment
-                                            </p>
-                                        </div>
-                                        <div id="div_Table_loaderP" style="display: none;">
-                                            <div class="d-flex justify-content-center align-items-center">
-                                                <div class="spinner-border text-warning me-2" role="status" aria-hidden="true"></div>
-                                                <strong>Chargement des données...</strong>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                Voulez-vous vraiment Annulé ce Rendez-Vous
+                <input type="hidden" id="Iddelete">
+            </div>
+            <div class="modal-footer">
+                <div class="d-flex justify-content-end gap-2">
+                    <a class="btn btn-secondary" data-bs-dismiss="modal" aria-label="Close">Non</a>
+                    <button id="btn_delete_rdv" class="btn btn-danger" data-bs-dismiss="modal" aria-label="Close">Oui</button>
                 </div>
             </div>
         </div>
@@ -385,12 +290,27 @@
 <script>
     document.addEventListener("DOMContentLoaded", function() {
 
-        Statistique();
-        select_acte();
-        listED();
+        select_medecin();
+        list_rdv();
+        rech_medecin();
+        rech_specialite();
+        rech_jour();
+        list();
+        Name_atient();
+
+        document.getElementById("add_horaire").addEventListener("click", add_select);
+        document.getElementById("btn_eng").addEventListener("click", eng);
+        document.getElementById("btn_eng_rdv").addEventListener("click", eng_rdv);
+        document.getElementById("btn_refresh").addEventListener("click", refresh);
+        document.getElementById("btn_refresh_table_rdv").addEventListener("click", list_rdv);
+        document.getElementById("btn_delete_rdv").addEventListener("click", delete_rdv);
+        document.getElementById("close_M_rdv").addEventListener("click", close_M_rdv);
+
+        ["rech_medecin", "rech_specialite", "rech_jour", "rech_periode"].forEach(id => document.getElementById(id).addEventListener("change", list));
 
 
-        function showAlert(title, message, type) {
+        function showAlert(title, message, type)
+        {
             Swal.fire({
                 title: title,
                 text: message,
@@ -398,7 +318,8 @@
             });
         }
 
-        function formatDate(dateString) {
+        function formatDate(dateString)
+        {
 
             const date = new Date(dateString);
             const day = String(date.getDate()).padStart(2, '0');
@@ -408,7 +329,8 @@
             return `${day}/${month}/${year}`; // Format as dd/mm/yyyy
         }
 
-        function formatDateHeure(dateString) {
+        function formatDateHeure(dateString)
+        {
 
             const date = new Date(dateString);
                 
@@ -423,90 +345,132 @@
             return `${day}/${month}/${year} à ${hours}:${minutes}:${seconds}`;
         }
 
-        function select_acte() {
-
-            const selectElement = document.getElementById('acte_id_ex');
-            const selectElementM = document.getElementById('acte_id_exM');
-            const selectElementexd = document.getElementById('typeacte_id_exd');
-
+        function select_medecin()
+        {
+            const selectElement = document.getElementById('medecin_id');
+            // Clear existing options
             selectElement.innerHTML = '';
-            selectElementM.innerHTML = '';
-            selectElementexd.innerHTML = '';
-
             const defaultOption = document.createElement('option');
             defaultOption.value = '';
-            defaultOption.textContent = 'Selectionner';
+            defaultOption.textContent = 'Sélectionner un medecin';
             selectElement.appendChild(defaultOption);
 
-            const defaultOption2 = document.createElement('option');
-            defaultOption2.value = '';
-            defaultOption2.textContent = 'Selectionner';
-            selectElementexd.appendChild(defaultOption2);
-
-            $.ajax({
-                url: '/api/list_acte_ex',
-                method: 'GET',
-                success: function(response) {
-                    data = response.acte;
-                    data.forEach(acte => {
-                        const option1 = document.createElement('option');
-                        option1.value = acte.id; // Ensure 'id' is the correct key
-                        option1.textContent = acte.nom; // Ensure 'nom' is the correct key
-                        selectElement.appendChild(option1);
-
-                        const option2 = document.createElement('option');
-                        option2.value = acte.id;
-                        option2.textContent = acte.nom;
-                        selectElementM.appendChild(option2);
-
-                        const option3 = document.createElement('option');
-                        option3.value = acte.id;
-                        option3.textContent = acte.nom;
-                        selectElementexd.appendChild(option3);
+            fetch('/api/list_medecin')
+                .then(response => response.json())
+                .then(data => {
+                    const medecins = data.medecin;
+                    medecins.forEach((item, index) => {
+                        const option = document.createElement('option');
+                        option.value = `${item.id}`; // Ensure 'id' is the correct key
+                        option.textContent = `Dr. ${item.name}`; // Ensure 'nom' is the correct key
+                        selectElement.appendChild(option);
                     });
-                },
-                error: function() {
-                    // showAlert('danger', 'Impossible de generer le code automatiquement');
-                }
-            });
+                })
+                .catch(error => console.error('Erreur lors du chargement des societes:', error));
 
-            selectElementexd.addEventListener('change', function() {
+            selectElement.addEventListener('change', function() {
                 const id = this.value;
                 if (id) {
-
-                    const url = '/api/select_examen/' + id;
+                    const url = '/api/select_jours';
                     fetch(url)
                         .then(response => response.json())
                         .then(data => {
 
-                            const examens = data.examen;
+                            const jours = data.jour;
 
-                            const contenuDiv = document.getElementById('contenu_examen');
+                            const contenuDiv = document.getElementById('contenu_horaire');
                             contenuDiv.innerHTML = '';
-
-                            document.getElementById('montant_total_examen').value ='';
-                            document.getElementById('montant_patient_examen').value ='';
-                            document.getElementById('montant_assurance_examen').value ='';
                                                     
-                            addSelectExamen(contenuDiv, examens);
+                            addSelectHoraire(contenuDiv, jours);
 
-                            document.getElementById('div_Examen').style.display = "block";
+                            document.getElementById('div_Horaire').style.display = "block";
                         })
                         .catch(error => {
                             console.error('Erreur lors du chargement des données:', error);
                         });
                 }else{
-                    const contenuDiv = document.getElementById('contenu_examen');
+                    const contenuDiv = document.getElementById('contenu_horaire');
                     contenuDiv.innerHTML = '';
-                    document.getElementById('div_Examen').style.display = "none";
+                    document.getElementById('div_Horaire').style.display = "none";
                 }
                 
             });
         }
 
-        function addSelectExamen(contenuDiv, examens) {
+        function rech_medecin()
+        {
+            const selectElementRech = document.getElementById('rech_medecin');
+            // Clear existing options
+            selectElementRech.innerHTML = '';
+            const defaultOption2 = document.createElement('option');
+            defaultOption2.value = 'tout';
+            defaultOption2.textContent = 'Tout';
+            selectElementRech.appendChild(defaultOption2);
 
-            const patientTaux = document.getElementById('patient_taux').value;
+            fetch('/api/list_medecin')
+                .then(response => response.json())
+                .then(data => {
+                    const medecins = data.medecin;
+                    medecins.forEach((item, index) => {
+                        const option2 = document.createElement('option');
+                        option2.value = `${item.id}`; // Ensure 'id' is the correct key
+                        option2.textContent = `Dr. ${item.name}`; // Ensure 'nom' is the correct key
+                        selectElementRech.appendChild(option2);
+                    });
+                })
+                .catch(error => console.error('Erreur lors du chargement des societes:', error));
+        }
+
+        function rech_specialite()
+        {
+            const selectElementRech = document.getElementById('rech_specialite');
+            // Clear existing options
+            selectElementRech.innerHTML = '';
+            const defaultOption2 = document.createElement('option');
+            defaultOption2.value = 'tout';
+            defaultOption2.textContent = 'Tout';
+            selectElementRech.appendChild(defaultOption2);
+
+            fetch('/api/select_specialite')
+                .then(response => response.json())
+                .then(data => {
+                    const rechs = data.typeacte;
+                    rechs.forEach((item, index) => {
+                        const option2 = document.createElement('option');
+                        option2.value = `${item.id}`; // Ensure 'id' is the correct key
+                        option2.textContent = `${item.nom}`; // Ensure 'nom' is the correct key
+                        selectElementRech.appendChild(option2);
+                    });
+                })
+                .catch(error => console.error('Erreur lors du chargement des societes:', error));
+        }
+
+        function rech_jour()
+        {
+            const selectElementRech = document.getElementById('rech_jour');
+            // Clear existing options
+            selectElementRech.innerHTML = '';
+            const defaultOption2 = document.createElement('option');
+            defaultOption2.value = 'tout';
+            defaultOption2.textContent = 'Tout';
+            selectElementRech.appendChild(defaultOption2);
+
+            fetch('/api/select_jour')
+                .then(response => response.json())
+                .then(data => {
+                    const rechs = data.rech;
+                    rechs.forEach((item, index) => {
+                        const option2 = document.createElement('option');
+                        option2.value = `${item.id}`; // Ensure 'id' is the correct key
+                        option2.textContent = `${item.jour}`; // Ensure 'nom' is the correct key
+                        selectElementRech.appendChild(option2);
+                    });
+                })
+                .catch(error => console.error('Erreur lors du chargement des societes:', error));
+        }
+
+        function addSelectHoraire(contenuDiv, jours)
+        {
 
             const div = document.createElement('div');
             div.className = 'mb-3';
@@ -514,31 +478,22 @@
             // Créer le groupe de contrôle contenant le select et le bouton supprimer
             div.innerHTML = `
                 <div class="input-group">
-                    <select class="form-select examen-select-assurer">
-                        ${patientTaux == 0 ? `
-                            <option selected value="oui">Oui</option>
-                        ` : `
-                            <option selected value="oui">Oui</option>
-                            <option value="non">Non</option>
-                        `}
-                    </select>
-                    <select class="form-select examen-select w-50">
-                        <option value="">Selectionner</option>
-                        ${examens.map(item => 
-                            `<option value="${item.id}" 
-                                     data-cotation="${item.cotation}" 
-                                     data-valeur="${item.valeur}" 
-                                     data-prix="${item.prix}" 
-                                     data-montant="${item.montant}"
-                                     data-assurer="oui"
-                                     data-montantr="${item.montant.replace(/\./g, '')}">
-                                ${item.nom}
+                    <select class="form-select jour-select w-25">
+                        <option value="">Selectionner le jour</option>
+                        ${jours.map(item => 
+                            `<option value="${item.id}">
+                                ${item.jour}
                             </option>`).join('')}
                     </select>
-                    <input readonly type="tel" class="form-control cotation-field" placeholder="Cotation">
-                    <input readonly type="tel" class="form-control valeur-field" placeholder="Valeur">
-                    <input readonly type="tel" class="form-control prix-field" placeholder="Prix">
-                    <input readonly type="tel" class="form-control montant-field" placeholder="Montant">
+                    <select class="form-select periode-select w-25">
+                        <option value="">Selectionner la période</option>
+                        <option value="Matin">Matin</option>
+                        <option value="Soir">Soir</option>
+                    </select>
+                    <span class="input-group-text">Heure debut : </span>
+                    <input type="time" class="form-control heure-debut-input">
+                    <span class="input-group-text">Heure Fin : </span>
+                    <input type="time" class="form-control heure-fin-input">
                     <button class="btn btn-outline-danger suppr-btn">Supprimer</button>
                 </div>
             `;
@@ -546,49 +501,19 @@
             // Ajouter l'élément dans le parent (contenu div)
             contenuDiv.appendChild(div);
 
-            checkContenuExamen();
+            checkContenuHoraire();
 
             // Ajouter un event listener pour le bouton supprimer
             div.querySelector('.suppr-btn').addEventListener('click', () => {
                 div.remove(); // Supprimer l'élément div parent
-                checkContenuExamen(); // Re-vérifier le contenu
-                updateMontantTotalExamen(); // Mettre à jour le montant total après la suppression
-            });
-
-            // Event listener pour le select 'examen-select-assurer'
-            const assurerSelect = div.querySelector('.examen-select-assurer');
-            assurerSelect.addEventListener('change', function() {
-                const selectedValue = assurerSelect.value; // Obtenez la valeur sélectionnée
-                const examenSelect = div.querySelector('.examen-select');
-                const selectedOption = examenSelect.options[examenSelect.selectedIndex];
-
-                if (selectedOption) {
-                    selectedOption.setAttribute('data-assurer', selectedValue);
-                }
-
-                updateMontantTotalExamen();
-            });
-
-
-            // Event listener pour le select
-            const examenSelect = div.querySelector('.examen-select');
-            examenSelect.addEventListener('change', function() {
-                const selectedOption = examenSelect.options[examenSelect.selectedIndex];
-
-                // Mettre à jour les champs en fonction de l'examen sélectionné
-                div.querySelector('.cotation-field').value = selectedOption.getAttribute('data-cotation') || '';
-                div.querySelector('.valeur-field').value = selectedOption.getAttribute('data-valeur') || '';
-                div.querySelector('.prix-field').value = selectedOption.getAttribute('data-prix') || '' + ' Fcfa';
-                div.querySelector('.montant-field').value = selectedOption.getAttribute('data-montant') || '' + ' Fcfa';
-
-                updateMontantTotalExamen(); // Mettre à jour le montant total après sélection
+                checkContenuHoraire();
             });
         }
 
-        function checkContenuExamen() {
-            const contenuDiv = document.getElementById('contenu_examen');
-            const divBtn = document.getElementById('div_btn_examen');
-            
+        function checkContenuHoraire()
+        {
+            const contenuDiv = document.getElementById('contenu_horaire');
+            const divBtn = document.getElementById('div_btn_horaire');
             // Si la div #contenu a un contenu, on affiche le bouton, sinon on le cache
             if (contenuDiv.innerHTML.trim() !== "") {
                 divBtn.style.display = "block"; // Afficher le bouton
@@ -597,167 +522,135 @@
             }
         }
 
-        function add_select() {
-            const contenuDiv = document.getElementById('contenu_examen');
-            const id = document.getElementById('typeacte_id_exd').value;
+        function add_select()
+        {
+            const contenuDiv = document.getElementById('contenu_horaire');
+            const id = document.getElementById('medecin_id').value;
 
             if (id == '') {
-                showAlert("ALERT", "Selectionner un Type d'examen.", "warning");
+                showAlert("ALERT", "Selectionner un médecin SVP.", "warning");
                 return false;
             }
 
-            const url = '/api/select_examen/' + id;
+            const url = '/api/select_jours';
                 fetch(url)
                     .then(response => response.json())
                     .then(data => {
 
-                        const examens = data.examen;
+                        const jours = data.jour;
                                                 
-                        addSelectExamen(contenuDiv, examens); // Ajouter le premier select
+                        addSelectHoraire(contenuDiv, jours); // Ajouter le premier select
                     })
                     .catch(error => {
                         console.error('Erreur lors du chargement des données:', error);
                     });
         }
 
-        function CalculMontant() {
-
-            const matricule_patient = document.getElementById('matricule_patient').value;
-            const typeacte_id_exd = document.getElementById('typeacte_id_exd').value;
-
-            // 1. Vérifier si le matricule du patient est renseigné
-            if (matricule_patient === '') {
-                showAlert("ALERT", "Veuillez sélectionner un Patient.", "warning");
-                return false;
-            }
-
-            // 2. Vérifier si un type de soins a été sélectionné
-            if (typeacte_id_exd === '') {
-                showAlert("ALERT", "Veuillez sélectionner un Type d'examen'.", "warning");
-                return false;
-            }
-
-            const contenuDiv = document.getElementById('contenu_examen');
-            if (contenuDiv.innerHTML.trim() == "") {
-                showAlert("ALERT", 'Aucun examen n\'a été sélectionné.', "warning");
-                return false;
-            }
+        function Verification() {
 
             let formIsValid = true;
-            const selectionsExamen = [];
+            const medecin_id = document.getElementById('medecin_id').value;
 
-            // 3. Vérifier si tous les soins infirmiers ont été sélectionnés
-            const examenSelects = document.querySelectorAll('.examen-select');
-            const selectedExamenIds = new Set();
-
-            examenSelects.forEach(item => {
-                const selectedOption = item.options[item.selectedIndex];
-                const idExamen = selectedOption.value;
-                const montant = parseInt(selectedOption.dataset.montantr);
-
-                if (!idExamen || isNaN(montant)) {
-                    showAlert("ALERT", 'Aucun Soins Infirmier n\'a été sélectionné.', "warning");
-                    formIsValid = false;
-                    return false;
-                }
-
-                if (selectedExamenIds.has(idExamen)) {
-                    showAlert("ALERT", 'Vous avez sélectionné le même Soins Infirmier plusieurs fois.', "warning");
-                    formIsValid = false;
-                    return false;
-                }
-
-                selectedExamenIds.add(idExamen);
-                selectionsExamen.push({
-                    id: idExamen,
-                    montant: montant
-                });
-            });
-
-            if (!formIsValid) {
-                resetLoaderAndButton();
+            if (medecin_id === '') {
+                showAlert("ALERT", "Veuillez sélectionner un médecin SVP.", "warning");
+                formIsValid = false;
                 return false;
             }
 
-            return true;
+            const contenuDiv = document.getElementById('contenu_horaire');
+            if (contenuDiv.innerHTML.trim() === "") {
+                showAlert("ALERT", 'Aucun horaire n\'a été ajouté.', "warning");
+                formIsValid = false;
+                return false;
+            }
+
+            const jourSelects = document.querySelectorAll('.jour-select');
+            const periodeSelects = document.querySelectorAll('.periode-select');
+            const heureDebutInputs = document.querySelectorAll('.heure-debut-input');
+            const heureFinInputs = document.querySelectorAll('.heure-fin-input');
+
+            jourSelects.forEach((item, index) => {
+                const jourValue = item.value;
+                const periodeValue = periodeSelects[index].value;
+                const heureDebut = heureDebutInputs[index].value;
+                const heureFin = heureFinInputs[index].value;
+
+                if (!jourValue) {
+                    showAlert("ALERT", 'Veuillez sélectionner un jour pour chaque horaire.', "warning");
+                    formIsValid = false;
+                    return false;
+                }
+
+                if (!periodeValue) {
+                    showAlert("ALERT", 'Veuillez sélectionner une période (Matin ou Soir).', "warning");
+                    formIsValid = false;
+                    return false;
+                }
+
+                if (!heureDebut) {
+                    showAlert("ALERT", 'Veuillez sélectionner une heure de début.', "warning");
+                    formIsValid = false;
+                    return false;
+                }
+
+                if (!heureFin) {
+                    showAlert("ALERT", 'Veuillez sélectionner une heure de fin.', "warning");
+                    formIsValid = false;
+                    return false;
+                }
+
+                // Vérification que l'heure de fin est bien après l'heure de début
+                if (heureDebut >= heureFin) {
+                    showAlert("ALERT", 'L\'heure de fin doit être supérieure à l\'heure de début.', "warning");
+                    formIsValid = false;
+                    return false;
+                }
+            });
+
+            return formIsValid;
         }
 
-        function eng_exd() {
+        function eng()
+        {
 
             try {
-                const calculResult = CalculMontant();
-                if (!calculResult) {
+                const isValid = Verification();
+                if (!isValid) {
                     return false;
                 }
             } catch (error) {
-                showAlert("ERREUR","Veuillez bien vérifier les données saisies", "error");
+                showAlert("ALERT", 'Veuillez bien definir tous les horaires SVP', "warning");
                 return false;
             }
             
-            const selectionsExamen = [];
-            const examenSelects = document.querySelectorAll('.examen-select');
-            examenSelects.forEach(item => {
+            const selectionsHoraire = [];
+            const jourSelects = document.querySelectorAll('.jour-select');
+            const periodeSelects = document.querySelectorAll('.periode-select');
+            const heureDebutInputs = document.querySelectorAll('.heure-debut-input');
+            const heureFinInputs = document.querySelectorAll('.heure-fin-input');
 
-                const selectedOption = item.options[item.selectedIndex];
-                const idExamen = selectedOption.value;
-                // const montant = parseInt(selectedOption.dataset.prix);
-                const accepte = selectedOption.dataset.assurer;
+            jourSelects.forEach((item, index) => {
+                const selectedJourOption = item.options[item.selectedIndex];
+                const jourId = selectedJourOption.value; // ID du jour sélectionné
 
-                selectionsExamen.push({
-                    id: idExamen,
-                    // montant: montant
-                    accepte: accepte,
+                const selectedPeriodeOption = periodeSelects[index].options[periodeSelects[index].selectedIndex];
+                const periode = selectedPeriodeOption.value; // Période sélectionnée
+
+                const heureDebut = heureDebutInputs[index].value; // Heure de début sélectionnée
+                const heureFin = heureFinInputs[index].value;     // Heure de fin sélectionnée
+
+                selectionsHoraire.push({
+                    jour_id: jourId,
+                    periode: periode,
+                    heure_debut: heureDebut,
+                    heure_fin: heureFin,
                 });
             });
 
-            const matricule_patient = document.getElementById('matricule_patient').value;
-            const typeacte_id_exd = document.getElementById('typeacte_id_exd').value;
-            const medecin = document.getElementById('medecin').value;
+            const medecin_id = document.getElementById('medecin_id').value;
 
-            if (matricule_patient == '') {
-                showAlert("ALERT", 'Veuillez sélectionner un Patient.', "warning");
-                return false;
-            }
-
-            if (typeacte_id_exd == '') {
-                showAlert("ALERT", 'Veuillez sélectionner un Type d\'examen.', "warning");
-                return false;
-            }
-
-            if (medecin == '') {
-                showAlert("ALERT", 'Veuillez saisie le nom du médecin.', "warning");
-                return false;
-            }
-
-            var montant_assurance = document.getElementById('montant_assurance_examen').value;
-            var montant_patient = document.getElementById('montant_patient_examen').value;
-            var montant_total = document.getElementById('montant_total_examen').value;
-            var montant_pre = document.getElementById('montant_pre_examen').value;
-            // Validate monetary fields
-            if (!montant_assurance || 
-                !montant_total || 
-                !montant_patient ||
-                !montant_pre) {
-                
-                showAlert("ALERT", 'Vérifier les montants SVP.', "warning");
-                return false; 
-            }
-
-            var montantAssuranceValue = parseFloat(montant_assurance);
-            var montantTotalValue = parseFloat(montant_total);
-            var montantPatientValue = parseFloat(montant_patient);
-            var montantPreValue = parseFloat(montant_pre);
-
-            if (isNaN(montantAssuranceValue) || 
-                isNaN(montantTotalValue) || 
-                isNaN(montantPatientValue) ||
-                isNaN(montantPreValue) || 
-                montantAssuranceValue < 0 || 
-                montantTotalValue < 0 || 
-                montantPatientValue < 0 ||
-                montantPreValue < 0) {
-                
-                showAlert("ALERT", 'Vérifier les montants SVP (les montants ne doivent pas être négatifs).', "warning");
+            if (medecin_id == '') {
+                showAlert("ALERT", 'Veuillez selectionner un médecin SVP.', "warning");
                 return false;
             }
 
@@ -770,17 +663,11 @@
             document.body.insertAdjacentHTML('beforeend', preloader_ch);
 
             $.ajax({
-                url: '/api/new_examend',
+                url: '/api/new_horaire',
                 method: 'GET',
                 data:{
-                    selectionsExamen: selectionsExamen,
-                    montantA: montant_assurance,
-                    montantT: montant_total,
-                    montantP: montant_patient,
-                    montant_pre: montant_pre,
-                    matricule: matricule_patient,
-                    acte_id: typeacte_id_exd,
-                    medecin: medecin,
+                    selections: selectionsHoraire,
+                    medecin_id: medecin_id,
                 },
                 success: function(response) {
 
@@ -791,19 +678,12 @@
                     
                     if (response.success) {
 
-                        document.getElementById('typeacte_id_exd').value = "";
-                        document.getElementById('patient').value = "";
-                        document.getElementById('medecin').value = "";
-                        document.getElementById('select_examen_div').style.display = "none";
-                        document.getElementById('div_Examen').style.display = "none";
+                        document.getElementById('medecin_id').value = "";
+                        document.getElementById('div_Horaire').style.display = "none";
 
-                        listED();   
+                        list();   
 
                         showAlert("ALERT", 'Enregistrement éffectué', "success");
-
-                        var newTab = new bootstrap.Tab(document.getElementById('tab-oneAAAD'));
-                        newTab.show();
-                        newTab.active();
 
                     } else if (response.error) {
                         showAlert("ERREUR", 'Une erreur est survenue', "error");
@@ -823,25 +703,324 @@
             });
         };
 
-        function listED(page = 1) {
+        function refresh()
+        {
+            document.getElementById('rech_medecin').value = "tout";
+            document.getElementById('rech_specialite').value = "tout";
+            document.getElementById('rech_jour').value = "tout";
+            document.getElementById('rech_periode').value = "tout";
 
-            const tableBody = document.querySelector('#TableED tbody');
-            const messageDiv = document.getElementById('message_TableED');
-            const tableDiv = document.getElementById('div_TableED');
-            const loaderDiv = document.getElementById('div_Table_loaderED');
+            list();
+        }
 
-            let allExamens = [];
+        function list() 
+        {
+            const tableBody = document.getElementById('table');
+            const messageDiv = document.getElementById('message');
+            const loaderDiv = document.getElementById('loader');
+
+            // Récupération des filtres
+            const medecin = document.getElementById('rech_medecin').value;
+            const specialite = document.getElementById('rech_specialite').value;
+            const jour = document.getElementById('rech_jour').value;
+            const periode = document.getElementById('rech_periode').value;
+
+            const url = `/api/list_horaire/${medecin}/${specialite}/${jour}/${periode}`;
+
+            // Afficher le loader
+            messageDiv.style.display = 'none';
+            tableBody.style.display = 'none';
+            loaderDiv.style.display = 'block';
+
+            fetch(url)
+                .then(response => response.json())
+                .then(data => {
+                    const medecins = data.medecins;
+                    tableBody.innerHTML = '';
+
+                    if (medecins.length > 0) {
+
+                        messageDiv.style.display = 'none';
+                        loaderDiv.style.display = 'none';
+                        tableBody.style.display = 'block';
+
+                        medecins.forEach((medecin) => {
+
+                            const horairesList = medecin.horaires.map(horaire => `
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    <div>${horaire.jour} ${horaire.periode}</div>
+                                    <div>${horaire.heure_debut} à ${horaire.heure_fin}</div>
+                                    <div>
+                                        <a id="modif-${horaire.id}" class="btn btn-sm btn-outline-danger rounded-5">
+                                            <i class="ri-close-fill"></i>
+                                        </a>
+                                    </div>
+                                </li>
+                            `).join('');
+
+                            const div = document.createElement('div');
+                            div.classList.add('col-xxl-3', 'col-sm-6', 'col-12', 'mb-3');
+
+                            let buttonRdv = '';
+
+                            if (medecin.horaires.length > 0) {
+                                buttonRdv = `
+                                    <a class="btn btn-outline-success mb-3" data-bs-toggle="modal" data-bs-target="#Rdv_modal" id="rdv-${medecin.id}">
+                                        <i class="ri-calendar-schedule-line"></i>
+                                        Prendre Rendez-Vous
+                                    </a>
+                                `;
+                            }
+
+                            div.innerHTML = `
+                                <div class="card h-100">
+                                    <div class="card-body">
+                                        <div class="text-center">
+                                            <a class="d-flex align-items-center flex-column">
+                                                <img src="{{asset('assets/images/docteur.png')}}" class="img-7x rounded-circle mb-3">
+                                                <h6>Dr. ${medecin.name}</h6>
+                                                <h6 class="text-primary">${medecin.specialité}</h6>
+                                                ${buttonRdv}
+                                                <ul class="list-group">
+                                                    ${horairesList}
+                                                </ul>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            `;
+
+
+
+                            tableBody.appendChild(div);
+
+                            medecin.horaires.forEach(horaire => {
+                                const boutonModif = document.getElementById(`modif-${horaire.id}`);
+                                boutonModif.addEventListener('click', () => {
+
+                                    var preloader_ch = `
+                                        <div id="preloader_ch">
+                                            <div class="spinner_preloader_ch"></div>
+                                        </div>
+                                    `;
+                                    // Add the preloader to the body
+                                    document.body.insertAdjacentHTML('beforeend', preloader_ch);
+                                    
+                                    $.ajax({
+                                        url: `/api/update_horaire/${horaire.id}`,
+                                        method: 'GET',
+                                        success: function(response) {
+
+                                            var preloader = document.getElementById('preloader_ch');
+                                            if (preloader) {
+                                                preloader.remove();
+                                            }
+                                            
+                                            if (response.success) {
+                                                refresh();   
+                                                showAlert("ALERT", 'Mise à jour éffectué', "success");
+
+                                            } else if (response.error) {
+                                                showAlert("ERREUR", 'Une erreur est survenue', "error");
+                                            }
+
+                                        },
+                                        error: function() {
+                                            var preloader = document.getElementById('preloader_ch');
+                                            if (preloader) {
+                                                preloader.remove();
+                                            }
+
+                                            showAlert("ERREUR", 'Une erreur est survenue lors de la mise à jour', "error");
+                                        }
+                                    });
+                                });
+                            });
+
+                            const rdvButton = document.getElementById(`rdv-${medecin.id}`);
+                            if (rdvButton) {
+                                rdvButton.addEventListener('click', () => {
+                                    document.getElementById('medecin_id_rdv').value = `${medecin.id}`;
+                                    document.getElementById('medecin_rdv').value = `Dr. ${medecin.name}`;
+                                    document.getElementById('specialite_rdv').value = `${medecin.specialité}`;
+                                });
+                            }
+
+                        });
+
+                    } else {
+                        messageDiv.style.display = 'block';
+                        tableBody.style.display = 'none';
+                        loaderDiv.style.display = 'none';
+                    }
+                })
+                .catch(error => {
+                    alert(error);
+                    console.error('Erreur lors du chargement des données:', error);
+                    messageDiv.style.display = 'block';
+                    tableBody.style.display = 'none';
+                    loaderDiv.style.display = 'none';
+                });
+        }
+
+        function Name_atient() {
+            $.ajax({
+                url: '/api/name_patient',
+                method: 'GET',
+                success: function(response) {
+                    const data = response.name;
+
+                    const input = document.getElementById('patient_rdv');
+                    const patient_id = document.getElementById('patient_id_rdv');
+                    const suggestionsDiv = document.getElementById('suggestions_patient');
+                    
+                    let patientSelected = false;
+                    input.addEventListener('input', function() {
+                        const searchTerm = input.value.toLowerCase();
+                        
+                        suggestionsDiv.style.display = 'block';
+                        suggestionsDiv.innerHTML = '';
+
+                        const filteredData = data.filter(item => item.np.toLowerCase().includes(searchTerm));
+
+                        // Display filtered data
+                        filteredData.forEach(item => {
+                            const suggestion = document.createElement('div');
+                            suggestion.innerText = item.np;
+                            suggestion.addEventListener('click', function() {
+                                // Set selected data in the input field
+                                input.value = item.np;
+                                patient_id.value = item.id;
+                                suggestionsDiv.innerHTML = '';
+                                suggestionsDiv.style.display = 'none';
+
+                                patientSelected = true;
+                            });
+                            suggestionsDiv.appendChild(suggestion);
+                        });
+
+                        suggestionsDiv.style.display = filteredData.length > 0 ? 'block' : 'none';
+
+                        if (patientSelected) {
+                            patient_id.value = '';
+                            patientSelected = false;
+                        }
+                    });
+
+                    // Hide suggestions when clicking outside
+                    document.addEventListener('click', function(e) {
+                        if (!suggestionsDiv.contains(e.target) && e.target !== input) {
+                            suggestionsDiv.style.display = 'none';
+                        }
+                    });
+                },
+                error: function() {
+                    // Handle error
+                }
+            });
+        }
+
+        function close_M_rdv() {
+            const today = new Date();
+            const formattedDate = today.toISOString().split('T')[0]; // Format YYYY-MM-DD
+            document.getElementById('date_rdv').value = formattedDate;
+            document.getElementById('patient_id_rdv').value = "";
+            document.getElementById('patient_rdv').value = "";
+            document.getElementById('motif_rdv').value = "";
+            document.getElementById('periode_rdv').value = "";
+        }
+
+        function eng_rdv()
+        {
+            const medecin_id = document.getElementById('medecin_id_rdv');
+            const patient_id = document.getElementById('patient_id_rdv');
+            const date_rdv = document.getElementById('date_rdv');
+            const motif_rdv = document.getElementById('motif_rdv');
+            const periode_rdv = document.getElementById('periode_rdv');
+
+            if (!medecin_id.value.trim() || !patient_id.value.trim() || !date_rdv.value.trim() || !motif_rdv.value.trim() || !periode_rdv.value.trim()) {
+                showAlert("ALERT", 'Veuillez remplir tous les champs.', "warning");
+                return false;
+            }
+
+            var modal = bootstrap.Modal.getInstance(document.getElementById('Rdv_modal'));
+            modal.hide();
+
+            var preloader_ch = `
+                <div id="preloader_ch">
+                    <div class="spinner_preloader_ch"></div>
+                </div>
+            `;
+            // Add the preloader to the body
+            document.body.insertAdjacentHTML('beforeend', preloader_ch);
+
+            $.ajax({
+                url: '/api/new_rdv',
+                method: 'GET',
+                data:{
+                    medecin_id: medecin_id.value,
+                    patient_id: patient_id.value,
+                    date: date_rdv.value,
+                    motif: motif_rdv.value,
+                    periode: periode_rdv.value,
+                },
+                success: function(response) {
+
+                    var preloader = document.getElementById('preloader_ch');
+                    if (preloader) {
+                        preloader.remove();
+                    }
+                    
+                    if (response.success) {
+
+                        list_rdv();
+
+                        const today = new Date();
+                        const formattedDate = today.toISOString().split('T')[0];
+                        document.getElementById('date_rdv').value = formattedDate;
+                        document.getElementById('patient_id_rdv').value = "";
+                        document.getElementById('patient_rdv').value = "";
+                        document.getElementById('motif_rdv').value = "";
+                        document.getElementById('periode_rdv').value = "";
+
+                        showAlert("ALERT", 'Enregistrement éffectué', "success");
+
+                    } else if (response.error) {
+                        showAlert("ERREUR", 'Une erreur est survenue', "error");
+                    } else if (response.json) {
+                        showAlert("ERREUR", 'Invalid selections format', "error");
+                    }
+
+                },
+                error: function() {
+                    var preloader = document.getElementById('preloader_ch');
+                    if (preloader) {
+                        preloader.remove();
+                    }
+
+                    showAlert("ERREUR", 'Une erreur est survenue lors de l\'enregistrement', "error");
+                }
+            });
+        }
+
+        function list_rdv(page = 1) {
+
+            const tableBody = document.querySelector('#Table_rdv tbody');
+            const messageDiv = document.getElementById('message_Table_rdv');
+            const tableDiv = document.getElementById('div_Table_rdv');
+            const loaderDiv = document.getElementById('div_Table_loader_rdv');
 
             messageDiv.style.display = 'none';
             tableDiv.style.display = 'none';
             loaderDiv.style.display = 'block';
 
-            const url = `/api/list_examend_all?page=${page}`;
+            const statut = document.getElementById('statut_rdv').value;
+            const url = `/api/list_rdv/${statut}?page=${page}`;
 
             fetch(url)
                 .then(response => response.json())
                 .then(data => {
-                    allExamens = data.examen || [] ;
+                    const rdvs = data.rdv || [] ;
                     const pagination = data.pagination || {};
 
                     const perPage = pagination.per_page || 10;
@@ -849,150 +1028,76 @@
 
                     tableBody.innerHTML = '';
 
-                    if (allExamens.length > 0) {
-                        document.getElementById('btn_print_tableED').style.display = 'block';
+                    if (rdvs.length > 0) {
 
                         loaderDiv.style.display = 'none';
                         messageDiv.style.display = 'none';
                         tableDiv.style.display = 'block';
 
-                        function displayRows(filteredExamens) {
-                            tableBody.innerHTML = ''; 
-
-                            filteredExamens.forEach((item, index) => {
+                            rdvs.forEach((item, index) => {
                                 const row = document.createElement('tr');
                                 row.innerHTML = `
                                     <td>${((currentPage - 1) * perPage) + index + 1}</td>
                                     <td>${item.patient}</td>
-                                    <td>${item.acte}</td>
                                     <td>Dr. ${item.medecin}</td>
-                                    <td>${item.nbre}</td>
-                                    <td>${item.prelevement} Fcfa</td>
-                                    <td>${item.montant} Fcfa</td>
+                                    <td>${item.specialite}</td>
+                                    <td>${formatDate(item.date)}</td>
+                                    <td>${item.periode}</td>
+                                    <td>
+                                        <span class="badge ${item.statut === 'en cours' ? 'bg-warning' : 'bg-success'}">
+                                            ${item.statut}
+                                        </span>
+                                    </td>
                                     <td>${formatDateHeure(item.created_at)}</td>
                                     <td>
                                         <div class="d-inline-flex gap-1">
-                                            <a class="btn btn-outline-warning btn-sm rounded-5" data-bs-toggle="modal" data-bs-target="#Detail" id="detail-${item.id}">
-                                                <i class="ri-archive-2-line"></i>
+                                            <a class="btn btn-outline-warning btn-sm rounded-5" data-bs-toggle="modal" data-bs-target="#Detail_motif" id="motif-${item.id}">
+                                                <i class="ri-eye-line"></i>
                                             </a>
-                                            <a class="btn btn-outline-info btn-sm rounded-5" id="fiche-${item.id}">
-                                                <i class="ri-file-line"></i>
+                                            <a class="btn btn-outline-danger btn-sm rounded-5" data-bs-toggle="modal" data-bs-target="#Mdelete" id="delete-${item.id}">
+                                                <i class="ri-delete-bin-line"></i>
                                             </a>
                                         </div>
                                     </td>
                                 `;
                                 tableBody.appendChild(row);
 
-                                document.getElementById(`detail-${item.id}`).addEventListener('click',()=>
+                                document.getElementById(`delete-${item.id}`).addEventListener('click', () => {
+                                    document.getElementById('Iddelete').value = item.id;
+                                });
+
+                                document.getElementById(`motif-${item.id}`).addEventListener('click', () =>
                                 {
-                                    const tableBodyP = document.querySelector('#TableP tbody');
-                                    const messageDivP = document.getElementById('message_TableP');
-                                    const tableDivP = document.getElementById('div_TableP');
-                                    const loaderDivP = document.getElementById('div_Table_loaderP');
+                                    const modal = document.getElementById('modal_Detail_motif');
+                                    modal.innerHTML = '';
 
-                                    messageDivP.style.display = 'none';
-                                    tableDivP.style.display = 'none';
-                                    loaderDivP.style.display = 'block';
+                                    const div = document.createElement('div');
+                                    div.innerHTML = `
+                                           <div class="row gx-3">
+                                                <div class="col-12">
+                                                    <div class=" mb-3">
+                                                        <div class="card-body">
+                                                            <ul class="list-group">
+                                                                <li class="list-group-item active text-center" aria-current="true">
+                                                                    Motif
+                                                                </li>
+                                                                <li class="list-group-item">
+                                                                    ${item.motif} 
+                                                                </li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>     
+                                    `;
 
-                                    fetch(`/api/list_facture_exam_d/${item.id}`) // API endpoint
-                                        .then(response => response.json())
-                                        .then(data => {
-                                            // Access the 'chambre' array from the API response
-                                            const factureds = data.factured;
-                                            const sumMontantEx = data.sumMontantEx;
+                                    modal.appendChild(div);
 
-                                            // Clear any existing rows in the table body
-                                            tableBodyP.innerHTML = '';
-
-                                            if (factureds.length > 0) {
-
-                                                loaderDivP.style.display = 'none';
-                                                messageDivP.style.display = 'none';
-                                                tableDivP.style.display = 'block';
-
-                                                // Loop through each item in the chambre array
-                                                factureds.forEach((item, index) => {
-                                                    // Create a new row
-                                                    const row = document.createElement('tr');
-                                                    // Create and append cells to the row based on your table's structure
-                                                    row.innerHTML = `
-                                                        <td>
-                                                            <h6>${item.nom_ex}</h6>
-                                                        </td>
-                                                        <td>
-                                                            <h6>${item.cotation_ex}${item.valeur_ex}</h6>
-                                                        </td>
-                                                        <td>
-                                                            <h6>${item.prix_ex} Fcfa</h6>
-                                                        </td>
-                                                        <td>
-                                                            <h6>${item.accepte}</h6>
-                                                        </td>
-                                                        <td>
-                                                            <h6>${item.montant_ex} Fcfa</h6>
-                                                        </td>
-                                                    `;
-                                                    // Append the row to the table body
-                                                    tableBodyP.appendChild(row);
-
-                                                });
-
-                                                const row2 = document.createElement('tr');
-                                                row2.innerHTML = `
-                                                    <td colspan="3">&nbsp;</td>
-                                                    <td colspan="2" >
-                                                        <h5 class="mt-4 text-success">
-                                                            Total : ${formatPriceT(sumMontantEx)} Fcfa
-                                                        </h5>
-                                                    </td>
-                                                `;
-                                                tableBodyP.appendChild(row2);
-
-                                                const row3 = document.createElement('tr');
-                                                row3.innerHTML = `
-                                                    <td colspan="5">
-                                                        <h6 class="text-danger">NOTE</h6>
-                                                        <p class="small m-0">
-                                                            Le Montant Total des examens  ajouter au montant du prélevement.
-                                                        </p>
-                                                    </td>
-                                                `;
-
-                                                tableBodyP.appendChild(row3);
-
-                                            } else {
-                                                loaderDivP.style.display = 'none';
-                                                messageDivP.style.display = 'block';
-                                                tableDivP.style.display = 'none';
-                                            }
-                                        })
-                                        .catch(error => {
-                                            console.error('Erreur lors du chargement des données:', error);
-                                            loaderDivD.style.display = 'none';
-                                            messageDivD.style.display = 'block';
-                                            tableDivD.style.display = 'none';
-                                        });
-                                    
                                 });
 
                             });
-                        };
 
-                        function applySearchFilter() {
-                            const searchTerm = searchInputd.value.toLowerCase();
-                            const filteredExamens = allExamens.filter(item =>
-                                item.patient.toLowerCase().includes(searchTerm) ||
-                                item.acte.toLowerCase().includes(searchTerm) ||
-                                item.medecin.toLowerCase().includes(searchTerm)
-                            );
-                            displayRows(filteredExamens);
-                        }
-
-                        searchInputd.addEventListener('input', applySearchFilter);
-
-                        displayRows(allExamens);
-
-                        updatePaginationControlsED(pagination);
+                        updatePaginationControls(pagination);
 
                     } else {
                         tableDiv.style.display = 'none';
@@ -1008,9 +1113,8 @@
                 });
         }
 
-        function updatePaginationControlsED(pagination)
-        {
-            const paginationDiv = document.getElementById('pagination-controlsED');
+        function updatePaginationControls(pagination) {
+            const paginationDiv = document.getElementById('pagination-controls_rdv');
             paginationDiv.innerHTML = '';
 
             // Bootstrap pagination wrapper
@@ -1022,7 +1126,7 @@
                 const prevButton = document.createElement('li');
                 prevButton.className = 'page-item';
                 prevButton.innerHTML = `<a class="page-link" href="#">Precédent</a>`;
-                prevButton.onclick = () => listED(pagination.current_page - 1);
+                prevButton.onclick = () => listP(pagination.current_page - 1);
                 paginationWrapper.appendChild(prevButton);
             } else {
                 // Disable the previous button if on the first page
@@ -1050,7 +1154,7 @@
                 const pageItem = document.createElement('li');
                 pageItem.className = `page-item ${i === currentPage ? 'active' : ''}`;
                 pageItem.innerHTML = `<a class="page-link" href="#">${i}</a>`;
-                pageItem.onclick = () => listED(i);
+                pageItem.onclick = () => listP(i);
                 paginationWrapper.appendChild(pageItem);
             }
 
@@ -1065,7 +1169,7 @@
                 const lastPageItem = document.createElement('li');
                 lastPageItem.className = `page-item`;
                 lastPageItem.innerHTML = `<a class="page-link" href="#">${totalPages}</a>`;
-                lastPageItem.onclick = () => listED(totalPages);
+                lastPageItem.onclick = () => listP(totalPages);
                 paginationWrapper.appendChild(lastPageItem);
             }
 
@@ -1074,7 +1178,7 @@
                 const nextButton = document.createElement('li');
                 nextButton.className = 'page-item';
                 nextButton.innerHTML = `<a class="page-link" href="#">Suivant</a>`;
-                nextButton.onclick = () => listED(pagination.current_page + 1);
+                nextButton.onclick = () => listP(pagination.current_page + 1);
                 paginationWrapper.appendChild(nextButton);
             } else {
                 // Disable the next button if on the last page
@@ -1088,23 +1192,46 @@
             paginationDiv.appendChild(paginationWrapper);
         }
 
-        function Statistique() {
+        function delete_rdv() {
 
-            const nbre_analyse = document.getElementById("nbre_analyse");
-            const nbre_imagerie = document.getElementById("nbre_imagerie");
+            const id = document.getElementById('Iddelete').value;
+
+            var modal = bootstrap.Modal.getInstance(document.getElementById('Mdelete'));
+            modal.hide();
+
+            var preloader_ch = `
+                <div id="preloader_ch">
+                    <div class="spinner_preloader_ch"></div>
+                </div>
+            `;
+            // Add the preloader to the body
+            document.body.insertAdjacentHTML('beforeend', preloader_ch);
 
             $.ajax({
-                url: '/api/statistique_examen',
+                url: '/api/delete_rdv/'+id,
                 method: 'GET',
                 success: function(response) {
-                    // Set the text content of each element
-                    nbre_analyse.textContent = response.nbre_analyse_day;
-                    nbre_imagerie.textContent = response.nbre_imagerie_day;
+
+                    var preloader = document.getElementById('preloader_ch');
+                    if (preloader) {
+                        preloader.remove();
+                    }
+
+                    if (response.success) {
+                        list_rdv();
+                        showAlert('Succès', 'Rendez-Vous annulé.','success');
+                    } else if (response.error) {
+                        showAlert("ERREUR", 'Une erreur est survenue', "error");
+                    }
+                
                 },
                 error: function() {
-                    // Set default values in case of an error
-                    nbre_analyse.textContent = '0';
-                    nbre_imagerie.textContent = '0';
+                    var preloader = document.getElementById('preloader_ch');
+                    if (preloader) {
+                        preloader.remove();
+                    }
+
+                    showAlert('Erreur', 'Erreur lors de la suppression.','error');
                 }
             });
         }

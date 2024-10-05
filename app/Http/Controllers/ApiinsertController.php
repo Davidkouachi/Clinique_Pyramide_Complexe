@@ -44,6 +44,9 @@ use App\Models\sp_soins;
 use App\Models\examenpatient;
 use App\Models\examen;
 use App\Models\prelevement;
+use App\Models\joursemaine;
+use App\Models\rdvpatient;
+use App\Models\programmemedecin;
 
 class ApiinsertController extends Controller
 {
@@ -836,9 +839,7 @@ class ApiinsertController extends Controller
                 }
             }
 
-            // Si tout s'est bien passé, on commit les changements
             DB::commit();
-
             return response()->json(['success' => true]);
             
         } catch (Exception $e) {
@@ -846,8 +847,6 @@ class ApiinsertController extends Controller
             DB::rollback();
             return response()->json(['error' => true]);
         }
-
-        return response()->json(['success' => true]);
     }
 
     public function examen_new(Request $request)
@@ -948,9 +947,7 @@ class ApiinsertController extends Controller
                 }
             }
 
-            // Si tout s'est bien passé, on commit les changements
             DB::commit();
-
             return response()->json(['success' => true]);
             
         } catch (Exception $e) {
@@ -958,8 +955,75 @@ class ApiinsertController extends Controller
             DB::rollback();
             return response()->json(['error' => true]);
         }
+    }
 
-        return response()->json(['success' => true]);
+    public function new_horaire(Request $request)
+    {
+        $selections = $request->input('selections');
+        if (!is_array($selections) || empty($selections)) {
+            return response()->json(['json' => true]);
+        }
+
+        $user = user::find($request->medecin_id);
+
+        if (!$user) {
+            return response()->json(['error' => true]);
+        }
+
+        DB::beginTransaction();
+
+        try {
+
+            foreach ($selections as $value) {
+
+                $adds = new programmemedecin();
+                $adds->periode = $value['periode'];
+                $adds->statut = 'oui';
+                $adds->heure_debut = $value['heure_debut'];
+                $adds->heure_fin = $value['heure_fin'];
+                $adds->jour_id = $value['jour_id'];
+                $adds->user_id = $user->id;
+
+                if (!$adds->save()) {
+                    throw new \Exception('Erreur');
+                }
+            }
+
+            DB::commit();
+            return response()->json(['success' => true]);
+            
+        } catch (Exception $e) {
+
+            DB::rollback();
+            return response()->json(['error' => true]);
+        }
+    }
+
+    public function new_rdv(Request $request)
+    {
+        $user = user::find($request->medecin_id);
+        if (!$user) {
+            return response()->json(['error' => true]);
+        }
+
+        $patient = patient::find($request->patient_id);
+        if (!$patient) {
+            return response()->json(['error' => true]);
+        }
+
+        $add = new rdvpatient();
+        $add->user_id = $user->id;
+        $add->patient_id = $patient->id;
+        $add->date = $request->date;
+        $add->motif = $request->motif;
+        $add->periode = $request->periode;
+        $add->statut = 'en cours';
+
+        if ($add->save()) {
+            return response()->json(['success' => true]);
+        }
+
+        return response()->json(['error' => true]);
     }
 
 }

@@ -87,7 +87,7 @@
                                             <label class="form-label">Patient</label>
                                             <div class="input-group">
                                                 <input type="hidden" class="form-control" id="matricule_patient" autocomplete="off">
-                                                <input type="text" class="form-control" id="patient" placeholder="facultatif" autocomplete="off">
+                                                <input type="text" class="form-control" id="patient" placeholder="Saisie Obligatoire" autocomplete="off">
                                             </div>
                                             <div class="suggestions" id="suggestions_patient" style="display: none;"></div>
                                         </div>

@@ -24,18 +24,28 @@ use App\Models\chambre;
 use App\Models\lit;
 use App\Models\acte;
 use App\Models\typeacte;
-use App\Models\user;
 use App\Models\typemedecin;
+use App\Models\user;
 use App\Models\role;
+use App\Models\consultation;
+use App\Models\detailconsultation;
 use App\Models\typeadmission;
 use App\Models\natureadmission;
 use App\Models\detailhopital;
+use App\Models\facture;
 use App\Models\produit;
+use App\Models\soinshopital;
 use App\Models\soinsinfirmier;
 use App\Models\typesoins;
+use App\Models\soinspatient;
+use App\Models\sp_produit;
+use App\Models\sp_soins;
 use App\Models\examenpatient;
 use App\Models\examen;
 use App\Models\prelevement;
+use App\Models\joursemaine;
+use App\Models\rdvpatient;
+use App\Models\programmemedecin;
 
 class ApiupdateController extends Controller
 {
@@ -345,6 +355,18 @@ class ApiupdateController extends Controller
     {
         $add = prelevement::where('code', '=', '1')->first();
         $add->prix = $request->prix;
+
+        if ($add->save()) {
+            return response()->json(['success' => true]);
+        }
+
+        return response()->json(['error' => true]);
+    }
+
+    public function update_horaire($id)
+    {
+        $add = programmemedecin::find($id);
+        $add->statut = 'non';
 
         if ($add->save()) {
             return response()->json(['success' => true]);

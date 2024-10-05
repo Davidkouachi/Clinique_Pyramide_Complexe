@@ -24,14 +24,28 @@ use App\Models\chambre;
 use App\Models\lit;
 use App\Models\acte;
 use App\Models\typeacte;
-use App\Models\user;
 use App\Models\typemedecin;
+use App\Models\user;
 use App\Models\role;
+use App\Models\consultation;
+use App\Models\detailconsultation;
 use App\Models\typeadmission;
 use App\Models\natureadmission;
 use App\Models\detailhopital;
+use App\Models\facture;
+use App\Models\produit;
+use App\Models\soinshopital;
 use App\Models\soinsinfirmier;
 use App\Models\typesoins;
+use App\Models\soinspatient;
+use App\Models\sp_produit;
+use App\Models\sp_soins;
+use App\Models\examenpatient;
+use App\Models\examen;
+use App\Models\prelevement;
+use App\Models\joursemaine;
+use App\Models\rdvpatient;
+use App\Models\programmemedecin;
 
 
 class ApideleteController extends Controller
@@ -181,6 +195,22 @@ class ApideleteController extends Controller
     public function delete_societe($id)
     {
         $put = societe::find($id);
+
+        if ($put) {
+            if ($put->delete()) {
+                return response()->json(['success' => true]);
+            }else{
+                return response()->json(['error' => true]);
+            }
+        }
+
+        return response()->json(['error' => true]);
+
+    }
+
+    public function delete_rdv($id)
+    {
+        $put = rdvpatient::find($id);
 
         if ($put) {
             if ($put->delete()) {

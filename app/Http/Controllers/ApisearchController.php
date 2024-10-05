@@ -34,6 +34,9 @@ use App\Models\typesoins;
 use App\Models\examenpatient;
 use App\Models\examen;
 use App\Models\prelevement;
+use App\Models\joursemaine;
+use App\Models\rdvpatient;
+use App\Models\programmemedecin;
 
 class ApisearchController extends Controller
 {
@@ -215,6 +218,13 @@ class ApisearchController extends Controller
         $examen = Typeacte::where('acte_id', '=', $id)->get();
 
         return response()->json(['examen' => $examen]); 
+    }
+
+    public function select_jour()
+    {
+        $rech = joursemaine::all();
+
+        return response()->json(['rech' => $rech]); 
     }
 
 }

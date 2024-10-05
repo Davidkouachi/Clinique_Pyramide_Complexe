@@ -43,6 +43,10 @@ use App\Models\sp_soins;
 use App\Models\examenpatient;
 use App\Models\examen;
 use App\Models\prelevement;
+use App\Models\joursemaine;
+use App\Models\rdvpatient;
+use App\Models\programmemedecin;
+
 
 class ApilistController extends Controller
 {
@@ -602,6 +606,88 @@ class ApilistController extends Controller
             'patient' => $patient,
             'acte' => $acte,
             'examenpatient' => $examenpatient,
+        ]);
+    }
+
+    public function select_jours()
+    {
+        $jour = joursemaine::all();
+        
+        return response()->json([
+            'jour' => $jour,
+        ]);
+    }
+
+    public function list_horaire($medecin, $specialite, $jour, $periode)
+    {
+        $query = user::join('typemedecins', 'typemedecins.user_id', '=', 'users.id')
+                    ->join('typeactes', 'typeactes.id', '=', 'typemedecins.typeacte_id')
+                    ->where('users.role', '=', 'MEDECIN');
+
+        // Filtrage par médecin
+        if ($medecin !== 'tout') {
+            $query->where('users.id', '=', $medecin);
+        }
+
+        // Filtrage par spécialité
+        if ($specialite !== 'tout') {
+            $query->where('typeactes.id', '=', $specialite);
+        }
+
+        $medecins = $query->select('users.*', 'typeactes.nom as specialité')->get();
+
+        foreach ($medecins as $value) {
+            $horairesQuery = programmemedecin::join('joursemaines', 'joursemaines.id', '=', 'programmemedecins.jour_id')
+                                             ->where('programmemedecins.user_id', '=', $value->id)
+                                             ->where('programmemedecins.statut', '=', 'oui');
+
+            // Filtrage par jour
+            if ($jour !== 'tout') {
+                $horairesQuery->where('joursemaines.id', '=', $jour);
+            }
+
+            // Filtrage par période (Matin/Soir)
+            if ($periode !== 'tout') {
+                $horairesQuery->where('programmemedecins.periode', '=', $periode);
+            }
+
+            $horaires = $horairesQuery->select('programmemedecins.*', 'joursemaines.jour as jour')->get();
+            $value->horaires = $horaires;
+        }
+
+        return response()->json([
+            'medecins' => $medecins,
+        ]);
+    }
+
+    public function list_rdv($statut)
+    {
+        $rdvQuery = rdvpatient::Join('patients', 'patients.id', '=', 'rdvpatients.patient_id')
+                        ->Join('users', 'users.id', '=', 'rdvpatients.user_id')
+                        ->join('typemedecins', 'typemedecins.user_id', '=', 'users.id')
+                        ->join('typeactes', 'typeactes.id', '=', 'typemedecins.typeacte_id')
+                        ->select(
+                            'rdvpatients.*', 
+                            'patients.np as patient', 
+                            'users.name as medecin',
+                            'typeactes.nom as specialite'
+                        )
+                        ->orderBy('created_at', 'desc');
+
+        if ($statut !== 'tous') {
+            $rdvQuery->where('rdvpatients.statut', '=', $statut);
+        }
+
+        $rdv = $rdvQuery->paginate(15);
+
+        return response()->json([
+            'rdv' => $rdv->items(), // Paginated data
+            'pagination' => [
+                'current_page' => $rdv->currentPage(),
+                'last_page' => $rdv->lastPage(),
+                'per_page' => $rdv->perPage(),
+                'total' => $rdv->total(),
+            ]
         ]);
     }
 
