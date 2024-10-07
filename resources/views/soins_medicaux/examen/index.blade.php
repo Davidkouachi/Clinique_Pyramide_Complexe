@@ -98,12 +98,14 @@
                                     </h5>
                                 </div>
                                 <div class="row gx-3 justify-content-center align-items-center mb-4">
-                                    <div class="col-xxl-3 col-lg-4 col-sm-6">
+                                    <div class="col-xxl-4 col-lg-4 col-sm-6">
                                         <div class="mb-3">
                                             <label class="form-label">Patient</label>
-                                            <input type="hidden" class="form-control" id="matricule_patient" autocomplete="off">
-                                            <input type="text" class="form-control" id="patient" placeholder="saisie obligatoire" autocomplete="off">
-                                            <div class="suggestions" id="suggestions_patient" style="display: none;"></div>
+                                            <div class="input-group">
+                                                <input type="hidden" class="form-control" id="matricule_patient" autocomplete="off">
+                                                <input type="text" class="form-control" id="patient" placeholder="saisie obligatoire" autocomplete="off">
+                                                <div class="suggestions w-100" id="suggestions_patient" style="display: none;"></div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -119,6 +121,15 @@
                                             <div class="mb-3">
                                                 <label class="form-label">Medecin</label>
                                                 <input type="text" class="form-control" id="medecin" autocomplete="off" placeholder="saisie obligatoire" oninput="this.value = this.value.toUpperCase()">
+                                            </div>
+                                        </div>
+                                        <div class="col-xxl-3 col-lg-4 col-sm-6" id="div_numcode" style="display: none;">
+                                            <div class="mb-3">
+                                                <label class="form-label">N° prise en charge</label>
+                                                <div class="input-group">
+                                                    <span class="input-group-text">N°</span>
+                                                    <input type="text" class="form-control" id="numcode">
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -278,9 +289,6 @@
                                                 </h5>
                                                 <div class="d-flex" >
                                                     <input type="text" id="searchInputd" placeholder="Recherche" class="form-control me-1">
-                                                    <a id="btn_print_tableED" style="display: none;" class="btn btn-outline-warning ms-auto me-1">
-                                                        <i class="ri-printer-line"></i>
-                                                    </a>
                                                     <a id="btn_refresh_tableED" class="btn btn-outline-info ms-auto">
                                                         <i class="ri-loop-left-line"></i>
                                                     </a>
@@ -335,9 +343,6 @@
                                                 </h5>
                                                 <div class="d-flex" >
                                                     <input type="text" id="searchInpute" placeholder="Recherche" class="form-control me-1">
-                                                    <a id="btn_print_tableE" style="display: none;" class="btn btn-outline-warning ms-auto me-1">
-                                                        <i class="ri-printer-line"></i>
-                                                    </a>
                                                     <a id="btn_refresh_tableE" class="btn btn-outline-info ms-auto">
                                                         <i class="ri-loop-left-line"></i>
                                                     </a>
@@ -510,9 +515,6 @@
                             <div class="card-body">
                                 <div class="row">
                                     <div class="col-12">
-                                        <div id="div_alert_tableP" >
-                    
-                                        </div>
                                         <div class="table-responsive" id="div_TableP" style="display: none;">
                                             <table class="table table-bordered" id="TableP">
                                                 <thead>
@@ -1024,7 +1026,6 @@
                     tableBody.innerHTML = '';
 
                     if (allExamens.length > 0) {
-                        document.getElementById('btn_print_tableE').style.display = 'block';
 
                         loaderDiv.style.display = 'none';
                         messageDiv.style.display = 'none';
@@ -1228,6 +1229,13 @@
 
                                 // Assign patient rate (taux)
                                 patient_taux.value = item.taux ? item.taux : 0;
+
+                                document.getElementById('numcode').value = '';
+                                if (item.assurer == 'oui') {
+                                    document.getElementById('div_numcode').style.display = 'block';
+                                }else{
+                                    document.getElementById('div_numcode').style.display = 'none';
+                                }
 
                                 document.getElementById('contenu_examen').innerHTML = "";
                                 document.getElementById('div_btn_examen').style.display = "none";
@@ -1547,6 +1555,7 @@
             var montant_patient = document.getElementById('montant_patient_examen').value;
             var montant_total = document.getElementById('montant_total_examen').value;
             var montant_pre = document.getElementById('montant_pre_examen').value;
+            var numcode = document.getElementById('numcode').value;
             // Validate monetary fields
             if (!montant_assurance || 
                 !montant_total || 
@@ -1595,6 +1604,7 @@
                     matricule: matricule_patient,
                     acte_id: typeacte_id_exd,
                     medecin: medecin,
+                    numcode: numcode || null,
                 },
                 success: function(response) {
 
@@ -1608,8 +1618,10 @@
                         document.getElementById('typeacte_id_exd').value = "";
                         document.getElementById('patient').value = "";
                         document.getElementById('medecin').value = "";
+                        document.getElementById('numcode').value = "";
                         document.getElementById('select_examen_div').style.display = "none";
                         document.getElementById('div_Examen').style.display = "none";
+                        document.getElementById('div_numcode').style.display = "none";
 
                         listED();   
 
@@ -1664,7 +1676,6 @@
                     tableBody.innerHTML = '';
 
                     if (allExamens.length > 0) {
-                        document.getElementById('btn_print_tableED').style.display = 'block';
 
                         loaderDiv.style.display = 'none';
                         messageDiv.style.display = 'none';
@@ -2031,9 +2042,15 @@
 
                 yPoss = (yPos + 40);
 
-                const typeInfo = [
+                const typeInfo = [];
+
+                if (examen.num_bon && examen.num_bon !== "") {
+                    typeInfo.push({ label: "N° prise en charge", value: examen.num_bon });
+                }
+
+                typeInfo.push(
                     { label: "Type d'examen", value: acte.nom },
-                ];
+                );
 
                 typeInfo.forEach(info => {
                     doc.setFontSize(8);

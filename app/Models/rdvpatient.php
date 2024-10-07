@@ -12,7 +12,6 @@ class rdvpatient extends Model
     protected $fillable = [
         'date',
         'motif',
-        'periode',
         'statut',
         'patient_id',
         'user_id',

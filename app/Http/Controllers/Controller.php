@@ -123,4 +123,9 @@ class Controller
     {
         return view('accueil.reception.horairemedecin');
     }
+
+    public function specialite()
+    {
+        return view('grille.specialite');
+    }
 }

@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('statut');
             $table->text('libelle');
             $table->string('code')->index()->unique();
+            $table->string('num_bon')->index()->nullable();
             $table->string('medecin');
             $table->string('prelevement');
             $table->unsignedBigInteger('patient_id');

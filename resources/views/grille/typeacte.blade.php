@@ -28,7 +28,6 @@
                     <h5 class="card-title">Formulaire Nouveau Type Acte</h5>
                 </div>
                 <div class="card-body" >
-                    <!-- Row starts -->
                     <div class="row gx-3">
                         <div class="col-xxl-3 col-lg-4 col-sm-6">
                             <div class="mb-3">
@@ -70,7 +69,6 @@
                             </div>
                         </div>
                     </div>
-                    <!-- Row ends -->
                 </div>
             </div>
         </div>
@@ -155,10 +153,7 @@
             </div>
             <div class="modal-body">
                 <form id="updateForm">
-                    <div class="mb-3" id="alert_update">
-                        
-                    </div>
-                    <input type="hidden" id="Id"> <!-- Hidden field for the room's ID -->
+                    <input type="hidden" id="Id">
                     <div class="mb-3">
                         <label class="form-label">Spécialité / Type Acte</label>
                         <input type="text" class="form-control" id="nomModif" oninput="this.value = this.value.toUpperCase()">
@@ -289,12 +284,6 @@
             const acte_id = document.getElementById("acte_id");
             const nom_acte = document.getElementById("nom_acte");
             const prix = document.getElementById("prix");
-
-            var dynamicFields = document.getElementById("div_alert");
-            // Remove existing content
-            while (dynamicFields.firstChild) {
-                dynamicFields.removeChild(dynamicFields.firstChild);
-            }
 
             if(!acte_id.value.trim() || !nom_acte.value.trim() || !prix.value.trim()){
                 showAlert('Alert', 'Veuillez remplir tous les champs SVP.','warning');
@@ -442,13 +431,6 @@
             const nomModif = document.getElementById('nomModif').value;
             const acte_id_modif = document.getElementById('acte_id_modif').value;
             const prixModif = document.getElementById('prixModif').value;
-
-
-            var dynamicFields = document.getElementById("alert_update");
-            // Remove existing content
-            while (dynamicFields.firstChild) {
-                dynamicFields.removeChild(dynamicFields.firstChild);
-            }
 
             if(!nomModif.trim() || !acte_id_modif.trim() || !prixModif.trim()){
                 showAlert('Alert', 'Veuillez remplir tous les champs SVP.','warning');

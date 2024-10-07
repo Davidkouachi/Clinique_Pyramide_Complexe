@@ -22,7 +22,7 @@ use App\Http\Controllers\ApipdfController;
 //     return response()->json(['csrf_token' => csrf_token()]);
 // });
 
-Route::middleware(['statutchambre'])->group(function () {
+Route::middleware(['statutchambre','dateRdv'])->group(function () {
 
 	// recherche debut
 	Route::get('/taux_select_patient_new', [ApiController::class, 'taux_select_patient_new']);
@@ -52,6 +52,7 @@ Route::middleware(['statutchambre'])->group(function () {
 	Route::get('/new_examend', [ApiinsertController::class, 'new_examend']);
 	Route::get('/new_horaire', [ApiinsertController::class, 'new_horaire']);
 	Route::get('/new_rdv', [ApiinsertController::class, 'new_rdv']);
+	Route::get('/specialite_new', [ApiinsertController::class, 'specialite_new']);
 	// insert debut
 
 	// search debut
@@ -76,6 +77,7 @@ Route::middleware(['statutchambre'])->group(function () {
 	// liste day debut
 	Route::get('/list_cons_day', [ApilistController::class, 'list_cons_day']);
 	Route::get('/list_cons', [ApilistController::class, 'list_cons']);
+	Route::get('/list_rdv_day', [ApilistController::class, 'list_rdv_day']);
 	// liste day debut
 
 	// update debut
@@ -94,6 +96,8 @@ Route::middleware(['statutchambre'])->group(function () {
 	Route::get('/examen_Modif/{id}', [ApiupdateController::class, 'examen_Modif']);
 	Route::get('/prelevement_Modif', [ApiupdateController::class, 'prelevement_Modif']);
 	Route::get('/update_horaire/{id}', [ApiupdateController::class, 'update_horaire']);
+	Route::get('/update_rdv/{id}', [ApiupdateController::class, 'update_rdv']);
+	Route::get('/update_specialite/{id}', [ApiupdateController::class, 'update_specialite']);
 	// update debut
 
 	// delete debut
@@ -108,6 +112,7 @@ Route::middleware(['statutchambre'])->group(function () {
 	Route::get('/delete_soinsIn/{id}', [ApideleteController::class, 'delete_soinsIn']);
 	Route::get('/delete_societe/{id}', [ApideleteController::class, 'delete_societe']);
 	Route::get('/delete_rdv/{id}', [ApideleteController::class, 'delete_rdv']);
+	Route::get('/delete_specialite/{id}', [ApideleteController::class, 'delete_specialite']);
 	// delete debut
 
 	// liste debut
@@ -136,6 +141,7 @@ Route::middleware(['statutchambre'])->group(function () {
 	Route::get('/select_jours', [ApilistController::class, 'select_jours']);
 	Route::get('/list_horaire/{medecin}/{specialite}/{jour}/{periode}', [ApilistController::class, 'list_horaire']);
 	Route::get('/list_rdv/{statut}', [ApilistController::class, 'list_rdv']);
+	Route::get('/list_specialite', [ApilistController::class, 'list_specialite']);
 	// liste debut
 
 	// statistique debut

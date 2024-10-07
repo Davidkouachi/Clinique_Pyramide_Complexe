@@ -56,10 +56,6 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-sm-12">
-                            <div class="mb-3" id="div_alert">
-                            </div>
-                        </div>
                     </div>
                     <!-- Row ends -->
                 </div>
@@ -76,9 +72,6 @@
                     </a>
                 </div>
                 <div class="card-body">
-                    <div id="div_alert_table" >
-                    
-                    </div>
                     <div class="table-outer" id="div_Table" style="display: none;">
                         <div class="table-responsive">
                             <table class="table align-middle table-hover m-0 truncate" id="Table" >
@@ -140,14 +133,11 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Mise à jour</h5>
+                <h5 class="modal-title" >Mise à jour</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 <form id="updateForm">
-                    <div class="mb-3" id="alert_update">
-                        
-                    </div>
                     <input type="hidden" id="Id">
                     <div class="mb-3">
                         <label class="form-label">Nature Admission</label>
@@ -244,12 +234,6 @@
 
             const type_id = document.getElementById("type_id");
             const nom = document.getElementById("nom_nature");
-
-            var dynamicFields = document.getElementById("div_alert");
-            // Remove existing content
-            while (dynamicFields.firstChild) {
-                dynamicFields.removeChild(dynamicFields.firstChild);
-            }
 
             if(!type_id.value.trim() || !nom.value.trim()){
                 showAlert('Alert', 'Veuillez remplir tous les champs SVP.','warning');
@@ -403,13 +387,6 @@
             const id = document.getElementById('Id').value;
             const nomModif = document.getElementById('nomModif').value;
             const type_id_modif = document.getElementById('type_id_modif').value;
-
-
-            var dynamicFields = document.getElementById("alert_update");
-            // Remove existing content
-            while (dynamicFields.firstChild) {
-                dynamicFields.removeChild(dynamicFields.firstChild);
-            }
 
             if(!nomModif.trim() || !type_id_modif.trim()){
                 showAlert('Alert', 'Veuillez remplir tous les champs SVP.','warning');

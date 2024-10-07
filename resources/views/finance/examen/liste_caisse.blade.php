@@ -35,18 +35,12 @@
                             <option value="payer">Réglé</option>
                             <option value="impayer">Non Réglé</option>
                         </select>
-                        <a id="btn_print_table" style="display: none;" class="btn btn-outline-warning ms-auto me-1">
-                            <i class="ri-printer-line"></i>
-                        </a>
                         <a id="btn_refresh_table" class="btn btn-outline-info ms-auto">
                             <i class="ri-loop-left-line"></i>
                         </a>
                     </div>
                 </div>
                 <div class="card-body">
-                    <div id="div_alert_table" >
-                    
-                    </div>
                     <div class="table-outer" id="div_Table" style="display: none;">
                         <div class="table-responsive">
                             <table class="table align-middle table-hover m-0 truncate" id="Table">
@@ -105,9 +99,6 @@
                             <div class="card-body">
                                 <div class="row">
                                     <div class="col-12">
-                                        <div id="div_alert_tableP" >
-                    
-                                        </div>
                                         <div class="table-responsive" id="div_TableP" style="display: none;">
                                             <table class="table table-bordered" id="TableP">
                                                 <thead>
@@ -342,7 +333,6 @@
                     tableBody.innerHTML = '';
 
                     if (allExamens.length > 0) {
-                        document.getElementById('btn_print_table').style.display = 'block';
 
                         loaderDiv.style.display = 'none';
                         messageDiv.style.display = 'none';

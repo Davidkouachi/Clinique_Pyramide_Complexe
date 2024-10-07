@@ -39,9 +39,6 @@
                     </div>
                 </div>
                 <div class="card-body">
-                    <div id="div_alert_table" >
-                    
-                    </div>
                     <div class="table-outer" id="div_Table" style="display: none;">
                         <div class="table-responsive">
                             <table class="table align-middle table-hover m-0 truncate" id="Table">
@@ -99,9 +96,6 @@
                             <div class="card-body">
                                 <div class="row">
                                     <div class="col-12">
-                                        <div id="div_alert_tableD" >
-                    
-                                        </div>
                                         <div class="table-responsive" id="div_TableD" style="display: none;">
                                             <table class="table table-bordered" id="TableD">
                                                 <thead>
@@ -187,12 +181,7 @@
     </div>
 </div>
 
-
-{{-- <script src="{{ asset('js/app.js') }}"></script> --}}
-{{-- <script src="https://unpkg.com/jspdf-invoice-template@1.4.4/dist/index.js"></script> --}}
 <script src="{{asset('assets/js/app/js/jspdfinvoicetemplate/dist/index.js')}}" ></script>
-<script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="{{asset('jsPDF-master/dist/jspdf.umd.js')}}"></script>
 
 <script>

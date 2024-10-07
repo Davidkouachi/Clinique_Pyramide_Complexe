@@ -4,30 +4,20 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Bootstrap Gallery - Medical Admin Templates & Dashboards</title>
-    <!-- Meta -->
+    <title>Espace Santé</title>
     <meta name="description" content="Marketplace for Bootstrap Admin Dashboards">
     <meta property="og:title" content="Admin Templates - Dashboard Templates">
     <meta property="og:description" content="Marketplace for Bootstrap Admin Dashboards">
     <meta property="og:type" content="Website">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <link rel="shortcut icon" href="{{asset('assets/images/logo.png')}}">
-    <!-- *************
-        ************ CSS Files *************
-    ************* -->
     <link rel="stylesheet" href="{{asset('assets/fonts/remix/remixicon.css')}}">
     <link rel="stylesheet" href="{{asset('assets/css/main.min.css')}}">
     <link rel="stylesheet" href="{{asset('assets/css/style.css')}}">
-    <!-- *************
-        ************ Vendor Css Files *************
-    ************ -->
-    <!-- Scrollbar CSS -->
     <link rel="stylesheet" href="{{asset('assets/vendor/overlay-scroll/OverlayScrollbars.min.css')}}">
-    <!-- Data Tables -->
     <link rel="stylesheet" href="{{asset('assets/vendor/datatables/dataTables.bs5.css')}}">
     <link rel="stylesheet" href="{{asset('assets/vendor/datatables/dataTables.bs5-custom.css')}}">
     <link rel="stylesheet" href="{{asset('assets/vendor/datatables/buttons/dataTables.bs5-custom.css')}}">
-
     <script src="{{asset('sweetalert.js')}}"></script>
 </head>
 
@@ -239,458 +229,100 @@
                                         </li>
                                     </ul>
                                 </li>
-                                {{-- <li>
-                                    <a href="#">
-                                        Réimprimer recu
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="#!">
-                                        Opération de caisse
-                                        <i class="ri-arrow-right-s-line"></i>
-                                    </a>
-                                    <ul class="treeview-menu">
-                                        <li>
-                                            <a href="#">Sortie d'espèce</a>
-                                        </li>
-                                        <li>
-                                            <a href="#">Liste des sorties</a>
-                                        </li>
-                                    </ul>
-                                </li>
-                                <li>
-                                    <a href="#">
-                                        Point de caisse
-                                    </a>
-                                </li> --}}
                             </ul>
                         </li>
-                        <li @if(request()->routeIs('medecin_new','assurance_new','taux_new','societe_new','acte_new','typeacte_new','chambre_new','lit_new','typeadmission_new','natureadmission_new','produit_new','typesoins_new','soinsinfirmier_new')) class="active current-page treeview" @else class="treeview" @endif>
+                        <li @if(request()->routeIs('medecin_new','assurance_new','taux_new','societe_new','acte_new','typeacte_new','chambre_new','lit_new','typeadmission_new','natureadmission_new','produit_new','typesoins_new','soinsinfirmier_new','specialite')) class="active current-page treeview" @else class="treeview" @endif>
                             <a href="#!">
                                 <i class="ri-settings-5-line"></i>
                                 <span class="menu-text">Configuration</span>
                             </a>
                             <ul class="treeview-menu">
-                                <li @if(request()->routeIs('medecin_new','assurance_new','taux_new','societe_new','chambre_new','lit_new','typeadmission_new','natureadmission_new','produit_new')) class="active" @endif >
+                                <li @if(request()->routeIs('chambre_new','lit_new','typeadmission_new','natureadmission_new','produit_new')) class="active" @endif >
                                     <a href="#!">
-                                        Ajouter
+                                        Hospitalisation
                                         <i class="ri-arrow-right-s-line"></i>
                                     </a>
                                     <ul class="treeview-menu">
                                         <li>
-                                            <a href="{{route('medecin_new')}}">Medecin</a>
+                                            <a @if(request()->routeIs('chambre_new')) class="text-primary" @endif href="{{route('chambre_new')}}">Chambre</a>
                                         </li>
-                                        <li @if(request()->routeIs('chambre_new','lit_new','typeadmission_new','natureadmission_new','produit_new')) class="active" @endif >
-                                            <a href="#!">
-                                                Hospitalisation
-                                                <i class="ri-arrow-right-s-line"></i>
-                                            </a>
-                                            <ul class="treeview-menu">
-                                                <li>
-                                                    <a @if(request()->routeIs('chambre_new')) class="text-primary" @endif href="{{route('chambre_new')}}">Chambre</a>
-                                                </li>
-                                                <li>
-                                                    <a @if(request()->routeIs('lit_new')) class="text-primary" @endif href="{{route('lit_new')}}">lit</a>
-                                                </li>
-                                                <li>
-                                                    <a @if(request()->routeIs('typeadmission_new')) class="text-primary" @endif href="{{route('typeadmission_new')}}">Type admission</a>
-                                                </li>
-                                                <li>
-                                                    <a @if(request()->routeIs('natureadmission_new')) class="text-primary" @endif href="{{route('natureadmission_new')}}">Nature admission</a>
-                                                </li>
-                                                <li>
-                                                    <a @if(request()->routeIs('produit_new')) class="text-primary" @endif href="{{route('produit_new')}}">Produit Pharmacie</a>
-                                                </li>
-                                            </ul>
+                                        <li>
+                                            <a @if(request()->routeIs('lit_new')) class="text-primary" @endif href="{{route('lit_new')}}">lit</a>
                                         </li>
-                                        {{-- <li @if(request()->routeIs('assurance_new','taux_new','societe_new')) class="active" @endif >
-                                            <a href="#!">
-                                                Assurance (en cours)
-                                                <i class="ri-arrow-right-s-line"></i>
-                                            </a>
-                                            <ul class="treeview-menu">
-                                                <li>
-                                                    <a @if(request()->routeIs('assurance_new')) class="text-primary" @endif href="{{route('assurance_new')}}">Assurance</a>
-                                                </li>
-                                                <li>
-                                                    <a @if(request()->routeIs('taux_new')) class="text-primary" @endif href="{{route('taux_new')}}">Taux</a>
-                                                </li>
-                                                <li>
-                                                    <a @if(request()->routeIs('societe_new')) class="text-primary" @endif href="{{route('societe_new')}}">Société assurer</a>
-                                                </li>
-                                            </ul>
-                                        </li> --}}
+                                        <li>
+                                            <a @if(request()->routeIs('typeadmission_new')) class="text-primary" @endif href="{{route('typeadmission_new')}}">Type admission</a>
+                                        </li>
+                                        <li>
+                                            <a @if(request()->routeIs('natureadmission_new')) class="text-primary" @endif href="{{route('natureadmission_new')}}">Nature admission</a>
+                                        </li>
+                                        <li>
+                                            <a @if(request()->routeIs('produit_new')) class="text-primary" @endif href="{{route('produit_new')}}">Produit Pharmacie</a>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li @if(request()->routeIs('typesoins_new','soinsinfirmier_new')) class="active" @endif >
+                                    <a href="#!">
+                                        Infirmerie
+                                        <i class="ri-arrow-right-s-line"></i>
+                                    </a>
+                                    <ul class="treeview-menu">
+                                        <li>
+                                            <a @if(request()->routeIs('typesoins_new')) class="text-primary" @endif  href="{{route('typesoins_new')}}">Type Soins</a>
+                                        </li>
+                                        <li>
+                                            <a @if(request()->routeIs('soinsinfirmier_new')) class="text-primary" @endif href="{{route('soinsinfirmier_new')}}">Soins Infirmier</a>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li @if(request()->routeIs('medecin_new','acte_new','typeacte_new','specialite')) class="active" @endif >
+                                    <a href="#!">
+                                        Medecin
+                                        <i class="ri-arrow-right-s-line"></i>
+                                    </a>
+                                    <ul class="treeview-menu">
+                                        <li>
+                                            <a href="{{route('medecin_new')}}">Nouveau</a>
+                                        </li>
                                         {{-- <li>
-                                            <a href="#!">
-                                                Pharmacie
-                                                <i class="ri-arrow-right-s-line"></i>
-                                            </a>
-                                            <ul class="treeview-menu">
-                                                <li>
-                                                    <a href="#">Medicament</a>
-                                                </li>
-                                                <li>
-                                                    <a href="#">Catégorie</a>
-                                                </li>
-                                            </ul>
+                                            <a @if(request()->routeIs('acte_new')) class="text-primary" @endif  href="{{route('acte_new')}}">Acte</a>
+                                        </li>
+                                        <li>
+                                            <a @if(request()->routeIs('typeacte_new')) class="text-primary" @endif href="{{route('typeacte_new')}}">Type acte</a>
                                         </li> --}}
-                                        {{-- <li>
-                                            <a href="#!">
-                                                Laboratoire
-                                                <i class="ri-arrow-right-s-line"></i>
+                                        <li>
+                                            <a @if(request()->routeIs('specialite')) class="text-primary" @endif href="{{route('specialite')}}">
+                                                Spécialité
                                             </a>
-                                            <ul class="treeview-menu">
-                                                <li>
-                                                    <a href="#">Examen</a>
-                                                </li>
-                                            </ul>
-                                        </li> --}}
-                                    </ul>
-                                </li>
-                                {{-- <li>
-                                    <a href="#!">
-                                        Liste
-                                        <i class="ri-arrow-right-s-line"></i>
-                                    </a>
-                                    <ul class="treeview-menu">
-                                        <li>
-                                            <a href="#!">
-                                                Infirmerie
-                                                <i class="ri-arrow-right-s-line"></i>
-                                            </a>
-                                            <ul class="treeview-menu">
-                                                <li>
-                                                    <a href="#">Soin Infirmier</a>
-                                                </li>
-                                                <li>
-                                                    <a href="#">Chambre</a>
-                                                </li>
-                                                <li>
-                                                    <a href="#">lit</a>
-                                                </li>
-                                            </ul>
-                                        </li>
-                                        <li>
-                                            <a href="#!">
-                                                Assurance
-                                                <i class="ri-arrow-right-s-line"></i>
-                                            </a>
-                                            <ul class="treeview-menu">
-                                                <li>
-                                                    <a href="#">Assurance</a>
-                                                </li>
-                                                <li>
-                                                    <a href="#">Assureur</a>
-                                                </li>
-                                                <li>
-                                                    <a href="#">Société assurer</a>
-                                                </li>
-                                                <li>
-                                                    <a href="#">Produit assurance</a>
-                                                </li>
-                                            </ul>
-                                        </li>
-                                        <li>
-                                            <a href="#!">
-                                                Pharmacie
-                                                <i class="ri-arrow-right-s-line"></i>
-                                            </a>
-                                            <ul class="treeview-menu">
-                                                <li>
-                                                    <a href="#">Medicament</a>
-                                                </li>
-                                                <li>
-                                                    <a href="#">Catégorie</a>
-                                                </li>
-                                            </ul>
-                                        </li>
-                                        <li>
-                                            <a href="#!">
-                                                Laboratoire
-                                                <i class="ri-arrow-right-s-line"></i>
-                                            </a>
-                                            <ul class="treeview-menu">
-                                                <li>
-                                                    <a href="#">Examen</a>
-                                                </li>
-                                            </ul>
-                                        </li>
-                                    </ul>
-                                </li> --}}
-                                <li>
-                                    <a @if(request()->routeIs('acte_new')) class="text-primary" @endif  href="{{route('acte_new')}}">Acte</a>
-                                </li>
-                                <li>
-                                    <a @if(request()->routeIs('typeacte_new')) class="text-primary" @endif href="{{route('typeacte_new')}}">Type acte</a>
-                                </li>
-                                <li>
-                                    <a @if(request()->routeIs('typesoins_new')) class="text-primary" @endif  href="{{route('typesoins_new')}}">Type Soins</a>
-                                </li>
-                                <li>
-                                    <a @if(request()->routeIs('soinsinfirmier_new')) class="text-primary" @endif href="{{route('soinsinfirmier_new')}}">Soins Infirmier</a>
-                                </li>
-                            </ul>
-                        </li>
-                        {{-- <li class="treeview">
-                            <a href="#!">
-                                <i class="ri-home-5-line"></i>
-                                <span class="menu-text">Acceuil</span>
-                            </a>
-                            <ul class="treeview-menu">
-                                <li>
-                                    <a href="#!">
-                                        Patient
-                                        <i class="ri-arrow-right-s-line"></i>
-                                    </a>
-                                    <ul class="treeview-menu">
-                                        <li>
-                                            <a href="#">Nouveau</a>
-                                        </li>
-                                        <li>
-                                            <a href="#">Recherche</a>
-                                        </li>
-                                        <li>
-                                            <a href="#">Liste</a>
-                                        </li>
-                                    </ul>
-                                </li>
-                                <li>
-                                    <a href="#">
-                                        Prix des examens
-                                    </a>
-                                </li>
-                            </ul>
-                        </li>
-                        <li class="treeview">
-                            <a href="#!">
-                                <i class="ri-settings-5-line"></i>
-                                <span class="menu-text">Laboratoire</span>
-                            </a>
-                            <ul class="treeview-menu">
-                                <li>
-                                    <a href="#!">
-                                        Famille acte biologie
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="#!">
-                                        Examen demandés
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="#!">
-                                        Liste des examens
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="#!">
-                                        Historique des examens
-                                    </a>
-                                </li>
-                            </ul>
-                        </li>
-                        <li class="treeview">
-                            <a href="#!">
-                                <i class="ri-settings-5-line"></i>
-                                <span class="menu-text">Ressources Humaines</span>
-                            </a>
-                            <ul class="treeview-menu">
-                                <li>
-                                    <a href="#!">
-                                        Nouveau médécin
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="#!">
-                                        Nouvel administrateur
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="#!">
-                                        Liste de médécins
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="#!">
-                                        Liste des administrateurs
-                                    </a>
-                                </li>
-                            </ul>
-                        </li>
-                        <li class="treeview">
-                            <a href="#!">
-                                <i class="ri-settings-5-line"></i>
-                                <span class="menu-text">Infirmerie</span>
-                            </a>
-                            <ul class="treeview-menu">
-                                <li>
-                                    <a href="#!">
-                                        Attribution de lits
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="#!">
-                                        Prise de constantes
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="#!">
-                                        Liste
-                                        <i class="ri-arrow-right-s-line"></i>
-                                    </a>
-                                    <ul class="treeview-menu">
-                                        <li>
-                                            <a href="#">Soin Infirmier</a>
-                                        </li>
-                                        <li>
-                                            <a href="#">Chambre</a>
-                                        </li>
-                                        <li>
-                                            <a href="#">lit</a>
                                         </li>
                                     </ul>
                                 </li>
                             </ul>
                         </li>
-                        <li class="treeview">
-                            <a href="#!">
-                                <i class="ri-settings-5-line"></i>
-                                <span class="menu-text">Assurances</span>
-                            </a>
-                            <ul class="treeview-menu">
-                                <li>
-                                    <a href="#!">
-                                        Liste
-                                        <i class="ri-arrow-right-s-line"></i>
-                                    </a>
-                                    <ul class="treeview-menu">
-                                        <li>
-                                            <a href="#">Assurance</a>
-                                        </li>
-                                        <li>
-                                            <a href="#">Assureur</a>
-                                        </li>
-                                        <li>
-                                            <a href="#">Société assurer</a>
-                                        </li>
-                                        <li>
-                                            <a href="#">Produit assurance</a>
-                                        </li>
-                                    </ul>
-                                </li>
-                            </ul>
-                        </li>
-                        <li class="treeview">
-                            <a href="#!">
-                                <i class="ri-settings-5-line"></i>
-                                <span class="menu-text">Pharmacie</span>
-                            </a>
-                            <ul class="treeview-menu">
-                                <li>
-                                    <a href="#!">
-                                        Ajouter
-                                        <i class="ri-arrow-right-s-line"></i>
-                                    </a>
-                                    <ul class="treeview-menu">
-                                        <li>
-                                            <a href="#">Facture</a>
-                                        </li>
-                                    </ul>
-                                </li>
-                                <li>
-                                    <a href="#!">
-                                        Liste
-                                        <i class="ri-arrow-right-s-line"></i>
-                                    </a>
-                                    <ul class="treeview-menu">
-                                        <li>
-                                            <a href="#">Medicament</a>
-                                        </li>
-                                        <li>
-                                            <a href="#">Catégorie</a>
-                                        </li>
-                                        <li>
-                                            <a href="#">Facture</a>
-                                        </li>
-                                    </ul>
-                                </li>
-                            </ul>
-                        </li> --}}
-                        {{-- <li class="treeview">
-                            <a href="#!">
-                                <i class="ri-settings-5-line"></i>
-                                <span class="menu-text">Pdf</span>
-                            </a>
-                            <ul class="treeview-menu">
-                                <li>
-                                    <a href="{{route('recu_consultation_cr')}}">
-                                        Consultation Compte rendu
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="#">Ajouter</a>
-                                </li>
-                            </ul>
-                        </li> --}}
-                        {{-- <li @if(request()->routeIs('consultation_liste',)) class="active current-page treeview" @else class="treeview" @endif>
-                            <a href="#!">
-                                <i class="ri-archive-2-line"></i>
-                                <span class="menu-text">Gestionnaire</span>
-                            </a>
-                            <ul class="treeview-menu">
-                                <li>
-                                    <a @if(request()->routeIs('consultation_liste')) class="text-primary" @endif href="{{route('consultation_liste')}}">
-                                        Consultation
-                                    </a>
-                                </li>
-                            </ul>
-                        </li> --}}
                     </ul>
                 </div>
-                <!-- Sidebar menu ends -->
-                <!-- Sidebar contact starts -->
                 <div class="sidebar-contact" style="background-color: red;">
                     <p class="fw-light mb-1 text-nowrap text-truncate">Appel d'urgence</p>
                     <h5 class="m-0 lh-1 text-nowrap text-truncate">0987654321</h5>
                     <i class="ri-phone-line"></i>
-                </div>      
-                <!-- Sidebar contact ends -->
-            </nav>
-            <!-- Sidebar wrapper ends -->
-            <!-- App container starts -->
-            <div class="app-container">
-                <!-- App hero header starts -->
-                @yield('info_page')
-                <!-- App Hero header ends -->
-                <!-- App body starts -->
-                @yield('content')
-                <!-- App body ends -->
-                <!-- App footer starts -->
-                <div class="app-footer bg-white">
-                    <span>© Medflex admin 2024</span>
                 </div>
-                <!-- App footer ends -->
+            </nav>
+            <div class="app-container">
+                @yield('info_page')
+                @yield('content')
+                <div class="app-footer bg-white">
+                    <span>© Espace Santé 2024</span>
+                </div>
             </div>
-            <!-- App container ends -->
         </div>
-        <!-- Main container ends -->
     </div>
-    <!-- Page wrapper ends -->
-    <!-- *************
-            ************ JavaScript Files *************
-        ************* -->
-    <!-- Required jQuery first, then Bootstrap Bundle JS -->
+
     <script src="{{asset('assets/js/jquery.min.js')}}"></script>
     <script src="{{asset('assets/js/bootstrap.bundle.min.js')}}"></script>
     <script src="{{asset('assets/js/moment.min.js')}}"></script>
-    <!-- Overlay Scroll JS -->
     <script src="{{asset('assets/vendor/overlay-scroll/jquery.overlayScrollbars.min.js')}}"></script>
     <script src="{{asset('assets/vendor/overlay-scroll/custom-scrollbar.js')}}"></script>
-    <!-- Apex Charts -->
     <script src="{{asset('assets/vendor/apex/apexcharts.min.js')}}"></script>
-    <!-- Custom JS files -->
     <script src="{{asset('assets/js/custom.js')}}"></script>
-    <!-- Data Tables -->
     <script src="{{asset('assets/vendor/datatables/dataTables.min.js')}}"></script>
     <script src="{{asset('assets/vendor/datatables/dataTables.bootstrap.min.js')}}"></script>
     <script src="{{asset('assets/vendor/datatables/custom/custom-datatables.js')}}"></script>
@@ -805,6 +437,4 @@
 
 
 </body>
-<!-- Mirrored from buybootstrap.com/demos/medflex/medflex-admin-dashboard/index.html by HTTrack Website Copier/3.x [XR&CO'2014], Mon, 09 Sep 2024 12:22:06 GMT -->
-
 </html>

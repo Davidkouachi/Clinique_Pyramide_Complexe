@@ -55,13 +55,13 @@
                         <ul class="nav nav-tabs justify-content-center bg-primary bg-2" id="customTab4" role="tablist" style="background: rgba(0, 0, 0, 0.7);">
                             <li class="nav-item" role="presentation">
                                 <a class="nav-link active text-white" id="tab-twoAAA" data-bs-toggle="tab" href="#twoAAA" role="tab" aria-controls="twoAAA" aria-selected="false" tabindex="-1">
-                                    <i class="ri-walk-line me-2"></i>
+                                    <i class="ri-medicine-bottle-line me-2"></i>
                                     Nouveau Soins Infirmier
                                 </a>
                             </li>
                             <li class="nav-item" role="presentation">
                                 <a class="nav-link text-white" id="tab-oneAAA" data-bs-toggle="tab" href="#oneAAA" role="tab" aria-controls="oneAAA" aria-selected="false" tabindex="-1">
-                                    <i class="ri-walk-line me-2"></i>
+                                    <i class="ri-health-book-line me-2"></i>
                                     Liste
                                 </a>
                             </li>
@@ -80,6 +80,15 @@
                                             <input type="hidden" class="form-control" id="matricule_patient" autocomplete="off">
                                             <input type="text" class="form-control" id="patient" placeholder="saisie obligatoire" autocomplete="off">
                                             <div class="suggestions" id="suggestions_patient" style="display: none;"></div>
+                                        </div>
+                                    </div>
+                                    <div class="col-xxl-3 col-lg-4 col-sm-6" id="div_numcode" style="display: none;">
+                                        <div class="mb-3">
+                                            <label class="form-label">N° prise en charge</label>
+                                            <div class="input-group">
+                                                <span class="input-group-text">N°</span>
+                                                <input type="text" class="form-control" id="numcode">
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -266,9 +275,6 @@
                                                         <option value="en cours">En cours</option>
                                                         <option value="terminé">Terminé</option>
                                                     </select>
-                                                    <a id="btn_print_table" style="display: none;" class="btn btn-outline-warning ms-auto me-1">
-                                                        <i class="ri-printer-line"></i>
-                                                    </a>
                                                     <a id="btn_refresh_table" class="btn btn-outline-info ms-auto">
                                                         <i class="ri-loop-left-line"></i>
                                                     </a>
@@ -401,9 +407,6 @@
                             <div class="card-body">
                                 <div class="row">
                                     <div class="col-12">
-                                        <div id="div_alert_tableP" >
-                    
-                                        </div>
                                         <div class="table-responsive" id="div_TableP" style="display: none;">
                                             <!-- Tableau Soins Infirmiers -->
                                             <table class="table table-bordered" id="TableP">
@@ -514,6 +517,13 @@
 
                                 // Assign patient rate (taux)
                                 patient_taux.value = item.taux ? item.taux : 0;
+
+                                document.getElementById('numcode').value = '';
+                                if (item.assurer == 'oui') {
+                                    document.getElementById('div_numcode').style.display = 'block';
+                                }else{
+                                    document.getElementById('div_numcode').style.display = 'none';
+                                }
 
                                 if (patient_taux.value == 0) {
                                     document.getElementById('div_assurance_utiliser').style.display = 'none';
@@ -819,7 +829,6 @@
 
         document.getElementById('add_select_produit').addEventListener('click', () => {
             const contenuDiv = document.getElementById('contenu_produit');
-
             // Récupérer les produits à partir de l'API
             fetch(`/api/list_produit_all`)
                 .then(response => response.json())
@@ -1232,6 +1241,8 @@
                 return false;
             }
 
+            var numcode = document.getElementById('numcode').value;
+
             var preloader_ch = `
                 <div id="preloader_ch">
                     <div class="spinner_preloader_ch"></div>
@@ -1252,6 +1263,7 @@
                     montantPatient: montant_patient,
                     matricule_patient: matricule_patient,
                     typesoins_id: typesoins_id,
+                    numcode: numcode || null,
                 },
                 success: function(response) {
                     var preloader = document.getElementById('preloader_ch');
@@ -1331,8 +1343,6 @@
                     tableBody.innerHTML = '';
 
                     if (spatients.length > 0) {
-
-                        document.getElementById(`btn_print_table`).style.display = 'block';
 
                         loaderDiv.style.display = 'none';
                         messageDiv.style.display = 'none';
@@ -1428,6 +1438,10 @@
                                                                     ` : ''}
                                                                 </div>
                                                                 <div class="col-12 text-center mt-4">
+                                                                    ${soinspatient.num_bon != null ? `
+                                                                        <h6 class="fw-semibold">Numéro de prise en charge :</h6>
+                                                                        <p>${soinspatient.num_bon}</p>
+                                                                    ` : ''}
                                                                     <h6 class="fw-semibold">Part Patient :</h6>
                                                                     <p>${soinspatient.part_patient} Fcfa</p>
                                                                     <h6 class="fw-semibold">Part Assurance :</h6>
@@ -1928,11 +1942,17 @@
 
                 yPoss = (yPos + 40);
 
-                const typeInfo = [
+                const typeInfo = [];
+
+                if (soinspatient.num_bon && soinspatient.num_bon !== "") {
+                    typeInfo.push({ label: "N° prise en charge", value: soinspatient.num_bon });
+                }
+
+                typeInfo.push(
                     { label: "Type de Soins", value: typesoins.nom },
                     { label: "Soins Infirmiers", value: soins.length },
                     { label: "Produits Utilisés", value: produit.length },
-                ];
+                );
 
                 typeInfo.forEach(info => {
                     doc.setFontSize(8);

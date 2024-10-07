@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('detailhopitals', function (Blueprint $table) {
             $table->id();
             $table->string('statut');
+            $table->string('num_bon')->index()->nullable();
             $table->string('part_assurance');
             $table->string('part_patient');
             $table->string('remise');

@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('soinspatients', function (Blueprint $table) {
             $table->id();
             $table->string('code')->index()->unique();
+            $table->string('num_bon')->index()->nullable();
             $table->string('statut')->index();
             $table->string('part_assurance');
             $table->string('part_patient');

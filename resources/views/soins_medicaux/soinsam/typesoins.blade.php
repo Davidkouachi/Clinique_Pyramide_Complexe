@@ -132,9 +132,6 @@
             </div>
             <div class="modal-body">
                 <form id="updateChambreForm">
-                    <div class="mb-3" id="alert_update">
-                        
-                    </div>
                     <input type="hidden" id="Id"> <!-- Hidden field for the room's ID -->
                     <div class="mb-3">
                         <label class="form-label">Nom du Type</label>
@@ -174,12 +171,6 @@
         {
 
             const nom = document.getElementById("nomA");
-
-            var dynamicFields = document.getElementById("div_alert");
-            // Remove existing content
-            while (dynamicFields.firstChild) {
-                dynamicFields.removeChild(dynamicFields.firstChild);
-            }
 
             if(!nom.value.trim()){
                 showAlert('Alert', 'Veuillez remplir tous les champs SVP.','warning');
@@ -321,18 +312,6 @@
             const id = document.getElementById('Id').value;
             const nom = document.getElementById('nomModif').value;
 
-            var dynamicFields = document.getElementById("alert_update");
-            // Remove existing content
-            while (dynamicFields.firstChild) {
-                dynamicFields.removeChild(dynamicFields.firstChild);
-            }
-
-            var dynamicFields2 = document.getElementById("div_alert_table");
-            // Remove existing content
-            while (dynamicFields2.firstChild) {
-                dynamicFields2.removeChild(dynamicFields2.firstChild);
-            }
-
             if(!nom.trim()){
                 showAlert('Alert', 'Veuillez remplir tous les champs SVP.','warning');
                 return false;
@@ -386,12 +365,6 @@
         function deletee() {
 
             const id = document.getElementById('Iddelete').value;
-
-            var dynamicFields = document.getElementById("div_alert_table");
-            // Remove existing content
-            while (dynamicFields.firstChild) {
-                dynamicFields.removeChild(dynamicFields.firstChild);
-            }
 
             var modal = bootstrap.Modal.getInstance(document.getElementById('Mdelete'));
             modal.hide();

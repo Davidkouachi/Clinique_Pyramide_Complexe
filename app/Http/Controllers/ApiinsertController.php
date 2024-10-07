@@ -54,7 +54,7 @@ class ApiinsertController extends Controller
     {
         $name = $request->societe;
 
-        $verf = societe::where('nom', '=', $request->societe)->first();
+        $verf = societe::where('nom', '=', $request->societe)->exists();
 
         if ($verf) {
             return response()->json(['warning' => true]);
@@ -199,7 +199,7 @@ class ApiinsertController extends Controller
 
     public function chambre_new(Request $request)
     {
-        $verf = chambre::where('code', '=', $request->num_chambre)->get();
+        $verf = chambre::where('code', '=', $request->num_chambre)->exists();
 
         if ($verf) {
             return response()->json(['existe' => true]);
@@ -220,10 +220,17 @@ class ApiinsertController extends Controller
 
     public function lit_new(Request $request)
     {
-        $verf = lit::where('code', '=', $request->num_lit)->get();
+        $verf = lit::where('code', '=', $request->num_lit)->exists();
 
         if ($verf) {
             return response()->json(['existe' => true]);
+        }
+
+        $nbre = chambre::find($request->chambre_id);
+        $count = lit::where('chambre_id', '=', $request->chambre_id)->count();
+
+        if ($nbre->nbre_lit <= $count) {
+            return response()->json(['nbre' => true]);
         }
         
         $add = new lit();
@@ -258,7 +265,7 @@ class ApiinsertController extends Controller
 
     public function motif_cons_new(Request $request)
     {
-        $verf = acte::where('nom', '=', $request->nom)->first();
+        $verf = acte::where('nom', '=', $request->nom)->exists();
 
         if ($verf) {
             return response()->json(['existe' => true]);
@@ -276,7 +283,7 @@ class ApiinsertController extends Controller
 
     public function typeacte_cons_new(Request $request)
     {
-        $verf = typeacte::where('nom', '=', $request->nom)->first();
+        $verf = typeacte::where('nom', '=', $request->nom)->exists();
 
         if ($verf) {
             return response()->json(['existe' => true]);
@@ -431,6 +438,7 @@ class ApiinsertController extends Controller
             $add->facture_id = $fac->id; 
             $add->matricule_patient = $patient->matricule;
             $add->code = $code;
+            $add->num_bon = $request->mumcode;
 
             if (!$add->save()) {
                 throw new \Exception('Erreur');
@@ -476,7 +484,7 @@ class ApiinsertController extends Controller
 
     public function new_typeadmission(Request $request)
     {
-        $verf = typeadmission::where('nom', '=', $request->nom)->first();
+        $verf = typeadmission::where('nom', '=', $request->nom)->exists();
 
         if ($verf) {
             return response()->json(['existe' => true]);
@@ -494,7 +502,7 @@ class ApiinsertController extends Controller
 
     public function new_natureadmission(Request $request)
     {
-        $verf = natureadmission::where('nom', '=', $request->nom)->first();
+        $verf = natureadmission::where('nom', '=', $request->nom)->exists();
 
         if ($verf) {
             return response()->json(['existe' => true]);
@@ -577,6 +585,7 @@ class ApiinsertController extends Controller
 
             $add = new detailhopital();
             $add->statut = 'Hospitaliser';
+            $add->num_bon = $request->numcode;
             $add->part_assurance = $request->montant_assurance;
             $add->part_patient = $request->montant_patient;
             $add->remise = $request->taux_remise;
@@ -614,7 +623,7 @@ class ApiinsertController extends Controller
 
     public function new_produit(Request $request)
     {
-        $verf = produit::where('nom', '=', $request->nom)->first();
+        $verf = produit::where('nom', '=', $request->nom)->exists();
 
         if ($verf) {
             return response()->json(['existe' => true]);
@@ -707,7 +716,7 @@ class ApiinsertController extends Controller
 
     public function new_typesoins(Request $request)
     {
-        $verf = typesoins::where('nom', '=', $request->nom)->first();
+        $verf = typesoins::where('nom', '=', $request->nom)->exists();
 
         if ($verf) {
             return response()->json(['existe' => true]);
@@ -788,6 +797,7 @@ class ApiinsertController extends Controller
             $add = new soinspatient();
             $add->code = $code;
             $add->statut = 'en cours';
+            $add->num_bon = $request->numcode;
             $add->part_patient = $request->montantPatient;
             $add->part_assurance = $request->montantAssurance;
             $add->remise = $request->montantRemise;
@@ -921,6 +931,7 @@ class ApiinsertController extends Controller
             $add = new examen();
             $add->code = $code;
             $add->statut = 'en cours';
+            $add->num_bon = $request->numcode;
             $add->part_patient = $request->montantP;
             $add->part_assurance = $request->montantA;
             $add->montant = $request->montantT;
@@ -1016,7 +1027,6 @@ class ApiinsertController extends Controller
         $add->patient_id = $patient->id;
         $add->date = $request->date;
         $add->motif = $request->motif;
-        $add->periode = $request->periode;
         $add->statut = 'en cours';
 
         if ($add->save()) {
@@ -1024,6 +1034,28 @@ class ApiinsertController extends Controller
         }
 
         return response()->json(['error' => true]);
+    }
+
+    public function specialite_new(Request $request)
+    {
+        $verf = typeacte::where('nom', '=', $request->nom)->exists();
+
+        if ($verf) {
+            return response()->json(['existe' => true]);
+        }
+
+        $acte = acte::where('nom', '=', 'CONSULTATION')->first();
+
+        $add = new typeacte();
+        $add->nom = $request->nom;
+        $add->prix = $request->prix;
+        $add->acte_id = $acte->id;
+
+        if($add->save()){
+            return response()->json(['success' => true]);
+        } else {
+            return response()->json(['error' => true]);
+        }
     }
 
 }

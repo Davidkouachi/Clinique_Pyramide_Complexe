@@ -20,7 +20,7 @@ Route::get('/Login', [authController::class, 'login'])->name('login');
 Route::post('/trait_login', [authController::class, 'trait_login'])->name('trait_login');
 Route::get('/refresh_csrf', [authController::class, 'refresh_csrf'])->name('refresh_csrf');
 
-Route::middleware(['auth','statutchambre'])->group(function () {
+Route::middleware(['auth','statutchambre','dateRdv'])->group(function () {
 
 	Route::get('/', [AccueilController::class, 'index_accueil'])->name('index_accueil');
 
@@ -73,6 +73,8 @@ Route::middleware(['auth','statutchambre'])->group(function () {
 	Route::get('/Hospitalisation Liste Caisse', [Controller::class, 'liste_caisse_hos'])->name('liste_caisse_hos');
 
 	Route::get('/Produit Pharmacie', [Controller::class, 'produit_new'])->name('produit_new');
+
+	Route::get('/Spécialité', [utilisateurController::class, 'specialite'])->name('specialite');
 
 	Route::get('/Soins Ambulantoires', [Controller::class, 'soinsam'])->name('soinsam');
 	Route::get('/Soins Ambulatoire Caisse', [Controller::class, 'encaissement_soinsam'])->name('encaissement_soinsam');

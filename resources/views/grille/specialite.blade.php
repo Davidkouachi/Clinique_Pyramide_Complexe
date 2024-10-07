@@ -1,6 +1,6 @@
 @extends('app')
 
-@section('titre', 'Nouvel Acte')
+@section('titre', 'Nouvelle Spécialité')
 
 @section('info_page')
 <div class="app-hero-header d-flex align-items-center">
@@ -11,7 +11,7 @@
             <a href="{{route('index_accueil')}}">Espace Santé</a>
         </li>
         <li class="breadcrumb-item text-primary" aria-current="page">
-            Nouveau type d'admission
+            Nouvelle Spécialité
         </li>
     </ol>
 </div>
@@ -21,31 +21,45 @@
 
 <div class="app-body">
     <!-- Row starts -->
-    <div class="row justify-content-center">
-        <div class="col-xxl-4 col-lg-6 col-md-8 col-sm-8">
+    <div class="row">
+        <div class="col-12">
             <div class="card mb-3">
                 <div class="card-header">
-                    <h5 class="card-title">Formulaire Nouveau type d'admission</h5>
+                    <h5 class="card-title">Formulaire Nouvelle Spécialité</h5>
                 </div>
                 <div class="card-body" >
                     <div class="row gx-3">
-                        <div class="col-12">
+                        <div class="col-xxl-3 col-lg-4 col-sm-6">
                             <div class="mb-3">
                                 <label class="form-label">
-                                    Nom du type
+                                    Spécialité
                                 </label>
-                                <input type="text" class="form-control" id="nom" placeholder="Saisie Obligatoire" oninput="this.value = this.value.toUpperCase()">
+                                <input type="text" class="form-control" id="nom_acte" placeholder="Saisie Obligatoire" oninput="this.value = this.value.toUpperCase()">
+                            </div>
+                        </div>
+                        <div class="col-xxl-3 col-lg-4 col-sm-6">
+                            <div class="mb-3">
+                                <label class="form-label">Prix Consultation</label>
+                                <div class="input-group">
+                                    <input type="tel" class="form-control" id="prix" placeholder="Saisie Obligatoire">
+                                    <span class="input-group-text">Fcfa</span>
+                                </div>
                             </div>
                         </div>
                         <div class="col-sm-12">
-                            <div class="mb-3 d-flex gap-2 justify-content-start">
-                                <button id="btn_eng" class="btn btn-success">
-                                    Enregistrer
-                                </button>
+                            <div class="mb-3">
+                                <div class="d-flex gap-2 justify-content-start">
+                                    <button id="btn_eng" class="btn btn-success">
+                                        Enregistrer
+                                    </button>
+                                </div>
                             </div>
-                        </div>  
+                        </div>
+                        <div class="col-sm-12">
+                            <div class="mb-3" id="div_alert">
+                            </div>
+                        </div>
                     </div>
-                    <!-- Row ends -->
                 </div>
             </div>
         </div>
@@ -53,20 +67,21 @@
             <div class="card mb-3">
                 <div class="card-header d-flex align-items-center justify-content-between">
                     <h5 class="card-title">
-                        Liste des types d'admission
+                        Liste des Specialités
                     </h5>
                     <a id="btn_refresh_table" class="btn btn-outline-info ms-auto">
                         <i class="ri-loop-left-line"></i>
                     </a>
                 </div>
                 <div class="card-body">
-                    <div class="table-outer" id="div_Table" style="display: none;" >
+                    <div class="table-outer" id="div_Table" style="display: none;">
                         <div class="table-responsive">
-                            <table class="table align-middle table-hover m-0 truncate" id="Table_day">
+                            <table class="table align-middle table-hover m-0 truncate" id="Table" >
                                 <thead>
                                     <tr>
                                         <th scope="col">N°</th>
-                                        <th scope="col">Nom</th>
+                                        <th scope="col">Spécialité</th>
+                                        <th scope="col">Prix Consultation</th>
                                         <th scope="col">Actions</th>
                                     </tr>
                                 </thead>
@@ -77,7 +92,7 @@
                     </div>
                     <div id="message_Table" style="display: none;">
                         <p class="text-center" >
-                            Aucun type d'admission n'a été trouvé
+                            Aucune spécialité n'a été trouvé
                         </p>
                     </div>
                     <div id="div_Table_loader" style="display: none;">
@@ -103,7 +118,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                Voulez-vous vraiment supprimé cet Type d'acte ?
+                Voulez-vous vraiment supprimé cette spécialité ?
                 <input type="hidden" id="Iddelete">
             </div>
             <div class="modal-footer">
@@ -120,16 +135,21 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Mise à jour</h5>
+                <h5 class="modal-title" id="exampleModalLabel">Modifier Lit</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form id="updateChambreForm">
+                <form id="updateForm">
                     <input type="hidden" id="Id">
                     <div class="mb-3">
-                        <label class="form-label">Nom de l'acte</label>
+                        <label class="form-label">Spécialité</label>
+                        <input type="text" class="form-control" id="nomModif" placeholder="Saisie Obligatoire" oninput="this.value = this.value.toUpperCase()">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Prix Consultation</label>
                         <div class="input-group">
-                            <input type="text" class="form-control" id="nomModif" oninput="this.value = this.value.toUpperCase()">
+                            <input type="tel" class="form-control" id="prixModif" placeholder="Saisie Obligatoire">
+                            <span class="input-group-text">Fcfa</span>
                         </div>
                     </div>
                 </form>
@@ -152,6 +172,33 @@
         document.getElementById("updateBtn").addEventListener("click", updatee);
         document.getElementById("deleteBtn").addEventListener("click", deletee);
 
+        document.getElementById('prix').addEventListener('input', function() {
+            this.value = formatPrice(this.value);
+        });
+        document.getElementById('prix').addEventListener('keypress', function(event) {
+            const key = event.key;
+            if (isNaN(key)) {
+                event.preventDefault();
+            }
+        });
+
+        document.getElementById('prixModif').addEventListener('input', function() {
+            this.value = formatPrice(this.value);
+        });
+        document.getElementById('prixModif').addEventListener('keypress', function(event) {
+            const key = event.key;
+            if (isNaN(key)) {
+                event.preventDefault();
+            }
+        });
+
+        function formatPrice(input) {
+            // Supprimer tous les points existants
+            input = input.replace(/\./g, '');
+            // Formater le prix avec des points
+            return input.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+        }
+
         function showAlert(title, message, type) {
             Swal.fire({
                 title: title,
@@ -160,12 +207,12 @@
             });
         }
 
-        function eng() 
-        {
+        function eng() {
 
-            const nom = document.getElementById("nom");
+            const nom = document.getElementById("nom_acte");
+            const prix = document.getElementById("prix");
 
-            if(!nom.value.trim()){
+            if(!nom.value.trim() || !prix.value.trim()){
                 showAlert('Alert', 'Veuillez remplir tous les champs SVP.','warning');
                 return false;
             }
@@ -179,51 +226,48 @@
             document.body.insertAdjacentHTML('beforeend', preloader_ch);
 
             $.ajax({
-                url: '/api/new_typeadmission',
+                url: '/api/specialite_new',
                 method: 'GET',
-                data: { nom: nom.value,},
+                data: {nom: nom.value, prix: prix.value },
                 success: function(response) {
+
                     var preloader = document.getElementById('preloader_ch');
                     if (preloader) {
                         preloader.remove();
                     }
 
-                    if (response.existe) {
-                        showAlert('Alert', 'Cet Acte existe déjà.','warning');
-                    } else if (response.success) {
-                        showAlert('Succès', 'Acte Enregistrée.','success');
+                    if (response.success) {
+                        showAlert('Succès', 'Opération éffectuée.','success');
                     } else if (response.error) {
                         showAlert('Erreur', 'Une erreur est survenue lors de l\'enregistrement.','error');
-                    }
+                    } else if (response.existe) {
+                        showAlert('Alert', 'Cette Spécialité existe déjà.','warning');
+                    } 
 
                     nom.value = '';
+                    prix.value = '';
 
                     list();
                 },
-                error: function(xhr, status, error) {
+                error: function() {
                     var preloader = document.getElementById('preloader_ch');
                     if (preloader) {
                         preloader.remove();
                     }
 
-                    // You can log the entire error object to inspect it if needed
-                    console.log(xhr, status, error);
-
-                    // Display a more specific error message
-                    if (xhr.responseText) {
-                        showAlert('Erreur', `Erreur: ${xhr.responseText}`,'error');
-                    } else {
-                        showAlert('Erreur', `Erreur: ${status} - ${error}`,'error');
-                    }
-
+                    showAlert('Erreur', 'Une erreur est survenue lors de l\'enregistrement.','error');
+                    
                     nom.value = '';
+                    prix.value = '';
+                    
+                    list();
                 }
             });
         }
 
         function list() {
 
-            const tableBody = document.querySelector('#Table_day tbody'); // Target the specific table by id
+            const tableBody = document.querySelector('#Table tbody'); // Target the specific table by id
             const messageDiv = document.getElementById('message_Table');
             const tableDiv = document.getElementById('div_Table'); // The message div
             const loaderDiv = document.getElementById('div_Table_loader');
@@ -233,57 +277,50 @@
             loaderDiv.style.display = 'block';
 
             // Fetch data from the API
-            fetch('/api/list_typeadmission') // API endpoint
+            fetch('/api/list_specialite') // API endpoint
                 .then(response => response.json())
                 .then(data => {
                     // Access the 'chambre' array from the API response
-                    const typeadmissions = data.typeadmission;
+                    const typeactes = data.typeacte;
 
                     // Clear any existing rows in the table body
                     tableBody.innerHTML = '';
 
-                    if (typeadmissions.length > 0) {
+                    if (typeactes.length > 0) {
 
                         loaderDiv.style.display = 'none';
                         messageDiv.style.display = 'none';
                         tableDiv.style.display = 'block';
 
                         // Loop through each item in the chambre array
-                        typeadmissions.forEach((item, index) => {
+                        typeactes.forEach((item, index) => {
                             // Create a new row
                             const row = document.createElement('tr');
                             // Create and append cells to the row based on your table's structure
                             row.innerHTML = `
                                 <td>${index + 1}</td>
                                 <td>${item.nom}</td>
+                                <td>${item.prix} Fcfa</td>
                                 <td>
                                     <div class="d-inline-flex gap-1">
                                         <a class="btn btn-outline-info btn-sm rounded-5" data-bs-toggle="modal" data-bs-target="#Mmodif" id="edit-${item.id}">
                                             <i class="ri-edit-box-line"></i>
                                         </a>
-                                        ${item.nbre == '0' ? 
-                                            `<a class="btn btn-outline-danger btn-sm rounded-5" data-bs-toggle="modal" data-bs-target="#Mdelete" id="delete-${item.id}">
-                                                <i class="ri-delete-bin-line"></i>
-                                            </a>` : `` }
+                                        
                                     </div>
                                 </td>
                             `;
 
                             tableBody.appendChild(row);
 
-                            document.getElementById(`edit-${item.id}`).addEventListener('click', () => {
+                            document.getElementById(`edit-${item.id}`).addEventListener('click', () =>
+                            {
                                 // Set the values in the modal form
                                 document.getElementById('Id').value = item.id;
                                 document.getElementById('nomModif').value = item.nom;
-                            });
+                                document.getElementById('prixModif').value = item.prix;
 
-                            const deleteButton = document.getElementById(`delete-${item.id}`);
-                            if (deleteButton) {
-                                deleteButton.addEventListener('click', () => {
-                                    // Set the values in the modal form
-                                    document.getElementById('Iddelete').value = item.id;
-                                });
-                            }
+                            });
 
                         });
                     } else {
@@ -304,9 +341,10 @@
         function updatee() {
 
             const id = document.getElementById('Id').value;
-            const nom = document.getElementById('nomModif').value;
+            const nomModif = document.getElementById('nomModif').value;
+            const prixModif = document.getElementById('prixModif').value;
 
-            if(!nom.trim()){
+            if(!nomModif.trim() || !prixModif.trim()){
                 showAlert('Alert', 'Veuillez remplir tous les champs SVP.','warning');
                 return false;
             }
@@ -323,19 +361,18 @@
             document.body.insertAdjacentHTML('beforeend', preloader_ch);
 
             $.ajax({
-                url: '/api/update_typeadmission/'+id,
-                method: 'GET',  // Use 'POST' for data creation
-                data: { nom: nom},
+                url: '/api/update_specialite/'+id,
+                method: 'GET',
+                data: { nom: nomModif, prix: prixModif,},
                 success: function(response) {
                     var preloader = document.getElementById('preloader_ch');
                     if (preloader) {
                         preloader.remove();
                     }
 
-                    showAlert('Succès', 'Type admission mise à jour avec succès.','success');
-                    // Reload the list or update the table row without a full refresh
-                    list(); // Call your function to reload the table
-                    // Close the modal
+                    showAlert('Succès', 'Mise à jour éffectuée.','success');
+            
+                    list();
                 },
                 error: function() {
                     var preloader = document.getElementById('preloader_ch');
@@ -343,7 +380,7 @@
                         preloader.remove();
                     }
 
-                    showAlert('Erreur', 'Erreur lors de la mise à jour du type d\'admission.','error');
+                    showAlert('Erreur', 'Erreur lors de la mise à jour.','error');
                 }
             });
         }
@@ -364,18 +401,18 @@
             document.body.insertAdjacentHTML('beforeend', preloader_ch);
 
             $.ajax({
-                url: '/api/delete_typeadmission/'+id,
-                method: 'GET',  // Use 'POST' for data creation
+                url: '/api/delete_specialite/'+id,
+                method: 'GET',
                 success: function(response) {
+
                     var preloader = document.getElementById('preloader_ch');
                     if (preloader) {
                         preloader.remove();
                     }
 
-                    showAlert('Succès', 'Type admission supprimer avec succès.','success');
-                    // Reload the list or update the table row without a full refresh
-                    list(); // Call your function to reload the table
-                    // Close the modal
+                    showAlert('Succès', 'Spécialité supprimer avec succès.','success');
+                    
+                    list();
                 },
                 error: function() {
                     var preloader = document.getElementById('preloader_ch');
@@ -383,13 +420,13 @@
                         preloader.remove();
                     }
 
-                    showAlert('Erreur', 'Erreur lors de la suppression du type d\'admission.','error');
+                    showAlertList('Erreur', 'Erreur lors de la suppression.','error');
                 }
             });
         }
+
     });
 </script>
 
+
 @endsection
-
-

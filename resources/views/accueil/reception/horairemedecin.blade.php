@@ -116,7 +116,6 @@
                                                         <th>Médecin</th>
                                                         <th>Spécialité</th>
                                                         <th>Rdv prévu</th>
-                                                        <th>Période</th>
                                                         <th>Statut</th>
                                                         <th>Date de création</th>
                                                         <th>Actions</th>
@@ -151,41 +150,45 @@
         <div class="col-sm-12 col-12">
             <div class="card mb-3">
                 <div class="card-body">
-                    <!-- Row starts -->
-                    <div class="d-flex align-items-end gap-2">
-                        <div class="m-0">
-                            <button id="btn_refresh" class="btn btn-outline-primary">
-                                <i class="ri-loop-left-line" ></i>
-                            </button>
+                    <div class="row gx-3">
+                        <div class="col-12">
+                            <div class="mb-3">
+                                <button id="btn_refresh" class="btn btn-outline-primary">
+                                    <i class="ri-loop-left-line" ></i>
+                                </button>
+                            </div>
                         </div>
-                        <div class="m-0">
-                            <label class="form-label">Médecins</label>
-                            <select class="form-select" id="rech_medecin">
-                            </select>
+                        <div class="col-xxl-3 col-lg-4 col-sm-6">
+                            <div class="mb-3">
+                                <label class="form-label">Médecins</label>
+                                <select class="form-select" id="rech_medecin">
+                                </select>
+                            </div>
                         </div>
-                        <div class="m-0">
-                            <label class="form-label">Spécialités</label>
-                            <select class="form-select" id="rech_specialite">
-                            </select>
+                        <div class="col-xxl-3 col-lg-4 col-sm-6">
+                            <div class="mb-3">
+                                <label class="form-label">Spécialités</label>
+                                <select class="form-select" id="rech_specialite">
+                                </select>
+                            </div>
                         </div>
-                        <div class="m-0">
-                            <label class="form-label">Jours</label>
-                            <select class="form-select" id="rech_jour">
-                            </select>
+                        <div class="col-xxl-3 col-lg-4 col-sm-6">
+                            <div class="mb-3">
+                                <label class="form-label">Jours</label>
+                                <select class="form-select" id="rech_jour">
+                                </select>
+                            </div>
                         </div>
-                        <div class="m-0">
-                            <label class="form-label">Périodes</label>
-                            <select class="form-select" id="rech_periode">
-                                <option selected value="tout">Tout</option>
-                                <option value="Matin">Matin</option>
-                                <option value="Soir">Soir</option>
-                            </select>
+                        <div class="col-xxl-3 col-lg-4 col-sm-6">
+                            <div class="mb-3">
+                                <label class="form-label">Périodes</label>
+                                <select class="form-select" id="rech_periode">
+                                    <option selected value="tout">Tout</option>
+                                    <option value="Matin">Matin</option>
+                                    <option value="Soir">Soir</option>
+                                </select>
+                            </div>
                         </div>
-                        {{-- <div class="m-0">
-                            <button id="btn_rech" class="btn btn-outline-warning">
-                                <i class="ri-search-2-line"></i>
-                            </button>
-                        </div> --}}
                     </div>
                 </div>
             </div>
@@ -230,22 +233,16 @@
                     </div>
                     <div class="mb-3">
                         <label class="form-label">Patient</label>
-                        <input type="text" class="form-control" id="patient_rdv" placeholder="Saisie Obligatoire" autocomplete="off">
-                        <input type="hidden" id="patient_id_rdv">
-                        <div class="suggestions" id="suggestions_patient" style="display: none;">
+                        <div class="input-group">
+                            <input type="text" class="form-control" id="patient_rdv" placeholder="Saisie Obligatoire" autocomplete="off">
+                            <input type="hidden" id="patient_id_rdv">
+                            <div class="suggestions w-100" id="suggestions_patient" style="display: none;">
+                            </div>
                         </div>
                     </div>
                     <div class="mb-3">
                         <label class="form-label">Date</label>
-                        <input type="date" class="form-control" id="date_rdv" placeholder="Saisie Obligatoire" min="{{ date('Y-m-d') }}" value="{{ date('Y-m-d') }}">
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Période</label>
-                        <select class="form-select" id="periode_rdv">
-                            <option value="">Selectionner</option>
-                            <option value="Matin">Matin</option>
-                            <option value="Soir">Soir</option>
-                        </select>
+                        <input type="date" class="form-control" id="date_rdv" placeholder="Saisie Obligatoire" min="{{ date('Y-m-d') }}">
                     </div>
                     <div class="mb-3">
                         <label class="form-label">Motif</label>
@@ -256,6 +253,46 @@
             <div class="modal-footer">
                 <button type="button" class="btn btn-outline-danger" id="close_M_rdv" data-bs-dismiss="modal">Fermer</button>
                 <button type="button" class="btn btn-success" id="btn_eng_rdv">Enregistrer</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="Modif_Rdv_modal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Mise à jour</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="updateForm">
+                    <input type="hidden" id="medecin_id_rdvM">
+                    <div class="mb-3">
+                        <label class="form-label">Médecin</label>
+                        <input readonly type="text" class="form-control" id="medecin_rdvM">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Spécialité</label>
+                        <input readonly type="text" class="form-control" id="specialite_rdvM">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Patient</label>
+                        <input readonly type="text" class="form-control" id="patient_rdvM" placeholder="Saisie Obligatoire" autocomplete="off">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Date</label>
+                        <input type="date" class="form-control" id="date_rdvM" placeholder="Saisie Obligatoire" min="{{ date('Y-m-d') }}">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Motif</label>
+                        <textarea class="form-control" id="motif_rdvM" rows="3" style="resize: none;"></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <a class="btn btn-outline-danger" data-bs-dismiss="modal">Fermer</a>
+                <button type="button" class="btn btn-success" id="btn_update_rdv">Enregistrer</button>
             </div>
         </div>
     </div>
@@ -301,6 +338,7 @@
         document.getElementById("add_horaire").addEventListener("click", add_select);
         document.getElementById("btn_eng").addEventListener("click", eng);
         document.getElementById("btn_eng_rdv").addEventListener("click", eng_rdv);
+        document.getElementById("btn_update_rdv").addEventListener("click", update_rdv);
         document.getElementById("btn_refresh").addEventListener("click", refresh);
         document.getElementById("btn_refresh_table_rdv").addEventListener("click", list_rdv);
         document.getElementById("btn_delete_rdv").addEventListener("click", delete_rdv);
@@ -746,17 +784,28 @@
 
                         medecins.forEach((medecin) => {
 
-                            const horairesList = medecin.horaires.map(horaire => `
-                                <li class="list-group-item d-flex justify-content-between align-items-center">
-                                    <div>${horaire.jour} ${horaire.periode}</div>
-                                    <div>${horaire.heure_debut} à ${horaire.heure_fin}</div>
-                                    <div>
-                                        <a id="modif-${horaire.id}" class="btn btn-sm btn-outline-danger rounded-5">
-                                            <i class="ri-close-fill"></i>
-                                        </a>
-                                    </div>
-                                </li>
-                            `).join('');
+                            let horairesList = '';
+
+                            if (medecin.horaires.length > 0) {
+                                horairesList = medecin.horaires.map(horaire => `
+                                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                                        <div>${horaire.jour} ${horaire.periode}</div>
+                                        <div>${horaire.heure_debut} à ${horaire.heure_fin}</div>
+                                        <div>
+                                            <a id="deleteH-${horaire.id}" class="btn btn-sm btn-outline-danger rounded-5">
+                                                <i class="ri-close-fill"></i>
+                                            </a>
+                                        </div>
+                                    </li>
+                                `).join('');
+                            } else {
+                                // Si aucun horaire n'est trouvé, afficher ce message
+                                horairesList = `
+                                    <li class="list-group-item text-center">
+                                        Aucun horaire n'a été trouvé.
+                                    </li>
+                                `;
+                            }
 
                             const div = document.createElement('div');
                             div.classList.add('col-xxl-3', 'col-sm-6', 'col-12', 'mb-3');
@@ -790,12 +839,10 @@
                                 </div>
                             `;
 
-
-
                             tableBody.appendChild(div);
 
                             medecin.horaires.forEach(horaire => {
-                                const boutonModif = document.getElementById(`modif-${horaire.id}`);
+                                const boutonModif = document.getElementById(`deleteH-${horaire.id}`);
                                 boutonModif.addEventListener('click', () => {
 
                                     var preloader_ch = `
@@ -843,6 +890,33 @@
                                     document.getElementById('medecin_id_rdv').value = `${medecin.id}`;
                                     document.getElementById('medecin_rdv').value = `Dr. ${medecin.name}`;
                                     document.getElementById('specialite_rdv').value = `${medecin.specialité}`;
+
+                                    const allowedDays = medecin.horaires.map(horaire => horaire.jour);
+
+                                    const dateInput = document.getElementById('date_rdv');
+                                    dateInput.addEventListener('input', (event) => {
+                                        
+                                        const selectedDate = new Date(event.target.value);
+                                        const selectedDay = selectedDate.getDay();
+
+                                        const dayMapping = {
+                                            'DIMANCHE': 0,
+                                            'LUNDI': 1,
+                                            'MARDI': 2,
+                                            'MERCREDI': 3,
+                                            'JEUDI': 4,
+                                            'VENDREDI': 5,
+                                            'SAMEDI': 6
+                                        };
+
+                                        const isValidDay = allowedDays.some(day => dayMapping[day] === selectedDay);
+
+                                        if (!isValidDay) {
+                                            dateInput.value = "";
+                                            showAlert("ALERT", 'Veuillez sélectionner un jour valide selon les horaires du médecin.', "info");
+                                        }
+                                    });
+
                                 });
                             }
 
@@ -855,7 +929,6 @@
                     }
                 })
                 .catch(error => {
-                    alert(error);
                     console.error('Erreur lors du chargement des données:', error);
                     messageDiv.style.display = 'block';
                     tableBody.style.display = 'none';
@@ -921,9 +994,7 @@
         }
 
         function close_M_rdv() {
-            const today = new Date();
-            const formattedDate = today.toISOString().split('T')[0]; // Format YYYY-MM-DD
-            document.getElementById('date_rdv').value = formattedDate;
+            document.getElementById('date_rdv').value = "";
             document.getElementById('patient_id_rdv').value = "";
             document.getElementById('patient_rdv').value = "";
             document.getElementById('motif_rdv').value = "";
@@ -936,9 +1007,8 @@
             const patient_id = document.getElementById('patient_id_rdv');
             const date_rdv = document.getElementById('date_rdv');
             const motif_rdv = document.getElementById('motif_rdv');
-            const periode_rdv = document.getElementById('periode_rdv');
 
-            if (!medecin_id.value.trim() || !patient_id.value.trim() || !date_rdv.value.trim() || !motif_rdv.value.trim() || !periode_rdv.value.trim()) {
+            if (!medecin_id.value.trim() || !patient_id.value.trim() || !date_rdv.value.trim() || !motif_rdv.value.trim()) {
                 showAlert("ALERT", 'Veuillez remplir tous les champs.', "warning");
                 return false;
             }
@@ -962,7 +1032,6 @@
                     patient_id: patient_id.value,
                     date: date_rdv.value,
                     motif: motif_rdv.value,
-                    periode: periode_rdv.value,
                 },
                 success: function(response) {
 
@@ -975,13 +1044,10 @@
 
                         list_rdv();
 
-                        const today = new Date();
-                        const formattedDate = today.toISOString().split('T')[0];
-                        document.getElementById('date_rdv').value = formattedDate;
+                        document.getElementById('date_rdv').value = "";
                         document.getElementById('patient_id_rdv').value = "";
                         document.getElementById('patient_rdv').value = "";
                         document.getElementById('motif_rdv').value = "";
-                        document.getElementById('periode_rdv').value = "";
 
                         showAlert("ALERT", 'Enregistrement éffectué', "success");
 
@@ -1035,6 +1101,20 @@
                         tableDiv.style.display = 'block';
 
                             rdvs.forEach((item, index) => {
+
+                                let button = '';
+
+                                if (item.statut == 'en cours') {
+                                    button = `
+                                        <a class="btn btn-outline-info btn-sm rounded-5" data-bs-toggle="modal" data-bs-target="#Modif_Rdv_modal" id="modif-${item.id}">
+                                            <i class="ri-edit-line"></i>
+                                        </a>
+                                        <a class="btn btn-outline-danger btn-sm rounded-5" data-bs-toggle="modal" data-bs-target="#Mdelete" id="delete-${item.id}">
+                                            <i class="ri-delete-bin-line"></i>
+                                        </a>
+                                    `;
+                                }
+
                                 const row = document.createElement('tr');
                                 row.innerHTML = `
                                     <td>${((currentPage - 1) * perPage) + index + 1}</td>
@@ -1042,7 +1122,6 @@
                                     <td>Dr. ${item.medecin}</td>
                                     <td>${item.specialite}</td>
                                     <td>${formatDate(item.date)}</td>
-                                    <td>${item.periode}</td>
                                     <td>
                                         <span class="badge ${item.statut === 'en cours' ? 'bg-warning' : 'bg-success'}">
                                             ${item.statut}
@@ -1054,17 +1133,56 @@
                                             <a class="btn btn-outline-warning btn-sm rounded-5" data-bs-toggle="modal" data-bs-target="#Detail_motif" id="motif-${item.id}">
                                                 <i class="ri-eye-line"></i>
                                             </a>
-                                            <a class="btn btn-outline-danger btn-sm rounded-5" data-bs-toggle="modal" data-bs-target="#Mdelete" id="delete-${item.id}">
-                                                <i class="ri-delete-bin-line"></i>
-                                            </a>
+                                            ${button}
                                         </div>
                                     </td>
                                 `;
                                 tableBody.appendChild(row);
 
-                                document.getElementById(`delete-${item.id}`).addEventListener('click', () => {
-                                    document.getElementById('Iddelete').value = item.id;
-                                });
+                                const deleteButton = document.getElementById(`delete-${item.id}`);
+                                if (deleteButton) {
+                                    deleteButton.addEventListener('click', () => {
+                                        document.getElementById('Iddelete').value = item.id;
+                                    });
+                                }
+
+                                const modifButton = document.getElementById(`modif-${item.id}`);
+                                if (modifButton) {
+                                    modifButton.addEventListener('click', () => {
+                                        document.getElementById('medecin_id_rdvM').value = item.id;
+                                        document.getElementById('date_rdvM').value = item.date;
+                                        document.getElementById('patient_rdvM').value = item.patient;
+                                        document.getElementById('motif_rdvM').value = item.motif;
+                                        document.getElementById('medecin_rdvM').value = item.medecin;
+                                        document.getElementById('specialite_rdvM').value = item.specialite;
+
+                                        const allowedDays = item.horaires.map(horaire => horaire.jour);
+
+                                        const dateInput = document.getElementById('date_rdvM');
+                                        dateInput.addEventListener('input', (event) => {
+                                            
+                                            const selectedDate = new Date(event.target.value);
+                                            const selectedDay = selectedDate.getDay();
+
+                                            const dayMapping = {
+                                                'DIMANCHE': 0,
+                                                'LUNDI': 1,
+                                                'MARDI': 2,
+                                                'MERCREDI': 3,
+                                                'JEUDI': 4,
+                                                'VENDREDI': 5,
+                                                'SAMEDI': 6
+                                            };
+
+                                            const isValidDay = allowedDays.some(day => dayMapping[day] === selectedDay);
+
+                                            if (!isValidDay) {
+                                                dateInput.value = item.date;
+                                                showAlert("ALERT", 'Veuillez sélectionner un jour valide selon les horaires du médecin.', "info");
+                                            }
+                                        });
+                                    });
+                                }
 
                                 document.getElementById(`motif-${item.id}`).addEventListener('click', () =>
                                 {
@@ -1126,7 +1244,7 @@
                 const prevButton = document.createElement('li');
                 prevButton.className = 'page-item';
                 prevButton.innerHTML = `<a class="page-link" href="#">Precédent</a>`;
-                prevButton.onclick = () => listP(pagination.current_page - 1);
+                prevButton.onclick = () => list_rdv(pagination.current_page - 1);
                 paginationWrapper.appendChild(prevButton);
             } else {
                 // Disable the previous button if on the first page
@@ -1154,7 +1272,7 @@
                 const pageItem = document.createElement('li');
                 pageItem.className = `page-item ${i === currentPage ? 'active' : ''}`;
                 pageItem.innerHTML = `<a class="page-link" href="#">${i}</a>`;
-                pageItem.onclick = () => listP(i);
+                pageItem.onclick = () => list_rdv(i);
                 paginationWrapper.appendChild(pageItem);
             }
 
@@ -1169,7 +1287,7 @@
                 const lastPageItem = document.createElement('li');
                 lastPageItem.className = `page-item`;
                 lastPageItem.innerHTML = `<a class="page-link" href="#">${totalPages}</a>`;
-                lastPageItem.onclick = () => listP(totalPages);
+                lastPageItem.onclick = () => list_rdv(totalPages);
                 paginationWrapper.appendChild(lastPageItem);
             }
 
@@ -1178,7 +1296,7 @@
                 const nextButton = document.createElement('li');
                 nextButton.className = 'page-item';
                 nextButton.innerHTML = `<a class="page-link" href="#">Suivant</a>`;
-                nextButton.onclick = () => listP(pagination.current_page + 1);
+                nextButton.onclick = () => list_rdv(pagination.current_page + 1);
                 paginationWrapper.appendChild(nextButton);
             } else {
                 // Disable the next button if on the last page
@@ -1232,6 +1350,63 @@
                     }
 
                     showAlert('Erreur', 'Erreur lors de la suppression.','error');
+                }
+            });
+        }
+
+        function update_rdv()
+        {
+            const id = document.getElementById('medecin_id_rdvM').value;
+            const date_rdv = document.getElementById('date_rdvM');
+            const motif_rdv = document.getElementById('motif_rdvM');
+
+            if (!date_rdv.value.trim() || !motif_rdv.value.trim()) {
+                showAlert("ALERT", 'Veuillez remplir tous les champs.', "warning");
+                return false;
+            }
+
+            var modal = bootstrap.Modal.getInstance(document.getElementById('Modif_Rdv_modal'));
+            modal.hide();
+
+            var preloader_ch = `
+                <div id="preloader_ch">
+                    <div class="spinner_preloader_ch"></div>
+                </div>
+            `;
+            // Add the preloader to the body
+            document.body.insertAdjacentHTML('beforeend', preloader_ch);
+
+            $.ajax({
+                url: '/api/update_rdv/' + id,
+                method: 'GET',
+                data:{
+                    date: date_rdv.value,
+                    motif: motif_rdv.value,
+                },
+                success: function(response) {
+
+                    var preloader = document.getElementById('preloader_ch');
+                    if (preloader) {
+                        preloader.remove();
+                    }
+                    
+                    if (response.success) {
+
+                        list_rdv();
+                        showAlert("ALERT", 'Mise à jour éffectué', "success");
+
+                    } else if (response.error) {
+                        showAlert("ERREUR", 'Une erreur est survenue', "error");
+                    }
+
+                },
+                error: function() {
+                    var preloader = document.getElementById('preloader_ch');
+                    if (preloader) {
+                        preloader.remove();
+                    }
+
+                    showAlert("ERREUR", 'Une erreur est survenue lors de l\'enregistrement', "error");
                 }
             });
         }

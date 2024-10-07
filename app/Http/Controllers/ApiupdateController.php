@@ -24,19 +24,19 @@ use App\Models\chambre;
 use App\Models\lit;
 use App\Models\acte;
 use App\Models\typeacte;
-use App\Models\typemedecin;
 use App\Models\user;
 use App\Models\role;
+use App\Models\typemedecin;
 use App\Models\consultation;
 use App\Models\detailconsultation;
+use App\Models\facture;
 use App\Models\typeadmission;
 use App\Models\natureadmission;
 use App\Models\detailhopital;
-use App\Models\facture;
 use App\Models\produit;
 use App\Models\soinshopital;
-use App\Models\soinsinfirmier;
 use App\Models\typesoins;
+use App\Models\soinsinfirmier;
 use App\Models\soinspatient;
 use App\Models\sp_produit;
 use App\Models\sp_soins;
@@ -46,6 +46,7 @@ use App\Models\prelevement;
 use App\Models\joursemaine;
 use App\Models\rdvpatient;
 use App\Models\programmemedecin;
+
 
 class ApiupdateController extends Controller
 {
@@ -370,6 +371,39 @@ class ApiupdateController extends Controller
 
         if ($add->save()) {
             return response()->json(['success' => true]);
+        }
+
+        return response()->json(['error' => true]);
+    }
+
+    public function update_rdv(Request $request, $id)
+    {
+        $add = rdvpatient::find($id);
+        
+        $add->date = $request->date;
+        $add->motif = $request->motif;
+
+        if ($add->save()) {
+            return response()->json(['success' => true]);
+        }
+
+        return response()->json(['error' => true]);
+    }
+
+    public function update_specialite(Request $request, $id)
+    {
+        $put = typeacte::find($id);
+
+        if ($put) {
+            $put->nom = $request->nom;
+            $put->prix = $request->prix;
+
+            if ($put->save()) {
+                return response()->json(['success' => true]);
+            }else{
+                return response()->json(['error' => true]);
+            }
+
         }
 
         return response()->json(['error' => true]);

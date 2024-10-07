@@ -21,6 +21,7 @@ class examen extends Model
         'facture_id',
         'patient_id',
         'acte_id',
+        'num_bon',
     ];
 
     public function facture()

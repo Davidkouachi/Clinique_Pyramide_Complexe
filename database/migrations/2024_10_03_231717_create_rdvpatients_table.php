@@ -15,7 +15,6 @@ return new class extends Migration
             $table->id();
             $table->string('date');
             $table->string('motif');
-            $table->string('periode');
             $table->string('statut')->index();
             $table->unsignedBigInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');

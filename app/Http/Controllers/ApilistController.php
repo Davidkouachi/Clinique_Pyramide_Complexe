@@ -672,13 +672,23 @@ class ApilistController extends Controller
                             'users.name as medecin',
                             'typeactes.nom as specialite'
                         )
-                        ->orderBy('created_at', 'desc');
+                        ->orderBy('rdvpatients.created_at', 'desc');
 
         if ($statut !== 'tous') {
             $rdvQuery->where('rdvpatients.statut', '=', $statut);
         }
 
         $rdv = $rdvQuery->paginate(15);
+
+        foreach ($rdv->items() as $value) {
+            $horaires = programmemedecin::join('joursemaines', 'joursemaines.id', '=', 'programmemedecins.jour_id')
+                                    ->where('programmemedecins.user_id', '=', $value->user_id)
+                                    ->where('programmemedecins.statut', '=', 'oui')
+                                    ->select('programmemedecins.*', 'joursemaines.jour as jour')
+                                    ->get();
+
+            $value->horaires = $horaires;
+        }
 
         return response()->json([
             'rdv' => $rdv->items(), // Paginated data
@@ -689,6 +699,57 @@ class ApilistController extends Controller
                 'total' => $rdv->total(),
             ]
         ]);
+    }
+
+    public function list_rdv_day()
+    {
+        $today = Carbon::today();
+
+        $rdvQuery = rdvpatient::Join('patients', 'patients.id', '=', 'rdvpatients.patient_id')
+                        ->Join('users', 'users.id', '=', 'rdvpatients.user_id')
+                        ->join('typemedecins', 'typemedecins.user_id', '=', 'users.id')
+                        ->join('typeactes', 'typeactes.id', '=', 'typemedecins.typeacte_id')
+                        ->whereDate('rdvpatients.date', '=', $today)
+                        ->select(
+                            'rdvpatients.*', 
+                            'patients.np as patient', 
+                            'users.name as medecin',
+                            'typeactes.nom as specialite'
+                        )
+                        ->orderBy('rdvpatients.created_at', 'desc');
+
+        $rdv = $rdvQuery->paginate(15);
+
+        foreach ($rdv->items() as $value) {
+            $horaires = programmemedecin::join('joursemaines', 'joursemaines.id', '=', 'programmemedecins.jour_id')
+                                    ->where('programmemedecins.user_id', '=', $value->user_id)
+                                    ->where('programmemedecins.statut', '=', 'oui')
+                                    ->select('programmemedecins.*', 'joursemaines.jour as jour')
+                                    ->get();
+
+            $value->horaires = $horaires;
+        }
+
+        return response()->json([
+            'rdv' => $rdv->items(), // Paginated data
+            'pagination' => [
+                'current_page' => $rdv->currentPage(),
+                'last_page' => $rdv->lastPage(),
+                'per_page' => $rdv->perPage(),
+                'total' => $rdv->total(),
+            ]
+        ]);
+    }
+
+    public function list_specialite()
+    {
+        $typeacte = typeacte::join('actes', 'actes.id', '=', 'typeactes.acte_id')
+                        ->where('actes.nom', '=', 'CONSULTATION')
+                        ->orderBy('typeactes.created_at', 'desc')
+                        ->select('typeactes.*')
+                        ->get();
+
+        return response()->json(['typeacte' => $typeacte]);
     }
 
 }

@@ -50,27 +50,24 @@
                 <div class="card-header" hidden >
                     <h5 class="card-title">Hospitalisation</h5>
                 </div>
-                <div class="p-2" id="div_alert" >
-                    
-                </div>
                 <div class="card-body" style="margin-top: -30px;">
                     <div class="custom-tabs-container">
                         <ul class="nav nav-tabs justify-content-center bg-primary bg-2" id="customTab4" role="tablist" style="background: rgba(0, 0, 0, 0.7);">
                             <li class="nav-item" role="presentation">
                                 <a class="nav-link active text-white" id="tab-twoAAA" data-bs-toggle="tab" href="#twoAAA" role="tab" aria-controls="twoAAA" aria-selected="false" tabindex="-1">
-                                    <i class="ri-walk-line me-2"></i>
+                                    <i class="ri-hotel-bed-line me-2"></i>
                                     Nouvelle admission
                                 </a>
                             </li>
                             <li class="nav-item" role="presentation">
                                 <a class="nav-link text-white" id="tab-oneAAA" data-bs-toggle="tab" href="#oneAAA" role="tab" aria-controls="oneAAA" aria-selected="false" tabindex="-1">
-                                    <i class="ri-walk-line me-2"></i>
+                                    <i class="ri-dossier-line me-2"></i>
                                     Liste
                                 </a>
                             </li>
                             <li class="nav-item" role="presentation">
                                 <a class="nav-link  text-white" id="tab-threeAAA" data-bs-toggle="tab" href="#threeAAA" role="tab" aria-controls="threeAAA" aria-selected="true">
-                                    <i class="ri-shake-hands-line me-2"></i>
+                                    <i class="ri-list-settings-fill me-2"></i>
                                     Disponibilité Chambre & Lit
                                 </a>
                             </li>
@@ -88,8 +85,17 @@
                                             <div class="input-group">
                                                 <input type="hidden" class="form-control" id="matricule_patient" autocomplete="off">
                                                 <input type="text" class="form-control" id="patient" placeholder="Saisie Obligatoire" autocomplete="off">
+                                                <div class="suggestions w-100" id="suggestions_patient" style="display: none;"></div>
                                             </div>
-                                            <div class="suggestions" id="suggestions_patient" style="display: none;"></div>
+                                        </div>
+                                    </div>
+                                    <div class="col-xxl-3 col-lg-4 col-sm-6" id="div_numcode" style="display: none;">
+                                        <div class="mb-3">
+                                            <label class="form-label">N° prise en charge</label>
+                                            <div class="input-group">
+                                                <span class="input-group-text">N°</span>
+                                                <input type="text" class="form-control" id="numcode">
+                                            </div>
                                         </div>
                                     </div>
                                     <div class="col-xxl-3 col-lg-4 col-sm-6">
@@ -150,12 +156,6 @@
                                             <input readonly type="tel" class="form-control" id="nbre_jour" value="1">
                                         </div>
                                     </div>
-                                    {{-- <div class="col-xxl-9 col-lg-4 col-sm-6">
-                                        <div class="mb-3">
-                                            <label class="form-label">Motif</label>
-                                            <input type="email" class="form-control" id="motif" placeholder="facultatif">
-                                        </div>
-                                    </div> --}}
                                     <div class="col-sm-12">
                                         <div class="d-flex gap-2 justify-content-center">
                                             <button id="btn_calcul" class="btn btn-warning">
@@ -246,7 +246,6 @@
                                             <strong>Calcul en cours...</strong>
                                         </div>
                                     </div>
-                                    <div class="p-2" id="div_alert_calcul" ></div>
                                 </div>
                             </div>
                             <div class="tab-pane fade " id="oneAAA" role="tabpanel" aria-labelledby="tab-oneAAA">
@@ -263,18 +262,12 @@
                                                         <option value="Hospitaliser">Hospitaliser</option>
                                                         <option value="Liberé">Liberé</option>
                                                     </select>
-                                                    <a id="btn_print_table_hos" style="display: none;" class="btn btn-outline-warning ms-auto me-1">
-                                                        <i class="ri-printer-line"></i>
-                                                    </a>
                                                     <a id="btn_refresh_table_hos" class="btn btn-outline-info ms-auto">
                                                         <i class="ri-loop-left-line"></i>
                                                     </a>
                                                 </div>
                                             </div>
                                             <div class="card-body">
-                                                <div id="div_alert_table_hos" >
-                                                
-                                                </div>
                                                 <div class="table-outer" id="div_Table_hos" style="display: none;">
                                                     <div class="table-responsive">
                                                         <table class="table align-middle table-hover m-0 truncate" id="Table_hos">
@@ -380,8 +373,7 @@
                 </h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="modal-body" id="modal_detail">
-            </div>
+            <div class="modal-body" id="modal_detail"></div>
         </div>
     </div>
 </div>
@@ -395,7 +387,6 @@
                 </h5>
                 <button type="button" id="close_modal_produit" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div id="div_alert_produit_qu" ></div>
             <div class="modal-body" id="modal_add">
                 <div class="row gx-3 justify-content-center align-items-center">
                     <div class="col-12 mb-3">
@@ -428,7 +419,7 @@
     <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalCenteredScrollableTitle">
+                <h5 class="modal-title">
                     Produit Pharmacie Utilisé
                 </h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -440,9 +431,6 @@
                             <div class="card-body">
                                 <div class="row">
                                     <div class="col-12">
-                                        <div id="div_alert_tableP" >
-                    
-                                        </div>
                                         <div class="table-responsive" id="div_TableP" style="display: none;">
                                             <table class="table table-bordered" id="TableP">
                                                 <thead>
@@ -543,6 +531,13 @@
 
                                 // Assign patient rate (taux)
                                 patient_taux.value = item.taux ? item.taux : 0;
+
+                                document.getElementById('numcode').value = '';
+                                if (item.assurer == 'oui') {
+                                    document.getElementById('div_numcode').style.display = 'block';
+                                }else{
+                                    document.getElementById('div_numcode').style.display = 'none';
+                                }
 
                                 // Cacher ou afficher l'option "Assurance" selon le taux
                                 if (patient_taux.value == 0) {
@@ -800,6 +795,17 @@
                 return false;
             }
 
+            if (!nbre_jour || isNaN(nbre_jour) || nbre_jour < 0) {
+
+                showAlert('Alert', 'Veuillez vérifier les dates saisies.','warning');
+
+                document.getElementById('div_loader').style.display = 'none';
+                document.getElementById('div_calcul').style.display = 'none';
+                document.getElementById('btn_calcul').style.display = 'block';
+
+                return false;
+            }
+
             // Convert and validate values
             let prixFloat = parseInt(montant_chambre.replace(/[.,]/g, ''));
             let joursInt = parseInt(nbre_jour);
@@ -846,7 +852,6 @@
             }
 
             document.getElementById('taux_remise').value = 0;
-
             // Show results
             document.getElementById('div_loader').style.display = 'none';
             document.getElementById('div_calcul').style.display = 'flex';
@@ -1037,7 +1042,7 @@
             var id_lit = document.getElementById('id_lit').value;
             var date_entrer = document.getElementById('date_entrer').value;
             var date_sortie = document.getElementById('date_sortie').value;
-
+            var numcode = document.getElementById('numcode').value;
 
             if (!matricule_patient.trim() || 
                 !medecin_id.trim() || 
@@ -1089,6 +1094,12 @@
                 return false;
             }
 
+            if (!nbre_jour || isNaN(nbre_jour) || nbre_jour < 0) {
+
+                showAlert('Alert', 'Veuillez vérifier les dates saisies.','warning');
+                return false;
+            }
+
             var preloader_ch = `
                 <div id="preloader_ch">
                     <div class="spinner_preloader_ch"></div>
@@ -1115,7 +1126,8 @@
                     montant_patient: montant_patient,
                     patient_taux: patient_taux,
                     nbre_jour: nbre_jour,
-                    montant_chambre: montant_chambre
+                    montant_chambre: montant_chambre,
+                    numcode: numcode,
                 },
                 success: function(response) {
                     var preloader = document.getElementById('preloader_ch');
@@ -1124,24 +1136,20 @@
                     }
                     
                     if (response.success) {
-                        Statistique();
+
                         showAlert('Succès', 'Patient Hospitaliser.', 'success');
+
+                        reset();
+
+                        var newConsultationTab = new bootstrap.Tab(document.getElementById('tab-oneAAA'));
+                        newConsultationTab.show();
+                        newConsultationTab.active();
+
                     } else if (response.error) {
+
                         showAlert('Alert', 'Une erreur est survenue lors de l\'hospitalisation.','error');
+
                     }
-
-                    list_hos();
-                    reset();
-                    Name_atient();
-                    calculerJours();
-                    select_medecin();
-                    select_chambre();
-                    select_typeadmission();
-                    list_lit();
-
-                    var newConsultationTab = new bootstrap.Tab(document.getElementById('tab-oneAAA'));
-                    newConsultationTab.show();
-                    newConsultationTab.active();
 
                 },
                 error: function() {
@@ -1151,10 +1159,7 @@
                         preloader.remove();
                     }
 
-                    showAlert('Alert', 'Une erreur est survenue lors de l\'hospitalisation.','error');
-
-                    reset();
-                    
+                    showAlert('Alert', 'Une erreur est survenue lors de l\'hospitalisation.','error');                    
                 }
             });
         }
@@ -1170,7 +1175,6 @@
             document.getElementById('id_lit').value = '';
             document.getElementById('date_entrer').value = '';
             document.getElementById('date_sortie').value = '';
-            document.getElementById('motif').value = '';
 
             document.getElementById('montant_assurance').value = '';
             document.getElementById('taux_remise').value = '';
@@ -1179,10 +1183,12 @@
             document.getElementById('patient_taux').value = '';
             document.getElementById('nbre_jour').value = '';
             document.getElementById('montant_chambre').value = '';
+            document.getElementById('numcode').value = '';
 
             document.getElementById('div_loader').style.display = 'none';
             document.getElementById('div_calcul').style.display = 'none';
             document.getElementById('btn_calcul').style.display = 'block';
+            document.getElementById('div_numcode').style.display = 'none';
 
             calculerJours();
             Name_atient();
@@ -1190,6 +1196,8 @@
             select_chambre();
             select_typeadmission();
             list_lit();
+            list_hos();
+            Statistique();
         }
 
         function list_hos(page = 1) {
@@ -1220,8 +1228,6 @@
                     tableBody.innerHTML = '';
 
                     if (hopitals.length > 0) {
-
-                        document.getElementById(`btn_print_table_hos`).style.display = 'block';
 
                         loaderDiv.style.display = 'none';
                         messageDiv.style.display = 'none';
@@ -1312,6 +1318,10 @@
                                                                     <p>${chambre.prix} Fcfa</p>
                                                                 </div>
                                                                 <div class="col-12 text-center mt-4">
+                                                                    ${hopital.num_bon != null ? `
+                                                                        <h6 class="fw-semibold">Numéro de prise en charge :</h6>
+                                                                        <p>${hopital.num_bon}</p>
+                                                                    ` : ''}
                                                                     <h6 class="fw-semibold">Type d'admission :</h6>
                                                                     <p>${type.nom}</p>
                                                                     <h6 class="fw-semibold">Nature d'admission :</h6>
@@ -1963,13 +1973,19 @@
 
                 yPoss = (yPos + 40);
 
-                const medecinInfo = [
+                const medecinInfo = [];
+
+                if (hopital.num_bon && hopital.num_bon !== "") {
+                    medecinInfo.push({ label: "N° prise en charge", value: hopital.num_bon });
+                }
+
+                medecinInfo.push(
                     { label: "Medecin", value: "Dr. "+user.name },
                     { label: "Spécialité", value: user.typeacte },
                     { label: "Date d'entrée le ", value: formatDate(hopital.date_debut) },
                     { label: "Date de sortie prévu le ", value: formatDate(hopital.date_fin) },
                     { label: "Nombre de jours ", value: calculateDaysBetween(hopital.date_debut, hopital.date_fin)+" Jour(s)" },
-                ];
+                );
 
                 medecinInfo.forEach(info => {
                     doc.setFontSize(8);

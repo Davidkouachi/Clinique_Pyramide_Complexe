@@ -10,8 +10,18 @@
             <i class="ri-bar-chart-line lh-1 pe-3 me-3 border-end"></i>
             <a href="{{route('index_accueil')}}">Espace Santé</a>
         </li>
-        <li class="breadcrumb-item text-primary" aria-current="page">
+        <li class="breadcrumb-item">
             Tableau de bord
+        </li>
+        <li class="breadcrumb-item" style="display: block;" id="div_btn_affiche_stat">
+            <a class="btn btn-sm btn-warning" id="btn_affiche_stat">
+                Afficher les Statstiques
+            </a>
+        </li>
+        <li class="breadcrumb-item" style="display: none;" id="div_btn_cache_stat">
+            <a class="btn btn-sm btn-danger" id="btn_cache_stat">
+                Cacher les Statstiques
+            </a>
         </li>
     </ol>
 </div>
@@ -87,14 +97,7 @@
         </div>
     </div>
 
-    <div class="row gx-3 mb-3" id="stat_consultation">
-        <div id="div_Table_loader_Cons" style="display: none;">
-            <div class="d-flex justify-content-center align-items-center">
-                <div class="spinner-border text-warning me-2" role="status" aria-hidden="true"></div>
-                <strong>Chargement des données...</strong>
-            </div>
-        </div>
-    </div>
+    <div class="row gx-3 mb-3" id="stat_consultation"></div>
 
     <div class="row gx-3" >
         <div class="col-sm-12">
@@ -121,6 +124,12 @@
                                 </a>
                             </li>
                             <li class="nav-item" role="presentation">
+                                <a class="nav-link  text-white" id="tab-threeAAAL" data-bs-toggle="tab" href="#threeAAAL" role="tab" aria-controls="threeAAAL" aria-selected="true">
+                                    <i class="ri-calendar-check-line me-2"></i>
+                                    Rendez-Vous
+                                </a>
+                            </li>
+                            <li class="nav-item" role="presentation">
                                 <a class="nav-link  text-white" id="tab-threeAAA" data-bs-toggle="tab" href="#threeAAA" role="tab" aria-controls="threeAAA" aria-selected="true">
                                     <i class="ri-sticky-note-add-line me-2"></i>
                                     Nouvelle societe
@@ -140,19 +149,19 @@
                                 </div>
                                 <div class="row gx-3">
                                     <div class="row gx-3 justify-content-center align-items-center" >
-                                        <div class="col-xxl-3 col-lg-4 col-sm-6">
+                                        <div class="col-xxl-4 col-lg-4 col-sm-6">
                                             <div class="mb-3">
                                                 <label class="form-label">
                                                     Nom du patient
                                                 </label>
                                                 <div class="input-group">
                                                     <input type="hidden" class="form-control" id="matricule_patient" autocomplete="off">
-                                                    <input type="text" class="form-control" id="name_rech" name="np" placeholder="Saisie Obligatoire" autocomplete="off">
+                                                    <input type="text" class="form-control" id="name_rech" placeholder="Saisie Obligatoire" autocomplete="off">
                                                     <button hidden id="btn_rech_num_dossier" class="btn btn-outline-success">
                                                         <i class="ri-search-line"></i>
                                                     </button>
+                                                    <div class="suggestions w-100" id="suggestions" style="display: none;"></div>
                                                 </div>
-                                                <div class="suggestions" id="suggestions" style="display: none;"></div>
                                             </div>
                                         </div>
                                     </div>
@@ -203,6 +212,17 @@
                                                     <label class="form-label">Medecin</label>
                                                     <select class="form-select" id="medecin_id">
                                                     </select>
+                                                </div>
+                                            </div>
+                                            <div class="col-xxl-3 col-lg-4 col-sm-6" id="div_numcode" style="display: none;">
+                                                <div class="mb-3">
+                                                    <label class="form-label">Numéro de bon</label>
+                                                    <div class="input-group">
+                                                        <span class="input-group-text">
+                                                            N°
+                                                        </span>
+                                                        <input type="text" class="form-control" id="mumcode">
+                                                    </div>
                                                 </div>
                                             </div>
                                             <div class="col-xxl-3 col-lg-4 col-sm-6" id="div_assurance_utiliser" style="display: none;">
@@ -393,6 +413,51 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="tab-pane fade" id="threeAAAL" role="tabpanel" aria-labelledby="tab-threeAAAL">
+                                <div class="card-header d-flex align-items-center justify-content-between">
+                                    <h5 class="card-title">Listes de Rendez-Vous du jour</h5>
+                                    <div class="d-flex">
+                                        <a id="btn_refresh_table_rdv" class="btn btn-outline-info ms-auto">
+                                            <i class="ri-loop-left-line"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="card-body">
+                                    <div class="table-outer" id="div_Table_rdv" style="display: none;">
+                                        <div class="table-responsive">
+                                            <table class="table m-0 align-middle" id="Table_rdv">
+                                                <thead>
+                                                    <tr>
+                                                        <th>N°</th>
+                                                        <th>Patient</th>
+                                                        <th>Médecin</th>
+                                                        <th>Spécialité</th>
+                                                        <th>Rdv prévu</th>
+                                                        <th>Période</th>
+                                                        <th>Statut</th>
+                                                        <th>Date de création</th>
+                                                        <th>Actions</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                    <div id="message_Table_rdv" style="display: none;">
+                                        <p class="text-center">
+                                            Aucun Rendez-Vous n'est prévu aujourd'hui
+                                        </p>
+                                    </div>
+                                    <div id="div_Table_loader_rdv" style="display: none;">
+                                        <div class="d-flex justify-content-center align-items-center">
+                                            <div class="spinner-border text-warning me-2" role="status" aria-hidden="true"></div>
+                                            <strong>Chargement des données...</strong>
+                                        </div>
+                                    </div>
+                                    <div id="pagination-controls_rdv"></div>
+                                </div>
+                            </div>
                             <div class="tab-pane fade" id="threeAAA" role="tabpanel" aria-labelledby="tab-threeAAA">
                                 <div class="card-header">
                                     <h5 class="card-title">Formulaire Nouvelle Scoiété</h5>
@@ -476,18 +541,12 @@
                         Patient recu Aujourd'hui
                     </h5>
                     <div class="d-flex" >
-                        <a id="btn_print_table" style="display: none;" class="btn btn-outline-warning ms-auto me-1">
-                            <i class="ri-printer-line"></i>
-                        </a>
                         <a id="btn_refresh_table" class="btn btn-outline-info ms-auto">
                             <i class="ri-loop-left-line"></i>
                         </a>
                     </div>
                 </div>
                 <div class="card-body">
-                    <div id="div_alert_table" >
-                    
-                    </div>
                     <div class="table-outer" id="div_Table" style="display: none;">
                         <div class="table-responsive">
                             <table class="table align-middle table-hover m-0 truncate" id="Table">
@@ -528,12 +587,77 @@
 
 </div>
 
+<div class="modal fade" id="Detail_motif" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-body" id="modal_Detail_motif"></div>
+    </div>
+</div>
+
+<div class="modal fade" id="Modif_Rdv_modal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Mise à jour</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="updateForm">
+                    <input type="hidden" id="medecin_id_rdvM">
+                    <div class="mb-3">
+                        <label class="form-label">Médecin</label>
+                        <input readonly type="text" class="form-control" id="medecin_rdvM">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Spécialité</label>
+                        <input readonly type="text" class="form-control" id="specialite_rdvM">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Patient</label>
+                        <input readonly type="text" class="form-control" id="patient_rdvM" placeholder="Saisie Obligatoire" autocomplete="off">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Date</label>
+                        <input type="date" class="form-control" id="date_rdvM" placeholder="Saisie Obligatoire" min="{{ date('Y-m-d') }}">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Motif</label>
+                        <textarea class="form-control" id="motif_rdvM" rows="3" style="resize: none;"></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <a class="btn btn-outline-danger" data-bs-dismiss="modal">Fermer</a>
+                <button type="button" class="btn btn-success" id="btn_update_rdv">Enregistrer</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="Mdelete" tabindex="-1" aria-labelledby="delRowLabel" aria-modal="true" role="dialog">
+    <div class="modal-dialog modal-sm modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="delRowLabel">
+                    Confirmation
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                Voulez-vous vraiment Annulé ce Rendez-Vous
+                <input type="hidden" id="Iddelete">
+            </div>
+            <div class="modal-footer">
+                <div class="d-flex justify-content-end gap-2">
+                    <a class="btn btn-secondary" data-bs-dismiss="modal" aria-label="Close">Non</a>
+                    <button id="btn_delete_rdv" class="btn btn-danger" data-bs-dismiss="modal" aria-label="Close">Oui</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script src="{{asset('assets/vendor/apex/apexcharts.min.js')}}"></script>
-{{-- <script src="{{ asset('js/app.js') }}"></script> --}}
-{{-- <script src="https://unpkg.com/jspdf-invoice-template@1.4.4/dist/index.js"></script> --}}
 <script src="{{asset('assets/js/app/js/jspdfinvoicetemplate/dist/index.js')}}" ></script>
-<script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="{{asset('jsPDF-master/dist/jspdf.umd.js')}}"></script>
 
 <script>
@@ -542,12 +666,12 @@
         Statistique();
         Activity_cons();
         Activity_cons_count();
-        Statistique_cons();
         Name_atient();
         select_taux();
         select_societe_patient();
         select_assurance_patient();
         list_cons();
+        list_rdv();
 
         // ------------------------------------------------------------------
 
@@ -558,6 +682,28 @@
         document.getElementById("btn_eng_societe").addEventListener("click", eng_societe);
         document.getElementById("btn_eng_assurance").addEventListener("click", eng_assurance);
         document.getElementById("btn_eng_patient").addEventListener("click", eng_patient);
+
+        document.getElementById("btn_update_rdv").addEventListener("click", update_rdv);
+        document.getElementById("btn_refresh_table_rdv").addEventListener("click", list_rdv);
+        document.getElementById("btn_delete_rdv").addEventListener("click", delete_rdv);
+
+        document.getElementById('btn_affiche_stat').addEventListener('click',function(){
+
+            document.getElementById('div_btn_affiche_stat').style.display = 'none';
+            document.getElementById('div_btn_cache_stat').style.display = 'block';
+
+            Statistique_cons();
+
+        });
+
+        document.getElementById('btn_cache_stat').addEventListener('click',function(){
+
+            document.getElementById('div_btn_affiche_stat').style.display = 'block';
+            document.getElementById('div_btn_cache_stat').style.display = 'none';
+
+            const stat_consultation = document.getElementById("stat_consultation");
+            stat_consultation.innerHTML = '';
+        });
 
         // ------------------------------------------------------------------
 
@@ -695,50 +841,60 @@
 
         // ------------------------------------------------------------------
 
-        function Name_atient()
-        {
+        function Name_atient() {
             $.ajax({
                 url: '/api/name_patient',
                 method: 'GET',
                 success: function(response) {
-                    // Sample data array
+                    // Récupérer les données de l'API
                     const data = response.name;
 
-                    // Elements
+                    // Élément de l'input et autres éléments HTML
                     const input = document.getElementById('name_rech');
                     const matricule_patient = document.getElementById('matricule_patient');
                     const suggestionsDiv = document.getElementById('suggestions');
 
-                    // Event listener for input typing
-                    input.addEventListener('input', function() {
+                    // Fonction pour afficher les suggestions
+                    function displaySuggestions() {
                         const searchTerm = input.value.toLowerCase();
                         
-                        // Clear previous suggestions
+                        // Vider les suggestions précédentes
                         suggestionsDiv.style.display = 'block';
                         suggestionsDiv.innerHTML = '';
 
-                        // Filter data based on input
+                        // Filtrer les données en fonction de l'input
                         const filteredData = data.filter(item => item.np.toLowerCase().includes(searchTerm));
 
-                        // Display filtered data
+                        // Afficher les suggestions filtrées
                         filteredData.forEach(item => {
                             const suggestion = document.createElement('div');
                             suggestion.innerText = item.np;
                             suggestion.addEventListener('click', function() {
-                                // Set selected data in the input field
+                                // Remplir l'input avec la suggestion sélectionnée
                                 input.value = `${item.np}`;
                                 matricule_patient.value = `${item.matricule}`;
-                                suggestionsDiv.innerHTML = ''; // Clear suggestions
-                                rech_dosier();
+                                suggestionsDiv.innerHTML = ''; // Vider les suggestions
+                                suggestionsDiv.style.display = 'none'; // Masquer les suggestions
+                                rech_dosier(); // Appeler la fonction de recherche de dossier
                             });
                             suggestionsDiv.appendChild(suggestion);
                         });
 
-                        // Show/hide suggestions based on results
+                        // Afficher/masquer les suggestions en fonction du résultat
                         suggestionsDiv.style.display = filteredData.length > 0 ? 'block' : 'none';
+                    }
+
+                    // Afficher les suggestions dès que l'input est focus
+                    input.addEventListener('focus', function() {
+                        displaySuggestions(); // Afficher les suggestions dès que le curseur est sur l'input
                     });
 
-                    // Hide suggestions when clicking outside
+                    // Mettre à jour les suggestions lors de la saisie
+                    input.addEventListener('input', function() {
+                        displaySuggestions(); // Afficher les suggestions pendant la saisie
+                    });
+
+                    // Masquer les suggestions quand on clique en dehors de l'input ou des suggestions
                     document.addEventListener('click', function(e) {
                         if (!suggestionsDiv.contains(e.target) && e.target !== input) {
                             suggestionsDiv.style.display = 'none';
@@ -746,6 +902,7 @@
                     });
                 },
                 error: function() {
+                    console.error('Erreur lors du chargement des patients');
                 }
             });
         }
@@ -797,10 +954,11 @@
 
                         document.getElementById("div_info_consul").style.display = 'block';
 
-                        if (response.patient.taux) {
+                        if (response.patient.assurer == 'oui') {
                             // Le patient a un taux d'assurance
                             document.getElementById("input_part_assurance").style.display = 'block';
                             document.getElementById("div_assurance_utiliser").style.display = 'block';
+                            document.getElementById("div_numcode").style.display = 'block';
 
                             // Afficher le select et inclure l'option 'Assurance'
                             // Assurez-vous que l'option 'Assurance' est visible
@@ -819,6 +977,7 @@
                             // Le patient n'a pas d'assurance
                             document.getElementById("input_part_assurance").style.display = 'none';
                             document.getElementById("div_assurance_utiliser").style.display = 'none';
+                            document.getElementById("div_numcode").style.display = 'none';
 
                             // Cacher l'option 'Assurance' dans le select
                             const assuranceOption = document.querySelector("#appliq_remise option[value='assurance']");
@@ -866,12 +1025,6 @@
                     <div class="mb-3">
                         <label class="form-label" for="tel">Contact</label>
                         <input value="+225 ${data.tel}" readonly class="form-control">
-                    </div>
-                </div>
-                <div class="col-xxl-3 col-lg-4 col-sm-6">
-                    <div class="mb-3">
-                        <label class="form-label" for="adresse">Adresse</label>
-                        <input value="${data.adresse}" readonly class="form-control">
                     </div>
                 </div>
                 <div class="col-xxl-3 col-lg-4 col-sm-6">
@@ -1183,13 +1336,9 @@
 
                     if (prix) {
                         if (this.value == 'oui') {
-
-
-
-                            // Inclure le taux d'assurance si l'option 'oui' est sélectionnée
+                            appliq_remise.querySelector('option[value="assurance"]').style.display = 'block';
                             calculateAndFormatAmounts(prix, patient_taux.value);
                         } else {
-                            // Exclure le taux d'assurance si l'option 'non' est sélectionnée
                             appliq_remise.value = 'patient'; // Sélectionner l'option "patient"
                             appliq_remise.querySelector('option[value="assurance"]').style.display = 'none'; // Cacher l'option "Assurance"
                             calculateAndFormatAmounts(prix, 0); // Calculer sans taux d'assurance
@@ -1256,12 +1405,6 @@
         function eng_societe()
         {
             const societeInput = document.getElementById("societe_new");
-
-            var dynamicFields = document.getElementById("div_alert");
-            // Remove existing content
-            while (dynamicFields.firstChild) {
-                dynamicFields.removeChild(dynamicFields.firstChild);
-            }
 
             if(societeInput.value == ''){
                 showAlert('Alert', 'Veuillez saisie le nom de la société SVP.', 'warning');
@@ -1332,13 +1475,6 @@
             if (phone.value.length !== 10 || (phone2.value !== '' && phone2.value.length !== 10)) {
                 showAlert('Alert', 'Contact incomplet.','warning');
                 return false;
-            }
-
-
-            var dynamicFields = document.getElementById("div_alert");
-            // Remove existing content
-            while (dynamicFields.firstChild) {
-                dynamicFields.removeChild(dynamicFields.firstChild);
             }
 
             var preloader_ch = `
@@ -1483,11 +1619,13 @@
                     phone.value = '';
                     phone2.value = '';
                     adresse.value = '';
-
                     datenais.value = '';
                     sexe.value = '';
                     filiation.value = '';
                     matricule_assurance.value = '';
+                    assurance_id.value = "";
+                    taux_id.value = "";
+                    societe_id.value = "";
 
                     assurer.value = 'non';
 
@@ -1534,6 +1672,8 @@
             var jourF = document.getElementById('jourF');
             var nuit = document.getElementById('Nuit');
 
+            var mumcode = document.getElementById('mumcode');
+
             if (taux_remise.value == '') {
                 taux_remise.value = '0';
             }
@@ -1559,7 +1699,7 @@
             $.ajax({
                 url: '/api/new_consultation',
                 method: 'GET',  // Use 'POST' for data creation
-                data: {num_patient: num_patient.value, acte_id: acte_id, typeacte_id: typeacte_idS.value, user_id: medecin_id.value, periode: periode.value, montant_assurance: montant_assurance.value, montant_patient: montant_patient.value, taux_remise: taux_remise.value, total: montant_total.value, appliq_remise: appliq_remise.value},
+                data: {num_patient: num_patient.value, acte_id: acte_id, typeacte_id: typeacte_idS.value, user_id: medecin_id.value, periode: periode.value, montant_assurance: montant_assurance.value, montant_patient: montant_patient.value, taux_remise: taux_remise.value, total: montant_total.value, appliq_remise: appliq_remise.value, mumcode: mumcode.value || null},
                 success: function(response) {
                     var preloader = document.getElementById('preloader_ch');
                     if (preloader) {
@@ -1568,6 +1708,21 @@
                     
                     if (response.success) {
 
+                        jourO.checked = true;
+                        jourF.checked = false;
+                        nuit.checked = false;
+
+                        var dynamicFields = document.getElementById("div_info_patient");
+                        // Remove existing content
+                        while (dynamicFields.firstChild) {
+                            dynamicFields.removeChild(dynamicFields.firstChild);
+                        }
+
+                        document.getElementById("div_info_consul").style.display = 'none';
+                        document.getElementById("name_rech").value = "";
+
+                        mumcode.value = "";
+
                         showAlert('Succès', 'Patient Enregistrée.', 'success');
 
                         const patient = response.patient;
@@ -1575,9 +1730,14 @@
                         const user = response.user;
                         const consultation = response.consultation;
 
+                        const stat_consultation = document.getElementById("stat_consultation");
+
+                        if (stat_consultation && stat_consultation.innerHTML.trim() !== "") {
+                            Statistique_cons();
+                        }
+
                         list_cons();
                         Statistique();
-                        Statistique_cons();
                         Reset();
 
                         generatePDFficheCons(patient, user, typeacte, consultation);
@@ -1585,18 +1745,6 @@
                     } else if (response.error) {
                         showAlert('Alert', 'Une erreur est survenue lors de l\'enregistrement.','error');
                     }
-
-                    jourO.checked = true;
-                    jourF.checked = false;
-                    nuit.checked = false;
-
-                    var dynamicFields = document.getElementById("div_info_patient");
-                    // Remove existing content
-                    while (dynamicFields.firstChild) {
-                        dynamicFields.removeChild(dynamicFields.firstChild);
-                    }
-
-                    document.getElementById("div_info_consul").style.display = 'none';
 
                 },
                 error: function() {
@@ -1640,8 +1788,6 @@
                     tableBody.innerHTML = '';
 
                     if (consultations.length > 0) {
-
-                        document.getElementById(`btn_print_table`).style.display = 'block';
 
                         loaderDiv.style.display = 'none';
                         messageDiv.style.display = 'none';
@@ -1882,17 +2028,23 @@
 
         function Statistique_cons() {
 
-            document.getElementById("div_Table_loader_Cons").style.display = 'block';
-
             const stat_consultation = document.getElementById("stat_consultation");
+
+            const div = document.createElement('div');
+            div.innerHTML = `
+                <div class="d-flex justify-content-center align-items-center">
+                    <div class="spinner-border text-warning me-2" role="status" aria-hidden="true"></div>
+                    <strong>Chargement des données...</strong>
+                </div>
+            `;
+            stat_consultation.appendChild(div);
+
 
             fetch('/api/statistique_reception_cons') // API endpoint
                 .then(response => response.json())
                 .then(data => {
-                    // Access the 'chambre' array from the API response
+
                     const typeactes = data.typeacte;
-                    document.getElementById("div_Table_loader_Cons").style.display = 'none';
-                    // Clear any existing rows in the table body
                     stat_consultation.innerHTML = '';
 
                     if (typeactes.length > 0) {
@@ -2443,12 +2595,18 @@
 
                 yPoss = (yPos + 50);
 
-                const medecinInfo = [
-                    { label: "N° Consultation", value: "C-"+consultation.code},
-                    { label: "Medecin", value: "Dr. "+user.name },
+                const medecinInfo = [];
+
+                if (consultation.num_bon && consultation.num_bon !== "") {
+                    medecinInfo.push({ label: "Numéro de Bon", value: consultation.num_bon });
+                }
+
+                medecinInfo.push(
+                    { label: "N° Consultation", value: "C-" + consultation.code },
+                    { label: "Medecin", value: "Dr. " + user.name },
                     { label: "Spécialité", value: typeacte.nom },
-                    { label: "Prix Consultation", value: typeacte.prix+" Fcfa" },
-                ];
+                    { label: "Prix Consultation", value: typeacte.prix + " Fcfa" }
+                );
 
                 medecinInfo.forEach(info => {
                     doc.setFontSize(8);
@@ -2507,6 +2665,348 @@
 
 
             doc.output('dataurlnewwindow');
+        }
+
+        // -----------------------------------------------------------------
+
+        function list_rdv(page = 1) {
+
+            const tableBody = document.querySelector('#Table_rdv tbody');
+            const messageDiv = document.getElementById('message_Table_rdv');
+            const tableDiv = document.getElementById('div_Table_rdv');
+            const loaderDiv = document.getElementById('div_Table_loader_rdv');
+
+            messageDiv.style.display = 'none';
+            tableDiv.style.display = 'none';
+            loaderDiv.style.display = 'block';
+
+            const url = `/api/list_rdv_day?page=${page}`;
+
+            fetch(url)
+                .then(response => response.json())
+                .then(data => {
+                    const rdvs = data.rdv || [];
+                    const pagination = data.pagination || {};
+                    const perPage = pagination.per_page || 10;
+                    const currentPage = pagination.current_page || 1;
+
+                    tableBody.innerHTML = '';
+
+                    if (rdvs.length > 0) {
+
+                        loaderDiv.style.display = 'none';
+                        messageDiv.style.display = 'none';
+                        tableDiv.style.display = 'block';
+
+                            rdvs.forEach((item, index) => {
+
+                                let button = '';
+
+                                if (item.statut == 'en cours') {
+                                    button = `
+                                        <a class="btn btn-outline-info btn-sm rounded-5" data-bs-toggle="modal" data-bs-target="#Modif_Rdv_modal" id="modif-${item.id}">
+                                            <i class="ri-edit-line"></i>
+                                        </a>
+                                        <a class="btn btn-outline-danger btn-sm rounded-5" data-bs-toggle="modal" data-bs-target="#Mdelete" id="delete-${item.id}">
+                                            <i class="ri-delete-bin-line"></i>
+                                        </a>
+                                    `;
+                                }
+
+                                const row = document.createElement('tr');
+                                row.innerHTML = `
+                                    <td>${((currentPage - 1) * perPage) + index + 1}</td>
+                                    <td>${item.patient}</td>
+                                    <td>Dr. ${item.medecin}</td>
+                                    <td>${item.specialite}</td>
+                                    <td>${formatDate(item.date)}</td>
+                                    <td>
+                                        <span class="badge ${item.statut === 'en cours' ? 'bg-warning' : 'bg-success'}">
+                                            ${item.statut}
+                                        </span>
+                                    </td>
+                                    <td>${formatDateHeure(item.created_at)}</td>
+                                    <td>
+                                        <div class="d-inline-flex gap-1">
+                                            <a class="btn btn-outline-warning btn-sm rounded-5" data-bs-toggle="modal" data-bs-target="#Detail_motif" id="motif-${item.id}">
+                                                <i class="ri-eye-line"></i>
+                                            </a>
+                                            ${button}
+                                        </div>
+                                    </td>
+                                `;
+                                tableBody.appendChild(row);
+
+                                const deleteButton = document.getElementById(`delete-${item.id}`);
+                                if (deleteButton) {
+                                    deleteButton.addEventListener('click', () => {
+                                        document.getElementById('Iddelete').value = item.id;
+                                    });
+                                }
+
+                                const modifButton = document.getElementById(`modif-${item.id}`);
+                                if (modifButton) {
+                                    modifButton.addEventListener('click', () => {
+                                        document.getElementById('medecin_id_rdvM').value = item.id;
+                                        document.getElementById('date_rdvM').value = item.date;
+                                        document.getElementById('patient_rdvM').value = item.patient;
+                                        document.getElementById('motif_rdvM').value = item.motif;
+                                        document.getElementById('medecin_rdvM').value = item.medecin;
+                                        document.getElementById('specialite_rdvM').value = item.specialite;
+
+                                        const allowedDays = item.horaires.map(horaire => horaire.jour);
+
+                                        const dateInput = document.getElementById('date_rdvM');
+                                        dateInput.addEventListener('input', (event) => {
+                                            
+                                            const selectedDate = new Date(event.target.value);
+                                            const selectedDay = selectedDate.getDay();
+
+                                            const dayMapping = {
+                                                'DIMANCHE': 0,
+                                                'LUNDI': 1,
+                                                'MARDI': 2,
+                                                'MERCREDI': 3,
+                                                'JEUDI': 4,
+                                                'VENDREDI': 5,
+                                                'SAMEDI': 6
+                                            };
+
+                                            const isValidDay = allowedDays.some(day => dayMapping[day] === selectedDay);
+
+                                            if (!isValidDay) {
+                                                dateInput.value = item.date;
+                                                showAlert("ALERT", 'Veuillez sélectionner un jour valide selon les horaires du médecin.', "info");
+                                            }
+                                        });
+                                    });
+                                }
+
+                                document.getElementById(`motif-${item.id}`).addEventListener('click', () =>
+                                {
+                                    const modal = document.getElementById('modal_Detail_motif');
+                                    modal.innerHTML = '';
+
+                                    const div = document.createElement('div');
+                                    div.innerHTML = `
+                                           <div class="row gx-3">
+                                                <div class="col-12">
+                                                    <div class=" mb-3">
+                                                        <div class="card-body">
+                                                            <ul class="list-group">
+                                                                <li class="list-group-item active text-center" aria-current="true">
+                                                                    Motif
+                                                                </li>
+                                                                <li class="list-group-item">
+                                                                    ${item.motif} 
+                                                                </li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>     
+                                    `;
+
+                                    modal.appendChild(div);
+
+                                });
+
+                            });
+
+                        updatePaginationControlsRdv(pagination);
+
+                    } else {
+                        tableDiv.style.display = 'none';
+                        loaderDiv.style.display = 'none';
+                        messageDiv.style.display = 'block';
+                    }
+                })
+                .catch(error => {
+                    console.error('Erreur lors du chargement des données:', error);
+                    loaderDiv.style.display = 'none';
+                    tableDiv.style.display = 'none';
+                    messageDiv.style.display = 'block';
+                });
+        }
+
+        function updatePaginationControlsRdv(pagination) {
+            const paginationDiv = document.getElementById('pagination-controls_rdv');
+            paginationDiv.innerHTML = '';
+
+            // Bootstrap pagination wrapper
+            const paginationWrapper = document.createElement('ul');
+            paginationWrapper.className = 'pagination justify-content-center';
+
+            // Previous button
+            if (pagination.current_page > 1) {
+                const prevButton = document.createElement('li');
+                prevButton.className = 'page-item';
+                prevButton.innerHTML = `<a class="page-link" href="#">Precédent</a>`;
+                prevButton.onclick = () => list_rdv(pagination.current_page - 1);
+                paginationWrapper.appendChild(prevButton);
+            } else {
+                // Disable the previous button if on the first page
+                const prevButton = document.createElement('li');
+                prevButton.className = 'page-item disabled';
+                prevButton.innerHTML = `<a class="page-link" href="#">Precédent</a>`;
+                paginationWrapper.appendChild(prevButton);
+            }
+
+            // Page number links (show a few around the current page)
+            const totalPages = pagination.last_page;
+            const currentPage = pagination.current_page;
+            const maxVisiblePages = 5; // Max number of page links to display
+
+            let startPage = Math.max(1, currentPage - Math.floor(maxVisiblePages / 2));
+            let endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
+
+            // Adjust start page if end page exceeds the total pages
+            if (endPage - startPage < maxVisiblePages - 1) {
+                startPage = Math.max(1, endPage - maxVisiblePages + 1);
+            }
+
+            // Loop through pages and create page links
+            for (let i = startPage; i <= endPage; i++) {
+                const pageItem = document.createElement('li');
+                pageItem.className = `page-item ${i === currentPage ? 'active' : ''}`;
+                pageItem.innerHTML = `<a class="page-link" href="#">${i}</a>`;
+                pageItem.onclick = () => list_rdv(i);
+                paginationWrapper.appendChild(pageItem);
+            }
+
+            // Ellipsis (...) if not all pages are shown
+            if (endPage < totalPages) {
+                const ellipsis = document.createElement('li');
+                ellipsis.className = 'page-item disabled';
+                ellipsis.innerHTML = `<a class="page-link" href="#">...</a>`;
+                paginationWrapper.appendChild(ellipsis);
+
+                // Add the last page link
+                const lastPageItem = document.createElement('li');
+                lastPageItem.className = `page-item`;
+                lastPageItem.innerHTML = `<a class="page-link" href="#">${totalPages}</a>`;
+                lastPageItem.onclick = () => list_rdv(totalPages);
+                paginationWrapper.appendChild(lastPageItem);
+            }
+
+            // Next button
+            if (pagination.current_page < pagination.last_page) {
+                const nextButton = document.createElement('li');
+                nextButton.className = 'page-item';
+                nextButton.innerHTML = `<a class="page-link" href="#">Suivant</a>`;
+                nextButton.onclick = () => list_rdv(pagination.current_page + 1);
+                paginationWrapper.appendChild(nextButton);
+            } else {
+                // Disable the next button if on the last page
+                const nextButton = document.createElement('li');
+                nextButton.className = 'page-item disabled';
+                nextButton.innerHTML = `<a class="page-link" href="#">Suivant</a>`;
+                paginationWrapper.appendChild(nextButton);
+            }
+
+            // Append pagination controls to the DOM
+            paginationDiv.appendChild(paginationWrapper);
+        }
+
+        function delete_rdv() {
+
+            const id = document.getElementById('Iddelete').value;
+
+            var modal = bootstrap.Modal.getInstance(document.getElementById('Mdelete'));
+            modal.hide();
+
+            var preloader_ch = `
+                <div id="preloader_ch">
+                    <div class="spinner_preloader_ch"></div>
+                </div>
+            `;
+            // Add the preloader to the body
+            document.body.insertAdjacentHTML('beforeend', preloader_ch);
+
+            $.ajax({
+                url: '/api/delete_rdv/'+id,
+                method: 'GET',
+                success: function(response) {
+
+                    var preloader = document.getElementById('preloader_ch');
+                    if (preloader) {
+                        preloader.remove();
+                    }
+
+                    if (response.success) {
+                        list_rdv();
+                        showAlert('Succès', 'Rendez-Vous annulé.','success');
+                    } else if (response.error) {
+                        showAlert("ERREUR", 'Une erreur est survenue', "error");
+                    }
+                
+                },
+                error: function() {
+                    var preloader = document.getElementById('preloader_ch');
+                    if (preloader) {
+                        preloader.remove();
+                    }
+
+                    showAlert('Erreur', 'Erreur lors de la suppression.','error');
+                }
+            });
+        }
+
+        function update_rdv()
+        {
+            const id = document.getElementById('medecin_id_rdvM').value;
+            const date_rdv = document.getElementById('date_rdvM');
+            const motif_rdv = document.getElementById('motif_rdvM');
+
+            if (!date_rdv.value.trim() || !motif_rdv.value.trim()) {
+                showAlert("ALERT", 'Veuillez remplir tous les champs.', "warning");
+                return false;
+            }
+
+            var modal = bootstrap.Modal.getInstance(document.getElementById('Modif_Rdv_modal'));
+            modal.hide();
+
+            var preloader_ch = `
+                <div id="preloader_ch">
+                    <div class="spinner_preloader_ch"></div>
+                </div>
+            `;
+            // Add the preloader to the body
+            document.body.insertAdjacentHTML('beforeend', preloader_ch);
+
+            $.ajax({
+                url: '/api/update_rdv/' + id,
+                method: 'GET',
+                data:{
+                    date: date_rdv.value,
+                    motif: motif_rdv.value,
+                },
+                success: function(response) {
+
+                    var preloader = document.getElementById('preloader_ch');
+                    if (preloader) {
+                        preloader.remove();
+                    }
+                    
+                    if (response.success) {
+
+                        list_rdv();
+                        showAlert("ALERT", 'Mise à jour éffectué', "success");
+
+                    } else if (response.error) {
+                        showAlert("ERREUR", 'Une erreur est survenue', "error");
+                    }
+
+                },
+                error: function() {
+                    var preloader = document.getElementById('preloader_ch');
+                    if (preloader) {
+                        preloader.remove();
+                    }
+
+                    showAlert("ERREUR", 'Une erreur est survenue lors de l\'enregistrement', "error");
+                }
+            });
         }
 
     });

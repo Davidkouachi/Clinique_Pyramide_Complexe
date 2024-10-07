@@ -53,9 +53,6 @@
                     </h5>
                     <div class="d-flex">
                         <input type="text" id="searchInput" placeholder="Société" class="form-control me-1">
-                        <a id="btn_print_table" style="display: none;" class="btn btn-outline-warning ms-auto me-1">
-                            <i class="ri-printer-line"></i>
-                        </a>
                         <a id="btn_refresh_table" class="btn btn-outline-info ms-auto">
                             <i class="ri-loop-left-line"></i>
                         </a>
@@ -249,8 +246,6 @@
                     tableBody.innerHTML = '';
 
                     if (allSocietes.length > 0) {
-
-                        document.getElementById('btn_print_table').style.display = 'block';
 
                         loaderDiv.style.display = 'none';
                         messageDiv.style.display = 'none';

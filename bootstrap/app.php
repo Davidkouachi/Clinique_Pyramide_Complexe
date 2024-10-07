@@ -16,10 +16,12 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->alias([
             'role' => \App\Http\Middleware\RoleMiddleware::class,
             'statutchambre' => \App\Http\Middleware\StatutChambremiddleware::class,
+            'dateRdv' => \App\Http\Middleware\DateRdvMiddleware::class,
         ]);
         $middleware->web([
             'role',
             'statutchambre',
+            'dateRdv',
         ]);
 
     })

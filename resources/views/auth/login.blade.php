@@ -33,8 +33,6 @@
                         <a class="mb-4" >
                             <img height="150" width="150" src="{{asset('assets/images/logo.png')}}" alt="Bootstrap Gallery">
                         </a>
-                        {{-- <h2 class="mb-4">Bienvenue</h2> --}}
-                        {{-- <h6 class="mb-4" style="color: red;">Centre medico-social la pyramide du complexe</h6> --}}
                         <h4 class="mt-4 mb-4 text-primary ">Se connecter</h4>
                     </div>
                     <div class="mb-3">

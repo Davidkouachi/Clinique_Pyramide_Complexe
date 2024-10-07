@@ -11,7 +11,7 @@
             <a href="{{route('index_accueil')}}">Espace Santé</a>
         </li>
         <li class="breadcrumb-item text-primary" aria-current="page">
-            Nouveau Medecin
+            Nouveau Médecin
         </li>
     </ol>
 </div>
@@ -25,7 +25,7 @@
         <div class="col-12">
             <div class="card mb-3">
                 <div class="card-header">
-                    <h5 class="card-title">Formulaire Nouveau Medecin</h5>
+                    <h5 class="card-title">Formulaire Nouveau Médecin</h5>
                 </div>
                 <div class="card-body" >
                     <!-- Row starts -->
@@ -66,7 +66,7 @@
                         </div>
                         <div class="col-xxl-3 col-lg-4 col-sm-6">
                             <div class="mb-3">
-                                <label class="form-label" for="adresse">Adresse</label>
+                                <label class="form-label" for="adresse">Localisation</label>
                                 <input type="text" class="form-control" id="adresse" placeholder="Saisie Obligatoire">
                             </div>
                         </div>
@@ -98,7 +98,7 @@
             <div class="card mb-3">
                 <div class="card-header d-flex align-items-center justify-content-between">
                     <h5 class="card-title">
-                        Liste des Utilisateurs
+                        Liste des Médecins
                     </h5>
                     <a id="btn_refresh_table" class="btn btn-outline-info ms-auto">
                         <i class="ri-loop-left-line"></i>
@@ -119,7 +119,7 @@
                                         <th scope="col">Matricule</th>
                                         <th scope="col">Specialité</th>
                                         <th scope="col">contact</th>
-                                        <th scope="col">Adresse</th>
+                                        <th scope="col">Localisation</th>
                                         <th scope="col">Actions</th>
                                     </tr>
                                 </thead>
@@ -156,7 +156,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                Voulez-vous vraiment supprimé ce Utilisateur
+                Voulez-vous vraiment supprimé ce Médecin
                 <input type="hidden" id="Iddelete">
             </div>
             <div class="modal-footer">
@@ -173,7 +173,7 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Modifier un Utilisateur</h5>
+                <h5 class="modal-title" id="exampleModalLabel">Mise à jour</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
@@ -347,7 +347,7 @@
 
             $.ajax({
                 url: '/api/new_medecin',
-                method: 'GET',  // Use 'POST' for data creation
+                method: 'GET',
                 data: { nom: nom.value, email: email.value, tel: tel.value, tel2: tel2.value || null, adresse: adresse.value, sexe: sexe.value, typeacte_id: typeacte_id.value },
                 success: function(response) {
                     var preloader = document.getElementById('preloader_ch');
@@ -356,28 +356,36 @@
                     }
 
                     if (response.tel_existe) {
-                        showAlert('Alert', 'Ce numéro de téléphone appartient déjà a un utilisateur.','warning');
+
+                        showAlert('Alert', 'Veuillez saisir autre numéro de téléphone s\'il vous plaît','warning');
+
                     }else if (response.email_existe) {
-                        showAlert('Alert', 'Cet email appartient déjà a un utilisateur.','warning');
+
+                        showAlert('Alert', 'Veuillez saisir autre email s\'il vous plaît','warning');
+
                     }else if (response.nom_existe) {
-                        showAlert('Alert', 'Cet utilisateur existe déjà.','warning');
+
+                        showAlert('Alert', 'Cet Médecin existe déjà.','warning');
+
                     } else if (response.success) {
-                        showAlert('Succès', 'utilisateur Enregistrée.','success');
+
+                        nom.value = '';
+                        email.value = '';
+                        tel.value = '';
+                        tel2.value = '';
+                        adresse.value = '';
+                        sexe.value = '';
+                        typeacte_id.value = '';
+
+                        list();
+
+                        showAlert('Succès', 'Opération éffectuée.','success');
+
                     } else if (response.error) {
+
                         showAlert('Erreur', 'Une erreur est survenue lors de l\'enregistrement.','error');
+
                     }
-
-                    nom.value = '';
-                    email.value = '';
-                    tel.value = '';
-                    tel2.value = '';
-                    adresse.value = '';
-                    sexe.value = '';
-                    typeacte_id.value = '';
-
-                    select_modif();
-                    select();
-                    list();
                 },
                 error: function() {
                     var preloader = document.getElementById('preloader_ch');
@@ -386,18 +394,6 @@
                     }
 
                     showAlert('Erreur', 'Une erreur est survenue lors de l\'enregistrement.','error');
-                    
-                    nom.value = '';
-                    email.value = '';
-                    tel.value = '';
-                    tel2.value = '';
-                    adresse.value = '';
-                    sexe.value = '';
-                    typeacte_id.value = '';
-                    
-                    select_modif();
-                    select();
-                    list();
                 }
             });
         }
@@ -436,7 +432,7 @@
                             // Create and append cells to the row based on your table's structure
                             row.innerHTML = `
                                 <td>${index + 1}</td>
-                                <td>${item.sexe}.${item.name}</td>
+                                <td>${item.sexe}. ${item.name}</td>
                                 <td>${item.email}</td>
                                 <td>M-${item.matricule}</td>
                                 <td>${item.typeacte}</td>
@@ -488,7 +484,6 @@
                                 }
                             });
 
-                            // Add event listener to the edit button to open the modal with pre-filled data
                             document.getElementById(`delete-${item.id}`).addEventListener('click', () => {
                                 // Set the values in the modal form
                                 document.getElementById('Iddelete').value = item.id;
@@ -571,21 +566,28 @@
                     document.getElementById('preloader_ch').remove();
 
                     if (response.tel_existe) {
-                        showAlert('Alert', 'Ce numéro de téléphone appartient déjà à un utilisateur.','warning');
-                    } else if (response.email_existe) {
-                        showAlert('Alert', 'Cet email appartient déjà à un utilisateur.','warning');
-                    } else if (response.nom_existe) {
-                        showAlert('Alert', 'Cet utilisateur existe déjà.','warning');
-                    } else if (response.success) {
-                        showAlert('Succès', 'Utilisateur mis à jour avec succès.','success');
-                    } else if (response.error) {
-                        showAlert('Erreur', 'Une erreur est survenue lors de la mise à jour.','error');
-                    }
 
-                    // Refresh the list or any UI components
-                    list();
-                    select();
-                    select_modif();
+                        showAlert('Alert', 'Veuillez saisir autre numéro de téléphone s\'il vous plaît','warning');
+
+                    }else if (response.email_existe) {
+
+                        showAlert('Alert', 'Veuillez saisir autre email s\'il vous plaît','warning');
+
+                    }else if (response.nom_existe) {
+
+                        showAlert('Alert', 'Cet Médecin existe déjà.','warning');
+
+                    } else if (response.success) {
+
+                        list();
+
+                        showAlert('Succès', 'Opération éffectuée.','success');
+
+                    } else if (response.error) {
+
+                        showAlert('Erreur', 'Une erreur est survenue lors de l\'enregistrement.','error');
+
+                    }
                 },
                 error: function() {
                     document.getElementById('preloader_ch').remove();
@@ -612,27 +614,20 @@
 
             $.ajax({
                 url: '/api/delete_medecin/'+id,
-                method: 'GET',  // Use 'POST' for data creation
-                // headers: {
-                //     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'), // Include CSRF token if required
-                //     'Content-Type': 'application/json',  // Ensure JSON request
-                // },
-                // data: { nbre_lit: nbreLit, prix: prix},
-                // data: JSON.stringify({
-                //     nbre_lit: nbreLit,
-                //     prix: prix,
-                // }),
+                method: 'GET',
                 success: function(response) {
                     var preloader = document.getElementById('preloader_ch');
                     if (preloader) {
                         preloader.remove();
                     }
 
-                    showAlert('Succès', 'Chambre supprimer avec succès.','success');
-                    
-                    list();
-                    select();
-                    select_modif();
+                    if (response.success) {
+
+                        list();
+
+                        showAlert('Succès', 'Opération éffectuée.','success');
+                    }
+
                 },
                 error: function() {
                     var preloader = document.getElementById('preloader_ch');

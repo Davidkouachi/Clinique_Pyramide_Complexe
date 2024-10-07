@@ -96,9 +96,6 @@
                     </a>
                 </div>
                 <div class="card-body">
-                    <div id="div_alert_table" >
-                    
-                    </div>
                     <div class="table-outer" id="div_Table_lit_day" style="display: none;">
                         <div class="table-responsive">
                             <table class="table align-middle table-hover m-0 truncate" id="Table_lit_day">
@@ -168,9 +165,6 @@
             </div>
             <div class="modal-body">
                 <form id="updateLitForm">
-                    <div class="mb-3" id="alert_update">
-                        
-                    </div>
                     <input type="hidden" id="litId"> <!-- Hidden field for the room's ID -->
                     <div class="mb-3">
                         <label for="chambreCode" class="form-label">Numéro</label>
@@ -273,12 +267,6 @@
             const type = document.getElementById("type");
             const chambre_id = document.getElementById("chambre_id");
 
-            var dynamicFields = document.getElementById("div_alert");
-            // Remove existing content
-            while (dynamicFields.firstChild) {
-                dynamicFields.removeChild(dynamicFields.firstChild);
-            }
-
             if(!num_lit.value.trim() || !type.value.trim() || !chambre_id.value.trim()){
                 showAlert('Alert', 'Veuillez remplir tous les champs SVP.','warning');
                 return false;
@@ -303,20 +291,37 @@
                     }
 
                     if (response.existe) {
+
+                        select_lit();
+
                         showAlert('Alert', 'Cet Lit Existe déjà.','warning');
-                    }else if (response.success) {
-                        showAlert('Succès', 'Lit Enregistrée.','success');
+
+                    } else if (response.nbre) {
+
+                        select_lit();
+
+                        showAlert('Alert', 'Cette Chambre a atteint sa limite, Veuillez selectionner une autre chambre.','warning');
+
+                    } else if (response.success) {
+
+                        num_lit.value = '';
+                        type.value = '';
+                        chambre_id.value = '';
+
+                        refresh_num();
+                        select_lit();
+                        list_lit();
+
+                        showAlert('Succès', 'Opération éffectuée.','success');
+
                     } else if (response.error) {
+
+                        select_lit();
+
                         showAlert('Erreur', 'Une erreur est survenue lors de l\'enregistrement.','error');
+
                     }
 
-                    num_lit.value = '';
-                    type.value = '';
-                    chambre_id.value = '';
-
-                    refresh_num();
-                    select_lit();
-                    list_lit();
                 },
                 error: function() {
                     var preloader = document.getElementById('preloader_ch');
@@ -324,15 +329,9 @@
                         preloader.remove();
                     }
 
-                    showAlert('Erreur', 'Une erreur est survenue lors de l\'enregistrement.','error');
-                    
-                    num_lit.value = '';
-                    type.value = '';
-                    chambre_id.value = '';
-                    
-                    refresh_num();
                     select_lit();
-                    list_lit();
+
+                    showAlert('Erreur', 'Une erreur est survenue lors de l\'enregistrement.','error');
                 }
             });
 
@@ -443,12 +442,6 @@
             const id = document.getElementById('litId').value;
             const typeLit = document.getElementById('typeLit').value;
 
-            var dynamicFields = document.getElementById("alert_update");
-            // Remove existing content
-            while (dynamicFields.firstChild) {
-                dynamicFields.removeChild(dynamicFields.firstChild);
-            }
-
             if(!typeLit.trim()){
                 showAlert('Alert', 'Veuillez remplir tous les champs SVP.','warning');
                 return false;
@@ -467,27 +460,20 @@
 
             $.ajax({
                 url: '/api/update_lit/'+id,
-                method: 'GET',  // Use 'POST' for data creation
-                // headers: {
-                //     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'), // Include CSRF token if required
-                //     'Content-Type': 'application/json',  // Ensure JSON request
-                // },
+                method: 'GET',
                 data: { typeLit: typeLit},
-                // data: JSON.stringify({
-                //     nbre_lit: nbreLit,
-                //     prix: prix,
-                // }),
                 success: function(response) {
                     var preloader = document.getElementById('preloader_ch');
                     if (preloader) {
                         preloader.remove();
                     }
 
-                    showAlert('Succès', 'Lit mise à jour avec succès.','success');
+                    if (response.success) {
 
-                    refresh_num();
-                    select_lit();
-                    list_lit();
+                        showAlert('Succès', 'Opération éffectuée.','success');
+
+                    }
+
                 },
                 error: function() {
                     var preloader = document.getElementById('preloader_ch');
@@ -517,27 +503,18 @@
 
             $.ajax({
                 url: '/api/delete_lit/'+id,
-                method: 'GET',  // Use 'POST' for data creation
-                // headers: {
-                //     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'), // Include CSRF token if required
-                //     'Content-Type': 'application/json',  // Ensure JSON request
-                // },
-                // data: { nbre_lit: nbreLit, prix: prix},
-                // data: JSON.stringify({
-                //     nbre_lit: nbreLit,
-                //     prix: prix,
-                // }),
+                method: 'GET',
                 success: function(response) {
                     var preloader = document.getElementById('preloader_ch');
                     if (preloader) {
                         preloader.remove();
                     }
 
-                    showAlert('Succès', 'Chambre supprimer avec succès.','success');
-                    
-                    refresh_num();
-                    select_lit();
-                    list_lit();
+                    if (response.success) {
+
+                        showAlert('Succès', 'Opération éffectuée.','success');
+
+                    }
                 },
                 error: function() {
                     var preloader = document.getElementById('preloader_ch');

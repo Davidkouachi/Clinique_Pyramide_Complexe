@@ -37,9 +37,6 @@
                     </h5>
                     <div class="d-flex">
                         <input type="text" id="searchInputC" placeholder="N° Consultation" class="form-control me-1">
-                        <a id="btn_print_tableC" style="display: none;" class="btn btn-outline-warning ms-auto me-1">
-                            <i class="ri-printer-line"></i>
-                        </a>
                         <a id="btn_refresh_tableC" class="btn btn-outline-info ms-auto">
                             <i class="ri-loop-left-line"></i>
                         </a>
@@ -366,8 +363,6 @@
                     tableBody.innerHTML = '';
 
                     if (allCons.length > 0) {
-
-                        document.getElementById(`btn_print_tableC`).style.display = 'block';
 
                         loaderDiv.style.display = 'none';
                         messageDiv.style.display = 'none';

@@ -15,6 +15,7 @@ class consultation extends Model
         'facture_id',
         'matricule_patient',
         'code',
+        'num_bon',
     ];
 
     public function patient()

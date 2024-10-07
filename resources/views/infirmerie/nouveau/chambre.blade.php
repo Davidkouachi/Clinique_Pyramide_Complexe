@@ -88,9 +88,6 @@
                     </a>
                 </div>
                 <div class="card-body">
-                    <div id="div_alert" >
-                    
-                    </div>
                     <div class="table-outer" id="div_Table_ch_day" style="display: none;" >
                         <div class="table-responsive">
                             <table class="table align-middle table-hover m-0 truncate" id="Table_ch_day">
@@ -159,9 +156,6 @@
             </div>
             <div class="modal-body">
                 <form id="updateChambreForm">
-                    <div class="mb-3" id="alert_update">
-                        
-                    </div>
                     <input type="hidden" id="chambreId"> <!-- Hidden field for the room's ID -->
                     <div class="mb-3">
                         <label for="chambreCode" class="form-label">Numéro</label>
@@ -266,12 +260,6 @@
             const nbre_lit = document.getElementById("nbre_lit");
             const prix = document.getElementById("prix");
 
-            var dynamicFields = document.getElementById("div_alert");
-            // Remove existing content
-            while (dynamicFields.firstChild) {
-                dynamicFields.removeChild(dynamicFields.firstChild);
-            }
-
             if(!num_chambre.value.trim() || !nbre_lit.value.trim() || !prix.value.trim()){
                 showAlert('Alert', 'Veuillez remplir tous les champs SVP.','warning');
                 return false;
@@ -296,19 +284,26 @@
                     }
 
                     if (response.existe) {
+
                         showAlert('Alert', 'Cette chambre Existe déjà.','warning');
+
                     }else if (response.success) {
-                        showAlert('Succès', 'Chambre Enregistrée.','success');
+
+                        num_chambre.value = '';
+                        nbre_lit.value = '';
+                        prix.value = '';
+
+                        refresh_num();
+                        list_chambre();
+
+                        showAlert('Succès', 'Opération éffectuée.','success');
+
                     } else if (response.error) {
+
                         showAlert('Erreur', 'Une erreur est survenue lors de l\'enregistrement.','error');
+
                     }
 
-                    num_chambre.value = '';
-                    nbre_lit.value = '';
-                    prix.value = '';
-
-                    refresh_num();
-                    list_chambre();
                 },
                 error: function() {
                     var preloader = document.getElementById('preloader_ch');
@@ -317,13 +312,6 @@
                     }
 
                     showAlert('Erreur', 'Une erreur est survenue lors de l\'enregistrement.','error');
-                    
-                    num_chambre.value = '';
-                    nbre_lit.value = '';
-                    prix.value = '';
-                    
-                    refresh_num();
-                    list_chambre();
                 }
             });
 
@@ -438,12 +426,6 @@
             const nbreLit = document.getElementById('chambreLit').value;
             const prix = document.getElementById('chambrePrix').value;
 
-            var dynamicFields = document.getElementById("alert_update");
-            // Remove existing content
-            while (dynamicFields.firstChild) {
-                dynamicFields.removeChild(dynamicFields.firstChild);
-            }
-
             if(!nbreLit.trim() || !prix.trim()){
                 showAlert('Alert', 'Veuillez remplir tous les champs SVP.','warning');
                 return false;
@@ -462,28 +444,19 @@
 
             $.ajax({
                 url: '/api/update_chambre/'+id,
-                method: 'GET',  // Use 'POST' for data creation
-                // headers: {
-                //     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'), // Include CSRF token if required
-                //     'Content-Type': 'application/json',  // Ensure JSON request
-                // },
+                method: 'GET',
                 data: { nbre_lit: nbreLit, prix: prix},
-                // data: JSON.stringify({
-                //     nbre_lit: nbreLit,
-                //     prix: prix,
-                // }),
                 success: function(response) {
                     var preloader = document.getElementById('preloader_ch');
                     if (preloader) {
                         preloader.remove();
                     }
 
-                    showAlert('Succès', 'Chambre mise à jour avec succès.','success');
-                    // Reload the list or update the table row without a full refresh
-                    list_chambre(); // Call your function to reload the table
-                    // Close the modal
+                    showAlert('Succès', 'Opération éffectuée.','success');
+                    list_chambre();
                 },
                 error: function() {
+
                     var preloader = document.getElementById('preloader_ch');
                     if (preloader) {
                         preloader.remove();
@@ -511,26 +484,16 @@
 
             $.ajax({
                 url: '/api/delete_chambre/'+id,
-                method: 'GET',  // Use 'POST' for data creation
-                // headers: {
-                //     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'), // Include CSRF token if required
-                //     'Content-Type': 'application/json',  // Ensure JSON request
-                // },
-                // data: { nbre_lit: nbreLit, prix: prix},
-                // data: JSON.stringify({
-                //     nbre_lit: nbreLit,
-                //     prix: prix,
-                // }),
+                method: 'GET',
                 success: function(response) {
                     var preloader = document.getElementById('preloader_ch');
                     if (preloader) {
                         preloader.remove();
                     }
 
-                    showAlert('Succès', 'Chambre supprimer avec succès.','success');
-                    // Reload the list or update the table row without a full refresh
-                    list_chambre(); // Call your function to reload the table
-                    // Close the modal
+                    showAlert('Succès', 'Opération éffectuée.','success');
+
+                    list_chambre();
                 },
                 error: function() {
                     var preloader = document.getElementById('preloader_ch');

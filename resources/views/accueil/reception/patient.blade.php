@@ -147,15 +147,12 @@
                         Liste des Patients
                     </h5>
                     <div class="d-flex">
-                        <input type="text" id="searchInputP" placeholder="N° Dossier" class="form-control me-1">
+                        <input type="text" id="searchInputP" placeholder="Recherche" class="form-control me-1">
                         <select class="form-select me-1" id="statutP">
                             <option selected value="tous">Tous</option>
                             <option value="oui">Assurer</option>
                             <option value="non">Non Assurer</option>
                         </select>
-                        <a id="btn_print_tableP" style="display: none;" class="btn btn-outline-warning ms-auto me-1">
-                            <i class="ri-printer-line"></i>
-                        </a>
                         <a id="btn_refresh_tableP" class="btn btn-outline-info ms-auto">
                             <i class="ri-loop-left-line"></i>
                         </a>
@@ -523,11 +520,13 @@
                     phone.value = '';
                     phone2.value = '';
                     adresse.value = '';
-
                     datenais.value = '';
                     sexe.value = '';
                     filiation.value = '';
                     matricule_assurance.value = '';
+                    assurance_id.value = "";
+                    taux_id.value = "";
+                    societe_id.value = "";
 
                     assurer.value = 'non';
 
@@ -576,7 +575,6 @@
                     tableBody.innerHTML = '';
 
                     if (allPatients.length > 0) {
-                        document.getElementById('btn_print_tableP').style.display = 'block';
 
                         loaderDiv.style.display = 'none';
                         messageDiv.style.display = 'none';

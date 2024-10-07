@@ -85,9 +85,7 @@
                     </a>
                 </div>
                 <div class="card-body">
-                    <div id="div_alert_table" >
-                    
-                    </div>
+
                     <div class="table-outer" id="div_Table" style="display: none;">
                         <div class="table-responsive">
                             <table class="table align-middle table-hover m-0 truncate" id="Table" >
@@ -155,10 +153,8 @@
             </div>
             <div class="modal-body">
                 <form id="updateForm">
-                    <div class="mb-3" id="alert_update">
-                        
-                    </div>
-                    <input type="hidden" id="Id"> <!-- Hidden field for the room's ID -->
+
+                    <input type="hidden" id="Id">
                     <div class="mb-3">
                         <label class="form-label">Soins Infirmier</label>
                         <input type="text" class="form-control" id="nomModif" oninput="this.value = this.value.toUpperCase()">

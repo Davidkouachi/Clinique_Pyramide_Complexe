@@ -86,9 +86,6 @@
                     </div>
                 </div>
                 <div class="card-body">
-                    <div id="div_alert_table" >
-                    
-                    </div>
                     <div class="table-outer" id="div_Table" style="display: none;" >
                         <div class="table-responsive">
                             <table class="table align-middle table-hover m-0 truncate" id="Table_day">
@@ -157,10 +154,7 @@
             </div>
             <div class="modal-body">
                 <form id="updateChambreForm">
-                    <div class="mb-3" id="alert_update">
-                        
-                    </div>
-                    <input type="hidden" id="Id"> <!-- Hidden field for the room's ID -->
+                    <input type="hidden" id="Id">
                     <div class="mb-3">
                         <label class="form-label">Nom du Produit</label>
                         <div class="input-group">
@@ -249,11 +243,6 @@
             const nom = document.getElementById("nom");
             const prix = document.getElementById("prix");
             const quantite = document.getElementById("quantite");
-
-            var dynamicFields = document.getElementById("div_alert");
-            while (dynamicFields.firstChild) {
-                dynamicFields.removeChild(dynamicFields.firstChild);
-            }
 
             if(!nom.value.trim() || !prix.value.trim() || !quantite.value.trim()){
                 showAlert('Alert', 'Veuillez remplir tous les champs SVP.','warning');
@@ -508,16 +497,6 @@
             const nom = document.getElementById('nomModif').value;
             const prix = document.getElementById('prixModif').value;
             const quantite = document.getElementById('quantiteModif').value;
-
-            var dynamicFields = document.getElementById("alert_update");
-            while (dynamicFields.firstChild) {
-                dynamicFields.removeChild(dynamicFields.firstChild);
-            }
-
-            var dynamicFields2 = document.getElementById("div_alert_table");
-            while (dynamicFields2.firstChild) {
-                dynamicFields2.removeChild(dynamicFields2.firstChild);
-            }
 
             if(!nom.trim() || !prix.trim() || !quantite.trim()){
                 showAlert('Alert', 'Veuillez remplir tous les champs SVP.','warning');

@@ -23,6 +23,7 @@ class detailhopital extends Model
         'patient_id',
         'lit_id',
         'user_id',
+        'num_bon',
     ];
 
     public function natureadmission()
