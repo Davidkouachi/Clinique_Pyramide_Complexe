@@ -187,6 +187,7 @@ Route::middleware(['statutchambre','dateRdv'])->group(function () {
 
 	// Etat debut
 	Route::get('/imp_fac_assurance', [ApipdfController::class, 'imp_fac_assurance']);
+	Route::get('/imp_fac_assurance_bordo', [ApipdfController::class, 'imp_fac_assurance_bordo']);
 	// Etat fin
 
 });
