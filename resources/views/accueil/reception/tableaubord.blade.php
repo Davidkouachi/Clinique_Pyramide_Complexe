@@ -160,6 +160,8 @@
                                                     <button hidden id="btn_rech_num_dossier" class="btn btn-outline-success">
                                                         <i class="ri-search-line"></i>
                                                     </button>
+                                                </div>
+                                                <div class="input-group">
                                                     <div class="suggestions w-100" id="suggestions" style="display: none;"></div>
                                                 </div>
                                             </div>
@@ -677,7 +679,6 @@
 
         document.getElementById("btn_eng_consultation").addEventListener("click", eng_consultation);
         document.getElementById("btn_refresh_table").addEventListener("click", list_cons);
-        document.getElementById("btn_rech_num_dossier").addEventListener("click", rech_dosier);
         document.getElementById("acte_id").addEventListener("change", select_list_typeacte);
         document.getElementById("btn_eng_societe").addEventListener("click", eng_societe);
         document.getElementById("btn_eng_assurance").addEventListener("click", eng_assurance);

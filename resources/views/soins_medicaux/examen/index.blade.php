@@ -104,6 +104,8 @@
                                             <div class="input-group">
                                                 <input type="hidden" class="form-control" id="matricule_patient" autocomplete="off">
                                                 <input type="text" class="form-control" id="patient" placeholder="saisie obligatoire" autocomplete="off">
+                                            </div>
+                                            <div class="input-group">
                                                 <div class="suggestions w-100" id="suggestions_patient" style="display: none;"></div>
                                             </div>
                                         </div>
@@ -1204,7 +1206,7 @@
                     let patientSelected = false;  // Variable to track if a patient was selected
 
                     // Event listener for input typing
-                    input.addEventListener('input', function() {
+                    function displaySuggestions() {
 
                         const searchTerm = input.value.toLowerCase();
                         
@@ -1265,9 +1267,16 @@
                             document.getElementById('typeacte_id_exd').value = "";
                             updateMontantTotalExamen();
                         }
+                    }
+
+                    input.addEventListener('focus', function() {
+                        displaySuggestions();
                     });
 
-                    // Hide suggestions when clicking outside
+                    input.addEventListener('input', function() {
+                        displaySuggestions();
+                    });
+
                     document.addEventListener('click', function(e) {
                         if (!suggestionsDiv.contains(e.target) && e.target !== input) {
                             suggestionsDiv.style.display = 'none';
@@ -1397,6 +1406,12 @@
 
             // Ajouter le prélèvement au montant total une seule fois après la boucle
             montantTotal += preleve;
+
+            let pre_ass = 0;
+            pre_ass = (preleve * patientTaux) / 100;
+
+            montantAssurance += pre_ass;
+            montantPatient += (preleve - pre_ass);
 
             // Formater les montants avec des points
             const formatMontant = (montant) => montant.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');

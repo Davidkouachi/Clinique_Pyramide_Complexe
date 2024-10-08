@@ -49,7 +49,7 @@
                                         <th scope="col">Remise</th>
                                         <th scope="col">Montant Chambre</th>
                                         <th scope="col">Montant Soins</th>
-                                        <th scope="col">Montant a payer</th>
+                                        <th scope="col">Montant Total</th>
                                         <th scope="col">Date de création</th>
                                         <th scope="col">Actions</th>
                                     </tr>
@@ -243,13 +243,13 @@
                                         ${item.remise ?? 0} Fcfa
                                     </td>
                                     <td class="text-primary">
-                                        ${item.montant ?? 0} Fcfa
+                                        ${item.montant_chambre ?? 0} Fcfa
                                     </td>
                                     <td class="text-primary">
                                         ${item.montant_soins ?? 0} Fcfa
                                     </td>
                                     <td class="text-primary">
-                                        ${item.total ?? 0} Fcfa
+                                        ${item.montant ?? 0} Fcfa
                                     </td>
                                     <td>${formatDate(item.created_at)}</td>
                                     <td>
@@ -798,7 +798,7 @@
                 doc.setFont("Helvetica", "bold");
                 doc.text('Total Chambre', leftMargin + 120, yPoss);
                 doc.setFont("Helvetica", "bold");
-                doc.text(": "+hopital.montant+" Fcfa", leftMargin + 150, yPoss);
+                doc.text(": "+hopital.montant_chambre+" Fcfa", leftMargin + 150, yPoss);
 
                 const donneeTable = produit;
                 // Using autoTable to add a dynamic table for hospital stay details
@@ -833,7 +833,7 @@
                     }
                     
                     // Ajouter l'entrée "Montant a payer"
-                    finalInfo.push({ label: "Montant a payer", value: hopital.total_final });
+                    finalInfo.push({ label: "Montant Total", value: hopital.montant });
                     
                     // Boucler à travers finalInfo pour afficher les informations
                     finalInfo.forEach(info => {
@@ -855,7 +855,7 @@
                         finalInfo.push({ label: "Total Produit", value: hopital.montant_soins });
                     }
                     // Ajouter l'entrée "Montant a payer"
-                    finalInfo.push({ label: "Montant a payer", value: hopital.total_final });
+                    finalInfo.push({ label: "Montant Total", value: hopital.montant });
                     // Boucler à travers finalInfo pour afficher les informations
                     finalInfo.forEach(info => {
                         doc.setFontSize(11);
@@ -1060,7 +1060,7 @@
                 doc.setFont("Helvetica", "bold");
                 doc.text('Total Chambre', leftMargin + 120, yPoss);
                 doc.setFont("Helvetica", "bold");
-                doc.text(": "+hopital.montant+" Fcfa", leftMargin + 150, yPoss);
+                doc.text(": "+hopital.montant_chambre+" Fcfa", leftMargin + 150, yPoss);
 
                 const donneeTable = produit;
                 // Using autoTable to add a dynamic table for hospital stay details
@@ -1095,7 +1095,7 @@
                     }
                     
                     // Ajouter l'entrée "Montant a payer"
-                    finalInfo.push({ label: "Montant a payer", value: hopital.total_final });
+                    finalInfo.push({ label: "Montant Total", value: hopital.montant });
                     
                     if (facture) {
                         finalInfo.push(
@@ -1124,7 +1124,7 @@
                         finalInfo.push({ label: "Total Produit", value: hopital.montant_soins });
                     }
                     // Ajouter l'entrée "Montant a payer"
-                    finalInfo.push({ label: "Montant a payer", value: hopital.total_final });
+                    finalInfo.push({ label: "Montant Total", value: hopital.montant });
                     // Boucler à travers finalInfo pour afficher les informations
                     finalInfo.forEach(info => {
                         doc.setFontSize(11);

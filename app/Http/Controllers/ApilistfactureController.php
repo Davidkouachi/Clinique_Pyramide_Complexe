@@ -166,19 +166,6 @@ class ApilistfactureController extends Controller
 
         $hopital = $hopitalQuery->paginate(15);
 
-        foreach ($hopital->items() as $value) {
-            $montant = str_replace('.', '', $value->part_patient);
-            $montant_soins = str_replace('.', '', $value->montant_soins);
-
-            // Additionner les montants
-            $total = $montant + $montant_soins;
-
-            // Remettre les points pour les milliers
-            $total_formatted = number_format($total, 0, '', '.');
-
-            $value->total = $total_formatted ;
-        }
-
         return response()->json([
             'hopital' => $hopital->items(), // Paginated data
             'pagination' => [
@@ -200,19 +187,6 @@ class ApilistfactureController extends Controller
                                 )->orderBy('detailhopitals.created_at', 'desc');
 
         $hopital = $hopitalQuery->paginate(15);
-
-        foreach ($hopital->items() as $value) {
-            $montant = str_replace('.', '', $value->part_patient);
-            $montant_soins = str_replace('.', '', $value->montant_soins);
-
-            // Additionner les montants
-            $total = $montant + $montant_soins;
-
-            // Remettre les points pour les milliers
-            $total_formatted = number_format($total, 0, '', '.');
-
-            $value->total = $total_formatted ;
-        }
 
         return response()->json([
             'hopital' => $hopital->items(), // Paginated data

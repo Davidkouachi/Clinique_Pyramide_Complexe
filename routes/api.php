@@ -185,4 +185,8 @@ Route::middleware(['statutchambre','dateRdv'])->group(function () {
 	Route::get('/facture_inpayer_cons/{id}', [ApipdfController::class, 'facture_inpayer_cons']);
 	// PDF fin
 
+	// Etat debut
+	Route::get('/imp_fac_assurance', [ApipdfController::class, 'imp_fac_assurance']);
+	// Etat fin
+
 });

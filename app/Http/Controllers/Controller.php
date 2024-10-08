@@ -128,4 +128,11 @@ class Controller
     {
         return view('grille.specialite');
     }
+
+    // ---------------------------------------------------
+
+    public function etat_facture()
+    {
+        return view('pdf.facture.index');
+    }
 }

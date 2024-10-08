@@ -85,6 +85,8 @@
                                             <div class="input-group">
                                                 <input type="hidden" class="form-control" id="matricule_patient" autocomplete="off">
                                                 <input type="text" class="form-control" id="patient" placeholder="Saisie Obligatoire" autocomplete="off">
+                                            </div>
+                                            <div class="input-group">
                                                 <div class="suggestions w-100" id="suggestions_patient" style="display: none;"></div>
                                             </div>
                                         </div>
@@ -481,7 +483,6 @@
         select_typeadmission();
         list_lit();
         list_hos();
-        
 
         document.getElementById("id_chambre").addEventListener("change", select_lit);
         document.getElementById("id_typeadmission").addEventListener("change", select_natureadmission);
@@ -508,7 +509,7 @@
                     const appliq_remise = document.getElementById('appliq_remise');
 
                     // Event listener for input typing
-                    input.addEventListener('input', function() {
+                    function displaySuggestions() {
                         const searchTerm = input.value.toLowerCase();
                         
                         // Clear previous suggestions
@@ -560,9 +561,16 @@
 
                         // Show/hide suggestions based on results
                         suggestionsDiv.style.display = filteredData.length > 0 ? 'block' : 'none';
+                    }
+
+                    input.addEventListener('focus', function() {
+                        displaySuggestions();
                     });
 
-                    // Hide suggestions when clicking outside
+                    input.addEventListener('input', function() {
+                        displaySuggestions();
+                    });
+
                     document.addEventListener('click', function(e) {
                         if (!suggestionsDiv.contains(e.target) && e.target !== input) {
                             suggestionsDiv.style.display = 'none';
@@ -2042,7 +2050,7 @@
                 doc.setFont("Helvetica", "bold");
                 doc.text('Total Chambre', leftMargin + 120, yPoss);
                 doc.setFont("Helvetica", "bold");
-                doc.text(": "+hopital.montant+" Fcfa", leftMargin + 150, yPoss);
+                doc.text(": "+hopital.montant_chambre+" Fcfa", leftMargin + 150, yPoss);
 
                 const donneeTable = produit;
                 // Using autoTable to add a dynamic table for hospital stay details
@@ -2077,7 +2085,7 @@
                     }
                     
                     // Ajouter l'entrée "Montant a payer"
-                    finalInfo.push({ label: "Montant a payer", value: hopital.total_final });
+                    finalInfo.push({ label: "Montant Total", value: hopital.montant });
                     
                     // Boucler à travers finalInfo pour afficher les informations
                     finalInfo.forEach(info => {

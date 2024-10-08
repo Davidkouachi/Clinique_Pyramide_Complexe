@@ -222,17 +222,6 @@ class ApilistController extends Controller
     {
         $hopital = detailhopital::find($id);
 
-        $montant = str_replace('.', '', $hopital->part_patient);
-        $montant_soins = str_replace('.', '', $hopital->montant_soins);
-
-        // Additionner les montants
-        $total = $montant + $montant_soins;
-
-        // Remettre les points pour les milliers
-        $total_formatted = number_format($total, 0, '', '.');
-
-        $hopital->total_final = $total_formatted ;
-
         $facture = facture::find($hopital->facture_id);
 
         $patient = patient::leftjoin('assurances', 'assurances.id', '=', 'patients.assurance_id')

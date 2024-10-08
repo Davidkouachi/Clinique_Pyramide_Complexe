@@ -77,9 +77,13 @@
                                     <div class="col-xxl-3 col-lg-4 col-sm-6">
                                         <div class="mb-3">
                                             <label class="form-label">Patient</label>
-                                            <input type="hidden" class="form-control" id="matricule_patient" autocomplete="off">
-                                            <input type="text" class="form-control" id="patient" placeholder="saisie obligatoire" autocomplete="off">
-                                            <div class="suggestions" id="suggestions_patient" style="display: none;"></div>
+                                            <div class="input-group">
+                                                <input type="hidden" class="form-control" id="matricule_patient" autocomplete="off">
+                                                <input type="text" class="form-control" id="patient" placeholder="saisie obligatoire" autocomplete="off">
+                                            </div>
+                                            <div class="input-group">
+                                                <div class="suggestions w-100" id="suggestions_patient" style="display: none;"></div>
+                                            </div>
                                         </div>
                                     </div>
                                     <div class="col-xxl-3 col-lg-4 col-sm-6" id="div_numcode" style="display: none;">
@@ -493,7 +497,7 @@
                     let patientSelected = false;  // Variable to track if a patient was selected
 
                     // Event listener for input typing
-                    input.addEventListener('input', function() {
+                    function displaySuggestions() {
 
                         const searchTerm = input.value.toLowerCase();
                         
@@ -547,9 +551,16 @@
                             patientSelected = false; // Reset patient selection flag
                             document.getElementById('div_calcul').style.display = 'none';
                         }
+                    }
+
+                    input.addEventListener('focus', function() {
+                        displaySuggestions();
                     });
 
-                    // Hide suggestions when clicking outside
+                    input.addEventListener('input', function() {
+                        displaySuggestions();
+                    });
+
                     document.addEventListener('click', function(e) {
                         if (!suggestionsDiv.contains(e.target) && e.target !== input) {
                             suggestionsDiv.style.display = 'none';

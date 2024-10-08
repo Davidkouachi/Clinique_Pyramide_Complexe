@@ -591,6 +591,7 @@ class ApiinsertController extends Controller
             $add->remise = $request->taux_remise;
             $add->montant = $request->montant_total;
             $add->montant_soins = '0';
+            $add->montant_chambre = $request->montant_total;
             $add->date_debut = $request->date_entrer;
             $add->date_fin = $request->date_sortie;
             $add->natureadmission_id = $natureadmission->id;
@@ -683,20 +684,53 @@ class ApiinsertController extends Controller
                 }
             }
 
-            // Récupérer le montant existant de detailhopital
+            $montantTotal = str_replace('.', '', $request->input('montantTotal'));
+
             $add2 = detailhopital::find($id);
 
-            // Enlever les points du montant actuel
-            $currentMontant = str_replace('.', '', $add2->montant_soins);
+            $montant_soins_ancien = str_replace('.', '', $add2->montant_soins);
 
-            // Additionner les montants (les deux montants sont maintenant des entiers sans points)
-            $nouveauMontant = $montantTotal + $currentMontant;
+            $montant_soins_nouveau = $montantTotal + $montant_soins_ancien;
 
-            // Remettre les points après chaque trois chiffres
-            $formattedMontant = number_format($nouveauMontant, 0, '', '.');
+            $formattedMontant = number_format($montant_soins_nouveau, 0, '', '.');
 
-            // Mettre à jour le montant dans la table detailhopital
             $add2->montant_soins = $formattedMontant;
+
+            $a_soins = str_replace('.', '', $add2->montant_soins);
+            $a_chambre = str_replace('.', '', $add2->montant_chambre);
+
+            $n_montant = $a_soins + $a_chambre;
+
+            $add2->montant = number_format($n_montant, 0, '', '.');
+
+            $rech_taux = patient::leftjoin('tauxes', 'tauxes.id', '=', 'patients.taux_id')
+                            ->where('patients.assurer', '=', 'oui')
+                            ->where('patients.id', '=', $add2->patient_id)
+                            ->select(
+                                'patients.*',
+                                'tauxes.taux as taux',
+                            )->first();
+
+            $nMontant = str_replace('.', '', $add2->montant);
+
+            $assurance = ($nMontant * $rech_taux->taux) / 100;
+
+            $patient = $nMontant - $assurance;
+
+            $formattedA = number_format($assurance, 0, '', '.');
+            $formattedP = number_format($patient, 0, '', '.');
+
+            $add2->part_assurance = $formattedA;
+            $add2->part_patient = $formattedP;
+
+            $remise = str_replace('.', '', $add2->remise);
+            $r_patient = str_replace('.', '', $add2->part_patient);
+
+            $nremise = $r_patient - $remise;
+
+            $formattedr = number_format($nremise, 0, '', '.');
+
+            $add2->part_patient = $formattedr;
 
             if (!$add2->save()) {
                 throw new \Exception('Erreur lors de la mise à jour du montant total');

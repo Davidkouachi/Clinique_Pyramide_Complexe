@@ -89,6 +89,8 @@ Route::middleware(['auth','statutchambre','dateRdv'])->group(function () {
 
 	Route::get('/Horaires Médecin', [Controller::class, 'horaire_medecin'])->name('horaire_medecin');
 
+	Route::get('/Etats Factures', [Controller::class, 'etat_facture'])->name('etat_facture');
+
 // Route::middleware(['role:ADMINISTRATEUR'])->group(function () {
 
 // });

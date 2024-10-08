@@ -298,6 +298,19 @@
                                 </li>
                             </ul>
                         </li>
+                        <li @if(request()->routeIs('etat_facture')) class="active current-page treeview" @else class="treeview" @endif >
+                            <a href="#!">
+                                <i class="ri-archive-fill"></i>
+                                <span class="menu-text">Etats</span>
+                            </a>
+                            <ul class="treeview-menu">
+                                <li>
+                                    <a @if(request()->routeIs('etat_facture')) class="text-primary" @endif href="{{route('etat_facture')}}">
+                                        Factures
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
                     </ul>
                 </div>
                 <div class="sidebar-contact" style="background-color: red;">

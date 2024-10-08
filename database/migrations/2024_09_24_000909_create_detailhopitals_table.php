@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string('remise');
             $table->string('montant');
             $table->string('montant_soins');
+            $table->string('montant_chambre');
             $table->string('date_debut');
             $table->string('date_fin');
             $table->unsignedBigInteger('natureadmission_id');

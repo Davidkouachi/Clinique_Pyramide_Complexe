@@ -16,6 +16,7 @@ class detailhopital extends Model
         'remise',
         'montant',
         'montant_soins',
+        'montant_chambre',
         'date_debut',
         'date_fin',
         'natureadmission_id',
