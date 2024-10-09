@@ -47,6 +47,7 @@ use App\Models\prelevement;
 use App\Models\joursemaine;
 use App\Models\rdvpatient;
 use App\Models\programmemedecin;
+use App\Models\depotfacture;
 
 class ApiinsertController extends Controller
 {
@@ -1086,6 +1087,38 @@ class ApiinsertController extends Controller
         $add->acte_id = $acte->id;
 
         if($add->save()){
+            return response()->json(['success' => true]);
+        } else {
+            return response()->json(['error' => true]);
+        }
+    }
+
+    public function new_depot_fac(Request $request)
+    {
+        $date1 = $request->date1;
+        $date2 = $request->date2;
+        $date_depot = $request->date_depot;
+        $assurance_id = $request->assurance_id;
+
+        $verf = depotfacture::join('assurances', 'assurances.id', 'depotfactures.assurance_id')
+                ->where('depotfactures.assurance_id', '=', $assurance_id)
+                ->whereBetween(DB::raw('DATE(depotfactures.date1)'), [$date1, $date2])
+                ->orWhereBetween(DB::raw('DATE(depotfactures.date2)'), [$date1, $date2])
+                ->exists();
+
+        if ($verf)
+        {
+            return response()->json(['existe' => true]);
+        }
+
+        $add = new depotfacture();
+        $add->assurance_id = $assurance_id;
+        $add->date1 = $date1;
+        $add->date2 = $date2;
+        $add->date_depot = $date_depot;
+        $add->statut = 'non';
+
+        if ($add->save()) {
             return response()->json(['success' => true]);
         } else {
             return response()->json(['error' => true]);

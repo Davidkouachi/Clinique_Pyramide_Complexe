@@ -135,4 +135,11 @@ class Controller
     {
         return view('pdf.facture.index');
     }
+
+    // --------------------------------------------------------
+
+    public function facture_depot()
+    {
+        return view('finance.comptabilite.facture_depot');
+    }
 }

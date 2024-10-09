@@ -46,6 +46,7 @@ use App\Models\prelevement;
 use App\Models\joursemaine;
 use App\Models\rdvpatient;
 use App\Models\programmemedecin;
+use App\Models\depotfacture;
 
 
 class ApideleteController extends Controller
@@ -227,6 +228,21 @@ class ApideleteController extends Controller
     public function delete_specialite($id)
     {
         $put = typeacte::find($id);
+
+        if ($put) {
+            if ($put->delete()) {
+                return response()->json(['success' => true]);
+            }else{
+                return response()->json(['error' => true]);
+            }
+        }
+
+        return response()->json(['error' => true]);
+    }
+
+    public function delete_depotfacture($id)
+    {
+        $put = depotfacture::find($id);
 
         if ($put) {
             if ($put->delete()) {

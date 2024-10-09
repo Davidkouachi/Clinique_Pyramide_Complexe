@@ -53,6 +53,7 @@ Route::middleware(['statutchambre','dateRdv'])->group(function () {
 	Route::get('/new_horaire', [ApiinsertController::class, 'new_horaire']);
 	Route::get('/new_rdv', [ApiinsertController::class, 'new_rdv']);
 	Route::get('/specialite_new', [ApiinsertController::class, 'specialite_new']);
+	Route::get('/new_depot_fac', [ApiinsertController::class, 'new_depot_fac']);
 	// insert debut
 
 	// search debut
@@ -113,6 +114,7 @@ Route::middleware(['statutchambre','dateRdv'])->group(function () {
 	Route::get('/delete_societe/{id}', [ApideleteController::class, 'delete_societe']);
 	Route::get('/delete_rdv/{id}', [ApideleteController::class, 'delete_rdv']);
 	Route::get('/delete_specialite/{id}', [ApideleteController::class, 'delete_specialite']);
+	Route::get('/delete_depotfacture/{id}', [ApideleteController::class, 'delete_depotfacture']);
 	// delete debut
 
 	// liste debut
@@ -142,6 +144,7 @@ Route::middleware(['statutchambre','dateRdv'])->group(function () {
 	Route::get('/list_horaire/{medecin}/{specialite}/{jour}/{periode}', [ApilistController::class, 'list_horaire']);
 	Route::get('/list_rdv/{statut}', [ApilistController::class, 'list_rdv']);
 	Route::get('/list_specialite', [ApilistController::class, 'list_specialite']);
+	Route::get('/list_depotfacture/{statut}', [ApilistController::class, 'list_depotfacture']);
 	// liste debut
 
 	// statistique debut

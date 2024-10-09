@@ -279,6 +279,11 @@ class ApipdfController extends Controller
 
         foreach ($societes as $key => $societe) {
 
+            // Initialisation des totaux
+            $total_patient = 0;
+            $total_assurance = 0;
+            $total_montant = 0;
+
             $fac_cons = consultation::join('patients', 'patients.id', '=', 'consultations.patient_id')
                 ->join('assurances', 'assurances.id', '=', 'patients.assurance_id')
                 ->join('societes', 'societes.id', '=', 'patients.societe_id')
@@ -298,11 +303,6 @@ class ApipdfController extends Controller
                     'detailconsultations.montant as montant',
                 )
                 ->get();
-
-            // Initialisation des totaux
-            $total_patient = 0;
-            $total_assurance = 0;
-            $total_montant = 0;
 
             foreach ($fac_cons as $value) {
                 $patient = intval(str_replace('.', '', $value->part_patient));

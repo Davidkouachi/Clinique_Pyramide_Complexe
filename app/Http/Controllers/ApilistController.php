@@ -46,6 +46,7 @@ use App\Models\prelevement;
 use App\Models\joursemaine;
 use App\Models\rdvpatient;
 use App\Models\programmemedecin;
+use App\Models\depotfacture;
 
 
 class ApilistController extends Controller
@@ -739,6 +740,184 @@ class ApilistController extends Controller
                         ->get();
 
         return response()->json(['typeacte' => $typeacte]);
+    }
+
+    private function formatWithPeriods($number) {
+        return number_format($number, 0, '', '.');
+    }
+
+    public function list_depotfacture($statut)
+    {
+
+        $depotQuery = depotfacture::join('assurances', 'assurances.id', '=', 'depotfactures.assurance_id')
+        ->select(
+            'depotfactures.*',
+            'assurances.nom as assurance',
+        )
+        ->orderBy('depotfactures.created_at', 'desc');
+
+        if ($statut !== 'tous') {
+            $depotQuery->where('depotfactures.statut', '=', $statut);
+        }
+
+        $depot = $depotQuery->paginate(15);
+
+        foreach ($depot->items() as $depo) {
+
+            $total_patient = 0;
+            $total_assurance = 0;
+            $total_montant = 0;
+
+            $date1 = $depo->date1;
+            $date2 = $depo->date2;
+
+            $fac_cons = consultation::join('patients', 'patients.id', '=', 'consultations.patient_id')
+                ->join('assurances', 'assurances.id', '=', 'patients.assurance_id')
+                ->join('societes', 'societes.id', '=', 'patients.societe_id')
+                ->join('detailconsultations', 'detailconsultations.consultation_id', '=', 'consultations.id')
+                ->where('patients.assurer', '=', 'oui')
+                ->where('consultations.num_bon', '!=', null)
+                ->whereBetween(DB::raw('DATE(consultations.created_at)'), [$date1, $date2])
+                ->where('assurances.id', '=', $depo->assurance_id)
+                ->select(
+                    'consultations.num_bon as num_bon',
+                    'consultations.created_at as created_at',
+                    'patients.np as patient',
+                    'detailconsultations.part_assurance as part_assurance',
+                    'detailconsultations.part_patient as part_patient',
+                    'detailconsultations.remise as remise',
+                    'detailconsultations.montant as montant',
+                )
+                ->get();
+
+            if ($fac_cons) {
+                foreach ($fac_cons as $value) {
+                    // Parse and ensure that invalid or missing values default to 0
+                    $patient = intval(str_replace('.', '', $value->part_patient ?? 0));
+                    $remise = intval(str_replace('.', '', $value->remise ?? 0));
+
+                    // Calculate totals and ensure invalid values are counted as 0
+                    $total_patient += $patient + $remise;
+                    $total_assurance += intval(str_replace('.', '', $value->part_assurance ?? 0));
+                    $total_montant += intval(str_replace('.', '', $value->montant ?? 0));
+                }
+            }else{
+                $total_patient += 0;
+                $total_assurance += 0;
+                $total_montant += 0;
+            }
+            
+
+            $fac_exam = examen::join('patients', 'patients.id', '=', 'examens.patient_id')
+                ->join('assurances', 'assurances.id', '=', 'patients.assurance_id')
+                ->join('societes', 'societes.id', '=', 'patients.societe_id')
+                ->where('patients.assurer', '=', 'oui')
+                ->where('examens.num_bon', '!=', null)
+                ->whereBetween(DB::raw('DATE(examens.created_at)'), [$date1, $date2])
+                ->where('assurances.id', '=', $depo->assurance_id)
+                ->select(
+                    'examens.num_bon as num_bon',
+                    'examens.created_at as created_at',
+                    'patients.np as patient',
+                    'examens.part_assurance as part_assurance',
+                    'examens.part_patient as part_patient',
+                    'examens.montant as montant',
+                )
+                ->get();
+
+            if ($fac_exam) {
+                foreach ($fac_exam as $value) {
+                    $total_patient += intval(str_replace('.', '', $value->part_patient ?? 0));
+                    $total_assurance += intval(str_replace('.', '', $value->part_assurance ?? 0));
+                    $total_montant += intval(str_replace('.', '', $value->montant ?? 0));
+                }
+            }else{
+                $total_patient += 0;
+                $total_assurance += 0;
+                $total_montant += 0;
+            }
+
+            $fac_soinsam = soinspatient::join('patients', 'patients.id', '=', 'soinspatients.patient_id')
+                ->join('assurances', 'assurances.id', '=', 'patients.assurance_id')
+                ->join('societes', 'societes.id', '=', 'patients.societe_id')
+                ->where('patients.assurer', '=', 'oui')
+                ->where('soinspatients.num_bon', '!=', null)
+                ->whereBetween(DB::raw('DATE(soinspatients.created_at)'), [$date1, $date2])
+                ->where('assurances.id', '=', $depo->assurance_id)
+                ->select(
+                    'soinspatients.num_bon as num_bon',
+                    'soinspatients.created_at as created_at',
+                    'patients.np as patient',
+                    'soinspatients.part_assurance as part_assurance',
+                    'soinspatients.part_patient as part_patient',
+                    'soinspatients.remise as remise',
+                    'soinspatients.montant as montant',
+                )
+                ->get();
+
+            if ($fac_soinsam) {
+                foreach ($fac_soinsam as $value) {
+                    $patient = intval(str_replace('.', '', $value->part_patient ?? 0));
+                    $remise = intval(str_replace('.', '', $value->remise ?? 0));
+
+                    $total_patient += $patient + $remise;
+                    $total_assurance += intval(str_replace('.', '', $value->part_assurance ?? 0));
+                    $total_montant += intval(str_replace('.', '', $value->montant ?? 0));
+                }
+            }else{
+                $total_patient += 0;
+                $total_assurance += 0;
+                $total_montant += 0;
+            }
+
+            $fac_hopital = detailhopital::join('patients', 'patients.id', '=', 'detailhopitals.patient_id')
+                ->leftjoin('assurances', 'assurances.id', '=', 'patients.assurance_id')
+                ->leftjoin('societes', 'societes.id', '=', 'patients.societe_id')
+                ->where('patients.assurer', '=', 'oui')
+                ->where('detailhopitals.num_bon', '!=', null)
+                ->whereBetween(DB::raw('DATE(detailhopitals.created_at)'), [$date1, $date2])
+                ->where('assurances.id', '=', $depo->assurance_id)
+                ->select(
+                    'detailhopitals.num_bon as num_bon',
+                    'detailhopitals.created_at as created_at',
+                    'patients.np as patient',
+                    'detailhopitals.part_assurance as part_assurance',
+                    'detailhopitals.part_patient as part_patient',
+                    'detailhopitals.remise as remise',
+                    'detailhopitals.montant as montant',
+                )
+                ->get();
+
+            if ($fac_hopital) {
+                foreach ($fac_hopital as $value) {
+                    $patient = intval(str_replace('.', '', $value->part_patient ?? 0));
+                    $remise = intval(str_replace('.', '', $value->remise ?? 0));
+
+                    $total_patient += $patient + $remise;
+                    $total_assurance += intval(str_replace('.', '', $value->part_assurance ?? 0));
+                    $total_montant += intval(str_replace('.', '', $value->montant ?? 0));
+                }
+            }else{
+                $total_patient += 0;
+                $total_assurance += 0;
+                $total_montant += 0;
+            }
+
+            $depo->part_patient = $this->formatWithPeriods($total_patient);
+            $depo->part_assurance = $this->formatWithPeriods($total_assurance);
+            $depo->total = $this->formatWithPeriods($total_montant);
+            
+        }
+
+        return response()->json([
+            'depot' => $depot->items(), // Paginated data
+            'pagination' => [
+                'current_page' => $depot->currentPage(),
+                'last_page' => $depot->lastPage(),
+                'per_page' => $depot->perPage(),
+                'total' => $depot->total(),
+            ]
+        ]);
     }
 
 }

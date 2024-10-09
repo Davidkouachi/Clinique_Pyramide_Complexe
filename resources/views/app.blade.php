@@ -231,6 +231,19 @@
                                 </li>
                             </ul>
                         </li>
+                        <li @if(request()->routeIs('facture_depot')) class="active current-page treeview" @else class="treeview" @endif >
+                            <a href="#!">
+                                <i class="ri-line-chart-fill"></i>
+                                <span class="menu-text">Comptabilité</span>
+                            </a>
+                            <ul class="treeview-menu">
+                                <li>
+                                    <a @if(request()->routeIs('facture_depot')) class="text-primary" @endif href="{{route('facture_depot')}}">
+                                        Depôts de factures
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
                         <li @if(request()->routeIs('medecin_new','assurance_new','taux_new','societe_new','acte_new','typeacte_new','chambre_new','lit_new','typeadmission_new','natureadmission_new','produit_new','typesoins_new','soinsinfirmier_new','specialite')) class="active current-page treeview" @else class="treeview" @endif>
                             <a href="#!">
                                 <i class="ri-settings-5-line"></i>
