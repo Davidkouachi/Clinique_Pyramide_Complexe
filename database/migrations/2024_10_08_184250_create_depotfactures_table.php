@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('date1');
             $table->string('date2');
             $table->string('date_depot');
+            $table->string('type_paiement')->nullable();
             $table->string('num_cheque')->nullable();
             $table->string('date_payer')->nullable();
             $table->string('statut')->index();

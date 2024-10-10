@@ -14,6 +14,7 @@ class depotfacture extends Model
         'date1',
         'date2',
         'date_depot',
+        'type_paiement',
         'num_cheque',
         'date_payer',
         'statut',

@@ -54,6 +54,7 @@ Route::middleware(['statutchambre','dateRdv'])->group(function () {
 	Route::get('/new_rdv', [ApiinsertController::class, 'new_rdv']);
 	Route::get('/specialite_new', [ApiinsertController::class, 'specialite_new']);
 	Route::get('/new_depot_fac', [ApiinsertController::class, 'new_depot_fac']);
+	Route::get('/paiement_depot_fac/{id}', [ApiinsertController::class, 'paiement_depot_fac']);
 	// insert debut
 
 	// search debut
@@ -99,6 +100,7 @@ Route::middleware(['statutchambre','dateRdv'])->group(function () {
 	Route::get('/update_horaire/{id}', [ApiupdateController::class, 'update_horaire']);
 	Route::get('/update_rdv/{id}', [ApiupdateController::class, 'update_rdv']);
 	Route::get('/update_specialite/{id}', [ApiupdateController::class, 'update_specialite']);
+	Route::get('/update_depot_fac/{id}', [ApiupdateController::class, 'update_depot_fac']);
 	// update debut
 
 	// delete debut
@@ -191,6 +193,8 @@ Route::middleware(['statutchambre','dateRdv'])->group(function () {
 	// Etat debut
 	Route::get('/imp_fac_assurance', [ApipdfController::class, 'imp_fac_assurance']);
 	Route::get('/imp_fac_assurance_bordo', [ApipdfController::class, 'imp_fac_assurance_bordo']);
+	Route::get('/imp_fac_depot/{id}', [ApipdfController::class, 'imp_fac_depot']);
+	Route::get('/imp_fac_depot_bordo/{id}', [ApipdfController::class, 'imp_fac_depot_bordo']);
 	// Etat fin
 
 });

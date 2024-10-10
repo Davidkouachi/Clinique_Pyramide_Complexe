@@ -1093,6 +1093,10 @@ class ApiinsertController extends Controller
         }
     }
 
+    private function formatWithPeriods($number) {
+        return number_format($number, 0, '', '.');
+    }
+
     public function new_depot_fac(Request $request)
     {
         $date1 = $request->date1;
@@ -1102,13 +1106,139 @@ class ApiinsertController extends Controller
 
         $verf = depotfacture::join('assurances', 'assurances.id', 'depotfactures.assurance_id')
                 ->where('depotfactures.assurance_id', '=', $assurance_id)
-                ->whereBetween(DB::raw('DATE(depotfactures.date1)'), [$date1, $date2])
-                ->orWhereBetween(DB::raw('DATE(depotfactures.date2)'), [$date1, $date2])
+                ->where(function($query) use ($date1, $date2) {
+                    $query->whereBetween(DB::raw('DATE(depotfactures.date1)'), [$date1, $date2])
+                          ->orWhereBetween(DB::raw('DATE(depotfactures.date2)'), [$date1, $date2]);
+                })
                 ->exists();
 
         if ($verf)
         {
             return response()->json(['existe' => true]);
+        }
+
+        $societes = societe::all();
+
+        foreach ($societes as $societe) {
+
+            $total_patient = 0;
+            $total_assurance = 0;
+            $total_montant = 0;
+
+            $fac_cons = consultation::join('patients', 'patients.id', '=', 'consultations.patient_id')
+                ->join('assurances', 'assurances.id', '=', 'patients.assurance_id')
+                ->join('societes', 'societes.id', '=', 'patients.societe_id')
+                ->join('detailconsultations', 'detailconsultations.consultation_id', '=', 'consultations.id')
+                ->where('patients.assurer', '=', 'oui')
+                ->where('consultations.num_bon', '!=', null)
+                ->whereBetween(DB::raw('DATE(consultations.created_at)'), [$date1, $date2])
+                ->where('assurances.id', '=', $assurance_id)
+                ->where('societes.id', '=', $societe->id)
+                ->select(
+                    'consultations.num_bon as num_bon',
+                    'consultations.created_at as created_at',
+                    'patients.np as patient',
+                    'detailconsultations.part_assurance as part_assurance',
+                    'detailconsultations.part_patient as part_patient',
+                    'detailconsultations.remise as remise',
+                    'detailconsultations.montant as montant',
+                )
+                ->get();
+
+            foreach ($fac_cons as $value) {
+                $patient = intval(str_replace('.', '', $value->part_patient));
+                $remise = intval(str_replace('.', '', $value->remise));
+
+                $total_patient += $patient + $remise;
+                $total_assurance += intval(str_replace('.', '', $value->part_assurance));
+                $total_montant += intval(str_replace('.', '', $value->montant));
+
+                $value->part_patient = $this->formatWithPeriods($patient + $remise);
+            }
+
+            $fac_exam = examen::join('patients', 'patients.id', '=', 'examens.patient_id')
+                ->join('assurances', 'assurances.id', '=', 'patients.assurance_id')
+                ->join('societes', 'societes.id', '=', 'patients.societe_id')
+                ->where('patients.assurer', '=', 'oui')
+                ->where('examens.num_bon', '!=', null)
+                ->whereBetween(DB::raw('DATE(examens.created_at)'), [$date1, $date2])
+                ->where('assurances.id', '=', $assurance_id)
+                ->where('societes.id', '=', $societe->id)
+                ->select(
+                    'examens.num_bon as num_bon',
+                    'examens.created_at as created_at',
+                    'patients.np as patient',
+                    'examens.part_assurance as part_assurance',
+                    'examens.part_patient as part_patient',
+                    'examens.montant as montant',
+                )
+                ->get();
+
+            foreach ($fac_exam as $value) {
+                $total_patient += intval(str_replace('.', '', $value->part_patient));
+                $total_assurance += intval(str_replace('.', '', $value->part_assurance));
+                $total_montant += intval(str_replace('.', '', $value->montant));
+            }
+
+            $fac_soinsam = soinspatient::join('patients', 'patients.id', '=', 'soinspatients.patient_id')
+                ->join('assurances', 'assurances.id', '=', 'patients.assurance_id')
+                ->join('societes', 'societes.id', '=', 'patients.societe_id')
+                ->where('patients.assurer', '=', 'oui')
+                ->where('soinspatients.num_bon', '!=', null)
+                ->whereBetween(DB::raw('DATE(soinspatients.created_at)'), [$date1, $date2])
+                ->where('assurances.id', '=', $assurance_id)
+                ->where('societes.id', '=', $societe->id)
+                ->select(
+                    'soinspatients.num_bon as num_bon',
+                    'soinspatients.created_at as created_at',
+                    'patients.np as patient',
+                    'soinspatients.part_assurance as part_assurance',
+                    'soinspatients.part_patient as part_patient',
+                    'soinspatients.remise as remise',
+                    'soinspatients.montant as montant',
+                )
+                ->get();
+
+            foreach ($fac_soinsam as $value) {
+                $patient = intval(str_replace('.', '', $value->part_patient));
+                $remise = intval(str_replace('.', '', $value->remise));
+
+                $total_patient += $patient + $remise;
+                $total_assurance += intval(str_replace('.', '', $value->part_assurance));
+                $total_montant += intval(str_replace('.', '', $value->montant));
+            }
+
+            $fac_hopital = detailhopital::join('patients', 'patients.id', '=', 'detailhopitals.patient_id')
+                ->leftjoin('assurances', 'assurances.id', '=', 'patients.assurance_id')
+                ->leftjoin('societes', 'societes.id', '=', 'patients.societe_id')
+                ->where('patients.assurer', '=', 'oui')
+                ->where('detailhopitals.num_bon', '!=', null)
+                ->whereBetween(DB::raw('DATE(detailhopitals.created_at)'), [$date1, $date2])
+                ->where('assurances.id', '=', $assurance_id)
+                ->where('societes.id', '=', $societe->id)
+                ->select(
+                    'detailhopitals.num_bon as num_bon',
+                    'detailhopitals.created_at as created_at',
+                    'patients.np as patient',
+                    'detailhopitals.part_assurance as part_assurance',
+                    'detailhopitals.part_patient as part_patient',
+                    'detailhopitals.remise as remise',
+                    'detailhopitals.montant as montant',
+                )
+                ->get();
+
+            foreach ($fac_hopital as $value) {
+                $patient = intval(str_replace('.', '', $value->part_patient));
+                $remise = intval(str_replace('.', '', $value->remise));
+
+                $total_patient += $patient + $remise;
+                $total_assurance += intval(str_replace('.', '', $value->part_assurance));
+                $total_montant += intval(str_replace('.', '', $value->montant));
+            }
+        }
+
+        if ($total_montant <= 0) {
+            return response()->json(['montant_inferieur' => true]);
         }
 
         $add = new depotfacture();
@@ -1117,6 +1247,26 @@ class ApiinsertController extends Controller
         $add->date2 = $date2;
         $add->date_depot = $date_depot;
         $add->statut = 'non';
+
+        if ($add->save()) {
+            return response()->json(['success' => true]);
+        } else {
+            return response()->json(['error' => true]);
+        }
+    }
+
+    public function paiement_depot_fac(Request $request, $id)
+    {
+        $add = depotfacture::find($id);
+
+        if (!$add) {
+            return response()->json(['non_touve' => true]);
+        }
+
+        $add->date_payer = $request->date;
+        $add->type_paiement = $request->type;
+        $add->num_cheque = $request->cheque;
+        $add->statut = 'oui';
 
         if ($add->save()) {
             return response()->json(['success' => true]);
