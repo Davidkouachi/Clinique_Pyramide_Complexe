@@ -1744,6 +1744,7 @@
                     list_hos();
                 },
                 error: function() {
+                    
                     var preloader = document.getElementById('preloader_ch');
                     if (preloader) {
                         preloader.remove();
@@ -1993,6 +1994,7 @@
                     { label: "Date d'entrée le ", value: formatDate(hopital.date_debut) },
                     { label: "Date de sortie prévu le ", value: formatDate(hopital.date_fin) },
                     { label: "Nombre de jours ", value: calculateDaysBetween(hopital.date_debut, hopital.date_fin)+" Jour(s)" },
+                    { label: "Prix Chambre ", value: chambre.prix+" Fcfa" },
                 );
 
                 medecinInfo.forEach(info => {
@@ -2023,38 +2025,11 @@
                     yPoss += 7;
                 });
 
-                yPoss = (yPos + 90);
-
-                const compteInfo = [
-                    { label: "Part assurance", value: hopital.part_assurance+" Fcfa"},
-                    { label: "Part Patient", value: hopital.part_patient+" Fcfa"},
-                    { label: "Remise", value: hopital.remise ? hopital.remise + " Fcfa" : "0 Fcfa" }
-                ];
-
-                if (patient.taux !== null) {
-                    compteInfo.push({ label: "Taux", value: patient.taux + "%" });
-                }
-
-                compteInfo.forEach(info => {
-                    doc.setFontSize(9);
-                    doc.setFont("Helvetica", "bold");
-                    doc.text(info.label, leftMargin + 120, yPoss);
-                    doc.setFont("Helvetica", "normal");
-                    doc.text(": " + info.value, leftMargin + 150, yPoss);
-                    yPoss += 7;
-                });
-
-                yPoss += 1;
-
-                doc.setFontSize(11);
-                doc.setFont("Helvetica", "bold");
-                doc.text('Total Chambre', leftMargin + 120, yPoss);
-                doc.setFont("Helvetica", "bold");
-                doc.text(": "+hopital.montant_chambre+" Fcfa", leftMargin + 150, yPoss);
+                yPoss = (yPos + 98);
 
                 const donneeTable = produit;
                 // Using autoTable to add a dynamic table for hospital stay details
-                if (donneeTable.length > 0) {
+                if ( donneeTable.length > 0) {
                     yPossT = yPoss + 10;
                     doc.autoTable({
                         startY: yPossT, // Ajustez cette valeur pour le placer correctement sur la page
@@ -2073,50 +2048,71 @@
                     // Utiliser la position Y de la dernière ligne du tableau
                     const finalY = doc.autoTable.previous.finalY || yPossT + 10;
 
-                    // Ajuster yPoss à la fin du tableau pour le placement des totaux
                     yPoss = finalY + 10;
 
-                    // Déclarer finalInfo comme un tableau vide
-                    const finalInfo = [];
-                    
-                    // Ajouter l'entrée "Total Produit" si produit.length > 0
-                    if (produit.length > 0) {
-                        finalInfo.push({ label: "Total Produit", value: hopital.montant_soins });
+                    const finalInfo = [];    
+
+                    finalInfo.push(
+                        { label: "Montant Total", value: hopital.montant +" Fcfa" },
+                        { label: "Total Produit", value: hopital.montant_soins +" Fcfa" },
+                        { label: "Total Chambre", value: hopital.montant_chambre +" Fcfa" },
+                        ...(hopital.part_assurance.replace(/[^0-9]/g, '') > 0 ? 
+                            [{ label: "Part assurance", value: hopital.part_assurance + " Fcfa" }] 
+                            : []),
+                        { label: "Remise", value: hopital.remise ? hopital.remise + " Fcfa" : "0 Fcfa" },
+                    );
+
+                    if (patient.taux !== null) {
+                        finalInfo.push({ label: "Taux", value: patient.taux + "%" });
                     }
-                    
-                    // Ajouter l'entrée "Montant a payer"
-                    finalInfo.push({ label: "Montant Total", value: hopital.montant });
-                    
+
                     // Boucler à travers finalInfo pour afficher les informations
                     finalInfo.forEach(info => {
-                        doc.setFontSize(11);
+                        doc.setFontSize(9);
                         doc.setFont("Helvetica", "bold");
-                        doc.text(info.label, leftMargin + 120, yPoss);
+                        doc.text(info.label, leftMargin + 110, yPoss);
                         doc.setFont("Helvetica", "normal");
-                        doc.text(": " + info.value + " Fcfa", leftMargin + 150, yPoss);
+                        doc.text(": " + info.value, leftMargin + 150, yPoss);
                         yPoss += 7;
                     });
+                    doc.setFontSize(11);
+                    doc.setFont("Helvetica", "bold");
+                    doc.text('Montant à payer', leftMargin + 110, yPoss);
+                    doc.setFont("Helvetica", "bold");
+                    doc.text(": "+hopital.part_patient+" Fcfa", leftMargin + 150, yPoss);
 
                 } else {
 
                     yPoss += 7;
                     // Déclarer finalInfo comme un tableau vide
                     const finalInfo = [];
-                    // Ajouter l'entrée "Total Produit" si produit.length > 0
-                    if (produit.length > 0) {
-                        finalInfo.push({ label: "Total Produit", value: hopital.montant_soins });
-                    }
+
                     // Ajouter l'entrée "Montant a payer"
-                    finalInfo.push({ label: "Montant a payer", value: hopital.total_final });
+                    finalInfo.push(
+                        { label: "Montant Total", value: hopital.montant + " Fcfa" },
+                        ...(hopital.part_assurance.replace(/[^0-9]/g, '') > 0 ? 
+                            [{ label: "Part assurance", value: hopital.part_assurance + " Fcfa" }] 
+                            : []),
+                        { label: "Remise", value: hopital.remise ? hopital.remise + " Fcfa" : "0 Fcfa" }
+                    );
+
+                    if (patient.taux !== null) {
+                        finalInfo.push({ label: "Taux", value: patient.taux + "%" });
+                    }
                     // Boucler à travers finalInfo pour afficher les informations
                     finalInfo.forEach(info => {
-                        doc.setFontSize(11);
+                        doc.setFontSize(9);
                         doc.setFont("Helvetica", "bold");
-                        doc.text(info.label, leftMargin + 120, yPoss);
+                        doc.text(info.label, leftMargin + 110, yPoss);
                         doc.setFont("Helvetica", "normal");
-                        doc.text(": " + info.value + " Fcfa", leftMargin + 150, yPoss);
+                        doc.text(": " + info.value, leftMargin + 150, yPoss);
                         yPoss += 7;
                     });
+                    doc.setFontSize(11);
+                    doc.setFont("Helvetica", "bold");
+                    doc.text('Montant à payer', leftMargin + 110, yPoss);
+                    doc.setFont("Helvetica", "bold");
+                    doc.text(": "+hopital.part_patient+" Fcfa", leftMargin + 150, yPoss);
                 }
 
             }

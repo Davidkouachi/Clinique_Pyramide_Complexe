@@ -237,4 +237,115 @@ class ApistatController extends Controller
         ]);
     }
 
+    public function stat_comp_acte($yearSelect)
+    {
+        $monthlyStats = [
+            'consultations' => [
+                'Jan' => 0, 'Feb' => 0, 'Mar' => 0, 'Apr' => 0, 'May' => 0, 'Jun' => 0,
+                'Jul' => 0, 'Aug' => 0, 'Sep' => 0, 'Oct' => 0, 'Nov' => 0, 'Dec' => 0,
+            ],
+            'hospitalisations' => [
+                'Jan' => 0, 'Feb' => 0, 'Mar' => 0, 'Apr' => 0, 'May' => 0, 'Jun' => 0,
+                'Jul' => 0, 'Aug' => 0, 'Sep' => 0, 'Oct' => 0, 'Nov' => 0, 'Dec' => 0,
+            ],
+            'examens' => [
+                'Jan' => 0, 'Feb' => 0, 'Mar' => 0, 'Apr' => 0, 'May' => 0, 'Jun' => 0,
+                'Jul' => 0, 'Aug' => 0, 'Sep' => 0, 'Oct' => 0, 'Nov' => 0, 'Dec' => 0,
+            ],
+            'soins_ambulatoires' => [
+                'Jan' => 0, 'Feb' => 0, 'Mar' => 0, 'Apr' => 0, 'May' => 0, 'Jun' => 0,
+                'Jul' => 0, 'Aug' => 0, 'Sep' => 0, 'Oct' => 0, 'Nov' => 0, 'Dec' => 0,
+            ]
+        ];
+
+        // 1. Consultations
+        $consultations = consultation::select(
+                DB::raw('MONTH(created_at) as month'),
+                DB::raw('COUNT(*) as count')
+            )
+            ->whereYear('created_at', $yearSelect)
+            ->groupBy(DB::raw('MONTH(created_at)'))
+            ->get();
+
+        foreach ($consultations as $consultation) {
+            $monthIndex = intval($consultation->month);
+            $monthName = date('M', mktime(0, 0, 0, $monthIndex, 10));
+            $monthlyStats['consultations'][$monthName] = $consultation->count;
+        }
+
+        // 2. Hospitalisations
+        $hospitalisations = detailhopital::select(
+                DB::raw('MONTH(created_at) as month'),
+                DB::raw('COUNT(*) as count')
+            )
+            ->whereYear('created_at', $yearSelect)
+            ->groupBy(DB::raw('MONTH(created_at)'))
+            ->get();
+
+        foreach ($hospitalisations as $hospitalisation) {
+            $monthIndex = intval($hospitalisation->month);
+            $monthName = date('M', mktime(0, 0, 0, $monthIndex, 10));
+            $monthlyStats['hospitalisations'][$monthName] = $hospitalisation->count;
+        }
+
+        // 3. Examens
+        $examens = examen::select(
+                DB::raw('MONTH(created_at) as month'),
+                DB::raw('COUNT(*) as count')
+            )
+            ->whereYear('created_at', $yearSelect)
+            ->groupBy(DB::raw('MONTH(created_at)'))
+            ->get();
+
+        foreach ($examens as $examen) {
+            $monthIndex = intval($examen->month);
+            $monthName = date('M', mktime(0, 0, 0, $monthIndex, 10));
+            $monthlyStats['examens'][$monthName] = $examen->count;
+        }
+
+        // 4. Soins Ambulatoires
+        $soins = soinspatient::select(
+                DB::raw('MONTH(created_at) as month'),
+                DB::raw('COUNT(*) as count')
+            )
+            ->whereYear('created_at', $yearSelect)
+            ->groupBy(DB::raw('MONTH(created_at)'))
+            ->get();
+
+        foreach ($soins as $soin) {
+            $monthIndex = intval($soin->month);
+            $monthName = date('M', mktime(0, 0, 0, $monthIndex, 10));
+            $monthlyStats['soins_ambulatoires'][$monthName] = $soin->count;
+        }
+
+        // Retourner les résultats sous forme de réponse JSON
+        return response()->json(['monthlyStats' => $monthlyStats]);
+    }
+
+    public function stat_acte_mois($date1, $date2)
+    {
+
+        $startDate = Carbon::createFromFormat('Y-m-d', $date1);
+        $endDate = Carbon::createFromFormat('Y-m-d', $date2);
+
+        if (!$startDate || !$endDate) {
+            return response()->json(['date_invalide' => 'Dates invalides']);
+        }
+
+        $consultations = consultation::whereBetween('created_at', [$startDate, $endDate])->count();
+        $hospitalisations = detailhopital::whereBetween('created_at', [$startDate, $endDate])->count();
+        $examens = examen::whereBetween('created_at', [$startDate, $endDate])->count();
+        $soinsAmbulatoires = soinspatient::whereBetween('created_at', [$startDate, $endDate])->count();
+
+        $data = [
+            'cons' => $consultations ?? 0,
+            'hos' => $hospitalisations ?? 0,
+            'exam' => $examens ?? 0,
+            'soinsam' => $soinsAmbulatoires ?? 0,
+        ];
+
+        return response()->json(['data' => $data]);
+    }
+
+
 }

@@ -254,4 +254,42 @@ class ApideleteController extends Controller
 
         return response()->json(['error' => true]);
     }
+
+    public function delete_Cons($id)
+    {
+        $put = detailconsultation::find($id);
+
+        if (!$put) {
+            return response()->json(['error' => true, 'message' => 'Detail consultation non trouvé']);
+        }
+
+        DB::beginTransaction();
+
+        try {
+            // Trouver la consultation associée
+            $id_cons = consultation::find($put->consultation_id);
+            if (!$id_cons) {
+                return response()->json(['error' => true, 'message' => 'Consultation non trouvée']);
+            }
+
+            // Trouver la facture associée à la consultation
+            $id_facture = facture::find($id_cons->facture_id);
+            if (!$id_facture) {
+                return response()->json(['error' => true, 'message' => 'Facture non trouvée']);
+            }
+
+            // Suppression dans l'ordre : détail consultation, consultation, puis facture
+            if ($put->delete() && $id_cons->delete() && $id_facture->delete()) {
+                DB::commit(); // Validation de la transaction si tout s'est bien passé
+                return response()->json(['success' => true, 'message' => 'Suppression effectuée avec succès']);
+            } else {
+                DB::rollBack(); // Annulation en cas de problème
+                return response()->json(['error' => true, 'message' => 'Erreur lors de la suppression']);
+            }
+        } catch (Exception $e) {
+            DB::rollBack(); // Annulation en cas d'exception
+            return response()->json(['error' => true, 'message' => $e->getMessage()]);
+        }
+    }
+
 }

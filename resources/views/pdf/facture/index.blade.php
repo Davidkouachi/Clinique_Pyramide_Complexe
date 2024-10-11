@@ -179,12 +179,12 @@
             }
 
             if (!isValidDate(date1.value)) {
-                showAlert('Erreur', 'La première date est invalide. Format attendu : YYYY-MM-DD.', 'error');
+                showAlert('Erreur', 'La première date est invalide.', 'error');
                 return false;
             }
 
             if (!isValidDate(date2.value)) {
-                showAlert('Erreur', 'La deuxième date est invalide. Format attendu : YYYY-MM-DD.', 'error');
+                showAlert('Erreur', 'La deuxième date est invalide.', 'error');
                 return false;
             }
 
@@ -272,12 +272,12 @@
             }
 
             if (!isValidDate(date1.value)) {
-                showAlert('Erreur', 'La première date est invalide. Format attendu : YYYY-MM-DD.', 'error');
+                showAlert('Erreur', 'La première date est invalide.', 'error');
                 return false;
             }
 
             if (!isValidDate(date2.value)) {
-                showAlert('Erreur', 'La deuxième date est invalide. Format attendu : YYYY-MM-DD.', 'error');
+                showAlert('Erreur', 'La deuxième date est invalide.', 'error');
                 return false;
             }
 

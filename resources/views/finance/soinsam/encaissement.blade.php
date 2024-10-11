@@ -43,12 +43,12 @@
                                     <tr>
                                         <th scope="col">N°</th>
                                         <th scope="col">Id facture</th>
-                                        <th scope="col">Montant Soins</th>
-                                        <th scope="col">Montant Produit</th>
-                                        <th scope="col">Part Assurance</th>
-                                        <th scope="col">Part Patient</th>
-                                        <th scope="col">Remise</th>
                                         <th scope="col">Montant Total</th>
+                                        <th scope="col">Montant Produit</th>
+                                        <th scope="col">Montant Soins</th>
+                                        <th scope="col">Montant a payer</th>
+                                        <th scope="col">Part Assurance</th>
+                                        <th scope="col">Remise</th>
                                         <th scope="col">Date de création</th>
                                         <th scope="col">Actions</th>
                                     </tr>
@@ -418,23 +418,23 @@
                                 row.innerHTML = `
                                     <td>${((currentPage - 1) * perPage) + index + 1}</td>
                                     <td>Fac-${item.code_fac}</td>
-                                    <td class="text-primary">
-                                        ${formatPrice(item.stotal) ?? 0} Fcfa
+                                    <td class="text-warning">
+                                        ${item.montant ?? 0} Fcfa
                                     </td>
                                     <td class="text-primary">
                                         ${formatPrice(item.prototal) ?? 0} Fcfa
                                     </td>
                                     <td class="text-primary">
-                                        ${item.part_assurance ?? 0} Fcfa
+                                        ${formatPrice(item.stotal) ?? 0} Fcfa
                                     </td>
                                     <td class="text-success">
                                         ${item.part_patient ?? 0} Fcfa
                                     </td>
-                                    <td class="text-warning">
-                                        ${item.remise ?? 0} Fcfa
+                                    <td class="text-primary">
+                                        ${item.part_assurance ?? 0} Fcfa
                                     </td>
                                     <td class="text-primary">
-                                        ${item.montant ?? 0} Fcfa
+                                        ${item.remise ?? 0} Fcfa
                                     </td>
                                     <td>${formatDateHeure(item.created_at)}</td>
                                     <td>
@@ -810,11 +810,19 @@
                 leftMargin = 15;
                 pdfWidth = doc.internal.pageSize.getWidth();
 
-                const titlea = "Impayer";
-                doc.setFontSize(100);
-                doc.setTextColor(252, 173, 159); // Gray color for background effect
-                doc.setFont("Helvetica", "bold");
-                doc.text(titlea, 120, yPos + 120, { align: 'center', angle: 40 });
+                if (facture.statut == 'payer') {
+                    const titlea = "Payer";
+                    doc.setFontSize(100);
+                    doc.setTextColor(174, 255, 165);
+                    doc.setFont("Helvetica", "bold");
+                    doc.text(titlea, 120, yPos + 120, { align: 'center', angle: 40 });
+                }else{
+                    const titlea = "Impayer";
+                    doc.setFontSize(100);
+                    doc.setTextColor(252, 173, 159);
+                    doc.setFont("Helvetica", "bold");
+                    doc.text(titlea, 120, yPos + 120, { align: 'center', angle: 40 });
+                }
 
                 // Informations de l'entreprise
                 doc.setFontSize(10);
@@ -993,10 +1001,13 @@
                 yPoss = yPoss + 10;
 
                 const compteInfo = [
-                    { label: "Part assurance", value: soinspatient.part_assurance+" Fcfa"},
-                    { label: "Part Patient", value: soinspatient.part_patient+" Fcfa"},
+                    { label: "Total", value: soinspatient.montant ? soinspatient.montant + " Fcfa" : "0 Fcfa" },
+                    ...(soinspatient.part_assurance.replace(/[^0-9]/g, '') > 0 ? 
+                        [{ label: "Part assurance", value: soinspatient.part_assurance + " Fcfa" }] 
+                        : []),
                     { label: "Remise", value: soinspatient.remise ? soinspatient.remise + " Fcfa" : "0 Fcfa" }
                 ];
+
 
                 if (patient.taux !== null) {
                     compteInfo.push({ label: "Taux", value: patient.taux + "%" });
@@ -1005,17 +1016,46 @@
                 compteInfo.forEach(info => {
                     doc.setFontSize(9);
                     doc.setFont("Helvetica", "bold");
-                    doc.text(info.label, leftMargin + 120, yPoss);
+                    doc.text(info.label, leftMargin + 110, yPoss);
                     doc.setFont("Helvetica", "normal");
                     doc.text(": " + info.value, leftMargin + 150, yPoss);
                     yPoss += 7;
                 });
                 doc.setFontSize(11);
                 doc.setFont("Helvetica", "bold");
-                doc.text('Total', leftMargin + 120, yPoss);
+                doc.text('Montant à payer', leftMargin + 110, yPoss);
                 doc.setFont("Helvetica", "bold");
-                doc.text(": "+soinspatient.montant+" Fcfa", leftMargin + 150, yPoss);
+                doc.text(": "+soinspatient.part_patient+" Fcfa", leftMargin + 150, yPoss);
 
+                if (facture.statut == 'payer') {
+                    yPoss += 7;
+                    
+                    const totalMontant = parseInt(soinspatient.part_patient.replace(/[^0-9]/g, ''));
+                    const montantVerser = parseInt(facture.montant_verser.replace(/[^0-9]/g, ''));
+                    const montantRemis = parseInt(facture.montant_remis.replace(/[^0-9]/g, ''));
+                    const resteAPayer = Math.max(montantVerser - (totalMontant + montantRemis), 0);
+
+                        doc.setFontSize(10);
+                        doc.setFont("Helvetica", "bold");
+                        doc.text('Montant Versé', leftMargin + 110, yPoss);
+                        doc.setFont("Helvetica", "bold");
+                        doc.text(": " + facture.montant_verser + " Fcfa", leftMargin + 150, yPoss);
+                        yPoss += 7;
+
+                        doc.setFontSize(10);
+                        doc.setFont("Helvetica", "bold");
+                        doc.text('Montant Remis', leftMargin + 110, yPoss);
+                        doc.setFont("Helvetica", "bold");
+                        doc.text(": " + facture.montant_remis + " Fcfa", leftMargin + 150, yPoss);
+                        yPoss += 7;
+
+                        // Display Reste à Payer
+                        doc.setFontSize(10);
+                        doc.setFont("Helvetica", "bold");
+                        doc.text('Reste à Payer', leftMargin + 110, yPoss);
+                        doc.setFont("Helvetica", "bold");
+                        doc.text(": " + resteAPayer + " Fcfa", leftMargin + 150, yPoss);
+                }
 
             }
 

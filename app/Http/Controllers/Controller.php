@@ -138,6 +138,11 @@ class Controller
 
     // --------------------------------------------------------
 
+    public function comptable()
+    {
+        return view('finance.comptabilite.index');
+    }
+
     public function facture_depot()
     {
         return view('finance.comptabilite.facture_depot');

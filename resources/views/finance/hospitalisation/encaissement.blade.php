@@ -43,12 +43,12 @@
                                     <tr>
                                         <th scope="col">N°</th>
                                         <th scope="col">Id facture</th>
-                                        <th scope="col">Part Assurance</th>
-                                        <th scope="col">Part Patient</th>
-                                        <th scope="col">Remise</th>
+                                        <th scope="col">Montant Total</th>
                                         <th scope="col">Montant Chambre</th>
                                         <th scope="col">Montant Soins</th>
                                         <th scope="col">Montant a payer</th>
+                                        <th scope="col">Part Assurance</th>
+                                        <th scope="col">Remise</th>
                                         <th scope="col">Date de création</th>
                                         <th scope="col">Actions</th>
                                     </tr>
@@ -321,7 +321,7 @@
 
                         list();
 
-                        generatePDFInvoicePayer(hopital, facture, patient, nature, type, lit, chambre, user, produit);
+                        generatePDFInvoice(hopital, facture, patient, nature, type, lit, chambre, user, produit);
 
                     } else if (response.error) {
                         showAlert('Alert', 'Une erreur est survenue lors du paiement, Veuillez ressayer.','error');
@@ -377,14 +377,8 @@
                                 row.innerHTML = `
                                     <td>${((currentPage - 1) * perPage) + index + 1}</td>
                                     <td>Fac-${item.code_fac}</td>
-                                    <td class="text-primary">
-                                        ${item.part_assurance ?? 0} Fcfa
-                                    </td>
-                                    <td class="text-success">
-                                        ${item.part_patient ?? 0} Fcfa
-                                    </td>
                                     <td class="text-warning">
-                                        ${item.remise ?? 0} Fcfa
+                                        ${item.montant ?? 0} Fcfa
                                     </td>
                                     <td class="text-primary">
                                         ${item.montant_chambre ?? 0} Fcfa
@@ -392,8 +386,14 @@
                                     <td class="text-primary">
                                         ${item.montant_soins ?? 0} Fcfa
                                     </td>
+                                    <td class="text-success">
+                                        ${item.part_patient ?? 0} Fcfa
+                                    </td>
                                     <td class="text-primary">
-                                        ${item.montant ?? 0} Fcfa
+                                        ${item.part_assurance ?? 0} Fcfa
+                                    </td>
+                                    <td class="text-primary">
+                                        ${item.remise ?? 0} Fcfa
                                     </td>
                                     <td>${formatDate(item.created_at)}</td>
                                     <td>
@@ -793,11 +793,19 @@
                 leftMargin = 15;
                 pdfWidth = doc.internal.pageSize.getWidth();
 
-                const titlea = "Impayer";
-                doc.setFontSize(100);
-                doc.setTextColor(252, 173, 159); // Gray color for background effect
-                doc.setFont("Helvetica", "bold");
-                doc.text(titlea, 120, yPos + 120, { align: 'center', angle: 40 });
+                if (facture.statut == 'payer') {
+                    const titlea = "Payer";
+                    doc.setFontSize(100);
+                    doc.setTextColor(174, 255, 165);
+                    doc.setFont("Helvetica", "bold");
+                    doc.text(titlea, 120, yPos + 120, { align: 'center', angle: 40 });
+                }else{
+                    const titlea = "Impayer";
+                    doc.setFontSize(100);
+                    doc.setTextColor(252, 173, 159);
+                    doc.setFont("Helvetica", "bold");
+                    doc.text(titlea, 120, yPos + 120, { align: 'center', angle: 40 });
+                }
 
                 // Informations de l'entreprise
                 doc.setFontSize(10);
@@ -891,13 +899,20 @@
 
                 yPoss = (yPos + 40);
 
-                const medecinInfo = [
+                const medecinInfo = [];
+
+                if (hopital.num_bon && hopital.num_bon !== "") {
+                    medecinInfo.push({ label: "N° prise en charge", value: hopital.num_bon });
+                }
+
+                medecinInfo.push(
                     { label: "Medecin", value: "Dr. "+user.name },
                     { label: "Spécialité", value: user.typeacte },
                     { label: "Date d'entrée le ", value: formatDate(hopital.date_debut) },
                     { label: "Date de sortie prévu le ", value: formatDate(hopital.date_fin) },
                     { label: "Nombre de jours ", value: calculateDaysBetween(hopital.date_debut, hopital.date_fin)+" Jour(s)" },
-                ];
+                    { label: "Prix Chambre ", value: chambre.prix+" Fcfa" },
+                );
 
                 medecinInfo.forEach(info => {
                     doc.setFontSize(8);
@@ -927,38 +942,11 @@
                     yPoss += 7;
                 });
 
-                yPoss = (yPos + 90);
-
-                const compteInfo = [
-                    { label: "Part assurance", value: hopital.part_assurance+" Fcfa"},
-                    { label: "Part Patient", value: hopital.part_patient+" Fcfa"},
-                    { label: "Remise", value: hopital.remise ? hopital.remise + " Fcfa" : "0 Fcfa" }
-                ];
-
-                if (patient.taux !== null) {
-                    compteInfo.push({ label: "Taux", value: patient.taux + "%" });
-                }
-
-                compteInfo.forEach(info => {
-                    doc.setFontSize(9);
-                    doc.setFont("Helvetica", "bold");
-                    doc.text(info.label, leftMargin + 120, yPoss);
-                    doc.setFont("Helvetica", "normal");
-                    doc.text(": " + info.value, leftMargin + 150, yPoss);
-                    yPoss += 7;
-                });
-
-                yPoss += 1;
-
-                doc.setFontSize(11);
-                doc.setFont("Helvetica", "bold");
-                doc.text('Total Chambre', leftMargin + 120, yPoss);
-                doc.setFont("Helvetica", "bold");
-                doc.text(": "+hopital.montant_chambre+" Fcfa", leftMargin + 150, yPoss);
+                yPoss = (yPos + 98);
 
                 const donneeTable = produit;
                 // Using autoTable to add a dynamic table for hospital stay details
-                if (donneeTable.length > 0) {
+                if ( donneeTable.length > 0) {
                     yPossT = yPoss + 10;
                     doc.autoTable({
                         startY: yPossT, // Ajustez cette valeur pour le placer correctement sur la page
@@ -977,319 +965,135 @@
                     // Utiliser la position Y de la dernière ligne du tableau
                     const finalY = doc.autoTable.previous.finalY || yPossT + 10;
 
-                    // Ajuster yPoss à la fin du tableau pour le placement des totaux
                     yPoss = finalY + 10;
 
-                    // Déclarer finalInfo comme un tableau vide
-                    const finalInfo = [];
-                    
-                    // Ajouter l'entrée "Total Produit" si produit.length > 0
-                    if (produit.length > 0) {
-                        finalInfo.push({ label: "Total Produit", value: hopital.montant_soins });
-                    }
-                    
-                    // Ajouter l'entrée "Montant a payer"
-                    finalInfo.push({ label: "Montant Total", value: hopital.montant });
-                    
-                    // Boucler à travers finalInfo pour afficher les informations
-                    finalInfo.forEach(info => {
-                        doc.setFontSize(11);
-                        doc.setFont("Helvetica", "bold");
-                        doc.text(info.label, leftMargin + 120, yPoss);
-                        doc.setFont("Helvetica", "normal");
-                        doc.text(": " + info.value + " Fcfa", leftMargin + 150, yPoss);
-                        yPoss += 7;
-                    });
+                    const finalInfo = [];    
 
-                } else {
-
-                    yPoss += 7;
-                    // Déclarer finalInfo comme un tableau vide
-                    const finalInfo = [];
-                    // Ajouter l'entrée "Total Produit" si produit.length > 0
-                    if (produit.length > 0) {
-                        finalInfo.push({ label: "Total Produit", value: hopital.montant_soins });
-                    }
-                    // Ajouter l'entrée "Montant a payer"
-                    finalInfo.push({ label: "Montant Total", value: hopital.montant });
-                    // Boucler à travers finalInfo pour afficher les informations
-                    finalInfo.forEach(info => {
-                        doc.setFontSize(11);
-                        doc.setFont("Helvetica", "bold");
-                        doc.text(info.label, leftMargin + 120, yPoss);
-                        doc.setFont("Helvetica", "normal");
-                        doc.text(": " + info.value + " Fcfa", leftMargin + 150, yPoss);
-                        yPoss += 7;
-                    });
-                }
-
-            }
-
-            function addFooter() {
-                const pageCount = doc.internal.getNumberOfPages();
-                for (let i = 1; i <= pageCount; i++) {
-                    doc.setPage(i);
-                    const footerText = "Imprimer le " + new Date().toLocaleDateString() + " à " + new Date().toLocaleTimeString();
-                    doc.setFontSize(7);
-                    doc.setFont("Helvetica", "bold");
-                    doc.setTextColor(0, 0, 0);
-                    doc.text(footerText, 5, 295); // Position near the bottom of the page (5mm from the left, 290mm from the top)
-                }
-            }
-
-            drawConsultationSection(yPos);
-
-            addFooter();
-
-            doc.output('dataurlnewwindow');
-        }
-
-        function generatePDFInvoicePayer(hopital, facture, patient, nature, type, lit, chambre, user, produit) {
-            const { jsPDF } = window.jspdf;
-            const doc = new jsPDF({ orientation: 'p', unit: 'mm', format: 'a4' });
-
-            let yPos = 10;
-
-            function drawConsultationSection(yPos) {
-                rightMargin = 15;
-                leftMargin = 15;
-                pdfWidth = doc.internal.pageSize.getWidth();
-
-                const titlea = "Payer";
-                doc.setFontSize(100);
-                doc.setTextColor(174, 255, 165); // Gray color for background effect
-                doc.setFont("Helvetica", "bold");
-                doc.text(titlea, 120, yPos + 120, { align: 'center', angle: 40 });
-
-                // Informations de l'entreprise
-                doc.setFontSize(10);
-                doc.setTextColor(0, 0, 0);
-                doc.setFont("Helvetica", "bold");
-                // Texte de l'entreprise
-                const title = "ESPACE MEDICO SOCIAL LA PYRAMIDE DU COMPLEXE";
-                const titleWidth = doc.getTextWidth(title);
-                const titleX = (doc.internal.pageSize.getWidth() - titleWidth) / 2;
-                doc.text(title, titleX, yPos);
-                // Texte de l'adresse
-                doc.setFont("Helvetica", "normal");
-                const address = "Abidjan Yopougon Selmer, Non loin du complexe sportif Jesse-Jackson - 04 BP 1523";
-                const addressWidth = doc.getTextWidth(address);
-                const addressX = (doc.internal.pageSize.getWidth() - addressWidth) / 2;
-                doc.text(address, addressX, (yPos + 5));
-                // Texte du téléphone
-                const phone = "Tél.: 20 24 44 70 / 20 21 71 92 - Cel.: 01 01 01 63 43";
-                const phoneWidth = doc.getTextWidth(phone);
-                const phoneX = (doc.internal.pageSize.getWidth() - phoneWidth) / 2;
-                doc.text(phone, phoneX, (yPos + 10));
-                doc.setFontSize(10);
-                doc.setFont("Helvetica", "normal");
-                const hopitalDate = new Date(hopital.created_at);
-                // Formatter la date et l'heure séparément
-                const formattedDate = hopitalDate.toLocaleDateString(); // Formater la date
-                const formattedTime = hopitalDate.toLocaleTimeString();
-                doc.text("Date: " + formattedDate, 15, (yPos + 25));
-                doc.text("Heure: " + formattedTime, 15, (yPos + 30));
-
-                //Ligne de séparation
-                doc.setFontSize(15);
-                doc.setFont("Helvetica", "bold");
-                doc.setLineWidth(0.5);
-                doc.setTextColor(0, 0, 0);
-                // doc.line(10, 35, 200, 35); 
-                const titleR = "FACTURE HOSPITALISATION";
-                const titleRWidth = doc.getTextWidth(titleR);
-                const titleRX = (doc.internal.pageSize.getWidth() - titleRWidth) / 2;
-                // Définir le padding
-                const paddingh = 0; // Padding vertical
-                const paddingw = 15; // Padding horizontal
-                // Calculer les dimensions du rectangle
-                const rectX = titleRX - paddingw; // X du rectangle
-                const rectY = (yPos + 18) - paddingh; // Y du rectangle
-                const rectWidth = titleRWidth + (paddingw * 2); // Largeur du rectangle
-                const rectHeight = 15 + (paddingh * 2); // Hauteur du rectangle
-                // Définir la couleur pour le cadre (noir)
-                doc.setDrawColor(0, 0, 0);
-                doc.rect(rectX, rectY, rectWidth, rectHeight); // Dessiner le rectangle
-                // Ajouter le texte centré en gras
-                doc.setFontSize(15);
-                doc.setFont("Helvetica", "bold");
-                doc.setTextColor(0, 0, 0); // Couleur du texte rouge
-                doc.text(titleR, titleRX, (yPos + 25)); // Positionner le texte
-                const titleN = "N° "+facture.code;
-                doc.text(titleN, (doc.internal.pageSize.getWidth() - doc.getTextWidth(titleN)) / 2, (yPos + 31));
-
-                doc.setFontSize(10);
-                doc.setFont("Helvetica", "bold");
-                doc.setTextColor(0, 0, 0);
-                const numDossier = "N° Dossier : P-"+ patient.matricule;
-                const numDossierWidth = doc.getTextWidth(numDossier);
-                doc.text(numDossier, pdfWidth - rightMargin - numDossierWidth, yPos + 28);
-
-                yPoss = (yPos + 40);
-
-                const patientInfo = [
-                    { label: "Nom et Prénoms", value: patient.np },
-                    { label: "Assurer", value: patient.assurer },
-                    { label: "Age", value: patient.age+" an(s)" },
-                    { label: "Domicile", value: patient.adresse },
-                    { label: "Contact", value: "+225 "+patient.tel }
-                ];
-
-                if (patient.assurer == 'oui') {
-                    patientInfo.push(
-                        { label: "Assurance", value: patient.assurance },
-                        { label: "Matricule", value: patient.matricule_assurance },
+                    finalInfo.push(
+                        { label: "Montant Total", value: hopital.montant +" Fcfa" },
+                        { label: "Total Produit", value: hopital.montant_soins +" Fcfa" },
+                        { label: "Total Chambre", value: hopital.montant_chambre +" Fcfa" },
+                        ...(hopital.part_assurance.replace(/[^0-9]/g, '') > 0 ? 
+                            [{ label: "Part assurance", value: hopital.part_assurance + " Fcfa" }] 
+                            : []),
+                        { label: "Remise", value: hopital.remise ? hopital.remise + " Fcfa" : "0 Fcfa" },
                     );
-                }
 
-                patientInfo.forEach(info => {
-                    doc.setFontSize(8);
-                    doc.setFont("Helvetica", "bold");
-                    doc.text(info.label, leftMargin, yPoss);
-                    doc.setFont("Helvetica", "normal");
-                    doc.text(": " + info.value, leftMargin + 35, yPoss);
-                    yPoss += 7;
-                });
-
-                yPoss = (yPos + 40);
-
-                const medecinInfo = [
-                    { label: "Medecin", value: "Dr. "+user.name },
-                    { label: "Spécialité", value: user.typeacte },
-                    { label: "Date d'entrée le ", value: formatDate(hopital.date_debut) },
-                    { label: "Date de sortie prévu le ", value: formatDate(hopital.date_fin) },
-                    { label: "Nombre de jours ", value: calculateDaysBetween(hopital.date_debut, hopital.date_fin)+" Jour(s)" },
-                ];
-
-                medecinInfo.forEach(info => {
-                    doc.setFontSize(8);
-                    doc.setFont("Helvetica", "bold");
-                    doc.text(info.label, leftMargin + 100, yPoss);
-                    doc.setFont("Helvetica", "normal");
-                    doc.text(": " + info.value, leftMargin + 135, yPoss);
-                    yPoss += 7;
-                });
-
-                yPoss = (yPos + 90);
-
-                const typeInfo = [
-                    { label: "Type d'admission", value: type.nom },
-                    { label: "Nature d'admission", value: nature.nom },
-                    { label: "Chambre Occupée", value: "CH-"+chambre.code },
-                    { label: "Lit Occupée", value: "LIT-"+lit.code+"/"+lit.type },
-                    { label: "Prix", value: chambre.prix+" Fcfa" },
-                ];
-
-                typeInfo.forEach(info => {
-                    doc.setFontSize(8);
-                    doc.setFont("Helvetica", "bold");
-                    doc.text(info.label, leftMargin, yPoss);
-                    doc.setFont("Helvetica", "normal");
-                    doc.text(": " + info.value, leftMargin + 35, yPoss);
-                    yPoss += 7;
-                });
-
-                yPoss = (yPos + 90);
-
-                const compteInfo = [
-                    { label: "Part assurance", value: hopital.part_assurance+" Fcfa"},
-                    { label: "Part Patient", value: hopital.part_patient+" Fcfa"},
-                    { label: "Remise", value: hopital.remise ? hopital.remise + " Fcfa" : "0 Fcfa" }
-                ];
-
-                if (patient.taux !== null) {
-                    compteInfo.push({ label: "Taux", value: patient.taux + "%" });
-                }
-
-                compteInfo.forEach(info => {
-                    doc.setFontSize(9);
-                    doc.setFont("Helvetica", "bold");
-                    doc.text(info.label, leftMargin + 120, yPoss);
-                    doc.setFont("Helvetica", "normal");
-                    doc.text(": " + info.value, leftMargin + 150, yPoss);
-                    yPoss += 7;
-                });
-
-                yPoss += 1;
-
-                doc.setFontSize(11);
-                doc.setFont("Helvetica", "bold");
-                doc.text('Total Chambre', leftMargin + 120, yPoss);
-                doc.setFont("Helvetica", "bold");
-                doc.text(": "+hopital.montant_chambre+" Fcfa", leftMargin + 150, yPoss);
-
-                const donneeTable = produit;
-                // Using autoTable to add a dynamic table for hospital stay details
-                if (donneeTable.length > 0) {
-                    yPossT = yPoss + 10;
-                    doc.autoTable({
-                        startY: yPossT, // Ajustez cette valeur pour le placer correctement sur la page
-                        head: [['N°','Nom du produit utilisé', 'Quantité', 'Prix Unitaire', 'Montant']], // En-têtes du tableau
-                        body: donneeTable.map((item, index) => [
-                            index + 1,
-                            item.nom_produit, // Nom du produit
-                            item.quantite, // Quantité
-                            item.prix_produit+" Fcfa", // Prix unitaire
-                            item.montant+" Fcfa", // Montant (quantité * prix unitaire)
-                        ]), // Remplace les lignes par les données dynamiques
-                        theme: 'striped', // Vous pouvez changer le thème en plain, grid, etc.
-                        // headStyles: { fillColor: [255, 0, 0] }, // En-tête en rouge si nécessaire
-                    });
-
-                    // Utiliser la position Y de la dernière ligne du tableau
-                    const finalY = doc.autoTable.previous.finalY || yPossT + 10;
-
-                    // Ajuster yPoss à la fin du tableau pour le placement des totaux
-                    yPoss = finalY + 10;
-
-                    // Déclarer finalInfo comme un tableau vide
-                    const finalInfo = [];
-                    
-                    // Ajouter l'entrée "Total Produit" si produit.length > 0
-                    if (produit.length > 0) {
-                        finalInfo.push({ label: "Total Produit", value: hopital.montant_soins });
-                    }
-                    
-                    // Ajouter l'entrée "Montant a payer"
-                    finalInfo.push({ label: "Montant Total", value: hopital.montant });
-                    
-                    if (facture) {
-                        finalInfo.push(
-                            { label: "Montant Verser", value: facture.montant_verser },
-                            { label: "Montant Remis", value: facture.montant_remis },
-                            );
+                    if (patient.taux !== null) {
+                        finalInfo.push({ label: "Taux", value: patient.taux + "%" });
                     }
 
                     // Boucler à travers finalInfo pour afficher les informations
                     finalInfo.forEach(info => {
-                        doc.setFontSize(11);
+                        doc.setFontSize(9);
                         doc.setFont("Helvetica", "bold");
-                        doc.text(info.label, leftMargin + 120, yPoss);
+                        doc.text(info.label, leftMargin + 110, yPoss);
                         doc.setFont("Helvetica", "normal");
-                        doc.text(": " + info.value + " Fcfa", leftMargin + 150, yPoss);
+                        doc.text(": " + info.value, leftMargin + 150, yPoss);
                         yPoss += 7;
                     });
+                    doc.setFontSize(11);
+                    doc.setFont("Helvetica", "bold");
+                    doc.text('Montant à payer', leftMargin + 110, yPoss);
+                    doc.setFont("Helvetica", "bold");
+                    doc.text(": "+hopital.part_patient+" Fcfa", leftMargin + 150, yPoss);
+
+                    if (facture.statut == 'payer') {
+
+                        yPoss += 7;
+
+                        const totalMontant = parseInt(hopital.part_patient.replace(/[^0-9]/g, ''));
+                        const montantVerser = parseInt(facture.montant_verser.replace(/[^0-9]/g, ''));
+                        const montantRemis = parseInt(facture.montant_remis.replace(/[^0-9]/g, ''));
+                        // Calculate the remaining amount, ensuring it's always positive
+                        const resteAPayer = Math.max(montantVerser - (totalMontant + montantRemis), 0);
+
+                        doc.setFontSize(10);
+                        doc.setFont("Helvetica", "bold");
+                        doc.text('Montant Verser', leftMargin + 110, yPoss);
+                        doc.setFont("Helvetica", "bold");
+                        doc.text(": "+facture.montant_verser+" Fcfa", leftMargin + 150, yPoss);
+                        yPoss += 7;
+
+                        doc.setFontSize(10);
+                        doc.setFont("Helvetica", "bold");
+                        doc.text('Montant Remis', leftMargin + 110, yPoss);
+                        doc.setFont("Helvetica", "bold");
+                        doc.text(": "+facture.montant_remis+" Fcfa", leftMargin + 150, yPoss);
+                        yPoss += 7;
+
+                        doc.setFontSize(10);
+                        doc.setFont("Helvetica", "bold");
+                        doc.text('Reste à payer', leftMargin + 110, yPoss);
+                        doc.setFont("Helvetica", "bold");
+                        doc.text(": "+resteAPayer+" Fcfa", leftMargin + 150, yPoss);
+
+                    }
 
                 } else {
 
                     yPoss += 7;
                     // Déclarer finalInfo comme un tableau vide
                     const finalInfo = [];
-                    // Ajouter l'entrée "Total Produit" si produit.length > 0
-                    if (produit.length > 0) {
-                        finalInfo.push({ label: "Total Produit", value: hopital.montant_soins });
-                    }
+
                     // Ajouter l'entrée "Montant a payer"
-                    finalInfo.push({ label: "Montant Total", value: hopital.montant });
+                    finalInfo.push(
+                        { label: "Montant Total", value: hopital.montant + " Fcfa" },
+                        ...(hopital.part_assurance.replace(/[^0-9]/g, '') > 0 ? 
+                            [{ label: "Part assurance", value: hopital.part_assurance + " Fcfa" }] 
+                            : []),
+                        { label: "Remise", value: hopital.remise ? hopital.remise + " Fcfa" : "0 Fcfa" }
+                    );
+
+                    if (patient.taux !== null) {
+                        finalInfo.push({ label: "Taux", value: patient.taux + "%" });
+                    }
                     // Boucler à travers finalInfo pour afficher les informations
                     finalInfo.forEach(info => {
-                        doc.setFontSize(11);
+                        doc.setFontSize(9);
                         doc.setFont("Helvetica", "bold");
-                        doc.text(info.label, leftMargin + 120, yPoss);
+                        doc.text(info.label, leftMargin + 110, yPoss);
                         doc.setFont("Helvetica", "normal");
-                        doc.text(": " + info.value + " Fcfa", leftMargin + 150, yPoss);
+                        doc.text(": " + info.value, leftMargin + 150, yPoss);
                         yPoss += 7;
                     });
+                    doc.setFontSize(11);
+                    doc.setFont("Helvetica", "bold");
+                    doc.text('Montant à payer', leftMargin + 110, yPoss);
+                    doc.setFont("Helvetica", "bold");
+                    doc.text(": "+hopital.part_patient+" Fcfa", leftMargin + 150, yPoss);
+
+                    if (facture.statut == 'payer') {
+
+                        yPoss += 7;
+
+                        const totalMontant = parseInt(hopital.part_patient.replace(/[^0-9]/g, ''));
+                        const montantVerser = parseInt(facture.montant_verser.replace(/[^0-9]/g, ''));
+                        const montantRemis = parseInt(facture.montant_remis.replace(/[^0-9]/g, ''));
+                        // Calculate the remaining amount, ensuring it's always positive
+                        const resteAPayer = Math.max(montantVerser - (totalMontant + montantRemis), 0);
+
+                        doc.setFontSize(10);
+                        doc.setFont("Helvetica", "bold");
+                        doc.text('Montant Verser', leftMargin + 110, yPoss);
+                        doc.setFont("Helvetica", "bold");
+                        doc.text(": "+facture.montant_verser+" Fcfa", leftMargin + 150, yPoss);
+                        yPoss += 7;
+
+                        doc.setFontSize(10);
+                        doc.setFont("Helvetica", "bold");
+                        doc.text('Montant Remis', leftMargin + 110, yPoss);
+                        doc.setFont("Helvetica", "bold");
+                        doc.text(": "+facture.montant_remis+" Fcfa", leftMargin + 150, yPoss);
+                        yPoss += 7;
+
+                        doc.setFontSize(10);
+                        doc.setFont("Helvetica", "bold");
+                        doc.text('Reste à payer', leftMargin + 110, yPoss);
+                        doc.setFont("Helvetica", "bold");
+                        doc.text(": "+resteAPayer+" Fcfa", leftMargin + 150, yPoss);
+
+                    }
                 }
 
             }

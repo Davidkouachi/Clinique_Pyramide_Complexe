@@ -2017,7 +2017,7 @@
                     body: donneeTable.map((item, index) => [
                         index + 1,
                         item.nom_pro,
-                        item.quantite_pro,
+                        item.quantite,
                         item.prix_pro + " Fcfa",
                         item.montant + " Fcfa",
                     ]),
@@ -2044,10 +2044,13 @@
                 yPoss = yPoss + 10;
 
                 const compteInfo = [
-                    { label: "Part assurance", value: soinspatient.part_assurance+" Fcfa"},
-                    { label: "Part Patient", value: soinspatient.part_patient+" Fcfa"},
+                    { label: "Total", value: soinspatient.montant ? soinspatient.montant + " Fcfa" : "0 Fcfa" },
+                    ...(soinspatient.part_assurance.replace(/[^0-9]/g, '') > 0 ? 
+                        [{ label: "Part assurance", value: soinspatient.part_assurance + " Fcfa" }] 
+                        : []),
                     { label: "Remise", value: soinspatient.remise ? soinspatient.remise + " Fcfa" : "0 Fcfa" }
                 ];
+
 
                 if (patient.taux !== null) {
                     compteInfo.push({ label: "Taux", value: patient.taux + "%" });
@@ -2056,17 +2059,16 @@
                 compteInfo.forEach(info => {
                     doc.setFontSize(9);
                     doc.setFont("Helvetica", "bold");
-                    doc.text(info.label, leftMargin + 120, yPoss);
+                    doc.text(info.label, leftMargin + 110, yPoss);
                     doc.setFont("Helvetica", "normal");
                     doc.text(": " + info.value, leftMargin + 150, yPoss);
                     yPoss += 7;
                 });
                 doc.setFontSize(11);
                 doc.setFont("Helvetica", "bold");
-                doc.text('Total', leftMargin + 120, yPoss);
+                doc.text('Montant à payer', leftMargin + 110, yPoss);
                 doc.setFont("Helvetica", "bold");
-                doc.text(": "+soinspatient.montant+" Fcfa", leftMargin + 150, yPoss);
-
+                doc.text(": "+soinspatient.part_patient+" Fcfa", leftMargin + 150, yPoss);
 
             }
 

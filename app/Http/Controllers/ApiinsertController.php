@@ -705,12 +705,15 @@ class ApiinsertController extends Controller
             $add2->montant = number_format($n_montant, 0, '', '.');
 
             $rech_taux = patient::leftjoin('tauxes', 'tauxes.id', '=', 'patients.taux_id')
-                            ->where('patients.assurer', '=', 'oui')
                             ->where('patients.id', '=', $add2->patient_id)
                             ->select(
                                 'patients.*',
                                 'tauxes.taux as taux',
                             )->first();
+
+            if ($rech_taux->assurer === 'non') {
+                $rech_taux->taux = 0;
+            }
 
             $nMontant = str_replace('.', '', $add2->montant);
 
@@ -961,6 +964,12 @@ class ApiinsertController extends Controller
 
             if (!$fac->save()) {
                 throw new \Exception('Erreur');
+            }
+
+            $verf = examen::where('num_bon', '=', $request->numcode)->exists();
+
+            if ($verf) {
+                return response()->json(['existe' => true]);
             }
 
             $add = new examen();

@@ -117,6 +117,7 @@ Route::middleware(['statutchambre','dateRdv'])->group(function () {
 	Route::get('/delete_rdv/{id}', [ApideleteController::class, 'delete_rdv']);
 	Route::get('/delete_specialite/{id}', [ApideleteController::class, 'delete_specialite']);
 	Route::get('/delete_depotfacture/{id}', [ApideleteController::class, 'delete_depotfacture']);
+	Route::get('/delete_Cons/{id}', [ApideleteController::class, 'delete_Cons']);
 	// delete debut
 
 	// liste debut
@@ -159,6 +160,8 @@ Route::middleware(['statutchambre','dateRdv'])->group(function () {
 	Route::get('/statistique_hos', [ApistatController::class, 'statistique_hos']);
 	Route::get('/statistique_soinsam', [ApistatController::class, 'statistique_soinsam']);
 	Route::get('/statistique_examen', [ApistatController::class, 'statistique_examen']);
+	Route::get('/stat_comp_acte/{yearSelect}', [ApistatController::class, 'stat_comp_acte']);
+	Route::get('/stat_acte_mois/{date1}/{date2}', [ApistatController::class, 'stat_acte_mois']);
 	// statistique fin
 
 	// List facture debut

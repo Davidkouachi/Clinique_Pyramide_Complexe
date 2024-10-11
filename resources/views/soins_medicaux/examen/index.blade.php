@@ -130,7 +130,7 @@
                                                 <label class="form-label">N° prise en charge</label>
                                                 <div class="input-group">
                                                     <span class="input-group-text">N°</span>
-                                                    <input type="text" class="form-control" id="numcode">
+                                                    <input type="text" class="form-control" id="numcode" autocomplete="off" placeholder="facultatif">
                                                 </div>
                                             </div>
                                         </div>
@@ -912,7 +912,7 @@
                     prix: prix.value ,
                     cotation: cotation.value, 
                     valeur: valeur.value, 
-                    montant: montant.value ,
+                    montant: montant.value,
                 },
                 success: function(response) {
 
@@ -1650,6 +1650,8 @@
                         showAlert("ERREUR", 'Une erreur est survenue', "error");
                     } else if (response.json) {
                         showAlert("ERREUR", 'Invalid selections format', "error");
+                    } else if (response.existe) {
+                        showAlert("Alert", 'Ce numéro de prise en charge existe déjà', "warning");
                     }
 
                 },
@@ -2100,8 +2102,10 @@
                 yPoss = yPoss + 5;
 
                 const compteInfo = [
-                    { label: "Part assurance", value: examen.part_assurance+" Fcfa"},
-                    { label: "Part Patient", value: examen.part_patient+" Fcfa"},
+                    { label: "Montant Total", value: examen.montant+" Fcfa"},
+                    ...(examen.part_assurance.replace(/[^0-9]/g, '') > 0 ? 
+                            [{ label: "Part assurance", value: examen.part_assurance + " Fcfa" }] 
+                            : []),
                     { label: "Prélevement", value: examen.prelevement+ " Fcfa" }
                 ];
 
@@ -2119,9 +2123,9 @@
                 });
                 doc.setFontSize(11);
                 doc.setFont("Helvetica", "bold");
-                doc.text('Total', leftMargin + 110, yPoss);
+                doc.text('Montant à payer', leftMargin + 110, yPoss);
                 doc.setFont("Helvetica", "bold");
-                doc.text(": "+examen.montant+" Fcfa", leftMargin + 142, yPoss);
+                doc.text(": "+examen.part_patient+" Fcfa", leftMargin + 142, yPoss);
 
             }
 

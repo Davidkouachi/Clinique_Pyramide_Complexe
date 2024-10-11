@@ -658,6 +658,29 @@
     </div>
 </div>
 
+<div class="modal fade" id="MdeleteCons" tabindex="-1" aria-labelledby="delRowLabel" aria-modal="true" role="dialog">
+    <div class="modal-dialog modal-sm modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="delRowLabel">
+                    Confirmation
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                Voulez-vous vraiment supprimé cette consultation ?
+                <input type="hidden" id="IddeleteCons">
+            </div>
+            <div class="modal-footer">
+                <div class="d-flex justify-content-end gap-2">
+                    <a class="btn btn-secondary" data-bs-dismiss="modal" aria-label="Close">Non</a>
+                    <button id="deleteBtnCons" class="btn btn-danger" data-bs-dismiss="modal" aria-label="Close">Oui</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script src="{{asset('assets/vendor/apex/apexcharts.min.js')}}"></script>
 <script src="{{asset('assets/js/app/js/jspdfinvoicetemplate/dist/index.js')}}" ></script>
 <script src="{{asset('jsPDF-master/dist/jspdf.umd.js')}}"></script>
@@ -687,6 +710,7 @@
         document.getElementById("btn_update_rdv").addEventListener("click", update_rdv);
         document.getElementById("btn_refresh_table_rdv").addEventListener("click", list_rdv);
         document.getElementById("btn_delete_rdv").addEventListener("click", delete_rdv);
+        document.getElementById("deleteBtnCons").addEventListener("click", delete_cons);
 
         document.getElementById('btn_affiche_stat').addEventListener('click',function(){
 
@@ -694,7 +718,6 @@
             document.getElementById('div_btn_cache_stat').style.display = 'block';
 
             Statistique_cons();
-
         });
 
         document.getElementById('btn_cache_stat').addEventListener('click',function(){
@@ -1810,17 +1833,28 @@
                                 <td>${item.montant} Fcfa</td>
                                 <td>
                                     <div class="d-inline-flex gap-1">
-                                        <a class="btn btn-outline-warning btn-sm" id="facture-${item.code}">
+                                        <a class="btn btn-outline-warning btn-sm rounded-5" id="facture-${item.code}">
                                             <i class="ri-printer-line"></i>
                                         </a>
-                                        <a class="btn btn-outline-info btn-sm" id="fiche-${item.code}">
+                                        <a class="btn btn-outline-info btn-sm rounded-5" id="fiche-${item.code}">
                                             <i class="ri-file-line"></i>
                                         </a>
+                                        ${item.statut_fac == 'impayer' ?  
+                                            `<a class="btn btn-outline-danger btn-sm rounded-5" data-bs-toggle="modal" data-bs-target="#MdeleteCons" id="deleteCons-${item.id}">
+                                                <i class="ri-delete-bin-line"></i>
+                                            </a>` : ``}
                                     </div>
                                 </td>
                             `;
                             // Append the row to the table body
                             tableBody.appendChild(row);
+
+                            const deleteButton = document.getElementById(`deleteCons-${item.id}`);
+                                if (deleteButton) {
+                                    deleteButton.addEventListener('click', () => {
+                                        document.getElementById('IddeleteCons').value = item.id;
+                                    });
+                                }
 
                             document.getElementById(`fiche-${item.code}`).addEventListener('click', () =>
                             {
@@ -1969,6 +2003,50 @@
 
             // Append pagination controls to the DOM
             paginationDiv.appendChild(paginationWrapper);
+        }
+
+        function delete_cons() {
+
+            const id = document.getElementById('IddeleteCons').value;
+
+            var modal = bootstrap.Modal.getInstance(document.getElementById('MdeleteCons'));
+            modal.hide();
+
+            var preloader_ch = `
+                <div id="preloader_ch">
+                    <div class="spinner_preloader_ch"></div>
+                </div>
+            `;
+            // Add the preloader to the body
+            document.body.insertAdjacentHTML('beforeend', preloader_ch);
+
+            $.ajax({
+                url: '/api/delete_Cons/'+id,
+                method: 'GET',
+                success: function(response) {
+
+                    var preloader = document.getElementById('preloader_ch');
+                    if (preloader) {
+                        preloader.remove();
+                    }
+
+                    if (response.success) {
+                        list_cons();
+                        showAlert('Succès', 'Opération éffectuée.','success');
+                    } else if (response.error) {
+                        showAlert("ERREUR", 'Echec de l\'opération', "error");
+                    }
+                
+                },
+                error: function() {
+                    var preloader = document.getElementById('preloader_ch');
+                    if (preloader) {
+                        preloader.remove();
+                    }
+
+                    showAlert('Erreur', 'Erreur lors de la suppression.','error');
+                }
+            });
         }
 
         // ------------------------------------------------------------------
@@ -2621,10 +2699,13 @@
                 yPoss = (yPos + 90);
 
                 const compteInfo = [
-                    { label: "Part assurance", value: consultation.part_assurance+" Fcfa"},
-                    { label: "Part Patient", value: consultation.part_patient+" Fcfa"},
-                    { label: "Remise", value: consultation.remise+" Fcfa"},
+                    { label: "Montant Total", value: typeacte.prix + " Fcfa" },
+                    ...(parseInt(consultation.part_assurance.replace(/[^0-9]/g, '')) > 0 
+                        ? [{ label: "Part assurance", value: consultation.part_assurance + " Fcfa" }] 
+                        : []),
+                    { label: "Remise", value: consultation.remise + " Fcfa" },
                 ];
+
 
                 if (patient.taux !== null) {
                     compteInfo.push({ label: "Taux", value: patient.taux + "%" });
@@ -2633,24 +2714,26 @@
                 compteInfo.forEach(info => {
                     doc.setFontSize(9);
                     doc.setFont("Helvetica", "bold");
-                    doc.text(info.label, leftMargin + 100, yPoss);
+                    doc.setTextColor(0, 0, 0);
+                    doc.text(info.label, leftMargin + 110, yPoss);
                     doc.setFont("Helvetica", "normal");
-                    doc.text(": " + info.value, leftMargin + 130, yPoss);
+                    doc.text(": " + info.value, leftMargin + 140, yPoss);
                     yPoss += 7;
                 });
 
                 yPoss += 1;
 
                 doc.setFontSize(11);
-                doc.setFont("Helvetica", "bold");
-                doc.text('Total', leftMargin + 100, yPoss);
-                doc.setFont("Helvetica", "bold");
-                doc.text(": "+typeacte.prix+" Fcfa", leftMargin + 130, yPoss);
-
-                doc.setFontSize(10);
-                doc.setFont("Helvetica", "bold");
                 doc.setTextColor(0, 0, 0);
-                doc.text("Imprimer le "+new Date().toLocaleDateString()+" à "+new Date().toLocaleTimeString() , 5, yPoss + 20);
+                doc.setFont("Helvetica", "bold");
+                doc.text('Montant à payer', leftMargin + 110, yPoss);
+                doc.setFont("Helvetica", "bold");
+                doc.text(": "+consultation.part_patient+" Fcfa", leftMargin + 140, yPoss);
+
+                // doc.setFontSize(10);
+                // doc.setFont("Helvetica", "bold");
+                // doc.setTextColor(0, 0, 0);
+                // doc.text("Imprimer le "+new Date().toLocaleDateString()+" à "+new Date().toLocaleTimeString() , 5, yPoss + 20);
 
             }
 

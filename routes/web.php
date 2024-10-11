@@ -91,6 +91,7 @@ Route::middleware(['auth','statutchambre','dateRdv'])->group(function () {
 
 	Route::get('/Etats Factures', [Controller::class, 'etat_facture'])->name('etat_facture');
 
+	Route::get('/Tableau de Bord Comptabilité', [Controller::class, 'comptable'])->name('comptable');
 	Route::get('/Depôts de factures', [Controller::class, 'facture_depot'])->name('facture_depot');
 
 // Route::middleware(['role:ADMINISTRATEUR'])->group(function () {

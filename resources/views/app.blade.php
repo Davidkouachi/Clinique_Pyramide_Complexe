@@ -231,12 +231,17 @@
                                 </li>
                             </ul>
                         </li>
-                        <li @if(request()->routeIs('facture_depot')) class="active current-page treeview" @else class="treeview" @endif >
+                        <li @if(request()->routeIs('facture_depot','comptable')) class="active current-page treeview" @else class="treeview" @endif >
                             <a href="#!">
                                 <i class="ri-line-chart-fill"></i>
                                 <span class="menu-text">Comptabilité</span>
                             </a>
                             <ul class="treeview-menu">
+                                <li>
+                                    <a @if(request()->routeIs('comptable')) class="text-primary" @endif href="{{route('comptable')}}">
+                                        Tableau de Bord
+                                    </a>
+                                </li>
                                 <li>
                                     <a @if(request()->routeIs('facture_depot')) class="text-primary" @endif href="{{route('facture_depot')}}">
                                         Depôts de factures

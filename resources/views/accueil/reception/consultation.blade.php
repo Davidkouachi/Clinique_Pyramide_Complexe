@@ -13,6 +13,16 @@
         <li class="breadcrumb-item text-primary" aria-current="page">
             Liste des consultations
         </li>
+        <li class="breadcrumb-item" style="display: block;" id="div_btn_affiche_stat">
+            <a class="btn btn-sm btn-warning" id="btn_affiche_stat">
+                Afficher les Statstiques
+            </a>
+        </li>
+        <li class="breadcrumb-item" style="display: none;" id="div_btn_cache_stat">
+            <a class="btn btn-sm btn-danger" id="btn_cache_stat">
+                Cacher les Statstiques
+            </a>
+        </li>
     </ol>
 </div>
 @endsection
@@ -20,14 +30,7 @@
 @section('content')
 
 <div class="app-body">
-    <div class="row gx-3 mb-3" id="stat_consultation">
-        <div id="div_Table_loader_Cons" style="display: none;">
-            <div class="d-flex justify-content-center align-items-center">
-                <div class="spinner-border text-warning me-2" role="status" aria-hidden="true"></div>
-                <strong>Chargement des données...</strong>
-            </div>
-        </div>
-    </div>
+    <div class="row gx-3 mb-3" id="stat_consultation"></div>
     <div class="row gx-3">
         <div class="col-12">
             <div class="card mb-3">
@@ -172,10 +175,26 @@
 <script>
     document.addEventListener("DOMContentLoaded", function() {
 
-        Statistique_cons();
         list_cons_all();
 
         document.getElementById("btn_refresh_tableC").addEventListener("click", list_cons_all);
+
+        document.getElementById('btn_affiche_stat').addEventListener('click',function(){
+
+            document.getElementById('div_btn_affiche_stat').style.display = 'none';
+            document.getElementById('div_btn_cache_stat').style.display = 'block';
+
+            Statistique_cons();
+        });
+
+        document.getElementById('btn_cache_stat').addEventListener('click',function(){
+
+            document.getElementById('div_btn_affiche_stat').style.display = 'block';
+            document.getElementById('div_btn_cache_stat').style.display = 'none';
+
+            const stat_consultation = document.getElementById("stat_consultation");
+            stat_consultation.innerHTML = '';
+        });
 
         function formatPrice(input) {
             // Remove all non-numeric characters except the comma
@@ -224,17 +243,23 @@
 
         function Statistique_cons() {
 
-            document.getElementById("div_Table_loader_Cons").style.display = 'block';
-
             const stat_consultation = document.getElementById("stat_consultation");
+
+            const div = document.createElement('div');
+            div.innerHTML = `
+                <div class="d-flex justify-content-center align-items-center">
+                    <div class="spinner-border text-warning me-2" role="status" aria-hidden="true"></div>
+                    <strong>Chargement des données...</strong>
+                </div>
+            `;
+            stat_consultation.appendChild(div);
+
 
             fetch('/api/statistique_cons') // API endpoint
                 .then(response => response.json())
                 .then(data => {
-                    // Access the 'chambre' array from the API response
+
                     const typeactes = data.typeacte;
-                    document.getElementById("div_Table_loader_Cons").style.display = 'none';
-                    // Clear any existing rows in the table body
                     stat_consultation.innerHTML = '';
 
                     if (typeactes.length > 0) {
@@ -1078,10 +1103,13 @@
                 yPoss = (yPos + 90);
 
                 const compteInfo = [
-                    { label: "Part assurance", value: consultation.part_assurance+" Fcfa"},
-                    { label: "Part Patient", value: consultation.part_patient+" Fcfa"},
-                    { label: "Remise", value: consultation.remise+" Fcfa"},
+                    { label: "Montant Total", value: typeacte.prix + " Fcfa" },
+                    ...(parseInt(consultation.part_assurance.replace(/[^0-9]/g, '')) > 0 
+                        ? [{ label: "Part assurance", value: consultation.part_assurance + " Fcfa" }] 
+                        : []),
+                    { label: "Remise", value: consultation.remise + " Fcfa" },
                 ];
+
 
                 if (patient.taux !== null) {
                     compteInfo.push({ label: "Taux", value: patient.taux + "%" });
@@ -1090,24 +1118,26 @@
                 compteInfo.forEach(info => {
                     doc.setFontSize(9);
                     doc.setFont("Helvetica", "bold");
-                    doc.text(info.label, leftMargin + 100, yPoss);
+                    doc.setTextColor(0, 0, 0);
+                    doc.text(info.label, leftMargin + 110, yPoss);
                     doc.setFont("Helvetica", "normal");
-                    doc.text(": " + info.value, leftMargin + 130, yPoss);
+                    doc.text(": " + info.value, leftMargin + 140, yPoss);
                     yPoss += 7;
                 });
 
                 yPoss += 1;
 
                 doc.setFontSize(11);
-                doc.setFont("Helvetica", "bold");
-                doc.text('Total', leftMargin + 100, yPoss);
-                doc.setFont("Helvetica", "bold");
-                doc.text(": "+typeacte.prix+" Fcfa", leftMargin + 130, yPoss);
-
-                doc.setFontSize(10);
-                doc.setFont("Helvetica", "bold");
                 doc.setTextColor(0, 0, 0);
-                doc.text("Imprimer le "+new Date().toLocaleDateString()+" à "+new Date().toLocaleTimeString() , 5, yPoss + 20);
+                doc.setFont("Helvetica", "bold");
+                doc.text('Montant à payer', leftMargin + 110, yPoss);
+                doc.setFont("Helvetica", "bold");
+                doc.text(": "+consultation.part_patient+" Fcfa", leftMargin + 140, yPoss);
+
+                // doc.setFontSize(10);
+                // doc.setFont("Helvetica", "bold");
+                // doc.setTextColor(0, 0, 0);
+                // doc.text("Imprimer le "+new Date().toLocaleDateString()+" à "+new Date().toLocaleTimeString() , 5, yPoss + 20);
 
             }
 

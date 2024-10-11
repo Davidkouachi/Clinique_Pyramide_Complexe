@@ -113,9 +113,11 @@ class ApilistController extends Controller
         $consultationQuery = detailconsultation::join('consultations', 'consultations.id', '=', 'detailconsultations.consultation_id')
                                     ->leftJoin('users', 'users.id', '=', 'consultations.user_id')
                                     ->join('patients', 'patients.id', '=', 'consultations.patient_id')
+                                    ->join('factures', 'factures.id', '=', 'consultations.facture_id')
                                     ->select(
                                         'detailconsultations.*',
                                         'consultations.code as code', 
+                                        'factures.statut as statut_fac', 
                                         'patients.np as name', 
                                         'users.tel as tel', 
                                         'users.tel2 as tel2',
@@ -413,8 +415,7 @@ class ApilistController extends Controller
     {
         $soinspatient = soinspatient::find($id);
 
-        if ($soinspatient) { // Vérifiez que le patient a bien été trouvé
-            // Total des produits
+        if ($soinspatient) { 
             $produittotal = sp_produit::where('soinspatient_id', '=', $soinspatient->id)
                 ->select(DB::raw('COALESCE(SUM(REPLACE(montant, ".", "") + 0), 0) as total'))
                 ->first();
@@ -440,6 +441,7 @@ class ApilistController extends Controller
         function formatWithPeriods($number) {
         return number_format($number, 0, '', '.');
         }
+
         $facture->montant_restant = formatWithPeriods($remaining_amount);
 
         $patient = patient::leftjoin('assurances', 'assurances.id', '=', 'patients.assurance_id')
@@ -463,7 +465,7 @@ class ApilistController extends Controller
         // Récupération des produits avec les informations associées
         $produit = sp_produit::join('produits', 'produits.id', '=', 'sp_produits.produit_id')
             ->where('sp_produits.soinspatient_id', '=', $soinspatient->id)
-            ->select('sp_produits.*', 'produits.nom as nom_pro', 'produits.prix as prix_pro', 'produits.quantite as quantite_pro')
+            ->select('sp_produits.*', 'produits.nom as nom_pro', 'produits.prix as prix_pro', 'sp_produits.quantite as quantite_pro')
             ->get();
 
         
