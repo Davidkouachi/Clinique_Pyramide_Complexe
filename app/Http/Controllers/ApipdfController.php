@@ -136,8 +136,9 @@ class ApipdfController extends Controller
 
     public function imp_fac_assurance(Request $request)
     {
-        $date1 = $request->date1;
-        $date2 = $request->date2;
+
+        $date1 = Carbon::createFromFormat('Y-m-d', $request->date1)->startOfDay();
+        $date2 = Carbon::createFromFormat('Y-m-d', $request->date2)->endOfDay(); 
 
         $assurance = assurance::find($request->assurance_id);
 
@@ -270,8 +271,8 @@ class ApipdfController extends Controller
 
     public function imp_fac_assurance_bordo(Request $request)
     {
-        $date1 = $request->date1;
-        $date2 = $request->date2;
+        $date1 = Carbon::createFromFormat('Y-m-d', $request->date1)->startOfDay();
+        $date2 = Carbon::createFromFormat('Y-m-d', $request->date2)->endOfDay(); 
 
         $assurance = assurance::find($request->assurance_id);
 
@@ -426,8 +427,8 @@ class ApipdfController extends Controller
 
         $fac = depotfacture::find($id);
 
-        $date1 = $fac->date1;
-        $date2 = $fac->date2;
+        $date1 = Carbon::createFromFormat('Y-m-d', $fac->date1)->startOfDay();
+        $date2 = Carbon::createFromFormat('Y-m-d', $fac->date2)->endOfDay(); 
 
         $assurance = assurance::find($fac->assurance_id);
 
@@ -561,8 +562,8 @@ class ApipdfController extends Controller
     {
         $fac = depotfacture::find($id);
 
-        $date1 = $fac->date1;
-        $date2 = $fac->date2;
+        $date1 = Carbon::createFromFormat('Y-m-d', $fac->date1)->startOfDay();
+        $date2 = Carbon::createFromFormat('Y-m-d', $fac->date2)->endOfDay(); 
 
         $assurance = assurance::find($fac->assurance_id);
 

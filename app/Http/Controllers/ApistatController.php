@@ -116,10 +116,10 @@ class ApistatController extends Controller
 
             $nbre = detailconsultation::where('typeacte_id', '=', $value->id)->whereDate('created_at', '=', $today)->count();
 
-            $value->part_patient = $stats->part_patient;
-            $value->part_assurance = $stats->part_assurance;
-            $value->total = $stats->part_total;
-            $value->nbre = $nbre;
+            $value->part_patient = $stats->part_patient ?? 0;
+            $value->part_assurance = $stats->part_assurance ?? 0;
+            $value->total = $stats->part_total ?? 0;
+            $value->nbre = $nbre ?? 0;
 
         }
 
@@ -325,26 +325,163 @@ class ApistatController extends Controller
     public function stat_acte_mois($date1, $date2)
     {
 
-        $startDate = Carbon::createFromFormat('Y-m-d', $date1);
-        $endDate = Carbon::createFromFormat('Y-m-d', $date2);
+        $startDate = Carbon::createFromFormat('Y-m-d', $date1)->startOfDay();
+        $endDate = Carbon::createFromFormat('Y-m-d', $date2)->endOfDay(); 
 
         if (!$startDate || !$endDate) {
             return response()->json(['date_invalide' => 'Dates invalides']);
         }
 
         $consultations = consultation::whereBetween('created_at', [$startDate, $endDate])->count();
-        $hospitalisations = detailhopital::whereBetween('created_at', [$startDate, $endDate])->count();
+        $hospitalisations = detailhopital::whereBetween('created_at',[$startDate, $endDate])->count();
         $examens = examen::whereBetween('created_at', [$startDate, $endDate])->count();
-        $soinsAmbulatoires = soinspatient::whereBetween('created_at', [$startDate, $endDate])->count();
+        $soinsAmbulatoires = soinspatient::whereBetween('created_at',[$startDate, $endDate])->count();
+
+        $m_cons = consultation::join('detailconsultations', 'detailconsultations.consultation_id', '=', 'consultations.id')
+        ->join('factures', 'factures.id', '=', 'consultations.facture_id')
+        ->select(DB::raw('
+            COALESCE(SUM(CASE WHEN factures.statut = "payer" THEN REPLACE(detailconsultations.montant, ".", "") + 0 ELSE 0 END), 0) as total_payer,
+            COALESCE(SUM(CASE WHEN factures.statut = "impayer" THEN REPLACE(detailconsultations.montant, ".", "") + 0 ELSE 0 END), 0) as total_impayer,
+            COALESCE(SUM(REPLACE(detailconsultations.montant, ".", "") + 0), 0) as total_general,
+            COALESCE(SUM(REPLACE(detailconsultations.part_assurance, ".", "") + 0), 0) as part_assurance,
+            COALESCE(SUM(REPLACE(detailconsultations.part_patient, ".", "") + 0), 0) as part_patient,
+            COALESCE(SUM(REPLACE(detailconsultations.remise, ".", "") + 0), 0) as remise,
+            COALESCE(SUM(CASE WHEN factures.statut = "payer" THEN REPLACE(detailconsultations.part_patient, ".", "") + 0 ELSE 0 END), 0) as part_patient_payer,
+            COALESCE(SUM(CASE WHEN factures.statut = "impayer" THEN REPLACE(detailconsultations.part_patient, ".", "") + 0 ELSE 0 END), 0) as part_patient_impayer
+        '))
+        ->whereBetween('detailconsultations.created_at', [$startDate, $endDate])
+        ->first();
+
+
+        $m_hos = detailhopital::join('factures', 'factures.id', '=', 'detailhopitals.facture_id')
+        ->select(DB::raw('
+            COALESCE(SUM(CASE WHEN factures.statut = "payer" THEN REPLACE(detailhopitals.montant, ".", "") + 0 ELSE 0 END), 0) as total_payer,
+            COALESCE(SUM(CASE WHEN factures.statut = "impayer" THEN REPLACE(detailhopitals.montant, ".", "") + 0 ELSE 0 END), 0) as total_impayer,
+            COALESCE(SUM(REPLACE(detailhopitals.montant, ".", "") + 0), 0) as total_general,
+            COALESCE(SUM(REPLACE(detailhopitals.part_assurance, ".", "") + 0), 0) as part_assurance,
+            COALESCE(SUM(REPLACE(detailhopitals.part_patient, ".", "") + 0), 0) as part_patient,
+            COALESCE(SUM(REPLACE(detailhopitals.remise, ".", "") + 0), 0) as remise,
+            COALESCE(SUM(CASE WHEN factures.statut = "payer" THEN REPLACE(detailhopitals.part_patient, ".", "") + 0 ELSE 0 END), 0) as part_patient_payer,
+            COALESCE(SUM(CASE WHEN factures.statut = "impayer" THEN REPLACE(detailhopitals.part_patient, ".", "") + 0 ELSE 0 END), 0) as part_patient_impayer
+        '))
+        ->whereBetween('detailhopitals.created_at', [$startDate, $endDate])
+        ->first();
+
+        $m_exam = examen::join('factures', 'factures.id', '=', 'examens.facture_id')
+        ->select(DB::raw('
+            COALESCE(SUM(CASE WHEN factures.statut = "payer" THEN REPLACE(examens.montant, ".", "") + 0 ELSE 0 END), 0) as total_payer,
+            COALESCE(SUM(CASE WHEN factures.statut = "impayer" THEN REPLACE(examens.montant, ".", "") + 0 ELSE 0 END), 0) as total_impayer,
+            COALESCE(SUM(REPLACE(examens.montant, ".", "") + 0), 0) as total_general,
+            COALESCE(SUM(REPLACE(examens.part_assurance, ".", "") + 0), 0) as part_assurance,
+            COALESCE(SUM(REPLACE(examens.part_patient, ".", "") + 0), 0) as part_patient,
+            COALESCE(SUM(CASE WHEN factures.statut = "payer" THEN REPLACE(examens.part_patient, ".", "") + 0 ELSE 0 END), 0) as part_patient_payer,
+            COALESCE(SUM(CASE WHEN factures.statut = "impayer" THEN REPLACE(examens.part_patient, ".", "") + 0 ELSE 0 END), 0) as part_patient_impayer
+        '))
+        ->whereBetween('examens.created_at', [$startDate, $endDate])
+        ->first();
+
+        $m_soinsam = soinspatient::join('factures', 'factures.id', '=', 'soinspatients.facture_id')
+        ->select(DB::raw('
+            COALESCE(SUM(CASE WHEN factures.statut = "payer" THEN REPLACE(soinspatients.montant, ".", "") + 0 ELSE 0 END), 0) as total_payer,
+            COALESCE(SUM(CASE WHEN factures.statut = "impayer" THEN REPLACE(soinspatients.montant, ".", "") + 0 ELSE 0 END), 0) as total_impayer,
+            COALESCE(SUM(REPLACE(soinspatients.montant, ".", "") + 0), 0) as total_general,
+            COALESCE(SUM(REPLACE(soinspatients.part_assurance, ".", "") + 0), 0) as part_assurance,
+            COALESCE(SUM(REPLACE(soinspatients.part_patient, ".", "") + 0), 0) as part_patient,
+            COALESCE(SUM(REPLACE(soinspatients.remise, ".", "") + 0), 0) as remise,
+            COALESCE(SUM(CASE WHEN factures.statut = "payer" THEN REPLACE(soinspatients.part_patient, ".", "") + 0 ELSE 0 END), 0) as part_patient_payer,
+            COALESCE(SUM(CASE WHEN factures.statut = "impayer" THEN REPLACE(soinspatients.part_patient, ".", "") + 0 ELSE 0 END), 0) as part_patient_impayer
+        '))
+        ->whereBetween('soinspatients.created_at', [$startDate, $endDate])
+        ->first();
 
         $data = [
             'cons' => $consultations ?? 0,
             'hos' => $hospitalisations ?? 0,
             'exam' => $examens ?? 0,
             'soinsam' => $soinsAmbulatoires ?? 0,
+            'm_cons' => $m_cons,
+            'm_hos' => $m_hos,
+            'm_exam' => $m_exam,
+            'm_soinsam' => $m_soinsam,
         ];
 
-        return response()->json(['data' => $data]);
+        // -------------------------------------------------
+
+        $typeacte = typeacte::join('actes', 'actes.id', '=', 'typeactes.acte_id')
+                            ->where('actes.nom', '=', 'CONSULTATION')
+                            ->select('typeactes.*')
+                            ->get();
+
+        foreach ($typeacte as $value) {
+
+            $stats = detailconsultation::where('typeacte_id', '=', $value->id)
+                        ->whereBetween('created_at', [$startDate, $endDate])
+                        ->select(DB::raw('
+                            COALESCE(SUM(REPLACE(montant, ".", "") + 0), 0) as part_total,
+                            COALESCE(SUM(REPLACE(part_patient, ".", "") + 0), 0) as part_patient,
+                            COALESCE(SUM(REPLACE(part_assurance, ".", "") + 0), 0) as part_assurance,
+                            COALESCE(SUM(REPLACE(remise, ".", "") + 0), 0) as remise
+                        '))
+                        ->first();
+
+            $nbre = detailconsultation::where('typeacte_id', '=', $value->id)->whereBetween('created_at', [$startDate, $endDate])->count();
+
+            if ($stats) {
+                $value->part_patient = $stats->part_patient ?? 0;
+                $value->part_assurance = $stats->part_assurance ?? 0;
+                $value->total = $stats->part_total ?? 0;
+                $value->remise = $stats->remise ?? 0;
+                $value->nbre = $nbre ?? 0;
+            } else {
+                $value->part_patient = 0;
+                $value->part_assurance = 0;
+                $value->total = 0;
+                $value->remise = 0;
+                $value->nbre = 0;
+            }
+
+        }
+
+        // -------------------------------------------------
+
+        $fac_nbre = facture::whereBetween('created_at', [$startDate, $endDate])->count();
+
+        $fac_total = $m_cons->total_general + $m_hos->total_general + $m_exam->total_general + $m_soinsam->total_general ;
+
+        $fac_remise = $m_cons->remise + $m_hos->remise + $m_soinsam->remise ;
+
+        $fac_impayer = $m_cons->total_impayer + $m_hos->total_impayer + $m_exam->total_impayer + $m_soinsam->total_impayer ;
+
+        $fac_payer = $m_cons->total_payer + $m_hos->total_payer + $m_exam->total_payer + $m_soinsam->total_payer ;
+
+        $fac_assurance = $m_cons->part_assurance + $m_hos->part_assurance + $m_exam->part_assurance + $m_soinsam->part_assurance ;
+
+        $fac_patient = $m_cons->part_patient + $m_hos->part_patient + $m_exam->part_patient + $m_soinsam->part_patient ;
+
+        $fac_patient_payer = $m_cons->part_patient_payer + $m_hos->part_patient_payer + $m_exam->part_patient_payer + $m_soinsam->part_patient_payer ;
+
+        $fac_patient_impayer = $m_cons->part_patient_impayer + $m_hos->part_patient_impayer + $m_exam->part_patient_impayer + $m_soinsam->part_patient_impayer ;
+
+        $fac_patient_total = $fac_patient_impayer + $fac_patient_payer;
+
+        $dataCaisse = [
+            'fac_nbre' => $fac_nbre ?? 0,
+            'fac_total' => $fac_total ?? 0,
+            'fac_impayer' => $fac_impayer ?? 0,
+            'fac_payer' => $fac_payer ?? 0,
+            'fac_assurance' => $fac_assurance ?? 0,
+            'fac_patient' => $fac_patient ?? 0,
+            'fac_patient_payer' => $fac_patient_payer ?? 0,
+            'fac_patient_impayer' => $fac_patient_impayer ?? 0,
+            'fac_patient_total' => $fac_patient_total ?? 0,
+            'fac_remise' => $fac_remise ?? 0,
+        ];
+
+        return response()->json([
+            'data' => $data,
+            'dataCaisse' => $dataCaisse,
+            'typeacte' => $typeacte,
+        ]);
     }
 
 

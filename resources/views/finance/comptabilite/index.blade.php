@@ -76,9 +76,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-12">
-            <div class="row gx-3" id="stat_acte_mois"></div>
-        </div>
+        <div class="col-12" id="stat_global"></div>
     </div>
 </div>
 
@@ -96,6 +94,7 @@
         stat_acte_mois();
 
         document.getElementById("btn_rech").addEventListener("click", stat_acte_mois);
+        document.getElementById("btn_refresh_stat_acte").addEventListener("click", refresh_sam);
 
         function showAlert(title, message, type) {
             Swal.fire({
@@ -322,6 +321,11 @@
                 });
         }
 
+        function refresh_sam() {
+            yearSelect();
+            stat_acte();
+        }
+
         function isValidDate(dateString) {
             const regEx = /^\d{4}-\d{2}-\d{2}$/;
             if (!dateString.match(regEx)) return false;
@@ -359,71 +363,89 @@
                 return false;
             }
 
-            const stat_acte_mois = document.getElementById("stat_acte_mois");
+            const stat_global = document.getElementById("stat_global");
+            stat_global.innerHTML = "";
+
+            var preloader_ch = `
+                <div class="d-flex justify-content-center align-items-center" id="laoder_stat">
+                    <div class="spinner-border text-warning me-2" role="status" aria-hidden="true"></div>
+                    <strong>Chargement des données...</strong>
+                </div>
+            `;
+            stat_global.innerHTML = preloader_ch;
 
             fetch('/api/stat_acte_mois/' + date1.value + '/' + date2.value)
                 .then(response => response.json())
                 .then(data => {
 
-                    // Vérifiez si les dates sont invalides
+                    var preloader = document.getElementById('laoder_stat');
+                    if (preloader) preloader.remove();
+
                     if (data.date_invalide) {
                         showAlert('Erreur', 'Les dates sont invalides', 'error');
                         return false;
                     }
 
-                    // Récupérez les données
-                    const stats = data.data;
-                    stat_acte_mois.innerHTML = ''; // Réinitialiser le contenu
+                    stat_global.innerHTML = '';
 
-                    // Créer les cartes pour chaque type de donnée
-                    const cardData = [
-                        {
-                            label: "Consultations",
-                            count: stats.cons, // Remplacez par stats.cons
-                            icon: "ri-lungs-line",
-                            route: "{{route('consultation_liste')}}",
-                            percentage: "", // Exemple de pourcentage
-                            colorClass: "text-success",
-                            borderColor: "border-success",
-                            bgColor: "bg-success-subtle",
-                        },
-                        {
-                            label: "Hospitalisations",
-                            count: stats.hos, // Remplacez par stats.hospitalisations
-                            icon: "ri-hotel-bed-line",
-                            route: "{{route('hospitalisation')}}",
-                            percentage: "", // Exemple de pourcentage
-                            colorClass: "text-primary",
-                            borderColor: "border-primary",
-                            bgColor: "bg-primary-subtle",
-                        },
-                        {
-                            label: "Examens",
-                            count: stats.exam, // Remplacez par stats.examens
-                            icon: "ri-medicine-bottle-line",
-                            route: "{{route('examen')}}",
-                            percentage: "", // Exemple de pourcentage
-                            colorClass: "text-danger",
-                            borderColor: "border-danger",
-                            bgColor: "bg-danger-subtle",
-                        },
-                        {
-                            label: "Soins Ambulatoires",
-                            count: stats.soinsam, // Remplacez par stats.soins_ambulatoires
-                            icon: "ri-dossier-line",
-                            route: "{{route('soinsam')}}",
-                            percentage: "", // Exemple de pourcentage
-                            colorClass: "text-warning",
-                            borderColor: "border-warning",
-                            bgColor: "bg-warning-subtle",
-                        },
+                    const Div1 = `
+                        <div class="row gx-3" id="stat_acte_mois"></div>
+                    `;
+                    const Div2 = `
+                        <div class="row gx-3">
+                            <div class="card mb-3">
+                                <div class="card-header">
+                                    <h5 class="card-title">
+                                    Répartition du chiffre d'affaires des consultations : ${formatPrice(data.data.m_cons.total_general)} Fcfa
+                                    </h5>
+                                </div>
+                                <div class="card-body">
+                                    <div class="row g-3" id="stat_cons"></div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    const Div3 = `
+                        <div class="row gx-3">
+                            <div class="card mb-3">
+                                <div class="card-header">
+                                    <h5 class="card-title">
+                                    Répartition des mouvements de la caisse
+                                    </h5>
+                                </div>
+                                <div class="card-body">
+                                    <div class="row g-3" id="stat_caisse"></div>
+                                </div>
+                                <div class="card-header">
+                                    <h5 class="card-title">
+                                    Répartition des mouvements de la caisse : Pour le Patient
+                                    </h5>
+                                </div>
+                                <div class="card-body">
+                                    <div class="row g-3" id="stat_caisse_patient"></div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+
+                    stat_global.innerHTML += Div1;
+                    stat_global.innerHTML += Div2;
+                    stat_global.innerHTML += Div3;
+
+                    const stats = data.data;
+                    const stat_acte_mois = document.getElementById("stat_acte_mois");
+                    stat_acte_mois.innerHTML = '';
+
+                    const cardData_acte_mois = [
+                        { label: "Consultations", count: stats.cons, icon: "ri-lungs-line", colorClass: "text-success", borderColor: "border-success", bgColor: "bg-success-subtle", mTotal : formatPrice(stats.m_cons.total_general), pTotal : formatPrice(stats.m_cons.total_payer), ipTotal : formatPrice(stats.m_cons.total_impayer), assurance : formatPrice(stats.m_cons.part_assurance), patient : formatPrice(stats.m_cons.part_patient)},
+                        { label: "Hospitalisations", count: stats.hos, icon: "ri-hotel-bed-line", colorClass: "text-primary", borderColor: "border-primary", bgColor: "bg-primary-subtle", mTotal : formatPrice(stats.m_hos.total_general), pTotal : formatPrice(stats.m_hos.total_payer), ipTotal : formatPrice(stats.m_hos.total_impayer), assurance : formatPrice(stats.m_hos.part_assurance), patient : formatPrice(stats.m_hos.part_patient)},
+                        { label: "Examens", count: stats.exam, icon: "ri-medicine-bottle-line", colorClass: "text-danger", borderColor: "border-danger", bgColor: "bg-danger-subtle", mTotal : formatPrice(stats.m_exam.total_general), pTotal : formatPrice(stats.m_exam.total_payer), ipTotal : formatPrice(stats.m_exam.total_impayer), assurance : formatPrice(stats.m_exam.part_assurance), patient : formatPrice(stats.m_exam.part_patient)},
+                        { label: "Soins Ambulatoires", count: stats.soinsam, icon: "ri-dossier-line", colorClass: "text-warning", borderColor: "border-warning", bgColor: "bg-warning-subtle", mTotal : formatPrice(stats.m_soinsam.total_general), pTotal : formatPrice(stats.m_soinsam.total_payer), ipTotal : formatPrice(stats.m_soinsam.total_impayer), assurance : formatPrice(stats.m_soinsam.part_assurance), patient : formatPrice(stats.m_soinsam.part_patient)},
                     ];
 
-                    // Créer et ajouter les cartes au DOM
-                    cardData.forEach(card => {
+                    cardData_acte_mois.forEach(card => {
                         const div = document.createElement('div');
-                        div.className = "col-xl-3 col-sm-6 col-12"; // Ajouter la classe de la colonne
-
+                        div.className = "col-xl-3 col-sm-6 col-12";
                         div.innerHTML = `
                             <div class="card mb-3">
                                 <div class="card-body">
@@ -439,29 +461,169 @@
                                         </div>
                                     </div>
                                     <div class="d-flex align-items-end justify-content-between mt-1">
-                                        <a class="${card.colorClass}" href="${card.route}">
-                                            <span>Détails</span>
+                                        <a class="${card.colorClass}" href="javascript:void(0);">
+                                            <span>Montant Total</span>
                                             <i class="ri-arrow-right-line ${card.colorClass} ms-1"></i>
                                         </a>
                                         <div class="text-end">
-                                            <p class="mb-0 ${card.colorClass}">${card.percentage}</p>
-                                            <span class="badge ${card.bgColor} ${card.colorClass} small">
-                                                Période sélectionnée
-                                            </span>
+                                            <p class="mb-0 ${card.colorClass}">${card.mTotal} Fcfa</p>
+                                        </div>
+                                    </div>
+                                    <div class="d-flex align-items-end justify-content-between mt-1">
+                                        <a class="${card.colorClass}" href="javascript:void(0);">
+                                            <span>Montant Réglé</span>
+                                            <i class="ri-arrow-right-line ${card.colorClass} ms-1"></i>
+                                        </a>
+                                        <div class="text-end">
+                                            <p class="mb-0 ${card.colorClass}">${card.pTotal} Fcfa</p>
+                                        </div>
+                                    </div>
+                                    <div class="d-flex align-items-end justify-content-between mt-1">
+                                        <a class="${card.colorClass}" href="javascript:void(0);">
+                                            <span>Montant Non-Réglé</span>
+                                            <i class="ri-arrow-right-line ${card.colorClass} ms-1"></i>
+                                        </a>
+                                        <div class="text-end">
+                                            <p class="mb-0 ${card.colorClass}">${card.ipTotal} Fcfa</p>
+                                        </div>
+                                    </div>
+                                    <div class="d-flex align-items-end justify-content-between mt-1">
+                                        <a class="${card.colorClass}" href="javascript:void(0);">
+                                            <span>Part Assurance</span>
+                                            <i class="ri-arrow-right-line ${card.colorClass} ms-1"></i>
+                                        </a>
+                                        <div class="text-end">
+                                            <p class="mb-0 ${card.colorClass}">${card.assurance} Fcfa</p>
+                                        </div>
+                                    </div>
+                                    <div class="d-flex align-items-end justify-content-between mt-1">
+                                        <a class="${card.colorClass}" href="javascript:void(0);">
+                                            <span>Part Patient</span>
+                                            <i class="ri-arrow-right-line ${card.colorClass} ms-1"></i>
+                                        </a>
+                                        <div class="text-end">
+                                            <p class="mb-0 ${card.colorClass}">${card.patient} Fcfa</p>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         `;
-                        stat_acte_mois.appendChild(div); // Ajouter la carte au DOM
+                        stat_acte_mois.appendChild(div);
+                    });
+
+                    const cons_specialite = data.typeacte;
+                    const stat_cons = document.getElementById("stat_cons");
+                    stat_cons.innerHTML = '';
+
+                    cons_specialite.forEach(item => {
+                        const div = document.createElement('div');
+                        div.className = "col-xl-3 col-sm-6 col-12";
+                        div.innerHTML = `
+                            <div class="border rounded-2 d-flex align-items-center flex-row p-2 ">
+                                <div class="card-body">
+                                    <div class="d-flex align-items-center">
+                                        <div class="p-2 border border-primary rounded-circle me-3">
+                                            <div class="icon-box md bg-primary-subtle rounded-5">
+                                                <i class="ri-stethoscope-line fs-4 text-primary"></i>
+                                            </div>
+                                        </div>
+                                        <div class="d-flex flex-column">
+                                            <h5 class="lh-1">${item.nom}</h5>
+                                            <p class="m-0">${item.nbre} Consultation(s)</p>
+                                        </div>
+                                    </div>
+                                    ${createStatRow('Part Assurance', item.part_assurance, 'text-primary')}
+                                    ${createStatRow('Part Patient', item.part_patient, 'text-primary')}
+                                    ${createStatRow('Remise', item.remise, 'text-primary')}
+                                    ${createStatRow('Montant Total', item.total, 'text-primary')}
+                                </div>
+                            </div>
+                        `;
+                        stat_cons.appendChild(div);
+                    });
+
+                    const statsCaisse = data.dataCaisse;
+                    const stat_caisse = document.getElementById("stat_caisse");
+                    stat_caisse.innerHTML = '';
+
+                    const cardData_caisse = [
+                        { label: "Factures", icon: "ri-bar-chart-2-line", colorClass: "text-primary", borderColor: "border-primary", bgColor: "bg-primary-subtle", data : formatPrice(statsCaisse.fac_nbre),},
+                        { label: "Montant Total", icon: "ri-safe-2-line", colorClass: "text-success", borderColor: "border-success", bgColor: "bg-success-subtle", data : formatPrice(statsCaisse.fac_total)+" Fcfa",},
+                        { label: "Montant Impayer", icon: "ri-hand-coin-line", colorClass: "text-danger", borderColor: "border-danger", bgColor: "bg-danger-subtle", data : formatPrice(statsCaisse.fac_impayer)+" Fcfa",},
+                        { label: "Montant Payer", icon: "ri-funds-fill", colorClass: "text-success", borderColor: "border-success", bgColor: "bg-success-subtle", data : formatPrice(statsCaisse.fac_payer)+" Fcfa",},
+                        { label: "Part Assurance", icon: "ri-cash-fill", colorClass: "text-warning", borderColor: "border-warning", bgColor: "bg-warning-subtle", data : formatPrice(statsCaisse.fac_assurance)+" Fcfa",},
+                        { label: "Total Remise", icon: "ri-percent-line", colorClass: "text-danger", borderColor: "border-danger", bgColor: "bg-danger-subtle", data : formatPrice(statsCaisse.fac_remise)+" Fcfa",},
+                    ];
+
+                    cardData_caisse.forEach(card => {
+                        const div = document.createElement('div');
+                        div.className = "col-xl-3 col-sm-6 col-12";
+                        div.innerHTML = `
+                            <div class="border rounded-2 d-flex align-items-center flex-row p-2 ">
+                                <div class="card-body">
+                                    <div class="d-flex flex-column align-items-center">
+                                        <div class="icon-box xl ${card.bgColor} rounded-5 mb-2 no-shadow">
+                                            <i class="${card.icon} fs-1 ${card.colorClass}"></i>
+                                        </div>
+                                        <h3 class="${card.colorClass}">
+                                            ${card.data}
+                                        </h3>
+                                        <h4>${card.label}</h4>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                        stat_caisse.appendChild(div);
+                    });
+
+                    const stat_caisse_patient = document.getElementById("stat_caisse_patient");
+                    stat_caisse_patient.innerHTML = '';
+                    const cardData_caisse_patient = [
+                        { label: "Part Patient", icon: "ri-cash-fill", colorClass: "text-warning", borderColor: "border-warning", bgColor: "bg-warning-subtle", data : formatPrice(statsCaisse.fac_patient_total)+" Fcfa",},
+                        { label: "Part Patient Impayer", icon: "ri-hand-coin-line", colorClass: "text-danger", borderColor: "border-danger", bgColor: "bg-danger-subtle", data : formatPrice(statsCaisse.fac_patient_impayer)+" Fcfa",},
+                        { label: "Part Patient Payer", icon: "ri-funds-fill", colorClass: "text-success", borderColor: "border-success", bgColor: "bg-success-subtle", data : formatPrice(statsCaisse.fac_patient_payer)+" Fcfa",},
+                    ];
+
+                    cardData_caisse_patient.forEach(card => {
+                        const div = document.createElement('div');
+                        div.className = "col-xl-3 col-sm-6 col-12";
+                        div.innerHTML = `
+                            <div class="border rounded-2 d-flex align-items-center flex-row p-2 ">
+                                <div class="card-body">
+                                    <div class="d-flex flex-column align-items-center">
+                                        <div class="icon-box xl ${card.bgColor} rounded-5 mb-2 no-shadow">
+                                            <i class="${card.icon} fs-1 ${card.colorClass}"></i>
+                                        </div>
+                                        <h3 class="${card.colorClass}">
+                                            ${card.data}
+                                        </h3>
+                                        <h4>${card.label}</h4>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                        stat_caisse_patient.appendChild(div);
                     });
                 })
                 .catch(error => {
+                    stat_global.innerHTML = `<p class="text-danger text-center">Erreur lors du chargement des données. Veuillez réessayer plus tard.</p>`;
                     console.error('Erreur lors du chargement des données:', error);
                 });
-
-            
         }
+
+        function createStatRow(label, value, colorClass) {
+            return `
+                <div class="d-flex align-items-end justify-content-between mt-1">
+                    <div class="text-start">
+                        <p class="mb-0 ${colorClass}">${label}</p>
+                    </div>
+                    <div class="text-end">
+                        <p class="mb-0 ${colorClass}">${formatPrice(value.toString())} Fcfa</p>
+                    </div>
+                </div>
+            `;
+        }
+
 
     });
 </script>
