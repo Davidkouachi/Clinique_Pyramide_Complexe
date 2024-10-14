@@ -427,10 +427,27 @@
                             </div>
                         </div>
                     `;
+                    const Div4 = `
+                        <div class="row gx-3">
+                            <div class="card mb-3">
+                                <div class="card-header">
+                                    <h5 class="card-title">
+                                        Informations de Bord
+                                    </h5>
+                                </div>
+                                <div class="card-body">
+                                    <div class="row g-3" id="stat_info"></div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
 
                     stat_global.innerHTML += Div1;
                     stat_global.innerHTML += Div2;
                     stat_global.innerHTML += Div3;
+                    stat_global.innerHTML += Div4;
+
+                    // -------------------------------------------------------------
 
                     const stats = data.data;
                     const stat_acte_mois = document.getElementById("stat_acte_mois");
@@ -511,6 +528,8 @@
                         stat_acte_mois.appendChild(div);
                     });
 
+                    // -------------------------------------------------------------
+
                     const cons_specialite = data.typeacte;
                     const stat_cons = document.getElementById("stat_cons");
                     stat_cons.innerHTML = '';
@@ -541,6 +560,8 @@
                         `;
                         stat_cons.appendChild(div);
                     });
+
+                    // -------------------------------------------------------------
 
                     const statsCaisse = data.dataCaisse;
                     const stat_caisse = document.getElementById("stat_caisse");
@@ -604,6 +625,39 @@
                         `;
                         stat_caisse_patient.appendChild(div);
                     });
+
+                    // -------------------------------------------------------------
+
+                    const stat_info = document.getElementById("stat_info");
+                    stat_info.innerHTML = '';
+
+                    const cardData_info = [
+                        { label: "Consultations", icon: "ri-lungs-line", colorClass: "text-success", borderColor: "border-success", bgColor: "bg-success-subtle"}
+                    ];
+
+                    cardData_info.forEach(card => {
+                        const div = document.createElement('div');
+                        div.className = "col-xl-3 col-sm-6 col-12";
+                        div.innerHTML = `
+                            <div class="border rounded-2 d-flex align-items-center flex-row p-2">
+                                <div class="card-body">
+                                    <div class="d-flex align-items-center">
+                                        <div class="p-2 ${card.borderColor} rounded-circle me-3">
+                                            <div class="icon-box md ${card.bgColor} rounded-5">
+                                                <i class="${card.icon} fs-4 ${card.colorClass}"></i>
+                                            </div>
+                                        </div>
+                                        <div class="d-flex flex-column">
+                                            <h2 class="lh-1">23</h2>
+                                            <p class="m-0">${card.label}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                        stat_info.appendChild(div);
+                    });
+
                 })
                 .catch(error => {
                     stat_global.innerHTML = `<p class="text-danger text-center">Erreur lors du chargement des données. Veuillez réessayer plus tard.</p>`;
