@@ -20,6 +20,11 @@ class AccueilController extends Controller
 {
     public function index_accueil()
     {
-        return view('accueil.accueil');
+        return view('accueil.reception.tableaubord');
+    }
+
+    public function index_propos()
+    {
+        return view('accueil.propos');
     }
 }

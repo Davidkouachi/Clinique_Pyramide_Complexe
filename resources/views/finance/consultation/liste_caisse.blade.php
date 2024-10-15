@@ -20,86 +20,12 @@
 @section('content')
 
 <div class="app-body">
-    <!-- Row starts -->
-    <div class="row gx-3">
-        <div class="col-xl-3 col-sm-6 col-12">
-            <div class="card mb-3">
-                <div class="card-body">
-                    <div class="d-flex align-items-center">
-                        <div class="p-2 border border-warning rounded-circle me-3">
-                            <div class="icon-box md bg-warning-subtle rounded-5">
-                                <i class="ri-wallet-3-fill fs-4 text-warning"></i>
-                            </div>
-                        </div>
-                        <div class="d-flex flex-column">
-                            <h5 id="stat_assurance" class="lh-1 text-warning"></h5>
-                            <p class="m-0 text-warning">Part assurance</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-xl-3 col-sm-6 col-12">
-            <div class="card mb-3">
-                <div class="card-body">
-                    <div class="d-flex align-items-center">
-                        <div class="p-2 border border-primary rounded-circle me-3">
-                            <div class="icon-box md bg-primary-subtle rounded-5">
-                                <i class="ri-wallet-3-fill fs-4 text-primary"></i>
-                            </div>
-                        </div>
-                        <div class="d-flex flex-column">
-                            <h5 id="stat_patient" class="lh-1 text-primary"></h5>
-                            <p class="m-0 text-primary">Part Patient</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-xl-3 col-sm-6 col-12">
-            <div class="card mb-3">
-                <div class="card-body">
-                    <div class="d-flex align-items-center">
-                        <div class="p-2 border border-success rounded-circle me-3">
-                            <div class="icon-box md bg-success-subtle rounded-5">
-                                <i class="ri-wallet-3-fill fs-4 text-success"></i>
-                            </div>
-                        </div>
-                        <div class="d-flex flex-column">
-                            <h5 id="stat_total" class="lh-1 text-success"></h5>
-                            <p class="m-0 text-success">Total</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-xl-3 col-sm-6 col-12">
-            <div class="card mb-3">
-                <div class="card-body">
-                    <div class="d-flex align-items-center">
-                        <div class="p-2 border border-dark rounded-circle me-3">
-                            <div class="icon-box md bg-dark-subtle rounded-5">
-                                <i class="ri-survey-line fs-4 text-dark"></i>
-                            </div>
-                        </div>
-                        <div class="d-flex flex-column">
-                            <h5 id="stat_statut_payer" class="lh-1 text-success">
-                            </h5>
-                            <h5 id="stat_statut_impayer" class="lh-1 text-danger">
-                            </h5>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
     <div class="row justify-content-center">
         <div class="col-12">
             <div class="card mb-3">
                 <div class="card-header d-flex align-items-center justify-content-between">
                     <h5 class="card-title">
-                        Liste des Factures
+                        Consultations liste des factures
                     </h5>
                     <div class="d-flex" >
                         <input type="text" id="searchInput" placeholder="N° facture" class="form-control me-1">
@@ -227,7 +153,6 @@
 <script>
     document.addEventListener("DOMContentLoaded", function() {
 
-        Statistique();
         list();
 
         document.getElementById("btn_refresh_table").addEventListener("click", list);
@@ -268,37 +193,6 @@
             const seconds = String(date.getSeconds()).padStart(2, '0');
 
             return `${day}/${month}/${year} à ${hours}:${minutes}:${seconds}`;
-        }
-
-        function Statistique() {
-
-            const stat_assurance = document.getElementById("stat_assurance");
-            const stat_patient = document.getElementById("stat_patient");
-            const stat_total = document.getElementById("stat_total");
-
-            const stat_payer = document.getElementById("stat_statut_payer");
-            const stat_impayer = document.getElementById("stat_statut_impayer");
-
-            $.ajax({
-                url: '/api/statistique_caisse',
-                method: 'GET',
-                success: function(response) {
-                    stat_assurance.textContent = formatPrice(response.part_assurance.toString()) + ' Fcfa';
-                    stat_patient.textContent = formatPrice(response.part_patient.toString()) + ' Fcfa';
-                    stat_total.textContent = formatPrice(response.part_total.toString()) + ' Fcfa';
-
-                    stat_payer.textContent = 'Facture réglé : '+ response.payer;
-                    stat_impayer.textContent = 'Facture non-réglé : '+ response.impayer;
-
-                },
-                error: function() {
-                    stat_assurance.textContent = '0 Fcfa';
-                    stat_patient.textContent = '0 Fcfa';
-                    stat_total.textContent = '0 Fcfa';
-                    stat_payer.textContent = 'Facture réglé : 0 ';
-                    stat_impayer.textContent = 'Facture non-réglé : 0 ';
-                }
-            });
         }
 
         function list(page = 1) {
@@ -348,7 +242,7 @@
                                     <td class="text-success">${formatPrice(item.part_patient ?? 0)} Fcfa</td>
                                     <td class="text-warning">${formatPrice(item.remise ?? 0)} Fcfa</td>
                                     <td class="text-primary">${formatPrice(item.montant ?? 0)} Fcfa</td>
-                                    <td>${formatDate(item.created_at)}</td>
+                                    <td>${formatDateHeure(item.created_at)}</td>
                                     <td>
                                         <span class="badge ${item.statut === 'payer' ? 'bg-success' : 'bg-danger'}">
                                             ${item.statut === 'payer' ? 'Réglé' : 'Non Réglé'}

@@ -26,7 +26,7 @@
             <div class="card mb-3">
                 <div class="card-header d-flex align-items-center justify-content-between">
                     <h5 class="card-title">
-                        Facture non réglée
+                        Hospitalisations liste des factures
                     </h5>
                     <div class="d-flex" >
                         <input type="text" id="searchInput" placeholder="N° facture" class="form-control me-1" >
@@ -189,6 +189,21 @@
             return `${day}/${month}/${year}`; // Format as dd/mm/yyyy
         }
 
+        function formatDateHeure(dateString) {
+
+            const date = new Date(dateString);
+                
+            const day = String(date.getDate()).padStart(2, '0');
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const year = date.getFullYear();
+
+            const hours = String(date.getHours()).padStart(2, '0');
+            const minutes = String(date.getMinutes()).padStart(2, '0');
+            const seconds = String(date.getSeconds()).padStart(2, '0');
+
+            return `${day}/${month}/${year} à ${hours}:${minutes}:${seconds}`;
+        }
+
         function list(page = 1) {
             const tableBody = document.querySelector('#Table tbody');
             const messageDiv = document.getElementById('message_Table');
@@ -251,7 +266,7 @@
                                     <td class="text-primary">
                                         ${item.remise ?? 0} Fcfa
                                     </td>
-                                    <td>${formatDate(item.created_at)}</td>
+                                    <td>${formatDateHeure(item.created_at)}</td>
                                     <td>
                                         <div class="d-inline-flex gap-1">
                                             <a class="btn btn-outline-warning btn-sm rounded-5" id="detail-${item.id}" data-bs-toggle="modal" data-bs-target="#Detail">

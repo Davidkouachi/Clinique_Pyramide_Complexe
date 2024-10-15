@@ -45,12 +45,8 @@
             </div>
         </div>
     </div> --}}
-    <!-- Loading ends -->
-    <!-- Page wrapper starts -->
     <div class="page-wrapper">
-        <!-- App header starts -->
         <div class="app-header d-flex align-items-center">
-            <!-- Toggle buttons starts -->
             <div class="d-flex">
                 <button class="toggle-sidebar">
                     <i class="ri-menu-line"></i>
@@ -59,8 +55,6 @@
                     <i class="ri-menu-line"></i>
                 </button>
             </div>
-            <!-- Toggle buttons ends -->
-            <!-- App brand starts -->
             <div class="app-brand ms-3 ">
                 <a href="" class="d-lg-block d-none">
                     <img src="{{asset('assets/images/logo.png')}}" height="40" width="40" class="" style="border-radius: 10%;" alt="Medicare Admin Template">
@@ -69,17 +63,18 @@
                     <img src="{{asset('assets/images/logo.png')}}" height="40" width="40" class="" style="border-radius: 10%;" alt="Medicare Admin Template">
                 </a>
             </div>
-            <!-- App brand ends -->
-            
-            <!-- App header actions starts -->
             <div class="header-actions">
                 <div class="dropdown ms-2">
                     <a id="userSettings" class="dropdown-toggle d-flex align-items-center" href="#!" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        <div class="avatar-box">JB<span class="status busy"></span></div>
+                        <div class="avatar-box">
+                            {{ ucfirst(substr(Auth::user()->name, 0, 1)) }}{{ isset(explode(' ', Auth::user()->name)[1]) ? ucfirst(substr(explode(' ', Auth::user()->name)[1], 0, 1)) : '' }}
+
+                            <span class="status primary"></span>
+                        </div>
                     </a>
                     <div class="dropdown-menu dropdown-menu-end shadow-lg">
                         <div class="px-3 py-2">
-                            <span class="small">Admin</span>
+                            <span class="small">{{Auth::user()->role}}</span>
                             <h6 class="m-0">{{Auth::user()->name}}</h6>
                         </div>
                         <div class="mx-3 my-2 d-grid">
@@ -87,13 +82,10 @@
                         </div>
                     </div>
                 </div>
-                <!-- Header user settings ends -->
             </div>
         </div>
         <div class="main-container">
-            <!-- Sidebar wrapper starts -->
             <nav id="sidebar" class="sidebar-wrapper">
-                <!-- Sidebar profile starts -->
                 <div class="sidebar-profile">
                     <img src="{{asset('assets/images/user8.png')}}" class="img-shadow img-3x me-3 rounded-5" alt="Hospital Admin Templates">
                     <div class="m-0">
@@ -107,144 +99,168 @@
                 </div>
                 <div class="sidebarMenuScroll">
                     <ul class="sidebar-menu">
-                        <li @if(request()->routeIs('index_accueil')) class="active current-page" @endif>
-                            <a href="{{route('index_accueil')}}">
-                                <i class="ri-home-line"></i>
-                                <span class="menu-text">Accueil</span>
-                            </a>
-                        </li>
-                        <li @if(request()->routeIs('index_reception','consultation_liste','patient_liste','societe_liste','horaire_medecin')) class="active current-page treeview" @else class="treeview" @endif >
+                        <li @if(request()->routeIs('index_accueil','consultation_liste','patient_liste','societe_liste','horaire_medecin')) class="active current-page treeview" @else class="treeview" @endif >
                             <a href="#!">
                                 <i class="ri-computer-line"></i>
-                                <span class="menu-text">Réception</span>
+                                <span class="menu-text text-primary">
+                                    <b>Réception</b>
+                                </span>
                             </a>
                             <ul class="treeview-menu">
                                 <li>
-                                    <a @if(request()->routeIs('index_reception')) class="text-primary" @endif href="{{route('index_reception')}}">
-                                        Tableau de bord
+                                    <a @if(request()->routeIs('index_accueil')) class="text-primary" @endif href="{{route('index_accueil')}}">
+                                        <b>Tableau de bord</b>
                                     </a>
                                 </li>
                                 <li>
                                     <a @if(request()->routeIs('consultation_liste')) class="text-primary" @endif href="{{route('consultation_liste')}}">
-                                        Consultation
+                                        <b>Consultations</b>
                                     </a>
                                 </li>
                                 <li>
                                     <a @if(request()->routeIs('patient_liste')) class="text-primary" @endif href="{{route('patient_liste')}}">
-                                        Patient
+                                        <b>Patients</b>
                                     </a>
                                 </li>
                                 <li>
                                     <a @if(request()->routeIs('horaire_medecin')) class="text-primary" @endif href="{{route('horaire_medecin')}}">
-                                        Horaires Médecins
+                                        <b>Horaires Médecins</b>
                                     </a>
                                 </li>
                                 <li>
-                                    <a @if(request()->routeIs('societe_liste')) class="text-primary" @endif href="{{route('societe_liste')}}">Société</a>
+                                    <a @if(request()->routeIs('societe_liste')) class="text-primary" @endif href="{{route('societe_liste')}}">
+                                        <b>Sociétés</b>
+                                    </a>
                                 </li>
                             </ul>
                         </li>
                         <li @if(request()->routeIs('hospitalisation','examen','soinsam')) class="active current-page treeview" @else class="treeview" @endif>
                             <a href="#!">
                                 <i class="ri-first-aid-kit-fill"></i>
-                                <span class="menu-text">services médicaux</span>
+                                <span class="menu-text text-primary">
+                                    <b>Services</b>
+                                </span>
                             </a>
                             <ul class="treeview-menu">
                                 <li>
                                     <a @if(request()->routeIs('examen')) class="text-primary" @endif href="{{route('examen')}}">
-                                        Examen
+                                        <b>Examens</b>
                                     </a>
                                 </li>
                                 <li>
                                     <a @if(request()->routeIs('hospitalisation')) class="text-primary" @endif href="{{route('hospitalisation')}}">
-                                        Hospitalisation
+                                        <b>Hospitalisations</b>
                                     </a>
                                 </li>
                                 <li>
                                     <a @if(request()->routeIs('soinsam')) class="text-primary" @endif href="{{route('soinsam')}}">
-                                        Soins Ambulantoires
+                                        <b>Soins Ambulantoires</b>
                                     </a>
                                 </li>
                             </ul>
                         </li>
-                        <li @if(request()->routeIs('encaissement_cons','liste_caisse_cons','encaissement_hos','liste_caisse_hos','encaissement_soinsam','liste_caisse_soinsam','encaissement_examen','liste_caisse_examen')) class="active current-page treeview" @else class="treeview" @endif>
-                            <a href="#!">
-                                <i class="ri-safe-2-line"></i>
-                                <span class="menu-text">Caisse</span>
-                            </a>
-                            <ul class="treeview-menu">
-                                <li @if(request()->routeIs('encaissement_cons','liste_caisse_cons')) class="active" @endif >
-                                    <a href="#!">
-                                        Consultation
-                                        <i class="ri-arrow-right-s-line"></i>
-                                    </a>
-                                    <ul class="treeview-menu">
-                                        <li>
-                                            <a @if(request()->routeIs('encaissement_cons')) class="text-primary" @endif href="{{route('encaissement_cons')}}">Facture non-réglée</a>
-                                        </li>
-                                        <li>
-                                            <a @if(request()->routeIs('liste_caisse_cons')) class="text-primary" @endif href="{{route('liste_caisse_cons')}}">Liste facture</a>
-                                        </li>
-                                    </ul>
-                                </li>
-                                <li @if(request()->routeIs('encaissement_hos','liste_caisse_hos')) class="active" @endif >
-                                    <a href="#!">
-                                        Hospitalisation
-                                        <i class="ri-arrow-right-s-line"></i>
-                                    </a>
-                                    <ul class="treeview-menu">
-                                        <li>
-                                            <a @if(request()->routeIs('encaissement_hos')) class="text-primary" @endif href="{{route('encaissement_hos')}}">Facture non-réglée</a>
-                                        </li>
-                                        <li>
-                                            <a @if(request()->routeIs('liste_caisse_hos')) class="text-primary" @endif href="{{route('liste_caisse_hos')}}">Liste facture</a>
-                                        </li>
-                                    </ul>
-                                </li>
-                                <li @if(request()->routeIs('encaissement_soinsam','liste_caisse_soinsam')) class="active" @endif >
-                                    <a href="#!">
-                                        Soins Ambulatoires
-                                        <i class="ri-arrow-right-s-line"></i>
-                                    </a>
-                                    <ul class="treeview-menu">
-                                        <li>
-                                            <a @if(request()->routeIs('encaissement_soinsam')) class="text-primary" @endif href="{{route('encaissement_soinsam')}}">Facture non-réglée</a>
-                                        </li>
-                                        <li>
-                                            <a @if(request()->routeIs('liste_caisse_soinsam')) class="text-primary" @endif href="{{route('liste_caisse_soinsam')}}">Liste facture</a>
-                                        </li>
-                                    </ul>
-                                </li>
-                                <li @if(request()->routeIs('encaissement_examen','liste_caisse_examen')) class="active" @endif >
-                                    <a href="#!">
-                                        Examen
-                                        <i class="ri-arrow-right-s-line"></i>
-                                    </a>
-                                    <ul class="treeview-menu">
-                                        <li>
-                                            <a @if(request()->routeIs('encaissement_examen')) class="text-primary" @endif href="{{route('encaissement_examen')}}">Facture non-réglée</a>
-                                        </li>
-                                        <li>
-                                            <a @if(request()->routeIs('liste_caisse_examen')) class="text-primary" @endif href="{{route('liste_caisse_examen')}}">Liste facture</a>
-                                        </li>
-                                    </ul>
-                                </li>
-                            </ul>
-                        </li>
-                        <li @if(request()->routeIs('facture_depot','comptable')) class="active current-page treeview" @else class="treeview" @endif >
+                        <li @if(request()->routeIs('comptable','encaissement_cons','liste_caisse_cons','encaissement_hos','liste_caisse_hos','encaissement_soinsam','liste_caisse_soinsam','encaissement_examen','liste_caisse_examen')) class="active current-page treeview" @else class="treeview" @endif >
                             <a href="#!">
                                 <i class="ri-line-chart-fill"></i>
-                                <span class="menu-text">Comptabilité</span>
+                                <span class="menu-text text-primary">
+                                    <b>Comptabilité</b>
+                                </span>
                             </a>
                             <ul class="treeview-menu">
                                 <li>
                                     <a @if(request()->routeIs('comptable')) class="text-primary" @endif href="{{route('comptable')}}">
-                                        Tableau de Bord
+                                        <b>Tableau de Bord</b>
+                                    </a>
+                                </li>
+                                <li @if(request()->routeIs('encaissement_cons','liste_caisse_cons','encaissement_hos','liste_caisse_hos','encaissement_soinsam','liste_caisse_soinsam','encaissement_examen','liste_caisse_examen')) class="active" @endif>
+                                    <a href="#!">
+                                        <span class="menu-text">
+                                            <b>Caisse</b>
+                                        </span>
+                                        <i class="ri-arrow-right-s-line"></i>
+                                    </a>
+                                    <ul class="treeview-menu">
+                                        <li @if(request()->routeIs('encaissement_cons','liste_caisse_cons')) class="active" @endif >
+                                            <a href="#!">
+                                                <b>Consultations</b>
+                                                <i class="ri-arrow-right-s-line"></i>
+                                            </a>
+                                            <ul class="treeview-menu">
+                                                <li>
+                                                    <a @if(request()->routeIs('encaissement_cons')) class="text-primary" @endif href="{{route('encaissement_cons')}}">Facture non-réglée</a>
+                                                </li>
+                                                <li>
+                                                    <a @if(request()->routeIs('liste_caisse_cons')) class="text-primary" @endif href="{{route('liste_caisse_cons')}}">Liste facture</a>
+                                                </li>
+                                            </ul>
+                                        </li>
+                                        <li @if(request()->routeIs('encaissement_hos','liste_caisse_hos')) class="active" @endif >
+                                            <a href="#!">
+                                                <b>Hospitalisations</b>
+                                                <i class="ri-arrow-right-s-line"></i>
+                                            </a>
+                                            <ul class="treeview-menu">
+                                                <li>
+                                                    <a @if(request()->routeIs('encaissement_hos')) class="text-primary" @endif href="{{route('encaissement_hos')}}">Facture non-réglée</a>
+                                                </li>
+                                                <li>
+                                                    <a @if(request()->routeIs('liste_caisse_hos')) class="text-primary" @endif href="{{route('liste_caisse_hos')}}">Liste facture</a>
+                                                </li>
+                                            </ul>
+                                        </li>
+                                        <li @if(request()->routeIs('encaissement_soinsam','liste_caisse_soinsam')) class="active" @endif >
+                                            <a href="#!">
+                                                <b>Soins Ambulatoires</b>
+                                                <i class="ri-arrow-right-s-line"></i>
+                                            </a>
+                                            <ul class="treeview-menu">
+                                                <li>
+                                                    <a @if(request()->routeIs('encaissement_soinsam')) class="text-primary" @endif href="{{route('encaissement_soinsam')}}">Facture non-réglée</a>
+                                                </li>
+                                                <li>
+                                                    <a @if(request()->routeIs('liste_caisse_soinsam')) class="text-primary" @endif href="{{route('liste_caisse_soinsam')}}">Liste facture</a>
+                                                </li>
+                                            </ul>
+                                        </li>
+                                        <li @if(request()->routeIs('encaissement_examen','liste_caisse_examen')) class="active" @endif >
+                                            <a href="#!">
+                                                <b>Examens</b>
+                                                <i class="ri-arrow-right-s-line"></i>
+                                            </a>
+                                            <ul class="treeview-menu">
+                                                <li>
+                                                    <a @if(request()->routeIs('encaissement_examen')) class="text-primary" @endif href="{{route('encaissement_examen')}}">Facture non-réglée</a>
+                                                </li>
+                                                <li>
+                                                    <a @if(request()->routeIs('liste_caisse_examen')) class="text-primary" @endif href="{{route('liste_caisse_examen')}}">Liste facture</a>
+                                                </li>
+                                            </ul>
+                                        </li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </li>
+                        <li @if(request()->routeIs('facture_emise','facture_depot','facture_deposer')) class="active current-page treeview" @else class="treeview" @endif >
+                            <a href="#!">
+                                <i class="ri-archive-fill"></i>
+                                <span class="menu-text text-primary">
+                                    <b>Gestions Factures</b>
+                                </span>
+                            </a>
+                            <ul class="treeview-menu">
+                                <li>
+                                    <a @if(request()->routeIs('facture_emise')) class="text-primary" @endif href="{{route('facture_emise')}}">
+                                        <b>Emissions Factures</b>
                                     </a>
                                 </li>
                                 <li>
                                     <a @if(request()->routeIs('facture_depot')) class="text-primary" @endif href="{{route('facture_depot')}}">
-                                        Depôts de factures
+                                        <b>Depôts de factures</b>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a @if(request()->routeIs('facture_deposer')) class="text-primary" @endif href="{{route('facture_deposer')}}">
+                                        <b>Factures</b>
                                     </a>
                                 </li>
                             </ul>
@@ -252,12 +268,14 @@
                         <li @if(request()->routeIs('medecin_new','assurance_new','taux_new','societe_new','acte_new','typeacte_new','chambre_new','lit_new','typeadmission_new','natureadmission_new','produit_new','typesoins_new','soinsinfirmier_new','specialite')) class="active current-page treeview" @else class="treeview" @endif>
                             <a href="#!">
                                 <i class="ri-settings-5-line"></i>
-                                <span class="menu-text">Configuration</span>
+                                <span class="menu-text text-primary">
+                                    <b>Configuration</b>
+                                </span>
                             </a>
                             <ul class="treeview-menu">
                                 <li @if(request()->routeIs('chambre_new','lit_new','typeadmission_new','natureadmission_new','produit_new')) class="active" @endif >
                                     <a href="#!">
-                                        Hospitalisation
+                                        <b>Hospitalisations</b>
                                         <i class="ri-arrow-right-s-line"></i>
                                     </a>
                                     <ul class="treeview-menu">
@@ -280,7 +298,7 @@
                                 </li>
                                 <li @if(request()->routeIs('typesoins_new','soinsinfirmier_new')) class="active" @endif >
                                     <a href="#!">
-                                        Infirmerie
+                                        <b>Infirmerie</b>
                                         <i class="ri-arrow-right-s-line"></i>
                                     </a>
                                     <ul class="treeview-menu">
@@ -294,7 +312,7 @@
                                 </li>
                                 <li @if(request()->routeIs('medecin_new','acte_new','typeacte_new','specialite')) class="active" @endif >
                                     <a href="#!">
-                                        Medecin
+                                        <b>Medecin</b>
                                         <i class="ri-arrow-right-s-line"></i>
                                     </a>
                                     <ul class="treeview-menu">
@@ -318,16 +336,26 @@
                         </li>
                         <li @if(request()->routeIs('etat_facture')) class="active current-page treeview" @else class="treeview" @endif >
                             <a href="#!">
-                                <i class="ri-archive-fill"></i>
-                                <span class="menu-text">Etats</span>
+                                <i class="ri-file-pdf-2-line"></i>
+                                <span class="menu-text text-primary">
+                                    <b>Etats</b>
+                                </span>
                             </a>
                             <ul class="treeview-menu">
                                 <li>
                                     <a @if(request()->routeIs('etat_facture')) class="text-primary" @endif href="{{route('etat_facture')}}">
-                                        Factures
+                                        <b>Factures</b>
                                     </a>
                                 </li>
                             </ul>
+                        </li>
+                        <li @if(request()->routeIs('index_propos')) class="active current-page" @endif>
+                            <a href="{{route('index_propos')}}">
+                                <i class="ri-question-fill"></i>
+                                <span class="menu-text text-primary">
+                                    <b>A propos</b>
+                                </span>
+                            </a>
                         </li>
                     </ul>
                 </div>
@@ -354,118 +382,6 @@
     <script src="{{asset('assets/vendor/overlay-scroll/custom-scrollbar.js')}}"></script>
     <script src="{{asset('assets/vendor/apex/apexcharts.min.js')}}"></script>
     <script src="{{asset('assets/js/custom.js')}}"></script>
-    <script src="{{asset('assets/vendor/datatables/dataTables.min.js')}}"></script>
-    <script src="{{asset('assets/vendor/datatables/dataTables.bootstrap.min.js')}}"></script>
-    <script src="{{asset('assets/vendor/datatables/custom/custom-datatables.js')}}"></script>
-
-    @if (session('success'))
-        <div class="modal fade" id="success" tabindex="-1" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered" role="document">
-                <div class="modal-content">
-                    <div class="modal-body p-5 text-center">
-                        <h1 class="display-4">
-                            <i class="ri-checkbox-circle-line text-success"></i>
-                        </h1>
-                        <h4 class="text-success">Succès</h4>
-                        <p>{{session('success')}}</p>
-                        <a data-bs-dismiss="modal" class="btn btn-lg btn-success w-25">
-                            ok
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <script>
-            document.addEventListener('DOMContentLoaded', function() {
-                var myModal = new bootstrap.Modal(document.getElementById('success'));
-                myModal.show();
-            });
-        </script>
-        @php session()->forget('success'); @endphp
-    @endif
-
-    @if (session('error'))
-        <div class="modal fade" id="error" tabindex="-1" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered" role="document">
-                <div class="modal-content">
-                    <div class="modal-body p-5 text-center">
-                        <h1 class="display-4">
-                            <i class="ri-close-circle-line text-danger"></i>
-                        </h1>
-                        <h4 class="text-danger">Erreur</h4>
-                        <p>{{session('error')}}</p>
-                        <a data-bs-dismiss="modal" class="btn btn-lg btn-danger w-25">
-                            ok
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <script>
-            document.addEventListener('DOMContentLoaded', function() {
-                var myModal = new bootstrap.Modal(document.getElementById('error'));
-                myModal.show();
-            });
-        </script>
-        @php session()->forget('error'); @endphp
-    @endif
-
-    @if (session('info'))
-        <div class="modal fade" id="info" tabindex="-1" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered" role="document">
-                <div class="modal-content">
-                    <div class="modal-body p-5 text-center">
-                        <h1 class="display-4">
-                            <i class="ri-question-line text-info"></i>
-                        </h1>
-                        <h4 class="text-info">Information</h4>
-                        <p>{{session('info')}}</p>
-                        <a data-bs-dismiss="modal" class="btn btn-lg btn-info w-25">
-                            ok
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <script>
-            document.addEventListener('DOMContentLoaded', function() {
-                var myModal = new bootstrap.Modal(document.getElementById('info'));
-                myModal.show();
-            });
-        </script>
-        @php session()->forget('info'); @endphp
-    @endif
-
-    @if (session('warning'))
-        <div class="modal fade" id="warning" tabindex="-1" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered" role="document">
-                <div class="modal-content">
-                    <div class="modal-body p-5 text-center">
-                        <h1 class="display-4">
-                            <i class="ri-alert-line text-warning"></i>
-                        </h1>
-                        <h4 class="text-warning">Alert</h4>
-                        <p>{{session('warning')}}</p>
-                        <a data-bs-dismiss="modal" class="btn btn-lg btn-warning w-25">
-                            ok
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <script>
-            document.addEventListener('DOMContentLoaded', function() {
-                var myModal = new bootstrap.Modal(document.getElementById('warning'));
-                myModal.show();
-            });
-        </script>
-        @php session()->forget('warning'); @endphp
-    @endif
-
 
 </body>
 </html>

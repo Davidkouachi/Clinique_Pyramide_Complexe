@@ -20,13 +20,15 @@
 @section('content')
 
 <div class="app-body">
-    <!-- Row starts -->
+    
+    @include('finance.btnFacNonRegle')
+    
     <div class="row justify-content-center">
         <div class="col-12">
             <div class="card mb-3">
                 <div class="card-header d-flex align-items-center justify-content-between">
                     <h5 class="card-title">
-                        Factures non-réglées
+                        Soins Amulatoires factures non-réglées
                     </h5>
                     <div class="d-flex" >
                         <input type="text" id="searchInput" placeholder="N° facture" class="form-control me-1" >

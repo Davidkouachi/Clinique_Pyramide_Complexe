@@ -276,15 +276,16 @@
                                                             <thead>
                                                                 <tr>
                                                                     <th scope="col">N°</th>
-                                                                    <th scope="col">Statut</th>
                                                                     <th scope="col">Type</th>
                                                                     <th scope="col">Nature</th>
                                                                     <th scope="col">Nom et Prénoms</th>
                                                                     <th scope="col">Date entrer</th>
                                                                     <th scope="col">Date sorti</th>
-                                                                    <th scope="col">Medecin</th>
-                                                                    <th scope="col">Prix</th>
-                                                                    <th scope="col">Prix Soins</th>
+                                                                    <th scope="col">Médecin</th>
+                                                                    <th scope="col">Statut</th>
+                                                                    <th scope="col">Montant Chambre</th>
+                                                                    <th scope="col">Montant Soins</th>
+                                                                    <th scope="col">Montant Total</th>
                                                                     <th scope="col"></th>
                                                                 </tr>
                                                             </thead>
@@ -1256,19 +1257,20 @@
                             }
                             row.innerHTML = `
                                 <td>${((currentPage - 1) * perPage) + index + 1}</td>
-                                <td>
-                                    ${item.statut === 'Hospitaliser' ? 
-                                        `<span class="badge bg-danger">${item.statut}</span>` : 
-                                        `<span class="badge bg-success">${item.statut}</span>`}
-                                </td>
                                 <td>${item.type}</td>
                                 <td>${item.nature}</td>
                                 <td>${item.patient}</td>
                                 <td>${formatDate(item.date_debut)}</td>
                                 <td>${formatDate(item.date_fin)}</td>
                                 <td>${item.medecin}</td>
-                                <td>${item.montant} Fcfa</td>
+                                <td>
+                                    ${item.statut === 'Hospitaliser' ? 
+                                        `<span class="badge bg-danger">${item.statut}</span>` : 
+                                        `<span class="badge bg-success">${item.statut}</span>`}
+                                </td>
+                                <td>${item.montant_chambre} Fcfa</td>
                                 <td>${item.montant_soins} Fcfa</td>
+                                <td>${item.montant} Fcfa</td>
                                 <td>
                                     <div class="d-inline-flex gap-1">
                                         ${addButton}

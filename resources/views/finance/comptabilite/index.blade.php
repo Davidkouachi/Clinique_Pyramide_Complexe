@@ -61,11 +61,11 @@
                                     <span class="input-group-text">
                                         Du
                                     </span>
-                                    <input type="date" class="form-control" id="date1">
+                                    <input type="date" class="form-control" id="date1" max="{{ date('Y-m-d') }}">
                                     <span class="input-group-text">
                                         Au
                                     </span>
-                                    <input type="date" class="form-control" id="date2">
+                                    <input type="date" class="form-control" id="date2" max="{{ date('Y-m-d') }}">
                                     <button id="btn_rech" class="btn btn-outline-success">
                                         <i class="ri-search-line"></i>
                                     </button>
@@ -93,8 +93,19 @@
         dateSelect();
         stat_acte_mois();
 
+        document.getElementById("date1").addEventListener("change", datechange);
         document.getElementById("btn_rech").addEventListener("click", stat_acte_mois);
         document.getElementById("btn_refresh_stat_acte").addEventListener("click", refresh_sam);
+
+        function datechange()
+        {
+            const date1Value = document.getElementById('date1').value;
+            const date2 = document.getElementById('date2');
+
+            date2.value = date1Value;
+
+            date2.min = date1Value;
+        }
 
         function showAlert(title, message, type) {
             Swal.fire({
@@ -166,8 +177,8 @@
             // Calculer le début du mois (1er jour du mois)
             const startOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
             
-            // Calculer la fin du mois (dernier jour du mois)
-            const endOfMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0);
+            // Utiliser la date actuelle comme fin de la période
+            const endOfMonth = today;
             
             // Formater les dates au format YYYY-MM-DD
             const formatDate = (date) => {
@@ -178,6 +189,7 @@
             document.getElementById('date1').value = formatDate(startOfMonth);
             document.getElementById('date2').value = formatDate(endOfMonth);
         }
+
 
         function generateMonthlyData(stats, defaultMonths) {
             return defaultMonths.map(month => stats[month] || 0);
@@ -226,6 +238,19 @@
                                 toolbar: {
                                     show: false,
                                 },
+                                animations: {
+                                    enabled: true,
+                                    easing: 'easeinout',
+                                    speed: 800,
+                                    animateGradually: {
+                                        enabled: true,
+                                        delay: 150,
+                                    },
+                                    dynamicAnimation: {
+                                        enabled: true,
+                                        speed: 350,
+                                    }
+                                }
                             },
                             dataLabels: {
                                 enabled: false,

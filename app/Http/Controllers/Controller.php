@@ -131,9 +131,19 @@ class Controller
 
     // ---------------------------------------------------
 
-    public function etat_facture()
+    public function facture_emise()
     {
-        return view('pdf.facture.index');
+        return view('finance.comptabilite.facture.facture_emise');
+    }
+
+    public function facture_depot()
+    {
+        return view('finance.comptabilite.facture.facture_depot');
+    }
+
+    public function facture_deposer()
+    {
+        return view('finance.comptabilite.facture.facture_deposer');
     }
 
     // --------------------------------------------------------
@@ -143,8 +153,10 @@ class Controller
         return view('finance.comptabilite.index');
     }
 
-    public function facture_depot()
+    // --------------------------------------------------------
+
+    public function etat_facture()
     {
-        return view('finance.comptabilite.facture_depot');
+        return view('pdf.facture');
     }
 }

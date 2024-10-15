@@ -24,7 +24,9 @@ Route::middleware(['auth','statutchambre','dateRdv'])->group(function () {
 
 	Route::get('/', [AccueilController::class, 'index_accueil'])->name('index_accueil');
 
-	Route::get('/Reception', [receptionController::class,'index_reception'])->name('index_reception');
+	Route::get('/A propos', [AccueilController::class, 'index_propos'])->name('index_propos');
+
+	// Route::get('/Reception', [receptionController::class,'index_reception'])->name('index_reception');
 
 	Route::post('/trait_auth', [authController::class, 'trait_auth'])->name('trait_auth');
 	Route::get('/deconnecter', [authController::class, 'deconnecter'])->name('deconnecter');
@@ -89,10 +91,12 @@ Route::middleware(['auth','statutchambre','dateRdv'])->group(function () {
 
 	Route::get('/Horaires Médecin', [Controller::class, 'horaire_medecin'])->name('horaire_medecin');
 
-	Route::get('/Etats Factures', [Controller::class, 'etat_facture'])->name('etat_facture');
-
 	Route::get('/Tableau de Bord Comptabilité', [Controller::class, 'comptable'])->name('comptable');
+	Route::get('/Factures Emises', [Controller::class, 'facture_emise'])->name('facture_emise');
 	Route::get('/Depôts de factures', [Controller::class, 'facture_depot'])->name('facture_depot');
+	Route::get('/Factures', [Controller::class, 'facture_deposer'])->name('facture_deposer');
+
+	Route::get('/Etats Factures', [Controller::class, 'etat_facture'])->name('etat_facture');
 
 // Route::middleware(['role:ADMINISTRATEUR'])->group(function () {
 

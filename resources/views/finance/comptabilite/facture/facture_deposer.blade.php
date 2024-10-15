@@ -20,50 +20,6 @@
 @section('content')
 
 <div class="app-body">
-    <div class="row">
-        <div class="col-12">
-            <div class="card mb-3">
-                <div class="card-header">
-                    <h5 class="card-title">Formulaire Nouveau Dépôt de facture</h5>
-                </div>
-                <div class="card-body" >
-                    <div class="row gx-3">
-                        <div class="col-xxl-3 col-lg-4 col-sm-6">
-                            <div class="mb-3">
-                                <label class="form-label">Assurance</label>
-                                <select class="form-select" id="assurance_id"></select>
-                            </div>
-                        </div>
-                        <div class="col-sm-3 col-12">
-                            <div class="mb-3">
-                                <label class="form-label">Du</label>
-                                <input type="date" class="form-control" id="date1" max="{{ date('Y-m-d') }}">
-                            </div>
-                        </div>
-                        <div class="col-xxl-3 col-lg-4 col-sm-6">
-                            <div class="mb-3">
-                                <label class="form-label">Au</label>
-                                <input type="date" class="form-control" id="date2" max="{{ date('Y-m-d') }}">
-                            </div>
-                        </div>
-                        <div class="col-xxl-3 col-lg-4 col-sm-6">
-                            <div class="mb-3">
-                                <label class="form-label">Date de dépôt</label>
-                                <input type="date" class="form-control" id="date_depot" max="{{ date('Y-m-d') }}">
-                            </div>
-                        </div>
-                        <div class="col-sm-12 mb-3">
-                            <div class="d-flex gap-2 justify-content-start">
-                                <button id="btn_eng_depot" class="btn btn-success">
-                                    Enregistrer
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
     <div class="row justify-content-center">
         <div class="col-12">
             <div class="card mb-3">
@@ -247,12 +203,8 @@
 <script>
     document.addEventListener("DOMContentLoaded", function() {
 
-        select_assurance();
         list();
 
-        document.getElementById("date1").addEventListener("change", datechange);
-        document.getElementById("date1M").addEventListener("change", datechangeM);
-        document.getElementById("btn_eng_depot").addEventListener("click", eng_depot);
         document.getElementById("btn_paiement").addEventListener("click", eng_paiement);
         document.getElementById("btn_refresh_table").addEventListener("click", list);
         document.getElementById("statut").addEventListener("change", list);
@@ -323,16 +275,6 @@
             return `${day}/${month}/${year} à ${hours}:${minutes}:${seconds}`;
         }
 
-        function datechange()
-        {
-            const date1Value = document.getElementById('date1').value;
-            const date2 = document.getElementById('date2');
-
-            date2.value = date1Value;
-
-            date2.min = date1Value;
-        }
-
         function datechangeM()
         {
             const date1Value = document.getElementById('date1M').value;
@@ -341,29 +283,6 @@
             date2.value = date1Value;
 
             date2.min = date1Value;
-        }
-
-        function select_assurance()
-        {
-            const selectElement = document.getElementById('assurance_id');
-
-            selectElement.innerHTML = '';
-            const defaultOption = document.createElement('option');
-            defaultOption.value = '';
-            defaultOption.textContent = 'Selectionner';
-            selectElement.appendChild(defaultOption);
-
-            fetch('/api/assurance_select_patient_new')
-                .then(response => response.json())
-                .then(data => {
-                    data.forEach(assurance => {
-                        const option = document.createElement('option');
-                        option.value = assurance.id; // Ensure 'id' is the correct key
-                        option.textContent = assurance.nom; // Ensure 'nom' is the correct key
-                        selectElement.appendChild(option);
-                    });
-                })
-                .catch(error => console.error('Erreur lors du chargement des societes:', error));
         }
 
         function num_cheque() {
@@ -379,115 +298,6 @@
             } else {
                 divNumCheque.style.display = 'none';
             }
-        }
-
-        function eng_depot()
-        {
-            const assurance_id = document.getElementById('assurance_id');
-            const date1 = document.getElementById('date1');
-            const date2 = document.getElementById('date2');
-            const date_depot = document.getElementById('date_depot');
-
-            if (!assurance_id.value.trim() || !date1.value.trim() || !date2.value.trim() || !date_depot.value.trim()) {
-                showAlert('Alert', 'Tous les champs sont obligatoires.','warning');
-                return false; 
-            }
-
-            if (!isValidDate(date1.value)) {
-                showAlert('Erreur', 'La première date est invalide.', 'error');
-                return false;
-            }
-
-            if (!isValidDate(date2.value)) {
-                showAlert('Erreur', 'La deuxième date est invalide.', 'error');
-                return false;
-            }
-
-            if (!isValidDate(date_depot.value)) {
-                showAlert('Erreur', 'La deuxième date est invalide.', 'error');
-                return false;
-            }
-
-            const startDate = new Date(date1.value);
-            const endDate = new Date(date2.value);
-            const Datedepot = new Date(date_depot.value);
-
-            if (startDate > endDate) {
-                showAlert('Erreur', 'La date de début ne peut pas être supérieur à la date de fin.', 'error');
-                return false;
-            }
-
-            if (endDate > Datedepot) {
-                showAlert('Erreur', 'La date du dépôt ne peut pas être supérieur à la date de fin.', 'error');
-                return false;
-            }
-
-            const oneYearInMs = 365 * 24 * 60 * 60 * 1000;
-            if (endDate - startDate > oneYearInMs) {
-                showAlert('Erreur', 'La plage de dates ne peut pas dépasser un an.', 'error');
-                return false;
-            }
-
-            var preloader_ch = `
-                <div id="preloader_ch">
-                    <div class="spinner_preloader_ch"></div>
-                </div>
-            `;
-            // Add the preloader to the body
-            document.body.insertAdjacentHTML('beforeend', preloader_ch);
-
-            $.ajax({
-                url: '/api/new_depot_fac',
-                method: 'GET',
-                data: {
-                    assurance_id: assurance_id.value, 
-                    date1: date1.value, 
-                    date2: date2.value, 
-                    date_depot: date_depot.value,
-                },
-                success: function(response) {
-
-                    var preloader = document.getElementById('preloader_ch');
-                    if (preloader) {
-                        preloader.remove();
-                    }
-
-                    if (response.success) {
-
-                        assurance_id.value = "";
-                        date1.value = "";
-                        date2.value = "";
-                        date_depot.value = "";
-
-                        list();
-
-                        showAlert('Succès', 'Opération éffectuée','success');
-
-                    } else if (response.error) {
-
-                        showAlert('Informations', 'Echec de l\'opération','info');
-
-                    } else if (response.existe) {
-                        
-                        showAlert('Informations', 'L\'intervalle de dates choisi se trouve dans l\'intervalle de certaines factures qui ont déjà été déposées.', 'info');
-
-                    } else if (response.montant_inferieur) {
-                        
-                        showAlert('Informations', 'Opération impossible. Car le montant Total = 0 Fcfa.', 'info');
-
-                    }
-
-                },
-                error: function() {
-
-                    var preloader = document.getElementById('preloader_ch');
-                    if (preloader) {
-                        preloader.remove();
-                    }
-
-                    showAlert('Alert', ' Une erreur est survenue.','error');
-                }
-            });
         }
 
         function eng_paiement()
@@ -582,7 +392,6 @@
 
         function list(page = 1)
         {
-
             const tableBody = document.querySelector('#Table tbody');
             const messageDiv = document.getElementById('message_Table');
             const tableDiv = document.getElementById('div_Table');

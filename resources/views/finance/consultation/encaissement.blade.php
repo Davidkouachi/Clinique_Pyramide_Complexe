@@ -20,19 +20,18 @@
 @section('content')
 
 <div class="app-body">
-    <!-- Row starts -->
+
+    @include('finance.btnFacNonRegle')
+
     <div class="row justify-content-center">
         <div class="col-12">
             <div class="card mb-3">
                 <div class="card-header d-flex align-items-center justify-content-between">
                     <h5 class="card-title">
-                        Facture non réglée
+                        Consultations factures non-réglées
                     </h5>
                     <div class="d-flex" >
                         <input type="text" id="searchInput" placeholder="N° facture" class="form-control me-1" >
-                        <a id="btn_print_table" style="display: none;" class="btn btn-outline-warning ms-auto me-1">
-                            <i class="ri-printer-line"></i>
-                        </a>
                         <a id="btn_refresh_table" class="btn btn-outline-info ms-auto">
                             <i class="ri-loop-left-line"></i>
                         </a>
@@ -260,6 +259,21 @@
             return `${day}/${month}/${year}`; // Format as dd/mm/yyyy
         }
 
+        function formatDateHeure(dateString) {
+
+            const date = new Date(dateString);
+                
+            const day = String(date.getDate()).padStart(2, '0');
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const year = date.getFullYear();
+
+            const hours = String(date.getHours()).padStart(2, '0');
+            const minutes = String(date.getMinutes()).padStart(2, '0');
+            const seconds = String(date.getSeconds()).padStart(2, '0');
+
+            return `${day}/${month}/${year} à ${hours}:${minutes}:${seconds}`;
+        }
+
         function payer()
         {
             const code_fac = document.getElementById("id_code_fac").value;
@@ -347,7 +361,6 @@
                     const currentPage = pagination.current_page || 1;
 
                     if (allFactures.length > 0) {
-                        document.getElementById('btn_print_table').style.display = 'block';
                         loaderDiv.style.display = 'none';
                         messageDiv.style.display = 'none';
                         tableDiv.style.display = 'block';
@@ -375,7 +388,7 @@
                                     <td class="text-primary">
                                         ${formatPrice(item.montant ?? 0)} Fcfa
                                     </td>
-                                    <td>${formatDate(item.created_at)}</td>
+                                    <td>${formatDateHeure(item.created_at)}</td>
                                     <td>
                                         <div class="d-inline-flex gap-1">
                                             <a class="btn btn-outline-success btn-sm rounded-5" data-bs-toggle="modal" data-bs-target="#Caisse" id="paye-${item.id}">
@@ -548,7 +561,6 @@
                         updatePaginationControls(pagination);
 
                     } else {
-                        document.getElementById('btn_print_table').style.display = 'none';
                         loaderDiv.style.display = 'none';
                         messageDiv.style.display = 'block';
                         tableDiv.style.display = 'none';

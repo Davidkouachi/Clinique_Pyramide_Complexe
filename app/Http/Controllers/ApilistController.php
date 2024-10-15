@@ -342,7 +342,8 @@ class ApilistController extends Controller
                                     ->select(
                                         'detailconsultations.*',
                                         'consultations.code as code', 
-                                        'patients.np as name', 
+                                        'patients.np as name',
+                                        'users.name as medecin',
                                         'users.tel as tel', 
                                         'users.tel2 as tel2',
                                         'patients.matricule as matricule'
@@ -764,14 +765,14 @@ class ApilistController extends Controller
 
         $depot = $depotQuery->paginate(15);
 
+        $total_patient = 0;
+        $total_assurance = 0;
+        $total_montant = 0;
+
         foreach ($depot->items() as $depo) {
 
-            $total_patient = 0;
-            $total_assurance = 0;
-            $total_montant = 0;
-
-            $date1 = $depo->date1;
-            $date2 = $depo->date2;
+            $date1 = Carbon::parse($depo->date1)->startOfDay();
+            $date2 = Carbon::parse($depo->date2)->endOfDay();
 
             $fac_cons = consultation::join('patients', 'patients.id', '=', 'consultations.patient_id')
                 ->join('assurances', 'assurances.id', '=', 'patients.assurance_id')

@@ -1108,8 +1108,9 @@ class ApiinsertController extends Controller
 
     public function new_depot_fac(Request $request)
     {
-        $date1 = $request->date1;
-        $date2 = $request->date2;
+        $date1 = Carbon::createFromFormat('Y-m-d', $request->date1)->startOfDay();
+        $date2 = Carbon::createFromFormat('Y-m-d', $request->date2)->endOfDay();
+
         $date_depot = $request->date_depot;
         $assurance_id = $request->assurance_id;
 
@@ -1128,11 +1129,11 @@ class ApiinsertController extends Controller
 
         $societes = societe::all();
 
-        foreach ($societes as $societe) {
+        $total_patient = 0;
+        $total_assurance = 0;
+        $total_montant = 0;
 
-            $total_patient = 0;
-            $total_assurance = 0;
-            $total_montant = 0;
+        foreach ($societes as $societe) {
 
             $fac_cons = consultation::join('patients', 'patients.id', '=', 'consultations.patient_id')
                 ->join('assurances', 'assurances.id', '=', 'patients.assurance_id')
@@ -1140,7 +1141,7 @@ class ApiinsertController extends Controller
                 ->join('detailconsultations', 'detailconsultations.consultation_id', '=', 'consultations.id')
                 ->where('patients.assurer', '=', 'oui')
                 ->where('consultations.num_bon', '!=', null)
-                ->whereBetween(DB::raw('DATE(consultations.created_at)'), [$date1, $date2])
+                ->whereBetween(DB::raw('DATE(detailconsultations.created_at)'), [$date1, $date2])
                 ->where('assurances.id', '=', $assurance_id)
                 ->where('societes.id', '=', $societe->id)
                 ->select(
@@ -1244,6 +1245,7 @@ class ApiinsertController extends Controller
                 $total_assurance += intval(str_replace('.', '', $value->part_assurance));
                 $total_montant += intval(str_replace('.', '', $value->montant));
             }
+            
         }
 
         if ($total_montant <= 0) {

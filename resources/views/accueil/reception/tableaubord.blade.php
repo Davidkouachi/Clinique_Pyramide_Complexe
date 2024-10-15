@@ -775,6 +775,16 @@
             }
         });
 
+        document.getElementById('assurance_utiliser').addEventListener('change', function() {
+            if (this.value == 'non'){
+                document.getElementById('div_numcode').style.display = 'none';
+                document.getElementById('mumcode').value = '';
+            }else{
+                document.getElementById('div_numcode').style.display = 'block';
+                document.getElementById('mumcode').value = '';
+            }
+        });
+
         document.getElementById('taux_remise').addEventListener('input', function() {
             // Nettoyer la valeur entrée en supprimant les caractères non numériques sauf le point
             const rawValue = this.value.replace(/[^0-9]/g, ''); // Supprimer tous les caractères non numériques
@@ -796,6 +806,7 @@
                 const montantRemis = montant_patient - remise;
                 document.getElementById('montant_patient').value = formatPriceT(montantRemis);
             } else if (assuranceUtiliser == 'oui') {
+
                 // Si l'assurance est utilisée (valeur 'oui'), calculer le montant remis pour l'assurance
                 const montant_assurance = parseInt(document.getElementById('montant_assurance_hidden').value.replace(/\./g, '')) || 0;
                 const remise = parseInt(rawValue) || 0;
@@ -807,6 +818,7 @@
         });
 
         document.getElementById('appliq_remise').addEventListener('change', function() {
+
             document.getElementById('montant_assurance').value = formatPrice(document.getElementById('montant_assurance_hidden').value);
             document.getElementById('montant_patient').value = formatPrice(document.getElementById('montant_patient_hidden').value);
 
@@ -817,6 +829,7 @@
 
             if (this.value == 'patient' || assuranceUtiliser == 'non') {
                 // Convertir la valeur formatée en nombre pour les calculs
+
                 const montant_patient = parseFloat(document.getElementById('montant_patient_hidden').value.replace(/\./g, '')) || 0;
                 const remise = parseFloat(rawValue) || 0;
 
@@ -824,6 +837,7 @@
                 const montantRemis = montant_patient - remise;
                 document.getElementById('montant_patient').value = formatPriceT(montantRemis);
             } else if (assuranceUtiliser == 'oui') {
+
                 // Si l'assurance est utilisée (valeur 'oui'), calculer le montant remis pour l'assurance
                 const montant_assurance = parseFloat(document.getElementById('montant_assurance_hidden').value.replace(/\./g, '')) || 0;
                 const remise = parseFloat(rawValue) || 0;

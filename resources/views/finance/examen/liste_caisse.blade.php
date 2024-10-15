@@ -26,7 +26,7 @@
             <div class="card mb-3">
                 <div class="card-header d-flex align-items-center justify-content-between">
                     <h5 class="card-title">
-                        Facture non réglée
+                        Examens liste des factures
                     </h5>
                     <div class="d-flex" >
                         <input type="text" id="searchInput" placeholder="N° facture" class="form-control me-1" >
@@ -52,7 +52,6 @@
                                         <th scope="col">Type d'examen</th>
                                         <th scope="col">Part Assurance</th>
                                         <th scope="col">Part Patient</th>
-                                        <th scope="col">Prélevement</th>
                                         <th scope="col">Montant Total</th>
                                         <th scope="col">Montant a payer</th>
                                         <th scope="col">Date de création</th>
@@ -354,7 +353,6 @@
                                     <td>${item.acte}</td>
                                     <td class="text-warning" >${item.part_assurance} Fcfa</td>
                                     <td>${item.part_patient} Fcfa</td>
-                                    <td>${item.prelevement} Fcfa</td>
                                     <td class="text-primary" >${item.montant} Fcfa</td>
                                     <td class="text-success" >
                                         ${formatPrice(item.total_patient)} Fcfa

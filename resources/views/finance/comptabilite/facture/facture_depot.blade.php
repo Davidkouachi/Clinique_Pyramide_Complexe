@@ -11,7 +11,7 @@
             <a href="{{route('index_accueil')}}">Espace Santé</a>
         </li>
         <li class="breadcrumb-item text-primary" aria-current="page">
-            Etat Facture
+            Nouveau Dépôt de facture
         </li>
     </ol>
 </div>
@@ -20,61 +20,52 @@
 @section('content')
 
 <div class="app-body">
-    <!-- Row starts -->
     <div class="row justify-content-center">
         <div class="col-xxl-4 col-lg-6 col-md-8 col-sm-8">
             <div class="card mb-3">
                 <div class="card-header">
-                    <h5 class="card-title">Facture par assurance</h5>
+                    <h5 class="card-title">Formulaire Nouveau Dépôt de facture</h5>
                 </div>
                 <div class="card-body" >
                     <div class="row gx-3">
                         <div class="col-12">
                             <div class="mb-3">
-                                <label class="form-label">
-                                    Assurance
-                                </label>
-                                <select class="form-select" id="assurance_id_fac_ass"></select>
+                                <label class="form-label">Assurance</label>
+                                <select class="form-select" id="assurance_id"></select>
                             </div>
                         </div>
                         <div class="col-12">
                             <div class="mb-3">
-                                <label class="form-label">
-                                    Date début
-                                </label>
-                                <input type="date" class="form-control" id="date1_fac_ass" >
+                                <label class="form-label">Du</label>
+                                <input type="date" class="form-control" id="date1" max="{{ date('Y-m-d') }}">
                             </div>
                         </div>
                         <div class="col-12">
                             <div class="mb-3">
-                                <label class="form-label">
-                                    Date Fin
-                                </label>
-                                <input type="date" class="form-control" id="date2_fac_ass">
+                                <label class="form-label">Au</label>
+                                <input type="date" class="form-control" id="date2" max="{{ date('Y-m-d') }}">
                             </div>
                         </div>
-                        <div class="col-sm-12 d-flex justify-content-between">
-                            <div class="mb-3 d-flex gap-2 justify-content-start">
-                                <button id="btn_imp_fac_ass" class="btn btn-primary">
-                                    <i class="ri-printer-line"></i>
-                                    Imprimer
+                        <div class="col-12">
+                            <div class="mb-3">
+                                <label class="form-label">Date de dépôt</label>
+                                <input type="date" class="form-control" id="date_depot" max="{{ date('Y-m-d') }}">
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="d-flex gap-2 justify-content-start">
+                                <button id="btn_eng_depot" class="btn btn-success">
+                                    Enregistrer
                                 </button>
                             </div>
-                            <div class="mb-3 d-flex gap-2 justify-content-start">
-                                <button id="btn_imp_fac_ass_bordo" class="btn btn-warning">
-                                    <i class="ri-printer-line"></i>
-                                    Bordereaux
-                                </button>
-                            </div>
-                        </div>  
+                        </div>
                     </div>
-                    <!-- Row ends -->
                 </div>
             </div>
         </div>
     </div>
-    <!-- Row ends -->
 </div>
+
 
 <script src="{{asset('assets/js/app/js/jspdfinvoicetemplate/dist/index.js')}}" ></script>
 <script src="{{asset('jsPDF-master/dist/jspdf.umd.js')}}"></script>
@@ -84,11 +75,13 @@
     document.addEventListener("DOMContentLoaded", function() {
 
         select_assurance();
+        // list();
 
-        document.getElementById("btn_imp_fac_ass").addEventListener("click", imp_fac_assurance);
-        document.getElementById("btn_imp_fac_ass_bordo").addEventListener("click", imp_fac_assurance_bordo);
+        document.getElementById("date1").addEventListener("change", datechange);
+        document.getElementById("btn_eng_depot").addEventListener("click", eng_depot);
 
-        function showAlert(title, message, type) {
+        function showAlert(title, message, type)
+        {
             Swal.fire({
                 title: title,
                 text: message,
@@ -96,7 +89,17 @@
             });
         }
 
-        function formatPrice(price) {
+        function isValidDate(dateString) {
+            const regEx = /^\d{4}-\d{2}-\d{2}$/;
+            if (!dateString.match(regEx)) return false;
+            const date = new Date(dateString);
+            const timestamp = date.getTime();
+            if (typeof timestamp !== 'number' || isNaN(timestamp)) return false;
+            return dateString === date.toISOString().split('T')[0];
+        }
+
+        function formatPrice(price)
+        {
 
             // Convert to float and round to the nearest whole number
             let number = Math.round(parseFloat(price));
@@ -135,9 +138,19 @@
             return `${day}/${month}/${year} à ${hours}:${minutes}:${seconds}`;
         }
 
+        function datechange()
+        {
+            const date1Value = document.getElementById('date1').value;
+            const date2 = document.getElementById('date2');
+
+            date2.value = date1Value;
+
+            date2.min = date1Value;
+        }
+
         function select_assurance()
         {
-            const selectElement = document.getElementById('assurance_id_fac_ass');
+            const selectElement = document.getElementById('assurance_id');
 
             selectElement.innerHTML = '';
             const defaultOption = document.createElement('option');
@@ -158,24 +171,16 @@
                 .catch(error => console.error('Erreur lors du chargement des societes:', error));
         }
 
-        function imp_fac_assurance()
+        function eng_depot()
         {
-            const assurance_id = document.getElementById('assurance_id_fac_ass');
-            const date1 = document.getElementById('date1_fac_ass');
-            const date2 = document.getElementById('date2_fac_ass');
+            const assurance_id = document.getElementById('assurance_id');
+            const date1 = document.getElementById('date1');
+            const date2 = document.getElementById('date2');
+            const date_depot = document.getElementById('date_depot');
 
-            if (!assurance_id.value.trim() || !date1.value.trim() || !date2.value.trim()) {
+            if (!assurance_id.value.trim() || !date1.value.trim() || !date2.value.trim() || !date_depot.value.trim()) {
                 showAlert('Alert', 'Tous les champs sont obligatoires.','warning');
                 return false; 
-            }
-
-            function isValidDate(dateString) {
-                const regEx = /^\d{4}-\d{2}-\d{2}$/;
-                if (!dateString.match(regEx)) return false;
-                const date = new Date(dateString);
-                const timestamp = date.getTime();
-                if (typeof timestamp !== 'number' || isNaN(timestamp)) return false;
-                return dateString === date.toISOString().split('T')[0];
             }
 
             if (!isValidDate(date1.value)) {
@@ -188,11 +193,22 @@
                 return false;
             }
 
+            if (!isValidDate(date_depot.value)) {
+                showAlert('Erreur', 'La deuxième date est invalide.', 'error');
+                return false;
+            }
+
             const startDate = new Date(date1.value);
             const endDate = new Date(date2.value);
+            const Datedepot = new Date(date_depot.value);
 
             if (startDate > endDate) {
                 showAlert('Erreur', 'La date de début ne peut pas être supérieur à la date de fin.', 'error');
+                return false;
+            }
+
+            if (endDate > Datedepot) {
+                showAlert('Erreur', 'La date du dépôt ne peut pas être supérieur à la date de fin.', 'error');
                 return false;
             }
 
@@ -211,9 +227,14 @@
             document.body.insertAdjacentHTML('beforeend', preloader_ch);
 
             $.ajax({
-                url: '/api/imp_fac_assurance',
+                url: '/api/new_depot_fac',
                 method: 'GET',
-                data: {assurance_id: assurance_id.value, date1: date1.value, date2: date2.value,},
+                data: {
+                    assurance_id: assurance_id.value, 
+                    date1: date1.value, 
+                    date2: date2.value, 
+                    date_depot: date_depot.value,
+                },
                 success: function(response) {
 
                     var preloader = document.getElementById('preloader_ch');
@@ -221,21 +242,27 @@
                         preloader.remove();
                     }
 
-                    const societes = response.societes;
-                    const assurance = response.assurance;
-                    const date1 = response.date1;
-                    const date2 = response.date2;
-
-                    if (societes.length > 0) {
+                    if (response.success) {
 
                         assurance_id.value = "";
                         date1.value = "";
                         date2.value = "";
+                        date_depot.value = "";
 
-                        generatePDFInvoice_Fac_Assurance(societes,assurance,date1,date2);
+                        showAlert('Succès', 'Opération éffectuée','success');
 
-                    } else {
-                        showAlert('Informations', 'Aucune facture n\'a été trouvée pour cette période','info');
+                    } else if (response.error) {
+
+                        showAlert('Informations', 'Echec de l\'opération','info');
+
+                    } else if (response.existe) {
+                        
+                        showAlert('Informations', 'L\'intervalle de dates choisi se trouve dans l\'intervalle de certaines factures qui ont déjà été déposées.', 'info');
+
+                    } else if (response.montant_inferieur) {
+                        
+                        showAlert('Informations', 'Opération impossible. Car le montant Total = 0 Fcfa.', 'info');
+
                     }
 
                 },
@@ -251,100 +278,7 @@
             });
         }
 
-        function imp_fac_assurance_bordo()
-        {
-            const assurance_id = document.getElementById('assurance_id_fac_ass');
-            const date1 = document.getElementById('date1_fac_ass');
-            const date2 = document.getElementById('date2_fac_ass');
-
-            if (!assurance_id.value.trim() || !date1.value.trim() || !date2.value.trim()) {
-                showAlert('Alert', 'Tous les champs sont obligatoires.','warning');
-                return false; 
-            }
-
-            function isValidDate(dateString) {
-                const regEx = /^\d{4}-\d{2}-\d{2}$/;
-                if (!dateString.match(regEx)) return false;
-                const date = new Date(dateString);
-                const timestamp = date.getTime();
-                if (typeof timestamp !== 'number' || isNaN(timestamp)) return false;
-                return dateString === date.toISOString().split('T')[0];
-            }
-
-            if (!isValidDate(date1.value)) {
-                showAlert('Erreur', 'La première date est invalide.', 'error');
-                return false;
-            }
-
-            if (!isValidDate(date2.value)) {
-                showAlert('Erreur', 'La deuxième date est invalide.', 'error');
-                return false;
-            }
-
-            const startDate = new Date(date1.value);
-            const endDate = new Date(date2.value);
-
-            if (startDate > endDate) {
-                showAlert('Erreur', 'La date de début ne peut pas être supérieur à la date de fin.', 'error');
-                return false;
-            }
-
-            const oneYearInMs = 365 * 24 * 60 * 60 * 1000;
-            if (endDate - startDate > oneYearInMs) {
-                showAlert('Erreur', 'La plage de dates ne peut pas dépasser un an.', 'error');
-                return false;
-            }
-
-            var preloader_ch = `
-                <div id="preloader_ch">
-                    <div class="spinner_preloader_ch"></div>
-                </div>
-            `;
-            // Add the preloader to the body
-            document.body.insertAdjacentHTML('beforeend', preloader_ch);
-
-            $.ajax({
-                url: '/api/imp_fac_assurance_bordo',
-                method: 'GET',
-                data: {assurance_id: assurance_id.value, date1: date1.value, date2: date2.value,},
-                success: function(response) {
-
-                    var preloader = document.getElementById('preloader_ch');
-                    if (preloader) {
-                        preloader.remove();
-                    }
-
-                    const societes = response.societes;
-                    const assurance = response.assurance;
-                    const date1 = response.date1;
-                    const date2 = response.date2;
-
-                    if (societes.length > 0) {
-
-                        assurance_id.value = "";
-                        date1.value = "";
-                        date2.value = "";
-
-                        generatePDFInvoice_Fac_Assurance_Bordo(societes,assurance,date1,date2);
-
-                    } else {
-                        showAlert('Informations', 'Aucune facture n\'a été trouvée pour cette période','info');
-                    }
-
-                },
-                error: function() {
-
-                    var preloader = document.getElementById('preloader_ch');
-                    if (preloader) {
-                        preloader.remove();
-                    }
-
-                    showAlert('Alert', ' Une erreur est survenue.','error');
-                }
-            });
-        }
-
-        function generatePDFInvoice_Fac_Assurance(societes,assurance,date1,date2) {
+        function generatePDFInvoice_Fac(societes,assurance,date1,date2) {
 
             const { jsPDF } = window.jspdf;
             const doc = new jsPDF({ orientation: 'l', unit: 'mm', format: 'a4' });
@@ -554,7 +488,7 @@
             doc.output('dataurlnewwindow');
         }
 
-        function generatePDFInvoice_Fac_Assurance_Bordo(societes,assurance,date1,date2) {
+        function generatePDFInvoice_Fac_Bordo(societes,assurance,date1,date2,statut,date_paiement,type,cheque) {
 
             const { jsPDF } = window.jspdf;
             const doc = new jsPDF({ orientation: 'p', unit: 'mm', format: 'a4' });
@@ -621,6 +555,31 @@
 
                 yPoss = (yPos + 50);
 
+                const pageWidth = doc.internal.pageSize.getWidth();
+                let text;
+                if (statut === 'oui') {
+                    if (type === 'virement') {
+                        text = "Paiement effectué le " + date_paiement + " par Virement Bancaire";
+                    } else if (type === 'cheque') {
+                        text = "Paiement effectué le " + date_paiement + " par Chèque. N°" + cheque;
+                    }
+                } else {
+                    text = "Paiement non effectué";
+                }
+                doc.setFontSize(12);
+                doc.setFont("Helvetica", "bold");
+                if (statut === 'oui') {
+                    doc.setTextColor(0, 128, 0);
+                } else {
+                    doc.setTextColor(255, 0, 0);
+                }
+                const textWidth = doc.getTextWidth(text);
+                const xPos = (pageWidth - textWidth) / 2;
+                doc.text(text, xPos, yPoss);
+
+
+                yPoss += 5;
+
                 if (societes.length > 0) {
 
                     doc.autoTable({
@@ -646,6 +605,7 @@
 
                     doc.setFontSize(14);
                     doc.setFont("Helvetica", "bold");
+                    doc.setTextColor(0, 0, 0);
                     doc.text("TOTAL DES FACTURES", 15, yPoss);
                     yPoss += 10;
 
@@ -657,6 +617,7 @@
 
                     finalInfo.forEach(info => {
                         doc.setFontSize(11);
+                        doc.setTextColor(0, 0, 0);
                         doc.setFont("Helvetica", "bold");
                         doc.text(info.label, leftMargin, yPoss);
                         doc.setFont("Helvetica", "normal");
@@ -685,7 +646,6 @@
 
             doc.output('dataurlnewwindow');
         }
-
 
     });
 </script>

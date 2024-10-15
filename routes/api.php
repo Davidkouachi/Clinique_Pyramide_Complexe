@@ -198,6 +198,8 @@ Route::middleware(['statutchambre','dateRdv'])->group(function () {
 	Route::get('/imp_fac_assurance_bordo', [ApipdfController::class, 'imp_fac_assurance_bordo']);
 	Route::get('/imp_fac_depot/{id}', [ApipdfController::class, 'imp_fac_depot']);
 	Route::get('/imp_fac_depot_bordo/{id}', [ApipdfController::class, 'imp_fac_depot_bordo']);
+
+	Route::get('/etat_fac_assurance', [ApipdfController::class, 'etat_fac_assurance']);
 	// Etat fin
 
 });

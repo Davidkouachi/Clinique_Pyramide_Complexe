@@ -58,8 +58,8 @@
                                         <th scope="col">N° dossier</th>
                                         <th scope="col">Nom et Prénoms</th>
                                         <th scope="col">Contact</th>
-                                        <th scope="col">Motif</th>
-                                        <th scope="col">Détail</th>
+                                        <th scope="col">Médecin</th>
+                                        <th scope="col">Spécialité</th>
                                         <th scope="col">Prix</th>
                                         <th scope="col"></th>
                                     </tr>
@@ -407,7 +407,7 @@
                                     <td>P-${item.matricule}</td>
                                     <td>${item.name}</td>
                                     <td>+225 ${item.tel}</td>
-                                    <td>${item.motif}</td>
+                                    <td>${item.medecin}</td>  
                                     <td>${item.type_motif}</td>
                                     <td>${item.montant} Fcfa</td>
                                     <td>

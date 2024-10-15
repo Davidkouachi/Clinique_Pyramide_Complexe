@@ -20,13 +20,15 @@
 @section('content')
 
 <div class="app-body">
-    <!-- Row starts -->
+
+    @include('finance.btnFacNonRegle')
+    
     <div class="row justify-content-center">
         <div class="col-12">
             <div class="card mb-3">
                 <div class="card-header d-flex align-items-center justify-content-between">
                     <h5 class="card-title">
-                        Facture non réglée
+                        Examens factures non-réglées
                     </h5>
                     <div class="d-flex" >
                         <input type="text" id="searchInput" placeholder="N° facture" class="form-control me-1" >
@@ -46,7 +48,6 @@
                                         <th scope="col">Type d'examen</th>
                                         <th scope="col">Part Assurance</th>
                                         <th scope="col">Part Patient</th>
-                                        <th scope="col">Prélevement</th>
                                         <th scope="col">Montant Total</th>
                                         <th scope="col">Montant a payer</th>
                                         <th scope="col">Date de création</th>
@@ -353,7 +354,6 @@
             const messageDiv = document.getElementById('message_Table');
             const tableDiv = document.getElementById('div_Table');
             const loaderDiv = document.getElementById('div_Table_loader');
-            const searchInput = document.getElementById('searchInput');
 
             let allExamens = [];
 
@@ -391,7 +391,6 @@
                                     <td>${item.acte}</td>
                                     <td class="text-warning" >${item.part_assurance} Fcfa</td>
                                     <td>${item.part_patient} Fcfa</td>
-                                    <td>${item.prelevement} Fcfa</td>
                                     <td class="text-primary" >${item.montant} Fcfa</td>
                                     <td class="text-success" >
                                         ${formatPrice(item.total_patient)} Fcfa
@@ -540,22 +539,14 @@
                         };
 
                         function applySearchFilter() {
-                            const searchTerm = searchInput.value.toLowerCase();
+                            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
                             const filteredExamens = allExamens.filter(item =>
-                                item.patient.toLowerCase().includes(searchTerm) ||
-                                item.acte.toLowerCase().includes(searchTerm) ||
-                                item.medecin.toLowerCase().includes(searchTerm) ||
-                                item.nbre.toLowerCase().includes(searchTerm) ||
-                                item.prelevement.toLowerCase().includes(searchTerm) ||
-                                item.prelevement.replace(/[^0-9]/g, '').toLowerCase().includes(searchTerm) ||
-                                item.montant.toLowerCase().includes(searchTerm) ||
-                                item.montant.replace(/[^0-9]/g, '').toLowerCase().includes(searchTerm) ||
-                                formatDateHeure(item.created_at).toLowerCase().includes(searchTerm)
+                                item.code_fac.toLowerCase().includes(searchTerm)
                             );
                             displayRows(filteredExamens);
                         }
 
-                        searchInput.addEventListener('input', applySearchFilter);
+                        document.getElementById('searchInput').addEventListener('input', applySearchFilter);
 
                         displayRows(allExamens);
 
