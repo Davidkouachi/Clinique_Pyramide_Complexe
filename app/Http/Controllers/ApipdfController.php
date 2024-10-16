@@ -424,7 +424,6 @@ class ApipdfController extends Controller
 
     public function imp_fac_depot($id)
     {
-
         $fac = depotfacture::find($id);
 
         $date1 = Carbon::createFromFormat('Y-m-d', $fac->date1)->startOfDay();
@@ -717,15 +716,89 @@ class ApipdfController extends Controller
     public function etat_fac_assurance(Request $request)
     {
 
+        // Créer des dates basées sur le type de requête
         $date1 = Carbon::createFromFormat('Y-m-d', $request->date1)->startOfDay();
-        $date2 = Carbon::createFromFormat('Y-m-d', $request->date2)->endOfDay(); 
+        $date2 = Carbon::createFromFormat('Y-m-d', $request->date2)->endOfDay();
 
-        if ($request->assurance_id === null) {
-            $assurance_id = null;
+        $datee1 = null;
+        $datee2 = null;
+
+        // Si le type est 'tous', on utilise les dates initiales
+        if ($request->type === 'tous') {
+            $datee1 = $date1;
+            $datee2 = $date2;
         } else {
-            $assurance_id = $request->assurance_id ?? null;
-            $assurance = assurance::find($request->assurance_id);
+            $datee1 = $date1;
+            $datee2 = $date2;
         }
+
+        // Fonction pour récupérer les dépôts
+        function getDepotResults($assurance_id, $type) {
+
+            $query = depotfacture::selectRaw('MIN(DATE(depotfactures.date1)) as min_date, MAX(DATE(depotfactures.date2)) as max_date');
+
+            if ($assurance_id) {
+                $query->where('depotfactures.assurance_id', '=', $assurance_id);
+            }
+
+            if ($type === 'fac_deposer') {
+                $query->where(function($query) {
+                    $query->where('statut', '=', 'non')->orWhere('statut', '=', 'oui');
+                });
+            } else if ($type === 'fac_deposer_regler') {
+                $query->where('statut', '=', 'oui'); 
+            } else if ($type === 'fac_deposer_non_regler') {
+                $query->where('statut', '=', 'non');
+            } else if ($type === 'fac_regler_non_regler') {
+                $query->where(function($query) {
+                    $query->where('statut', '=', 'non')->orWhere('statut', '=', 'oui');
+                });
+            }
+
+            return $query->first();
+        }
+
+        $depotResult = getDepotResults($request->assurance_id, $request->type);
+
+        if ($depotResult) {
+
+            $minDate = $depotResult->min_date;
+            $maxDate = $depotResult->max_date;
+
+            if ($minDate === null && $maxDate === null) {
+                return response()->json([
+                    'facture_non_trouve' => true,
+                ]);
+            }
+
+            // Vérification des conditions de chevauchement
+            $condition1 = ($datee1 >= $minDate && $datee1 <= $maxDate) && ($datee2 >= $maxDate);
+            $condition2 = ($datee2 <= $maxDate && $datee2 >= $minDate) && ($datee1 <= $minDate);
+            $condition3 = ($datee1 >= $minDate && $datee2 <= $maxDate);
+
+            // Définir les nouvelles dates basées sur les conditions
+            if ($condition1) {
+                $date1 = $date1; // Reste le même
+                $date2 = $maxDate;
+            } else if ($condition2) {
+                $date1 = $datee2; // Change pour la deuxième date
+                $date2 = $minDate;
+            } else if ($condition3) {
+                $date1 = $date1; // Reste le même
+                $date2 = $date2; // Reste le même
+            } else{
+                return response()->json([
+                    'facture_non_trouve' => true,
+                ]);
+            }
+        }else{
+           return response()->json([
+                'facture_non_trouve' => true,
+            ]); 
+        }
+
+        $assurance_id = $request->assurance_id ?? null;
+        $assurance = assurance::find($request->assurance_id);
 
         $societes = societe::all();
         $result = [];
@@ -733,6 +806,7 @@ class ApipdfController extends Controller
         foreach ($societes as $key => $societe) {
 
             $fac_cons = consultation::join('patients', 'patients.id', '=', 'consultations.patient_id')
+                ->join('factures', 'factures.id', '=', 'consultations.facture_id')
                 ->join('assurances', 'assurances.id', '=', 'patients.assurance_id')
                 ->join('societes', 'societes.id', '=', 'patients.societe_id')
                 ->join('detailconsultations', 'detailconsultations.consultation_id', '=', 'consultations.id')
@@ -758,6 +832,7 @@ class ApipdfController extends Controller
                 ->get();
 
             foreach ($fac_cons as $value) {
+
                 $patient = intval(str_replace('.', '', $value->part_patient));
                 $remise = intval(str_replace('.', '', $value->remise));
 
@@ -767,6 +842,7 @@ class ApipdfController extends Controller
             }
 
             $fac_exam = examen::join('patients', 'patients.id', '=', 'examens.patient_id')
+                ->join('factures', 'factures.id', '=', 'examens.facture_id')
                 ->join('assurances', 'assurances.id', '=', 'patients.assurance_id')
                 ->join('societes', 'societes.id', '=', 'patients.societe_id')
                 ->where('patients.assurer', '=', 'oui')
@@ -790,6 +866,7 @@ class ApipdfController extends Controller
                 ->get();
 
             $fac_soinsam = soinspatient::join('patients', 'patients.id', '=', 'soinspatients.patient_id')
+                ->join('factures', 'factures.id', '=', 'soinspatients.facture_id')
                 ->join('assurances', 'assurances.id', '=', 'patients.assurance_id')
                 ->join('societes', 'societes.id', '=', 'patients.societe_id')
                 ->where('patients.assurer', '=', 'oui')
@@ -824,6 +901,7 @@ class ApipdfController extends Controller
             }
 
             $fac_hopital = detailhopital::join('patients', 'patients.id', '=', 'detailhopitals.patient_id')
+                ->join('factures', 'factures.id', '=', 'detailhopitals.facture_id')
                 ->leftjoin('assurances', 'assurances.id', '=', 'patients.assurance_id')
                 ->leftjoin('societes', 'societes.id', '=', 'patients.societe_id')
                 ->where('patients.assurer', '=', 'oui')
@@ -871,6 +949,138 @@ class ApipdfController extends Controller
             'assurance' => $assurance ?? null,
             'date1' => $date1,
             'date2' => $date2,
+            'type' => $request->type,
+        ]);
+    }
+
+    public function etat_fac_caisse(Request $request)
+    {
+
+        $startDate = Carbon::createFromFormat('Y-m-d', $request->date1)->startOfDay();
+        $endDate = Carbon::createFromFormat('Y-m-d', $request->date2)->endOfDay(); 
+
+        if (!$startDate || !$endDate) {
+            return response()->json(['date_invalide' => 'Dates invalides']);
+        }
+
+        $consultations = consultation::whereBetween('created_at', [$startDate, $endDate])->count();
+        $hospitalisations = detailhopital::whereBetween('created_at',[$startDate, $endDate])->count();
+        $examens = examen::whereBetween('created_at', [$startDate, $endDate])->count();
+        $soinsAmbulatoires = soinspatient::whereBetween('created_at',[$startDate, $endDate])->count();
+
+        $m_cons = consultation::join('detailconsultations', 'detailconsultations.consultation_id', '=', 'consultations.id')
+        ->join('factures', 'factures.id', '=', 'consultations.facture_id')
+        ->select(DB::raw('
+            COALESCE(SUM(CASE WHEN factures.statut = "payer" THEN REPLACE(detailconsultations.montant, ".", "") + 0 ELSE 0 END), 0) as total_payer,
+            COALESCE(SUM(CASE WHEN factures.statut = "impayer" THEN REPLACE(detailconsultations.montant, ".", "") + 0 ELSE 0 END), 0) as total_impayer,
+            COALESCE(SUM(REPLACE(detailconsultations.montant, ".", "") + 0), 0) as total_general,
+            COALESCE(SUM(REPLACE(detailconsultations.part_assurance, ".", "") + 0), 0) as part_assurance,
+            COALESCE(SUM(REPLACE(detailconsultations.part_patient, ".", "") + 0), 0) as part_patient,
+            COALESCE(SUM(REPLACE(detailconsultations.remise, ".", "") + 0), 0) as remise,
+            COALESCE(SUM(CASE WHEN factures.statut = "payer" THEN REPLACE(detailconsultations.part_patient, ".", "") + 0 ELSE 0 END), 0) as part_patient_payer,
+            COALESCE(SUM(CASE WHEN factures.statut = "impayer" THEN REPLACE(detailconsultations.part_patient, ".", "") + 0 ELSE 0 END), 0) as part_patient_impayer
+        '))
+        ->whereBetween('detailconsultations.created_at', [$startDate, $endDate])
+        ->first();
+
+
+        $m_hos = detailhopital::join('factures', 'factures.id', '=', 'detailhopitals.facture_id')
+        ->select(DB::raw('
+            COALESCE(SUM(CASE WHEN factures.statut = "payer" THEN REPLACE(detailhopitals.montant, ".", "") + 0 ELSE 0 END), 0) as total_payer,
+            COALESCE(SUM(CASE WHEN factures.statut = "impayer" THEN REPLACE(detailhopitals.montant, ".", "") + 0 ELSE 0 END), 0) as total_impayer,
+            COALESCE(SUM(REPLACE(detailhopitals.montant, ".", "") + 0), 0) as total_general,
+            COALESCE(SUM(REPLACE(detailhopitals.part_assurance, ".", "") + 0), 0) as part_assurance,
+            COALESCE(SUM(REPLACE(detailhopitals.part_patient, ".", "") + 0), 0) as part_patient,
+            COALESCE(SUM(REPLACE(detailhopitals.remise, ".", "") + 0), 0) as remise,
+            COALESCE(SUM(CASE WHEN factures.statut = "payer" THEN REPLACE(detailhopitals.part_patient, ".", "") + 0 ELSE 0 END), 0) as part_patient_payer,
+            COALESCE(SUM(CASE WHEN factures.statut = "impayer" THEN REPLACE(detailhopitals.part_patient, ".", "") + 0 ELSE 0 END), 0) as part_patient_impayer
+        '))
+        ->whereBetween('detailhopitals.created_at', [$startDate, $endDate])
+        ->first();
+
+        $m_exam = examen::join('factures', 'factures.id', '=', 'examens.facture_id')
+        ->select(DB::raw('
+            COALESCE(SUM(CASE WHEN factures.statut = "payer" THEN REPLACE(examens.montant, ".", "") + 0 ELSE 0 END), 0) as total_payer,
+            COALESCE(SUM(CASE WHEN factures.statut = "impayer" THEN REPLACE(examens.montant, ".", "") + 0 ELSE 0 END), 0) as total_impayer,
+            COALESCE(SUM(REPLACE(examens.montant, ".", "") + 0), 0) as total_general,
+            COALESCE(SUM(REPLACE(examens.part_assurance, ".", "") + 0), 0) as part_assurance,
+            COALESCE(SUM(REPLACE(examens.part_patient, ".", "") + 0), 0) as part_patient,
+            COALESCE(SUM(CASE WHEN factures.statut = "payer" THEN REPLACE(examens.part_patient, ".", "") + 0 ELSE 0 END), 0) as part_patient_payer,
+            COALESCE(SUM(CASE WHEN factures.statut = "impayer" THEN REPLACE(examens.part_patient, ".", "") + 0 ELSE 0 END), 0) as part_patient_impayer
+        '))
+        ->whereBetween('examens.created_at', [$startDate, $endDate])
+        ->first();
+
+        $m_soinsam = soinspatient::join('factures', 'factures.id', '=', 'soinspatients.facture_id')
+        ->select(DB::raw('
+            COALESCE(SUM(CASE WHEN factures.statut = "payer" THEN REPLACE(soinspatients.montant, ".", "") + 0 ELSE 0 END), 0) as total_payer,
+            COALESCE(SUM(CASE WHEN factures.statut = "impayer" THEN REPLACE(soinspatients.montant, ".", "") + 0 ELSE 0 END), 0) as total_impayer,
+            COALESCE(SUM(REPLACE(soinspatients.montant, ".", "") + 0), 0) as total_general,
+            COALESCE(SUM(REPLACE(soinspatients.part_assurance, ".", "") + 0), 0) as part_assurance,
+            COALESCE(SUM(REPLACE(soinspatients.part_patient, ".", "") + 0), 0) as part_patient,
+            COALESCE(SUM(REPLACE(soinspatients.remise, ".", "") + 0), 0) as remise,
+            COALESCE(SUM(CASE WHEN factures.statut = "payer" THEN REPLACE(soinspatients.part_patient, ".", "") + 0 ELSE 0 END), 0) as part_patient_payer,
+            COALESCE(SUM(CASE WHEN factures.statut = "impayer" THEN REPLACE(soinspatients.part_patient, ".", "") + 0 ELSE 0 END), 0) as part_patient_impayer
+        '))
+        ->whereBetween('soinspatients.created_at', [$startDate, $endDate])
+        ->first();
+
+        $data = [
+            'cons' => $consultations ?? 0,
+            'hos' => $hospitalisations ?? 0,
+            'exam' => $examens ?? 0,
+            'soinsam' => $soinsAmbulatoires ?? 0,
+            'm_cons' => $m_cons,
+            'm_hos' => $m_hos,
+            'm_exam' => $m_exam,
+            'm_soinsam' => $m_soinsam,
+        ];
+
+        // -------------------------------------------------
+
+        $fac_nbre = facture::whereBetween('created_at', [$startDate, $endDate])->count();
+
+        $fac_total = $m_cons->total_general + $m_hos->total_general + $m_exam->total_general + $m_soinsam->total_general ;
+
+        $fac_remise = $m_cons->remise + $m_hos->remise + $m_soinsam->remise ;
+
+        $fac_impayer = $m_cons->total_impayer + $m_hos->total_impayer + $m_exam->total_impayer + $m_soinsam->total_impayer ;
+
+        $fac_payer = $m_cons->total_payer + $m_hos->total_payer + $m_exam->total_payer + $m_soinsam->total_payer ;
+
+        $fac_assurance = $m_cons->part_assurance + $m_hos->part_assurance + $m_exam->part_assurance + $m_soinsam->part_assurance ;
+
+        $fac_patient = $m_cons->part_patient + $m_hos->part_patient + $m_exam->part_patient + $m_soinsam->part_patient ;
+
+        $fac_patient_payer = $m_cons->part_patient_payer + $m_hos->part_patient_payer + $m_exam->part_patient_payer + $m_soinsam->part_patient_payer ;
+
+        $fac_patient_impayer = $m_cons->part_patient_impayer + $m_hos->part_patient_impayer + $m_exam->part_patient_impayer + $m_soinsam->part_patient_impayer ;
+
+        $fac_patient_total = $fac_patient_impayer + $fac_patient_payer;
+
+        $dataCaisse = [
+            'fac_nbre' => $fac_nbre ?? 0,
+            'fac_total' => $fac_total ?? 0,
+            'fac_impayer' => $fac_impayer ?? 0,
+            'fac_payer' => $fac_payer ?? 0,
+            'fac_assurance' => $fac_assurance ?? 0,
+            'fac_patient' => $fac_patient ?? 0,
+            'fac_patient_payer' => $fac_patient_payer ?? 0,
+            'fac_patient_impayer' => $fac_patient_impayer ?? 0,
+            'fac_patient_total' => $fac_patient_total ?? 0,
+            'fac_remise' => $fac_remise ?? 0,
+        ];
+
+        if ($fac_total <= 0) {
+            return response()->json(['montant_0' => true]);
+        }
+
+        return response()->json([
+            'success' => true,
+            'data' => $data,
+            'dataCaisse' => $dataCaisse,
+            'date1' => $startDate,
+            'date2' => $endDate,
         ]);
     }
 

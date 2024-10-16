@@ -1254,8 +1254,8 @@ class ApiinsertController extends Controller
 
         $add = new depotfacture();
         $add->assurance_id = $assurance_id;
-        $add->date1 = $date1;
-        $add->date2 = $date2;
+        $add->date1 = $request->date1;
+        $add->date2 = $request->date2;
         $add->date_depot = $date_depot;
         $add->statut = 'non';
 

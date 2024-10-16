@@ -34,7 +34,7 @@
                                 <label class="form-label">
                                     Assurance
                                 </label>
-                                <select class="form-select" id="assurance_id_fac_ass"></select>
+                                <select class="form-select" id="assurance_id"></select>
                             </div>
                         </div>
                         <div class="col-12">
@@ -42,7 +42,7 @@
                                 <label class="form-label">
                                     Date début
                                 </label>
-                                <input type="date" class="form-control" id="date1_fac_ass" >
+                                <input type="date" class="form-control" id="date1"  max="{{ date('Y-m-d') }}">
                             </div>
                         </div>
                         <div class="col-12">
@@ -50,18 +50,18 @@
                                 <label class="form-label">
                                     Date Fin
                                 </label>
-                                <input type="date" class="form-control" id="date2_fac_ass">
+                                <input type="date" class="form-control" id="date2"  max="{{ date('Y-m-d') }}">
                             </div>
                         </div>
                         <div class="col-sm-12 d-flex justify-content-between">
                             <div class="mb-3 d-flex gap-2 justify-content-start">
-                                <button id="btn_imp_fac_ass" class="btn btn-primary">
+                                <button id="btn_imp" class="btn btn-primary">
                                     <i class="ri-printer-line"></i>
                                     Imprimer
                                 </button>
                             </div>
                             <div class="mb-3 d-flex gap-2 justify-content-start">
-                                <button id="btn_imp_fac_ass_bordo" class="btn btn-warning">
+                                <button id="btn_imp_bordo" class="btn btn-warning">
                                     <i class="ri-printer-line"></i>
                                     Bordereaux
                                 </button>
@@ -85,8 +85,9 @@
 
         select_assurance();
 
-        document.getElementById("btn_imp_fac_ass").addEventListener("click", imp_fac_assurance);
-        document.getElementById("btn_imp_fac_ass_bordo").addEventListener("click", imp_fac_assurance_bordo);
+        document.getElementById("date1").addEventListener("change", datechange);
+        document.getElementById("btn_imp").addEventListener("click", imp_fac_assurance);
+        document.getElementById("btn_imp_bordo").addEventListener("click", imp_fac_assurance_bordo);
 
         function showAlert(title, message, type) {
             Swal.fire({
@@ -135,9 +136,19 @@
             return `${day}/${month}/${year} à ${hours}:${minutes}:${seconds}`;
         }
 
+        function datechange()
+        {
+            const date1Value = document.getElementById('date1').value;
+            const date2 = document.getElementById('date2');
+
+            date2.value = date1Value;
+
+            date2.min = date1Value;
+        }
+
         function select_assurance()
         {
-            const selectElement = document.getElementById('assurance_id_fac_ass');
+            const selectElement = document.getElementById('assurance_id');
 
             selectElement.innerHTML = '';
             const defaultOption = document.createElement('option');
@@ -160,9 +171,9 @@
 
         function imp_fac_assurance()
         {
-            const assurance_id = document.getElementById('assurance_id_fac_ass');
-            const date1 = document.getElementById('date1_fac_ass');
-            const date2 = document.getElementById('date2_fac_ass');
+            const assurance_id = document.getElementById('assurance_id');
+            const date1 = document.getElementById('date1');
+            const date2 = document.getElementById('date2');
 
             if (!assurance_id.value.trim() || !date1.value.trim() || !date2.value.trim()) {
                 showAlert('Alert', 'Tous les champs sont obligatoires.','warning');
@@ -253,9 +264,9 @@
 
         function imp_fac_assurance_bordo()
         {
-            const assurance_id = document.getElementById('assurance_id_fac_ass');
-            const date1 = document.getElementById('date1_fac_ass');
-            const date2 = document.getElementById('date2_fac_ass');
+            const assurance_id = document.getElementById('assurance_id');
+            const date1 = document.getElementById('date1');
+            const date2 = document.getElementById('date2');
 
             if (!assurance_id.value.trim() || !date1.value.trim() || !date2.value.trim()) {
                 showAlert('Alert', 'Tous les champs sont obligatoires.','warning');

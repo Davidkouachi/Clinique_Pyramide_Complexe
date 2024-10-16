@@ -11,7 +11,7 @@
             <a href="{{route('index_accueil')}}">Espace Santé</a>
         </li>
         <li class="breadcrumb-item text-primary" aria-current="page">
-            Emissions des Factures
+            Etats des Factures
         </li>
     </ol>
 </div>
@@ -33,15 +33,18 @@
                             <div class="mb-3">
                                 <label class="form-label">Type</label>
                                 <select class="form-select" id="type">
-                                    <option value="">Selectionner</option>
+                                    <option value="tous">Selectionner</option>
                                     <option value="fac_deposer">
-                                        Facture déposer
+                                        Déposer
                                     </option>
                                     <option value="fac_deposer_regler">
-                                        Facture déposer et régler
+                                        Déposer & régler
                                     </option>
                                     <option value="fac_deposer_non_regler">
-                                        Facture déposer et non-régler
+                                        Déposer & non-régler
+                                    </option>
+                                    <option value="fac_regler_non_regler">
+                                        Régler & non-régler
                                     </option>
                                 </select>
                             </div>
@@ -187,7 +190,7 @@
             const date2 = document.getElementById('date2');
 
             if (!date1.value.trim() || !date2.value.trim()) {
-                showAlert('Alert', 'Tous les champs sont obligatoires.','warning');
+                showAlert('Alert', 'Veuillez saisir des dates S\'il vous plaît.','warning');
                 return false; 
             }
 
@@ -252,14 +255,22 @@
                     const assurance = response.assurance;
                     const date1 = response.date1;
                     const date2 = response.date2;
+                    const type = response.type;
+
+                    if (response.facture_non_trouve) {
+
+                        showAlert('Informations', 'Aucune facture n\'a été trouvée','info');
+
+                    }
 
                     if (societes.length > 0) {
 
-                        assurance_id.value = "";
-                        date1.value = "";
-                        date2.value = "";
+                        document.getElementById('type').value = "tous";
+                        document.getElementById('assurance_id').value = "";
+                        document.getElementById('date1').value = "";
+                        document.getElementById('date2').value = "";
 
-                        generatePDFInvoice_Fac_Assurance(societes,assurance,date1,date2);
+                        generatePDFInvoice(societes,assurance,date1,date2,type);
 
                     } else {
                         showAlert('Informations', 'Aucune facture n\'a été trouvée pour cette période','info');
@@ -278,10 +289,44 @@
             });
         }
 
-        function generatePDFInvoice_Fac_Assurance(societes,assurance,date1,date2) {
+        function generatePDFInvoice(societes,assurance,date1,date2,type) {
 
             const { jsPDF } = window.jspdf;
             const doc = new jsPDF({ orientation: 'l', unit: 'mm', format: 'a4' });
+
+            let pdfFilename ;
+
+            if (assurance === null || assurance === undefined) {
+
+                if (type == 'tous') {
+                    pdfFilename = "Facture_" + formatDate(date1) + "_au_" + formatDate(date2);
+                } else if (type == 'fac_deposer') {
+                    pdfFilename = "Facture_Deposer_" + formatDate(date1) + "_au_" + formatDate(date2);
+                } else if (type == 'fac_deposer_regler') {
+                    pdfFilename = "Facture_Deposer_Regler_" + formatDate(date1) + "_au_" + formatDate(date2);
+                } else if (type == 'fac_deposer_non_regler') {
+                    pdfFilename = "Facture_Deposer_Non_Regler_" + formatDate(date1) + "_au_" + formatDate(date2);
+                } else if (type == 'fac_regler_non_regler') {
+                    pdfFilename = "Facture_" + formatDate(date1) + "_au_" + formatDate(date2);
+                }
+            } else {
+                pdfFilename = assurance.nom + "_facture_" + formatDate(date1) + "_au_" + formatDate(date2);
+                if (type == 'tous') {
+                    pdfFilename = assurance.nom +  "_facture_" + formatDate(date1) + "_au_" + formatDate(date2);
+                } else if (type == 'fac_deposer') {
+                    pdfFilename = assurance.nom +  "_facture_Deposer_" + formatDate(date1) + "_au_" + formatDate(date2);
+                } else if (type == 'fac_deposer_regler') {
+                    pdfFilename = assurance.nom +  "_facture_Deposer_Regler_" + formatDate(date1) + "_au_" + formatDate(date2);
+                } else if (type == 'fac_deposer_non_regler') {
+                    pdfFilename = assurance.nom +  "_facture_Deposer_Non_Regler_" + formatDate(date1) + "_au_" + formatDate(date2);
+                } else if (type == 'fac_regler_non_regler') {
+                    pdfFilename = assurance.nom +  "_facture_" + formatDate(date1) + "_au_" + formatDate(date2);
+                }
+            }
+
+            doc.setProperties({
+                title: pdfFilename,
+            });
 
             let yPos = 10;
 
@@ -290,6 +335,11 @@
                 rightMargin = 15;
                 leftMargin = 15;
                 pdfWidth = doc.internal.pageSize.getWidth();
+
+                const logoSrc = "{{asset('assets/images/logo.png')}}";
+                const logoWidth = 22;
+                const logoHeight = 22;
+                doc.addImage(logoSrc, 'PNG', leftMargin, yPos - 7, logoWidth, logoHeight);
 
                 doc.setFontSize(10);
                 doc.setTextColor(0, 0, 0);
@@ -320,9 +370,29 @@
                 let titleR;
 
                 if (assurance === null || assurance === undefined) {
-                    titleR = "LISTE DES FACTURES PAR PERIODE";
+                    if (type == "tous") {
+                        titleR = "LISTE DES FACTURES PAR PERIODE";
+                    } else if (type == "fac_deposer") {
+                        titleR = "LISTE DES FACTURES DEPOSER PAR PERIODE";
+                    } else if (type == "fac_deposer_regler") {
+                        titleR = "LISTE DES FACTURES DEPOSER & REGLER PAR PERIODE";
+                    } else if (type == "fac_deposer_non_regler") {
+                        titleR = "LISTE DES FACTURES DEPOSER & NON-REGLER PAR PERIODE";
+                    } else if (type == "fac_regler_non_regler") {
+                        titleR = "LISTE DES FACTURES REGLER & NON-REGLER PAR PERIODE";
+                    }
                 } else {
-                    titleR = "LISTE DES FACTURES PAR ASSURANCE : " + assurance.nom;
+                    if (type == "tous") {
+                        titleR = "LISTE DES FACTURES PAR ASSURANCE : " + assurance.nom;
+                    } else if (type == "fac_deposer") {
+                        titleR = "LISTE DES FACTURES DEPOSER PAR ASSURANCE : " + assurance.nom;
+                    } else if (type == "fac_deposer_regler") {
+                        titleR = "LISTE DES FACTURES DEPOSER & REGLER PAR ASSURANCE : " + assurance.nom;
+                    } else if (type == "fac_deposer_non_regler") {
+                        titleR = "LISTE DES FACTURES DEPOSER & NON-REGLER PAR ASSURANCE : " + assurance.nom;
+                    } else if (type == "fac_regler_non_regler") {
+                        titleR = "LISTE DES FACTURES REGLER & NON-REGLER PAR ASSURANCE : " + assurance.nom;
+                    }
                 }
 
                 const titleRWidth = doc.getTextWidth(titleR);

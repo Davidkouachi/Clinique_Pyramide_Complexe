@@ -159,4 +159,9 @@ class Controller
     {
         return view('pdf.facture');
     }
+
+    public function etat_caisse()
+    {
+        return view('pdf.caisse');
+    }
 }

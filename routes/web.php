@@ -97,6 +97,7 @@ Route::middleware(['auth','statutchambre','dateRdv'])->group(function () {
 	Route::get('/Factures', [Controller::class, 'facture_deposer'])->name('facture_deposer');
 
 	Route::get('/Etats Factures', [Controller::class, 'etat_facture'])->name('etat_facture');
+	Route::get('/Etats Caisses', [Controller::class, 'etat_caisse'])->name('etat_caisse');
 
 // Route::middleware(['role:ADMINISTRATEUR'])->group(function () {
 

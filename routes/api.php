@@ -200,6 +200,7 @@ Route::middleware(['statutchambre','dateRdv'])->group(function () {
 	Route::get('/imp_fac_depot_bordo/{id}', [ApipdfController::class, 'imp_fac_depot_bordo']);
 
 	Route::get('/etat_fac_assurance', [ApipdfController::class, 'etat_fac_assurance']);
+	Route::get('/etat_fac_caisse', [ApipdfController::class, 'etat_fac_caisse']);
 	// Etat fin
 
 });

@@ -334,7 +334,7 @@
                                 </li>
                             </ul>
                         </li>
-                        <li @if(request()->routeIs('etat_facture')) class="active current-page treeview" @else class="treeview" @endif >
+                        <li @if(request()->routeIs('etat_facture','etat_caisse')) class="active current-page treeview" @else class="treeview" @endif >
                             <a href="#!">
                                 <i class="ri-file-pdf-2-line"></i>
                                 <span class="menu-text text-primary">
@@ -342,6 +342,11 @@
                                 </span>
                             </a>
                             <ul class="treeview-menu">
+                                <li>
+                                    <a @if(request()->routeIs('etat_caisse')) class="text-primary" @endif href="{{route('etat_caisse')}}">
+                                        <b>Caisse</b>
+                                    </a>
+                                </li>
                                 <li>
                                     <a @if(request()->routeIs('etat_facture')) class="text-primary" @endif href="{{route('etat_facture')}}">
                                         <b>Factures</b>
