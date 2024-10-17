@@ -513,7 +513,7 @@
                             // Sauter une page si nécessaire après chaque société
                             if (indexSociete < societes.length - 1) {
                                 doc.addPage();
-                                yPoss = 20; // Réinitialiser la position pour la nouvelle page
+                                yPoss = 0; // Réinitialiser la position pour la nouvelle page
                             }
                         }
                     });

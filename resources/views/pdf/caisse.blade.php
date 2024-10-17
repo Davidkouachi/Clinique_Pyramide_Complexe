@@ -32,6 +32,14 @@
                         <div class="col-12">
                             <div class="mb-3">
                                 <label class="form-label">
+                                    Assurance
+                                </label>
+                                <select class="form-select" id="assurance_id"></select>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="mb-3">
+                                <label class="form-label">
                                     Date début
                                 </label>
                                 <input type="date" class="form-control" id="date1" max="{{ date('Y-m-d') }}">
@@ -67,6 +75,8 @@
 
 <script>
     document.addEventListener("DOMContentLoaded", function() {
+
+        select_assurance();
 
         document.getElementById("date1").addEventListener("change", datechange);
         document.getElementById("btn_imp").addEventListener("click", imp_fac);
@@ -124,12 +134,35 @@
             const date2 = document.getElementById('date2');
 
             date2.value = date1Value;
-
             date2.min = date1Value;
+        }
+
+        function select_assurance()
+        {
+            const selectElement = document.getElementById('assurance_id');
+
+            selectElement.innerHTML = '';
+            const defaultOption = document.createElement('option');
+            defaultOption.value = '';
+            defaultOption.textContent = 'Selectionner';
+            selectElement.appendChild(defaultOption);
+
+            fetch('/api/assurance_select_patient_new')
+                .then(response => response.json())
+                .then(data => {
+                    data.forEach(assurance => {
+                        const option = document.createElement('option');
+                        option.value = assurance.id; // Ensure 'id' is the correct key
+                        option.textContent = assurance.nom; // Ensure 'nom' is the correct key
+                        selectElement.appendChild(option);
+                    });
+                })
+                .catch(error => console.error('Erreur lors du chargement des societes:', error));
         }
 
         function imp_fac()
         {
+            const assurance_id = document.getElementById('assurance_id');
             const date1 = document.getElementById('date1');
             const date2 = document.getElementById('date2');
 
@@ -183,6 +216,7 @@
                 url: '/api/etat_fac_caisse',
                 method: 'GET',
                 data: {
+                    assurance_id: assurance_id.value || null, 
                     date1: date1.value, 
                     date2: date2.value,
                 },
@@ -193,12 +227,14 @@
                         preloader.remove();
                     }
 
-                    const donnes = response.data;
-                    const caisses = response.dataCaisse;
+                    const fac_cons = response.fac_cons || [];
+                    const fac_exam = response.fac_exam || [];
+                    const fac_soinsam = response.fac_soinsam || [];
+                    const fac_hopital = response.fac_hopital || [];
                     const date1 = response.date1;
                     const date2 = response.date2;
 
-                    if (response.montant_0) {
+                    if (response.donnee_0) {
 
                         showAlert('Informations', 'Aucune donnée n\'a été trouvée pour cette période','info');
 
@@ -207,7 +243,7 @@
                         document.getElementById('date1').value = "";
                         document.getElementById('date2').value = "";
 
-                        generatePDFInvoice(donnes,caisses,date1,date2);
+                        generatePDFInvoice(fac_cons,fac_exam,fac_soinsam,fac_hopital,date1,date2);
 
                     } else {
                         showAlert('Informations', 'Aucune donnée n\'a été trouvée pour cette période','info');
@@ -226,11 +262,11 @@
             });
         }
 
-        function generatePDFInvoice(donnes,caisses,date1,date2)
+        function generatePDFInvoice(fac_cons,fac_exam,fac_soinsam,fac_hopital,date1,date2)
         {
 
             const { jsPDF } = window.jspdf;
-            const doc = new jsPDF({ orientation: 'p', unit: 'mm', format: 'a4' });
+            const doc = new jsPDF({ orientation: 'l', unit: 'mm', format: 'a4' });
 
             const pdfFilename = "Point_Caisse_" + formatDate(date1) + "_au_" + formatDate(date2);
             doc.setProperties({
@@ -303,117 +339,87 @@
                 doc.text(titleR, titleRX, textY);
 
                 yPoss = (yPos + 40);
-                const consInfo = [
-                    { label: "Acte", value: "Consultation" },
-                    { label: "Nombre Facture", value: donnes.cons },
-                    { label: "Montant Total", value: formatPrice(donnes.m_cons.total_general)+" Fcfa" },
-                    { label: "Montant Régler", value: formatPrice(donnes.m_cons.total_payer)+" Fcfa" },
-                    { label: "Montant Non-Régler", value: formatPrice(donnes.m_cons.total_impayer)+" Fcfa" },
-                    { label: "Part Assurance", value: formatPrice(donnes.m_cons.part_assurance)+" Fcfa" },
-                    { label: "Part Patient", value: formatPrice(donnes.m_cons.part_patient)+" Fcfa" },
-                ];
-                consInfo.forEach(info => {
-                    doc.setFontSize(9);
-                    doc.setFont("Helvetica", "bold");
-                    doc.text(info.label, leftMargin, yPoss);
-                    doc.setFont("Helvetica", "normal");
-                    doc.text(": " + info.value, leftMargin + 45, yPoss);
-                    yPoss += 7;
-                });
+                
+                let grandTotalAssurance = 0;
+                let grandTotalPatient = 0;
+                let grandTotalMontant = 0;
 
-                yPoss += 10;
-                const hosInfo = [
-                    { label: "Acte", value: "Hospitalisation" },
-                    { label: "Nombre Facture", value: donnes.hos },
-                    { label: "Montant Total", value: formatPrice(donnes.m_hos.total_general)+" Fcfa" },
-                    { label: "Montant Régler", value: formatPrice(donnes.m_hos.total_payer)+" Fcfa" },
-                    { label: "Montant Non-Régler", value: formatPrice(donnes.m_hos.total_impayer)+" Fcfa" },
-                    { label: "Part Assurance", value: formatPrice(donnes.m_hos.part_assurance)+" Fcfa" },
-                    { label: "Part Patient", value: formatPrice(donnes.m_hos.part_patient)+" Fcfa" },
+                const fac_global = [
+                    ...fac_cons.map(item => ({
+                        ...item,
+                        acte: 'Consultation',
+                    })),
+                    ...fac_exam.map(item => ({
+                        ...item,
+                        acte: 'Examen',
+                    })),
+                    ...fac_soinsam.map(item => ({
+                        ...item,
+                        acte: 'Soins Ambulatoire',
+                    })),
+                    ...fac_hopital.map(item => ({
+                        ...item,
+                        acte: 'Hospitalisation',
+                    })),
                 ];
-                hosInfo.forEach(info => {
-                    doc.setFontSize(9);
-                    doc.setFont("Helvetica", "bold");
-                    doc.text(info.label, leftMargin, yPoss);
-                    doc.setFont("Helvetica", "normal");
-                    doc.text(": " + info.value, leftMargin + 45, yPoss);
-                    yPoss += 7;
-                });
 
-                yPoss = (yPos + 40);
-                const examInfo = [
-                    { label: "Acte", value: "Examens" },
-                    { label: "Nombre Facture", value: donnes.exam },
-                    { label: "Montant Total", value: formatPrice(donnes.m_exam.total_general)+" Fcfa" },
-                    { label: "Montant Régler", value: formatPrice(donnes.m_exam.total_payer)+" Fcfa" },
-                    { label: "Montant Non-Régler", value: formatPrice(donnes.m_exam.total_impayer)+" Fcfa" },
-                    { label: "Part Assurance", value: formatPrice(donnes.m_exam.part_assurance)+" Fcfa" },
-                    { label: "Part Patient", value: formatPrice(donnes.m_exam.part_patient)+" Fcfa" },
-                ];
-                examInfo.forEach(info => {
-                    doc.setFontSize(9);
-                    doc.setFont("Helvetica", "bold");
-                    doc.text(info.label, leftMargin + 100, yPoss);
-                    doc.setFont("Helvetica", "normal");
-                    doc.text(": " + info.value, leftMargin + 145, yPoss);
-                    yPoss += 7;
-                });
+                if (fac_global.length > 0) {
+                            
+                    doc.autoTable({
+                        startY: yPoss,
+                        head: [['N°', 'N° Dossier', 'Patient', 'Assurance', 'Acte effectué', 'Montant Total', 'Part Assurance', 'Part assuré', 'Statut', 'Date']],
+                        body: fac_global.map((item, index) => [
+                            index + 1,
+                            "P-"+item.code_patient || '',
+                            item.patient || '',
+                            item.assurance || 'Néant',
+                            item.acte,
+                            item.montant + " Fcfa" || '' ,
+                            item.part_assurance + " Fcfa" || '' ,
+                            item.part_patient + " Fcfa" || '',
+                            (item.statut_fac || ''),
+                            formatDateHeure(item.created_at) || '',
+                        ]),
+                        theme: 'striped',
+                        didParseCell: function (data) {
+                            if (data.section === 'body' && data.column.index === 8) {
+                                if (data.cell.raw.toLowerCase() === 'payer') {
+                                    data.cell.styles.textColor = [0, 128, 0];
+                                } else {
+                                    data.cell.styles.textColor = [255, 0, 0];
+                                }
+                            }
+                        }
+                    });
 
-                yPoss += 10;
-                const soinsamInfo = [
-                    { label: "Acte", value: "Soins Ambulatoires" },
-                    { label: "Nombre Facture", value: donnes.soinsam },
-                    { label: "Montant Total", value: formatPrice(donnes.m_soinsam.total_general)+" Fcfa" },
-                    { label: "Montant Régler", value: formatPrice(donnes.m_soinsam.total_payer)+" Fcfa" },
-                    { label: "Montant Non-Régler", value: formatPrice(donnes.m_soinsam.total_impayer)+" Fcfa" },
-                    { label: "Part Assurance", value: formatPrice(donnes.m_soinsam.part_assurance)+" Fcfa" },
-                    { label: "Part Patient", value: formatPrice(donnes.m_soinsam.part_patient)+" Fcfa" },
-                ];
-                soinsamInfo.forEach(info => {
-                    doc.setFontSize(9);
-                    doc.setFont("Helvetica", "bold");
-                    doc.text(info.label, leftMargin + 100, yPoss);
-                    doc.setFont("Helvetica", "normal");
-                    doc.text(": " + info.value, leftMargin + 145, yPoss);
-                    yPoss += 7;
-                });
+                    const finalY = doc.autoTable.previous.finalY || yPoss + 10;
+                    yPoss = finalY + 10;
 
-                doc.setFontSize(30);
-                doc.setLineWidth(0.5);
-                doc.line(10, 170, 200, 170);
+                    const totalAssurance = fac_global.reduce((sum, item) => sum + parseInt(item.part_assurance.replace(/[^0-9]/g, '') || 0), 0);
+                    const totalPatient = fac_global.reduce((sum, item) => sum + parseInt(item.part_patient.replace(/[^0-9]/g, '') || 0), 0);
+                    const totalMontant = fac_global.reduce((sum, item) => sum + parseInt(item.montant.replace(/[^0-9]/g, '') || 0), 0);
 
-                yPoss = (yPos + 180);
-                const final1Info = [
-                    { label: "Nombre Total Factures", value: caisses.fac_nbre},
-                    { label: "Montant Total Factures", value: formatPrice(caisses.fac_total)+" Fcfa"},
-                    { label: "Montant Factures Impayer", value: formatPrice(caisses.fac_impayer)+" Fcfa"},
-                    { label: "Montant Factures Payer", value: formatPrice(caisses.fac_payer)+" Fcfa"},
-                    { label: "Total Part Assurance", value: formatPrice(caisses.fac_assurance)+" Fcfa"},
-                    { label: "Total Remise", value: formatPrice(caisses.fac_remise)+" Fcfa"},
-                ];
-                final1Info.forEach(info => {
-                    doc.setFontSize(9);
-                    doc.setFont("Helvetica", "bold");
-                    doc.text(info.label, leftMargin , yPoss);
-                    doc.setFont("Helvetica", "normal");
-                    doc.text(": " + info.value, leftMargin + 45, yPoss);
-                    yPoss += 7;
-                });
+                    grandTotalAssurance += totalAssurance;
+                    grandTotalPatient += totalPatient;
+                    grandTotalMontant += totalMontant;
 
-                yPoss = (yPos + 180);
-                const final2Info = [
-                    { label: "Total Part Patient", value: formatPrice(caisses.fac_patient_total)+" Fcfa"},
-                    { label: "Part Patient Payer", value: formatPrice(caisses.fac_patient_payer)+" Fcfa"},
-                    { label: "Part Patient Impayer", value: formatPrice(caisses.fac_patient_impayer)+" Fcfa"},
-                ];
-                final2Info.forEach(info => {
-                    doc.setFontSize(9);
-                    doc.setFont("Helvetica", "bold");
-                    doc.text(info.label, leftMargin + 100, yPoss);
-                    doc.setFont("Helvetica", "normal");
-                    doc.text(": " + info.value, leftMargin + 145, yPoss);
-                    yPoss += 7;
-                });
+                    const finalInfo = [
+                        { label: "Montant Total", value: formatPrice(totalMontant) + " Fcfa" },
+                        { label: "Total Assurance", value: formatPrice(totalAssurance) + " Fcfa" },
+                        { label: "Total Patient", value: formatPrice(totalPatient) + " Fcfa" },
+                        
+                    ];
+
+                    finalInfo.forEach(info => {
+                        doc.setFontSize(11);
+                        doc.setFont("Helvetica", "bold");
+                        doc.text(info.label, leftMargin + 200, yPoss);
+                        doc.setFont("Helvetica", "normal");
+                        doc.text(": " + info.value, leftMargin + 235, yPoss);
+                        yPoss += 7;
+                    });
+
+                }
 
             }
 

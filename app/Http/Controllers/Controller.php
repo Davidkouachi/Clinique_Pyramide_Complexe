@@ -155,6 +155,11 @@ class Controller
 
     // --------------------------------------------------------
 
+    public function etat_acte()
+    {
+        return view('pdf.acte');
+    }
+
     public function etat_facture()
     {
         return view('pdf.facture');

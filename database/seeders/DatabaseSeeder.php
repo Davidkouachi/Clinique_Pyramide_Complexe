@@ -135,9 +135,12 @@ class DatabaseSeeder extends Seeder
             societe::create(['nom' => $value]); 
         }
         
-        assurance::create(['nom' => 'SOGEMAD','email' => 'sogemad@gmail.com','tel' => '0757671653','fax' => '659625532', 'adresse' => 'COCODY RIVERA']);
+        $assu1 = assurance::create(['nom' => 'SOGEMAD','email' => 'sogemad@gmail.com','tel' => '0757671653','fax' => '659625532', 'adresse' => 'COCODY RIVERA']);
 
-        // Liste de produits pharmaceutiques avec leurs prix
+        $assu2 = assurance::create(['nom' => 'MCI','email' => 'mci@gmail.com','tel' => '0757671689','fax' => '659684789', 'adresse' => 'COCODY RIVERA FAYA']);
+
+        $assu3 = assurance::create(['nom' => 'MUGEFCI','email' => 'mugefci@gmail.com','tel' => '0759871689','fax' => '6786574789', 'adresse' => 'COCODY RIVERA M\'BADON']);
+
         $produitsPharmaceutiques = [
             ['nom' => 'PARACÉTAMOL 500MG', 'prix' => '1.500', 'quantite' => '20'],
             ['nom' => 'IBUPROFÈNE 400MG', 'prix' => '1.800', 'quantite' => '20'],
