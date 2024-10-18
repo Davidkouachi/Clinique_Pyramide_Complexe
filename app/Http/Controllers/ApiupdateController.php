@@ -300,6 +300,12 @@ class ApiupdateController extends Controller
 
         if ($put) {
             $put->nom = $request->nom;
+            $put->email = $request->email;
+            $put->adresse = $request->adresse;
+            $put->fax = $request->fax;
+            $put->tel = $request->tel;
+            $put->tel2 = $request->tel2;
+            $put->sgeo = $request->sgeo;
 
             if ($put->save()) {
                 return response()->json(['success' => true]);

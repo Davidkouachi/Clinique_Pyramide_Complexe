@@ -731,7 +731,7 @@ class ApipdfController extends Controller
 
             $query = depotfacture::selectRaw('MIN(DATE(depotfactures.date1)) as min_date, MAX(DATE(depotfactures.date2)) as max_date');
 
-            if ($assurance_id) {
+            if ($assurance_id != 'tous') {
                 $query->where('depotfactures.assurance_id', '=', $assurance_id);
             }
 
@@ -791,8 +791,11 @@ class ApipdfController extends Controller
             ]); 
         }
 
-        $assurance_id = $request->assurance_id ?? null;
-        $assurance = assurance::find($request->assurance_id);
+        if ($request->assurance_id === 'tous') {
+            $assurance = null;
+        }else{
+            $assurance = assurance::find($request->assurance_id);
+        }
 
         $societes = societe::all();
         $result = [];
@@ -809,8 +812,8 @@ class ApipdfController extends Controller
                 ->whereBetween(DB::raw('DATE(consultations.created_at)'), [$date1, $date2])
                 ->where('societes.id', '=', $societe->id);
 
-                if ($assurance_id) {
-                    $fac_cons->where('assurances.id', '=', $assurance_id);
+                if ($request->assurance_id != 'tous') {
+                    $fac_cons->where('assurances.id', '=', $request->assurance_id);
                 }
 
                 $fac_cons = $fac_cons->select(
@@ -844,8 +847,8 @@ class ApipdfController extends Controller
                 ->whereBetween(DB::raw('DATE(examens.created_at)'), [$date1, $date2])
                 ->where('societes.id', '=', $societe->id);
 
-                if ($assurance_id) {
-                    $fac_exam->where('assurances.id', '=', $assurance_id);
+                if ($request->assurance_id != 'tous') {
+                    $fac_exam->where('assurances.id', '=', $request->assurance_id);
                 }
 
                 $fac_exam = $fac_exam->select(
@@ -868,8 +871,8 @@ class ApipdfController extends Controller
                 ->whereBetween(DB::raw('DATE(soinspatients.created_at)'), [$date1, $date2])
                 ->where('societes.id', '=', $societe->id);
 
-                if ($assurance_id) {
-                    $fac_soinsam->where('assurances.id', '=', $assurance_id);
+                if ($request->assurance_id != 'tous') {
+                    $fac_soinsam->where('assurances.id', '=', $request->assurance_id);
                 }
 
                 $fac_soinsam = $fac_soinsam->select(
@@ -903,8 +906,8 @@ class ApipdfController extends Controller
                 ->whereBetween(DB::raw('DATE(detailhopitals.created_at)'), [$date1, $date2])
                 ->where('societes.id', '=', $societe->id);
 
-                if ($assurance_id) {
-                    $fac_hopital->where('assurances.id', '=', $assurance_id);
+                if ($request->assurance_id != 'tous') {
+                    $fac_hopital->where('assurances.id', '=', $request->assurance_id);
                 }
 
                 $fac_hopital = $fac_hopital->select(
@@ -960,7 +963,7 @@ class ApipdfController extends Controller
                 ->join('factures', 'factures.id', '=', 'consultations.facture_id')
                 ->whereBetween(DB::raw('DATE(consultations.created_at)'), [$date1, $date2]);
 
-                if (!empty($request->assurance_id)) {
+                if ($request->assurance_id != 'tous') {
                     $fac_cons->where('patients.assurer', '=', 'oui')
                              ->where('assurances.id', '=', $request->assurance_id);
                 }
@@ -993,7 +996,7 @@ class ApipdfController extends Controller
                 ->join('factures', 'factures.id', '=', 'examens.facture_id')
                 ->whereBetween(DB::raw('DATE(examens.created_at)'), [$date1, $date2]);
 
-                if (!empty($request->assurance_id)) {
+                if ($request->assurance_id != 'tous') {
                     $fac_exam->where('patients.assurer', '=', 'oui')
                              ->where('assurances.id', '=', $request->assurance_id);
                 }
@@ -1018,7 +1021,7 @@ class ApipdfController extends Controller
                 ->join('factures', 'factures.id', '=', 'soinspatients.facture_id')
                 ->whereBetween(DB::raw('DATE(soinspatients.created_at)'), [$date1, $date2]);
 
-                if (!empty($request->assurance_id)) {
+                if ($request->assurance_id != 'tous') {
                     $fac_soinsam->where('patients.assurer', '=', 'oui')
                              ->where('assurances.id', '=', $request->assurance_id);
                 }
@@ -1054,7 +1057,7 @@ class ApipdfController extends Controller
                 ->join('factures', 'factures.id', '=', 'detailhopitals.facture_id')
                 ->whereBetween(DB::raw('DATE(detailhopitals.created_at)'), [$date1, $date2]);
 
-                if (!empty($request->assurance_id)) {
+                if ($request->assurance_id != 'tous') {
                     $fac_hopital->where('patients.assurer', '=', 'oui')
                              ->where('assurances.id', '=', $request->assurance_id);
                 }

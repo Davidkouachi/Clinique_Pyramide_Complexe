@@ -12,11 +12,11 @@ class societe extends Model
     protected $fillable = [
         'id',
         'nom',
-        // 'email',
-        // 'fax',
-        // 'tel',
-        // 'tel2',
-        // 'adresse',
-        // 'responsable',
+        'email',
+        'fax',
+        'tel',
+        'tel2',
+        'adresse',
+        'sgeo',
     ];
 }

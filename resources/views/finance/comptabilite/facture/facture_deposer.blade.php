@@ -11,7 +11,7 @@
             <a href="{{route('index_accueil')}}">Espace Santé</a>
         </li>
         <li class="breadcrumb-item text-primary" aria-current="page">
-            Nouveau Dépôt de facture
+            Factures
         </li>
     </ol>
 </div>
@@ -343,7 +343,7 @@
             document.body.insertAdjacentHTML('beforeend', preloader_ch);
 
             $.ajax({
-                url: '/api/paiement_depot_fac/' + id,
+                url: '/api/paiement_depot_fac/'+id,
                 method: 'GET',
                 data: {
                     date: date.value, 

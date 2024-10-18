@@ -133,7 +133,6 @@
                                 </button>
                             </div>
                         </div>
-                        <div class="p-2" id="div_alert" ></div>
                     </div>
                 </div>
             </div>

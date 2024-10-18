@@ -33,7 +33,7 @@
                             <div class="mb-3">
                                 <label class="form-label">Type</label>
                                 <select class="form-select" id="type">
-                                    <option value="tous">Selectionner</option>
+                                    <option value="tous">Tout</option>
                                     <option value="fac_deposer">
                                         Déposer
                                     </option>
@@ -165,8 +165,8 @@
 
             selectElement.innerHTML = '';
             const defaultOption = document.createElement('option');
-            defaultOption.value = '';
-            defaultOption.textContent = 'Selectionner';
+            defaultOption.value = 'tous';
+            defaultOption.textContent = 'Tout';
             selectElement.appendChild(defaultOption);
 
             fetch('/api/assurance_select_patient_new')
@@ -264,11 +264,6 @@
                     }
 
                     if (societes.length > 0) {
-
-                        document.getElementById('type').value = "tous";
-                        document.getElementById('assurance_id').value = "";
-                        document.getElementById('date1').value = "";
-                        document.getElementById('date2').value = "";
 
                         generatePDFInvoice(societes,assurance,date1,date2,type);
 

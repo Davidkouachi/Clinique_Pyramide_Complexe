@@ -143,8 +143,8 @@
 
             selectElement.innerHTML = '';
             const defaultOption = document.createElement('option');
-            defaultOption.value = '';
-            defaultOption.textContent = 'Selectionner';
+            defaultOption.value = 'tous';
+            defaultOption.textContent = 'Tout';
             selectElement.appendChild(defaultOption);
 
             fetch('/api/assurance_select_patient_new')

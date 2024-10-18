@@ -53,16 +53,21 @@ class ApiinsertController extends Controller
 {
     public function societe_new(Request $request)
     {
-        $name = $request->societe;
 
-        $verf = societe::where('nom', '=', $request->societe)->exists();
+        $verf = societe::where('nom', '=', $request->nom)->exists();
 
         if ($verf) {
             return response()->json(['warning' => true]);
         }
 
         $add = new societe();
-        $add->nom = $request->societe;
+        $add->nom = $request->nom;
+        $add->email = $request->email;
+        $add->adresse = $request->adresse;
+        $add->fax = $request->fax;
+        $add->tel = $request->tel;
+        $add->tel2 = $request->tel2;
+        $add->sgeo = $request->sgeo;
 
         if ($add->save()) {
             return response()->json(['success' => true]);

@@ -129,17 +129,18 @@ class DatabaseSeeder extends Seeder
                 ]);
             }
         }
-
-        $societe = ['MOOV CI', 'ORANGE CI', 'MTN CI', 'SGBCI'];
-        foreach ($societe as $value) {
-            societe::create(['nom' => $value]); 
-        }
         
         $assu1 = assurance::create(['nom' => 'SOGEMAD','email' => 'sogemad@gmail.com','tel' => '0757671653','fax' => '659625532', 'adresse' => 'COCODY RIVERA']);
 
         $assu2 = assurance::create(['nom' => 'MCI','email' => 'mci@gmail.com','tel' => '0757671689','fax' => '659684789', 'adresse' => 'COCODY RIVERA FAYA']);
 
         $assu3 = assurance::create(['nom' => 'MUGEFCI','email' => 'mugefci@gmail.com','tel' => '0759871689','fax' => '6786574789', 'adresse' => 'COCODY RIVERA M\'BADON']);
+
+        $societe1 = societe::create(['nom' => 'SOGEMAD','email' => 'sogemad@gmail.com','tel' => '0757671653', 'tel2' => '0757671653', 'fax' => '659625532', 'adresse' => 'COCODY RIVERA', 'sgeo' => 'COCODY RIVERA']);
+
+        $societe2 = societe::create(['nom' => 'MCI','email' => 'mci@gmail.com','tel' => '0757671689', 'tel2' => '0757671654', 'fax' => '659684789', 'adresse' => 'COCODY RIVERA FAYA', 'sgeo' => 'COCODY RIVERA']);
+
+        $societe3 = societe::create(['nom' => 'MUGEFCI','email' => 'mugefci@gmail.com','tel' => '0759871689', 'tel2' => '0757671655', 'fax' => '6786574789', 'adresse' => 'COCODY RIVERA M\'BADON', 'sgeo' => 'COCODY RIVERA']);
 
         $produitsPharmaceutiques = [
             ['nom' => 'PARACÉTAMOL 500MG', 'prix' => '1.500', 'quantite' => '20'],

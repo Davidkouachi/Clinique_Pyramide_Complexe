@@ -464,16 +464,54 @@
                                 <div class="card-header">
                                     <h5 class="card-title">Formulaire Nouvelle Scoiété</h5>
                                 </div>
-                                <div class="row gx-3 justify-content-center align-items-center">
-                                    <div class="col-xxl-6 col-lg-8 col-sm-10">
+                                <div class="row gx-3 ">
+                                    <div class="col-xxl-3 col-lg-4 col-sm-6">
                                         <div class="mb-3">
                                             <label class="form-label">Nom de la société</label>
-                                            <div class="input-group">
-                                                <input type="text" class="form-control" id="societe_new" placeholder="Saisie Obligatoire" oninput="this.value = this.value.toUpperCase()">
-                                                <button id="btn_eng_societe" class="btn btn-outline-success">
-                                                    Enregistrer
-                                                </button>
-                                            </div>
+                                            <input type="text" class="form-control" id="nom_societe" placeholder="Saisie Obligatoire" oninput="this.value = this.value.toUpperCase()">
+                                        </div>
+                                    </div>
+                                    <div class="col-xxl-3 col-lg-4 col-sm-6">
+                                        <div class="mb-3">
+                                            <label class="form-label">Email</label>
+                                            <input type="email" class="form-control" id="email_societe" placeholder="facultatif">
+                                        </div>
+                                    </div>
+                                    <div class="col-xxl-3 col-lg-4 col-sm-6">
+                                        <div class="mb-3">
+                                            <label class="form-label">Contact</label>
+                                            <input type="tel" class="form-control" id="tel_societe" placeholder="Saisie Obligatoire" maxlength="10">
+                                        </div>
+                                    </div>
+                                    <div class="col-xxl-3 col-lg-4 col-sm-6">
+                                        <div class="mb-3">
+                                            <label class="form-label">Contact 2</label>
+                                            <input type="tel" class="form-control" id="tel2_societe" placeholder="facultatif" maxlength="10">
+                                        </div>
+                                    </div>
+                                    <div class="col-xxl-3 col-lg-4 col-sm-6">
+                                        <div class="mb-3">
+                                            <label class="form-label">Adresse</label>
+                                            <input type="text" class="form-control" id="adresse_societe" placeholder="facultatif">
+                                        </div>
+                                    </div>
+                                    <div class="col-xxl-3 col-lg-4 col-sm-6">
+                                        <div class="mb-3">
+                                            <label class="form-label">Fax</label>
+                                            <input type="text" class="form-control" id="fax_societe" placeholder="facultatif">
+                                        </div>
+                                    </div>
+                                    <div class="col-xxl-3 col-lg-4 col-sm-6">
+                                        <div class="mb-3">
+                                            <label class="form-label">Situation Géographique</label>
+                                            <input type="text" class="form-control" id="sgeo_societe" placeholder="facultatif">
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-12 mb-3">
+                                        <div class="d-flex gap-2 justify-content-start">
+                                            <button id="btn_eng_societe" class="btn btn-outline-success">
+                                                Enregistrer
+                                            </button>
                                         </div>
                                     </div>
                                 </div>
@@ -504,7 +542,7 @@
                                     <div class="col-xxl-3 col-lg-4 col-sm-6">
                                         <div class="mb-3">
                                             <label class="form-label">Contact 2</label>
-                                            <input type="tel" class="form-control" id="tel2_assurance_new" placeholder="facultatif" maxlength="10">
+                                            <input type="tel" class="form-control" id="tel2_assurance_new" placeholder="Facultatif" maxlength="10">
                                         </div>
                                     </div>
                                     <div class="col-xxl-3 col-lg-4 col-sm-6">
@@ -731,7 +769,7 @@
 
         // ------------------------------------------------------------------
 
-        var inputs = ['tel_assurance_new', 'tel2_assurance_new', 'patient_tel_new', 'patient_tel2_new', 'taux_remise', 'montant_assurance', 'montant_patient']; // Array of element IDs
+        var inputs = ['tel_assurance_new', 'tel2_assurance_new', 'patient_tel_new', 'patient_tel2_new', 'taux_remise', 'montant_assurance', 'montant_patient','tel_societe','tel2_societe']; // Array of element IDs
         inputs.forEach(function(id) {
             var inputElement = document.getElementById(id); // Get each element by its ID
 
@@ -1442,10 +1480,29 @@
 
         function eng_societe()
         {
-            const societeInput = document.getElementById("societe_new");
+            const nom = document.getElementById("nom_societe");
+            const email = document.getElementById("email_societe");
+            const adresse = document.getElementById("adresse_societe");
+            const fax = document.getElementById("fax_societe");
+            const tel = document.getElementById("tel_societe");
+            const tel2 = document.getElementById("tel2_societe");
+            const sgeo = document.getElementById("sgeo_societe");
 
-            if(societeInput.value == ''){
-                showAlert('Alert', 'Veuillez saisie le nom de la société SVP.', 'warning');
+            if(!nom.value.trim() || !email.value.trim() || !adresse.value.trim() || !fax.value.trim() || !tel.value.trim() || !sgeo.value.trim())
+            {
+                showAlert('Alert', 'Veuillez remplir tous les champs SVP.', 'warning');
+                return false;
+            }
+
+            var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email.value.trim())) { 
+                showAlert('Alert', 'Email incorrect.','warning');
+                return false;
+            }
+
+
+            if (tel.value.length !== 10 || (tel2.value !== '' && tel2.value.length !== 10)) {
+                showAlert('Alert', 'Contact incomplet.','warning');
                 return false;
             }
 
@@ -1459,8 +1516,16 @@
 
             $.ajax({
                 url: '/api/societe_new',
-                method: 'GET',  // Use 'POST' for data creation
-                data: { societe: societeInput.value },
+                method: 'GET',
+                data: { 
+                    nom: nom.value,
+                    email: email.value,
+                    adresse: adresse.value,
+                    fax: fax.value,
+                    tel: tel.value,
+                    tel2: tel2.value || null,
+                    sgeo: sgeo.value,
+                },
                 success: function(response) {
                     var preloader = document.getElementById('preloader_ch');
                     if (preloader) {
@@ -1473,7 +1538,15 @@
                     } else if (response.error) {
                         showAlert('Alert', 'Une erreur est survenue lors de l\'enregistrement.','error');
                     }
-                    societeInput.value = '';
+
+                    nom.value = '';
+                    email.value = '';
+                    adresse.value = '';
+                    fax.value = '';
+                    tel.value = '';
+                    tel2.value = '';
+                    sgeo.value = '';
+
                     select_societe_patient();
                 },
                 error: function() {
@@ -1504,7 +1577,7 @@
             }
 
             var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            if (!emailRegex.test(email.value.trim())) {  // Use email.value.trim() to check the actual input
+            if (!emailRegex.test(email.value.trim())) { 
                 showAlert('Alert', 'Email incorrect.','warning');
                 return false;
             }

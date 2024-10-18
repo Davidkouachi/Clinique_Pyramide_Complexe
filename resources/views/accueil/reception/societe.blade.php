@@ -27,16 +27,54 @@
                     <h5 class="card-title">Formulaire Nouvelle Societe</h5>
                 </div>
                 <div class="card-body" >
-                    <div class="row gx-3 justify-content-center align-items-center">
-                        <div class="col-xxl-6 col-lg-8 col-sm-10">
+                    <div class="row gx-3">
+                        <div class="col-xxl-3 col-lg-4 col-sm-6">
                             <div class="mb-3">
                                 <label class="form-label">Nom de la société</label>
-                                <div class="input-group">
-                                    <input type="text" class="form-control" id="societe_new" placeholder="Saisie Obligatoire" oninput="this.value = this.value.toUpperCase()">
-                                    <button id="btn_eng" class="btn btn-outline-success">
-                                        Enregistrer
-                                    </button>
-                                </div>
+                                <input type="text" class="form-control" id="nom" placeholder="Saisie Obligatoire" oninput="this.value = this.value.toUpperCase()">
+                            </div>
+                        </div>
+                        <div class="col-xxl-3 col-lg-4 col-sm-6">
+                            <div class="mb-3">
+                                <label class="form-label">Email</label>
+                                <input type="email" class="form-control" id="email" placeholder="Saisie Obligatoire">
+                            </div>
+                        </div>
+                        <div class="col-xxl-3 col-lg-4 col-sm-6">
+                            <div class="mb-3">
+                                <label class="form-label">Contact</label>
+                                <input type="tel" class="form-control" id="tel" placeholder="Saisie Obligatoire" maxlength="10">
+                            </div>
+                        </div>
+                        <div class="col-xxl-3 col-lg-4 col-sm-6">
+                            <div class="mb-3">
+                                <label class="form-label">Contact 2</label>
+                                <input type="tel2" class="form-control" id="tel2" placeholder="facultatif" maxlength="10">
+                            </div>
+                        </div>
+                        <div class="col-xxl-3 col-lg-4 col-sm-6">
+                            <div class="mb-3">
+                                <label class="form-label">Adresse</label>
+                                <input type="text" class="form-control" id="adresse" placeholder="Saisie Obligatoire">
+                            </div>
+                        </div>
+                        <div class="col-xxl-3 col-lg-4 col-sm-6">
+                            <div class="mb-3">
+                                <label class="form-label">Fax</label>
+                                <input type="text" class="form-control" id="fax" placeholder="Saisie Obligatoire">
+                            </div>
+                        </div>
+                        <div class="col-xxl-3 col-lg-4 col-sm-6">
+                            <div class="mb-3">
+                                <label class="form-label">Situation Géographique</label>
+                                <input type="text" class="form-control" id="sgeo" placeholder="Saisie Obligatoire">
+                            </div>
+                        </div>
+                        <div class="col-sm-12 mb-3">
+                            <div class="d-flex gap-2 justify-content-start">
+                                <button id="btn_eng" class="btn btn-outline-success">
+                                    Enregistrer
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -66,6 +104,12 @@
                                     <tr>
                                         <th scope="col">N°</th>
                                         <th scope="col">Nom</th>
+                                        <th scope="col">Email</th>
+                                        <th scope="col">contact 1</th>
+                                        <th scope="col">contact 2</th>
+                                        <th scope="col">Adresse</th>
+                                        <th scope="col">Fax</th>
+                                        <th scope="col">Localisation</th>
                                         <th scope="col">Date de création</th>
                                         <th scope="col">Actions</th>
                                     </tr>
@@ -102,15 +146,36 @@
             </div>
             <div class="modal-body">
                 <form id="updateChambreForm">
-                    <div class="mb-3" id="alert_update">
-                        
-                    </div>
                     <input type="hidden" id="Id">
                     <div class="mb-3">
-                        <label class="form-label">Nom de l'acte</label>
+                        <label class="form-label">Nom</label>
                         <div class="input-group">
                             <input type="text" class="form-control" id="nomModif" oninput="this.value = this.value.toUpperCase()">
                         </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Email</label>
+                        <input type="email" class="form-control" id="emailModif" placeholder="Saisie Obligatoire">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Contact</label>
+                        <input type="tel" class="form-control" id="telModif" placeholder="Saisie Obligatoire" maxlength="10">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Contact 2</label>
+                        <input type="tel2" class="form-control" id="tel2Modif" placeholder="Facultatif" maxlength="10">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Adresse</label>
+                        <input type="text" class="form-control" id="adresseModif" placeholder="Saisie Obligatoire">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Fax</label>
+                        <input type="text" class="form-control" id="faxModif" placeholder="Saisie Obligatoire">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Situation Géographique</label>
+                        <input type="text" class="form-control" id="sgeoModif" placeholder="Saisie Obligatoire">
                     </div>
                 </form>
             </div>
@@ -145,8 +210,6 @@
     </div>
 </div>
 
-{{-- <script src="{{ asset('js/app.js') }}"></script> --}}
-{{-- <script src="https://unpkg.com/jspdf-invoice-template@1.4.4/dist/index.js"></script> --}}
 <script src="{{asset('assets/js/app/js/jspdfinvoicetemplate/dist/index.js')}}" ></script>
 <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
@@ -162,6 +225,25 @@
         document.getElementById("deleteBtn").addEventListener("click", deletee);
         document.getElementById("btn_refresh_table").addEventListener("click", list);
 
+        var inputs = ['tel', 'tel2','telModif', 'tel2Modif',]; // Array of element IDs
+        inputs.forEach(function(id) {
+            var inputElement = document.getElementById(id); // Get each element by its ID
+
+            // Allow only numeric input (and optionally some special keys like backspace or delete)
+            inputElement.addEventListener('keypress', function(event) {
+                const key = event.key;
+                // Allow numeric keys, backspace, and delete
+                if (!/[0-9]/.test(key) && key !== 'Backspace' && key !== 'Delete') {
+                    event.preventDefault();
+                }
+            });
+
+            // Alternatively, for more comprehensive input validation, use input event listener
+            inputElement.addEventListener('input', function() {
+                this.value = this.value.replace(/[^0-9]/g, ''); // Allow only numbers
+            });
+        });
+
         function showAlert(title, message, type) {
             Swal.fire({
                 title: title,
@@ -172,10 +254,29 @@
 
         function eng()
         {
-            const societeInput = document.getElementById("societe_new");
+            const nom = document.getElementById("nom");
+            const email = document.getElementById("email");
+            const adresse = document.getElementById("adresse");
+            const fax = document.getElementById("fax");
+            const tel = document.getElementById("tel");
+            const tel2 = document.getElementById("tel2");
+            const sgeo = document.getElementById("sgeo");
 
-            if(societeInput.value == ''){
-                showAlert('Alert', 'Veuillez saisie le nom de la société SVP.', 'warning');
+            if(!nom.value.trim() || !email.value.trim() || !adresse.value.trim() || !fax.value.trim() || !tel.value.trim() || !sgeo.value.trim())
+            {
+                showAlert('Alert', 'Veuillez remplir tous les champs SVP.', 'warning');
+                return false;
+            }
+
+            var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email.value.trim())) { 
+                showAlert('Alert', 'Email incorrect.','warning');
+                return false;
+            }
+
+
+            if (tel.value.length !== 10 || (tel2.value !== '' && tel2.value.length !== 10)) {
+                showAlert('Alert', 'Contact incomplet.','warning');
                 return false;
             }
 
@@ -190,7 +291,15 @@
             $.ajax({
                 url: '/api/societe_new',
                 method: 'GET',
-                data: { societe: societeInput.value },
+                data: { 
+                    nom: nom.value,
+                    email: email.value,
+                    adresse: adresse.value,
+                    fax: fax.value,
+                    tel: tel.value,
+                    tel2: tel2.value || null,
+                    sgeo: sgeo.value,
+                },
                 success: function(response) {
 
                     var preloader = document.getElementById('preloader_ch');
@@ -205,7 +314,13 @@
                         showAlert('Alert', 'Une erreur est survenue lors de l\'enregistrement.','error');
                     }
 
-                    societeInput.value = '';
+                    nom.value = '';
+                    email.value = '';
+                    adresse.value = '';
+                    fax.value = '';
+                    tel.value = '';
+                    tel2.value = '';
+                    sgeo.value = '';
 
                     list();
                 },
@@ -259,6 +374,12 @@
                                 row.innerHTML = `
                                     <td>${((currentPage - 1) * perPage) + index + 1}</td>
                                     <td>${item.nom}</td>
+                                    <td>${item.email}</td>
+                                    <td>${item.tel}</td>
+                                    <td>${item.tel2 || 'Néant'}</td>
+                                    <td>${item.adresse}</td>
+                                    <td>${item.fax}</td>
+                                    <td>${item.sgeo}</td>
                                     <td>${formatDateHeure(item.created_at)}</td>
                                     <td>
                                         <div class="d-inline-flex gap-1">
@@ -279,6 +400,12 @@
                                 {
                                     document.getElementById('Id').value = item.id;
                                     document.getElementById('nomModif').value = item.nom;
+                                    document.getElementById('emailModif').value = item.email;
+                                    document.getElementById('adresseModif').value = item.adresse;
+                                    document.getElementById('telModif').value = item.tel;
+                                    document.getElementById('tel2Modif').value = item.tel2;
+                                    document.getElementById('faxModif').value = item.fax;
+                                    document.getElementById('sgeoModif').value = item.sgeo;
                                 });
 
                                 // document.getElementById(`delete-${item.id}`).addEventListener('click', () => {
@@ -424,10 +551,29 @@
         function updatee() {
 
             const id = document.getElementById('Id').value;
-            const nom = document.getElementById('nomModif').value;
+            const nom = document.getElementById('nomModif');
+            const email = document.getElementById("emailModif");
+            const adresse = document.getElementById("adresseModif");
+            const fax = document.getElementById("faxModif");
+            const tel = document.getElementById("telModif");
+            const tel2 = document.getElementById("tel2Modif");
+            const sgeo = document.getElementById("sgeoModif");
 
-            if(!nom.trim()){
+            if(!nom.value.trim() || !email.value.trim() || !adresse.value.trim() || !fax.value.trim() || !tel.value.trim() || !sgeo.value.trim())
+            {
                 showAlert('Alert', 'Veuillez remplir tous les champs SVP.','warning');
+                return false;
+            }
+
+            var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email.value.trim())) { 
+                showAlert('Alert', 'Email incorrect.','warning');
+                return false;
+            }
+
+
+            if (tel.value.length !== 10 || (tel2.value !== '' && tel2.value.length !== 10)) {
+                showAlert('Alert', 'Contact incomplet.','warning');
                 return false;
             }
 
@@ -445,7 +591,15 @@
             $.ajax({
                 url: '/api/update_societe/'+id,
                 method: 'GET',
-                data: { nom: nom},
+                data: { 
+                    nom: nom.value,
+                    email: email.value,
+                    adresse: adresse.value,
+                    fax: fax.value,
+                    tel: tel.value,
+                    tel2: tel2.value || null,
+                    sgeo: sgeo.value,
+                },
                 success: function(response) {
 
                     var preloader = document.getElementById('preloader_ch');
