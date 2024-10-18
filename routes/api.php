@@ -162,6 +162,7 @@ Route::middleware(['statutchambre','dateRdv'])->group(function () {
 	Route::get('/statistique_examen', [ApistatController::class, 'statistique_examen']);
 	Route::get('/stat_comp_acte/{yearSelect}', [ApistatController::class, 'stat_comp_acte']);
 	Route::get('/stat_acte_mois/{date1}/{date2}', [ApistatController::class, 'stat_acte_mois']);
+	Route::get('/statistique_patient', [ApistatController::class, 'statistique_patient']);
 	// statistique fin
 
 	// List facture debut

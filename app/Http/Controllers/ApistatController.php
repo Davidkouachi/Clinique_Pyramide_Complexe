@@ -484,5 +484,20 @@ class ApistatController extends Controller
         ]);
     }
 
+    public function statistique_patient(Request $request)
+    {
+        $stat_h = patient::where('sexe', '=', 'M')->count();
+        $stat_f = patient::where('sexe', '=', 'Mme')->count();
+        $stat_a = patient::where('assurer', '=', 'oui')->count();
+        $stat_an = patient::where('assurer', '=', 'non')->count();
+
+        return response()->json([
+            'stat_h' => $stat_h ?? 0,
+            'stat_f' => $stat_f ?? 0,
+            'stat_a' => $stat_a ?? 0,
+            'stat_an' => $stat_an ?? 0,
+        ]);
+    }
+
 
 }

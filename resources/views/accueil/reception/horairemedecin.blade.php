@@ -22,7 +22,7 @@
 <div class="app-body">
     <div class="row gx-3 mb-3">
         <div class="col-xxl-12 col-sm-12">
-            <div class="card mb-3 bg-3">
+            <div class="card bg-3">
                 <div class="card-body" style="background: rgba(0, 0, 0, 0.7);">
                     <div class="py-4 px-3 text-white">
                         <h6>Bienvenue,</h6>
@@ -94,6 +94,9 @@
                         <div class="tab-content" id="customTabContent">
                             <div class="tab-pane fade" id="twoAAAL" role="tabpanel" aria-labelledby="tab-twoAAAL">
                                 <div class="card-header d-flex align-items-center justify-content-between">
+                                    <h5 class="card-title">
+                                        Liste des Rendez-Vous
+                                    </h5>
                                     <div class="d-flex">
                                         <select class="form-select me-1" id="statut_rdv">
                                             <option selected value="tous">Tous</option>
@@ -341,6 +344,7 @@
         document.getElementById("btn_update_rdv").addEventListener("click", update_rdv);
         document.getElementById("btn_refresh").addEventListener("click", refresh);
         document.getElementById("btn_refresh_table_rdv").addEventListener("click", list_rdv);
+        document.getElementById("statut_rdv").addEventListener("change", list_rdv);
         document.getElementById("btn_delete_rdv").addEventListener("click", delete_rdv);
         document.getElementById("close_M_rdv").addEventListener("click", close_M_rdv);
 

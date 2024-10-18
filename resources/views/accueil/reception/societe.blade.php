@@ -20,117 +20,148 @@
 @section('content')
 
 <div class="app-body">
-    <div class="row">
-        <div class="col-12">
-            <div class="card mb-3">
-                <div class="card-header">
-                    <h5 class="card-title">Formulaire Nouvelle Societe</h5>
-                </div>
-                <div class="card-body" >
-                    <div class="row gx-3">
-                        <div class="col-xxl-3 col-lg-4 col-sm-6">
-                            <div class="mb-3">
-                                <label class="form-label">Nom de la société</label>
-                                <input type="text" class="form-control" id="nom" placeholder="Saisie Obligatoire" oninput="this.value = this.value.toUpperCase()">
-                            </div>
-                        </div>
-                        <div class="col-xxl-3 col-lg-4 col-sm-6">
-                            <div class="mb-3">
-                                <label class="form-label">Email</label>
-                                <input type="email" class="form-control" id="email" placeholder="Saisie Obligatoire">
-                            </div>
-                        </div>
-                        <div class="col-xxl-3 col-lg-4 col-sm-6">
-                            <div class="mb-3">
-                                <label class="form-label">Contact</label>
-                                <input type="tel" class="form-control" id="tel" placeholder="Saisie Obligatoire" maxlength="10">
-                            </div>
-                        </div>
-                        <div class="col-xxl-3 col-lg-4 col-sm-6">
-                            <div class="mb-3">
-                                <label class="form-label">Contact 2</label>
-                                <input type="tel2" class="form-control" id="tel2" placeholder="facultatif" maxlength="10">
-                            </div>
-                        </div>
-                        <div class="col-xxl-3 col-lg-4 col-sm-6">
-                            <div class="mb-3">
-                                <label class="form-label">Adresse</label>
-                                <input type="text" class="form-control" id="adresse" placeholder="Saisie Obligatoire">
-                            </div>
-                        </div>
-                        <div class="col-xxl-3 col-lg-4 col-sm-6">
-                            <div class="mb-3">
-                                <label class="form-label">Fax</label>
-                                <input type="text" class="form-control" id="fax" placeholder="Saisie Obligatoire">
-                            </div>
-                        </div>
-                        <div class="col-xxl-3 col-lg-4 col-sm-6">
-                            <div class="mb-3">
-                                <label class="form-label">Situation Géographique</label>
-                                <input type="text" class="form-control" id="sgeo" placeholder="Saisie Obligatoire">
-                            </div>
-                        </div>
-                        <div class="col-sm-12 mb-3">
-                            <div class="d-flex gap-2 justify-content-start">
-                                <button id="btn_eng" class="btn btn-outline-success">
-                                    Enregistrer
-                                </button>
-                            </div>
-                        </div>
+    <div class="row gx-3">
+        <div class="col-xxl-12 col-sm-12">
+            <div class="card mb-3 bg-3">
+                <div class="card-body" style="background: rgba(0, 0, 0, 0.7);">
+                    <div class="py-4 px-3 text-white">
+                        <h6>Bienvenue,</h6>
+                        <h2>{{Auth::user()->sexe.'. '.Auth::user()->name}}</h2>
+                        <h5>Sociétes.</h5>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    <div class="row justify-content-center">
-        <div class="col-12">
+    <div class="row gx-3" >
+        <div class="col-sm-12">
             <div class="card mb-3">
-                <div class="card-header d-flex align-items-center justify-content-between">
-                    <h5 class="card-title">
-                        Liste des Sociétés
-                    </h5>
-                    <div class="d-flex">
-                        <input type="text" id="searchInput" placeholder="Société" class="form-control me-1">
-                        <a id="btn_refresh_table" class="btn btn-outline-info ms-auto">
-                            <i class="ri-loop-left-line"></i>
-                        </a>
-                    </div>
-                </div>
-                <div class="card-body">
-                    <div class="table-outer" id="div_Table" style="display: none;">
-                        <div class="table-responsive">
-                            <table class="table align-middle table-hover m-0 truncate" id="Table">
-                                <thead>
-                                    <tr>
-                                        <th scope="col">N°</th>
-                                        <th scope="col">Nom</th>
-                                        <th scope="col">Email</th>
-                                        <th scope="col">contact 1</th>
-                                        <th scope="col">contact 2</th>
-                                        <th scope="col">Adresse</th>
-                                        <th scope="col">Fax</th>
-                                        <th scope="col">Localisation</th>
-                                        <th scope="col">Date de création</th>
-                                        <th scope="col">Actions</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                </tbody>
-                            </table>
+                <div class="card-body" style="margin-top: -30px;">
+                    <div class="custom-tabs-container">
+                        <ul class="nav nav-tabs justify-content-center bg-primary bg-2" id="customTab4" role="tablist" style="background: rgba(0, 0, 0, 0.7);">
+                            <li class="nav-item" role="presentation">
+                                <a class="nav-link active text-white" id="tab-twoAAAN" data-bs-toggle="tab" href="#twoAAAN" role="tab" aria-controls="twoAAAN" aria-selected="false" tabindex="-1">
+                                    <i class="ri-home-7-line me-2"></i>
+                                    Nouvelle Société
+                                </a>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <a class="nav-link text-white" id="tab-twoAAA" data-bs-toggle="tab" href="#twoAAA" role="tab" aria-controls="twoAAA" aria-selected="false" tabindex="-1">
+                                    <i class="ri-building-4-line me-2"></i>
+                                    Liste des Sociétés
+                                </a>
+                            </li>
+                        </ul>
+                        <div class="tab-content" id="customTabContent">
+                            <div class="tab-pane active show fade" id="twoAAAN" role="tabpanel" aria-labelledby="tab-twoAAAN">
+                                <div class="card-header">
+                                    <h5 class="card-title">Formulaire Nouvelle Societe</h5>
+                                </div>
+                                <div class="card-body" >
+                                    <div class="row gx-3">
+                                        <div class="col-xxl-3 col-lg-4 col-sm-6">
+                                            <div class="mb-3">
+                                                <label class="form-label">Nom de la société</label>
+                                                <input type="text" class="form-control" id="nom" placeholder="Saisie Obligatoire" oninput="this.value = this.value.toUpperCase()">
+                                            </div>
+                                        </div>
+                                        <div class="col-xxl-3 col-lg-4 col-sm-6">
+                                            <div class="mb-3">
+                                                <label class="form-label">Email</label>
+                                                <input type="email" class="form-control" id="email" placeholder="Saisie Obligatoire">
+                                            </div>
+                                        </div>
+                                        <div class="col-xxl-3 col-lg-4 col-sm-6">
+                                            <div class="mb-3">
+                                                <label class="form-label">Contact</label>
+                                                <input type="tel" class="form-control" id="tel" placeholder="Saisie Obligatoire" maxlength="10">
+                                            </div>
+                                        </div>
+                                        <div class="col-xxl-3 col-lg-4 col-sm-6">
+                                            <div class="mb-3">
+                                                <label class="form-label">Contact 2</label>
+                                                <input type="tel2" class="form-control" id="tel2" placeholder="facultatif" maxlength="10">
+                                            </div>
+                                        </div>
+                                        <div class="col-xxl-3 col-lg-4 col-sm-6">
+                                            <div class="mb-3">
+                                                <label class="form-label">Adresse</label>
+                                                <input type="text" class="form-control" id="adresse" placeholder="Saisie Obligatoire">
+                                            </div>
+                                        </div>
+                                        <div class="col-xxl-3 col-lg-4 col-sm-6">
+                                            <div class="mb-3">
+                                                <label class="form-label">Fax</label>
+                                                <input type="text" class="form-control" id="fax" placeholder="Saisie Obligatoire">
+                                            </div>
+                                        </div>
+                                        <div class="col-xxl-3 col-lg-4 col-sm-6">
+                                            <div class="mb-3">
+                                                <label class="form-label">Situation Géographique</label>
+                                                <input type="text" class="form-control" id="sgeo" placeholder="Saisie Obligatoire">
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-12 mb-3">
+                                            <div class="d-flex gap-2 justify-content-start">
+                                                <button id="btn_eng" class="btn btn-outline-success">
+                                                    Enregistrer
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="tab-pane fade" id="twoAAA" role="tabpanel" aria-labelledby="tab-twoAAA">
+                                <div class="card-header d-flex align-items-center justify-content-between">
+                                    <h5 class="card-title">
+                                        Liste des Sociétés
+                                    </h5>
+                                    <div class="d-flex">
+                                        <input type="text" id="searchInput" placeholder="Société" class="form-control me-1">
+                                        <a id="btn_refresh_table" class="btn btn-outline-info ms-auto">
+                                            <i class="ri-loop-left-line"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="card-body">
+                                    <div class="table-outer" id="div_Table" style="display: none;">
+                                        <div class="table-responsive">
+                                            <table class="table align-middle table-hover m-0 truncate" id="Table">
+                                                <thead>
+                                                    <tr>
+                                                        <th scope="col">N°</th>
+                                                        <th scope="col">Nom</th>
+                                                        <th scope="col">Email</th>
+                                                        <th scope="col">contact 1</th>
+                                                        <th scope="col">contact 2</th>
+                                                        <th scope="col">Adresse</th>
+                                                        <th scope="col">Fax</th>
+                                                        <th scope="col">Localisation</th>
+                                                        <th scope="col">Date de création</th>
+                                                        <th scope="col">Actions</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                    <div id="message_Table" style="display: none;">
+                                        <p class="text-center">
+                                            Aucune société n'a été trouvée
+                                        </p>
+                                    </div>
+                                    <div id="div_Table_loader" style="display: none;">
+                                        <div class="d-flex justify-content-center align-items-center">
+                                            <div class="spinner-border text-warning me-2" role="status" aria-hidden="true"></div>
+                                            <strong>Chargement des données...</strong>
+                                        </div>
+                                    </div>
+                                    <div id="pagination-controls"></div>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                    <div id="message_Table" style="display: none;">
-                        <p class="text-center">
-                            Aucune société n'a été trouvée
-                        </p>
-                    </div>
-                    <div id="div_Table_loader" style="display: none;">
-                        <div class="d-flex justify-content-center align-items-center">
-                            <div class="spinner-border text-warning me-2" role="status" aria-hidden="true"></div>
-                            <strong>Chargement des données...</strong>
-                        </div>
-                    </div>
-                    <div id="pagination-controls"></div>
                 </div>
             </div>
         </div>

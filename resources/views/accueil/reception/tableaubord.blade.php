@@ -145,7 +145,7 @@
                         <div class="tab-content" id="customTabContent">
                             <div class="tab-pane fade active show" id="oneAAA" role="tabpanel" aria-labelledby="tab-oneAAA">
                                 <div class="card-header">
-                                    <h5 class="card-title text-center">Recherche</h5>
+                                    <h5 class="card-title text-center">Recherche du Patient</h5>
                                 </div>
                                 <div class="row gx-3">
                                     <div class="row gx-3 justify-content-center align-items-center" >
@@ -619,7 +619,7 @@
                             <strong>Chargement des données...</strong>
                         </div>
                     </div>
-                    <div id="pagination-controls" ></div>
+                    <div id="pagination-controls"></div>
                 </div>
             </div>
         </div>

@@ -30,6 +30,19 @@
 @section('content')
 
 <div class="app-body">
+    <div class="row gx-3">
+        <div class="col-xxl-12 col-sm-12">
+            <div class="card mb-3 bg-3">
+                <div class="card-body" style="background: rgba(0, 0, 0, 0.7);">
+                    <div class="py-4 px-3 text-white">
+                        <h6>Bienvenue,</h6>
+                        <h2>{{Auth::user()->sexe.'. '.Auth::user()->name}}</h2>
+                        <h5>Consultations.</h5>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
     <div class="row gx-3 mb-3" id="stat_consultation"></div>
     <div class="row gx-3">
         <div class="col-12">

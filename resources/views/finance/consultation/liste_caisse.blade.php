@@ -20,6 +20,9 @@
 @section('content')
 
 <div class="app-body">
+
+    @include('finance.btnListeFac')
+
     <div class="row justify-content-center">
         <div class="col-12">
             <div class="card mb-3">

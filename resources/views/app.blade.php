@@ -172,7 +172,17 @@
                                         <b>Tableau de Bord</b>
                                     </a>
                                 </li>
-                                <li @if(request()->routeIs('encaissement_cons','liste_caisse_cons','encaissement_hos','liste_caisse_hos','encaissement_soinsam','liste_caisse_soinsam','encaissement_examen','liste_caisse_examen')) class="active" @endif>
+                                <li>
+                                    <a @if(request()->routeIs('encaissement_cons','encaissement_hos','encaissement_soinsam','encaissement_examen')) class="text-primary" @endif href="{{route('encaissement_cons')}}">
+                                        <b>Facture Impayer</b>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a @if(request()->routeIs('liste_caisse_cons','liste_caisse_hos','liste_caisse_soinsam','liste_caisse_examen')) class="text-primary" @endif href="{{route('liste_caisse_cons')}}">
+                                        <b>Liste des Factures</b>
+                                    </a>
+                                </li>
+                                {{-- <li @if(request()->routeIs('encaissement_cons','liste_caisse_cons','encaissement_hos','liste_caisse_hos','encaissement_soinsam','liste_caisse_soinsam','encaissement_examen','liste_caisse_examen')) class="active" @endif>
                                     <a href="#!">
                                         <span class="menu-text">
                                             <b>Caisse</b>
@@ -237,7 +247,7 @@
                                             </ul>
                                         </li>
                                     </ul>
-                                </li>
+                                </li> --}}
                             </ul>
                         </li>
                         <li @if(request()->routeIs('facture_emise','facture_depot','facture_deposer')) class="active current-page treeview" @else class="treeview" @endif >
