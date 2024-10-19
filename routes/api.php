@@ -148,6 +148,10 @@ Route::middleware(['statutchambre','dateRdv'])->group(function () {
 	Route::get('/list_rdv/{statut}', [ApilistController::class, 'list_rdv']);
 	Route::get('/list_specialite', [ApilistController::class, 'list_specialite']);
 	Route::get('/list_depotfacture/{statut}', [ApilistController::class, 'list_depotfacture']);
+	Route::get('/list_cons_patient/{id}', [ApilistController::class, 'list_cons_patient']);
+	Route::get('/list_examend_patient/{id}', [ApilistController::class, 'list_examend_patient']);
+	Route::get('/list_hopital_patient/{id}', [ApilistController::class, 'list_hopital_patient']);
+	Route::get('/list_soinsam_patient/{id}', [ApilistController::class, 'list_soinsam_patient']);
 	// liste debut
 
 	// statistique debut
@@ -163,6 +167,7 @@ Route::middleware(['statutchambre','dateRdv'])->group(function () {
 	Route::get('/stat_comp_acte/{yearSelect}', [ApistatController::class, 'stat_comp_acte']);
 	Route::get('/stat_acte_mois/{date1}/{date2}', [ApistatController::class, 'stat_acte_mois']);
 	Route::get('/statistique_patient', [ApistatController::class, 'statistique_patient']);
+	Route::get('/patient_stat/{id}', [ApistatController::class, 'patient_stat']);
 	// statistique fin
 
 	// List facture debut

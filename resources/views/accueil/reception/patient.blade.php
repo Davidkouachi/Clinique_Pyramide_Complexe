@@ -240,18 +240,21 @@
                                 </div>
                             </div>
                             <div class="tab-pane fade" id="twoRech" role="tabpanel" aria-labelledby="tab-twoRech">
-                                <div class="card-header">
-                                    <h5 class="card-title text-center">Recherche du Patient</h5>
-                                </div>
                                 <div class="row gx-3">
                                     <div class="row gx-3 justify-content-center align-items-center" >
                                         <div class="col-xxl-4 col-lg-4 col-sm-6">
+                                            <div class=" mb-3">
+                                                <div class="card-body">
+                                                    <div class="text-center">
+                                                        <a class="d-flex align-items-center flex-column">
+                                                            <img src="{{asset('assets/images/user7.png')}}" class="img-7x rounded-circle mb-3 border border-3">
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                            </div>
                                             <div class="mb-3">
-                                                <label class="form-label">
-                                                    Nom du patient
-                                                </label>
                                                 <div class="input-group">
-                                                    <input type="text" class="form-control" id="name_rech" placeholder="Saisie Obligatoire" autocomplete="off">
+                                                    <input type="text" class="form-control text-center" id="nameRech" placeholder="Nom du patient" autocomplete="off">
                                                 </div>
                                                 <div class="input-group">
                                                     <div class="suggestions w-100" id="suggestions" style="display: none;"></div>
@@ -259,9 +262,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-sm-12" id="div_info_patient">
-                                    </div>
-                                    <div class="col-sm-12" id="div_stat_patient">
+                                    <div class="col-sm-12 mt-5" id="div_info_patient">
                                     </div>
                                 </div>
                             </div>
@@ -284,6 +285,219 @@
             </div>
             <div class="modal-body" id="modal_detailP">
                 
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="Detailexam" tabindex="-1" aria-modal="true" role="dialog">
+    <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    Examens Demandés
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-xl-12">
+                        <div class="">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-12">
+                                        <div class="table-responsive" id="div_Tableexam" style="display: none;">
+                                            <table class="table table-bordered" id="Tableexam">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Examen</th>
+                                                        <th>Cotation</th>
+                                                        <th>Prix</th>
+                                                        <th>Accepté ?</th>
+                                                        <th>Total</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <div id="message_Tableexam" style="display: none;">
+                                            <p class="text-center" >
+                                                Aucun Produit utilisé pour le moment
+                                            </p>
+                                        </div>
+                                        <div id="div_Table_loaderexam" style="display: none;">
+                                            <div class="d-flex justify-content-center align-items-center">
+                                                <div class="spinner-border text-warning me-2" role="status" aria-hidden="true"></div>
+                                                <strong>Chargement des données...</strong>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="Detailhos" tabindex="-1" aria-labelledby="exampleModalCenteredScrollableTitle" aria-modal="true" role="dialog">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    Détail
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" id="modal_detailhos"></div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="Detail_produithos" tabindex="-1" aria-modal="true" role="dialog">
+    <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    Produit Pharmacie Utilisé
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-xl-12">
+                        <div class="">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-12">
+                                        <div class="table-responsive" id="div_Tablehos" style="display: none;">
+                                            <table class="table table-bordered" id="Tablehos">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Produit utilisé</th>
+                                                        <th style="width: 150px;" >Prix unitaire</th>
+                                                        <th style="width: 50px;" >Quantité</th>
+                                                        <th style="width: 150px;" >Prix</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <div id="message_Tablehos" style="display: none;">
+                                            <p class="text-center" >
+                                                Aucun Produit utilisé pour le moment
+                                            </p>
+                                        </div>
+                                        <div id="div_Table_loaderhos" style="display: none;">
+                                            <div class="d-flex justify-content-center align-items-center">
+                                                <div class="spinner-border text-warning me-2" role="status" aria-hidden="true"></div>
+                                                <strong>Chargement des données...</strong>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="Detail_produitsoinsam" tabindex="-1" aria-modal="true" role="dialog">
+    <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    Détail Soins Infirmiers et Produits Utilisés
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-xl-12">
+                        <div class="">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-12">
+                                        <div class="table-responsive" id="div_Tablesoinsamp" style="display: none;">
+                                            <!-- Tableau Soins Infirmiers -->
+                                            <table class="table table-bordered" id="Tablesoinsamp">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Soins Infirmiers</th>
+                                                        <th style="width: 250px;">Prix</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                </tbody>
+                                            </table>
+                                        </div>
+
+                                        <div class="table-responsive" id="div_TableProdsoinsamp" style="display: none;">
+                                            <!-- Tableau Produits Utilisés -->
+                                            <table class="table table-bordered" id="TableProdsoinsamp">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Produits Utilisés</th>
+                                                        <th style="width: 200px;">Prix Unitaire</th>
+                                                        <th style="width: 50px;" >Quantité</th>
+                                                        <th style="width: 200px;">Prix Total</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                </tbody>
+                                            </table>
+                                        </div>
+
+                                        <div id="message_Tablesoinsamp" style="display: none;">
+                                            <p class="text-center" >
+                                                Aucun détail pour le moment
+                                            </p>
+                                        </div>
+                                        <div id="div_Table_loadersoinsamp" style="display: none;">
+                                            <div class="d-flex justify-content-center align-items-center">
+                                                <div class="spinner-border text-warning me-2" role="status" aria-hidden="true"></div>
+                                                <strong>Chargement des données...</strong>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="Detailsoinsam" tabindex="-1" aria-labelledby="exampleModalCenteredScrollableTitle" aria-modal="true" role="dialog">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    Détails
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" id="modal_detailsoinsamd" style="display: none;">
+            </div>
+            <div id="message_detailsoinsamd" style="display: none;">
+                <p class="text-center" >
+                    Aucun détail pour le moment
+                </p>
+            </div>
+            <div id="div_detail_loadersoinsamd" style="display: none;">
+                <div class="d-flex justify-content-center align-items-center">
+                    <div class="spinner-border text-warning me-2" role="status" aria-hidden="true"></div>
+                    <strong>Chargement des données...</strong>
+                </div>
             </div>
         </div>
     </div>
@@ -350,6 +564,30 @@
                 document.getElementById("div_assurer").style.display = "none";
             }
         });
+
+        function formatPrice(price) {
+
+            // Convert to float and round to the nearest whole number
+            let number = Math.round(parseFloat(price));
+            if (isNaN(number)) {
+                return '';
+            }
+
+            // Format the number with dot as thousands separator
+            return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+        }
+
+        function formatPriceT(price) {
+
+            // Convert to float and round to the nearest whole number
+            let number = Math.round(parseInt(price));
+            if (isNaN(number)) {
+                return '';
+            }
+
+            // Format the number with dot as thousands separator
+            return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+        }
 
         function addGroup(data) {
 
@@ -621,7 +859,6 @@
                     divAssurer.style.display = "none";
 
                     listP();
-                    Statistique();
 
                 },
                 error: function() {
@@ -758,6 +995,11 @@
                                                                 <li class="list-group-item">
                                                                     Assurer : ${item.assurer ? item.assurer : 'Néant'}
                                                                 </li>
+                                                                ${item.assurer == 'oui' ? 
+                                                                `<li class="list-group-item">
+                                                                    Société : ${item.societe ? item.societe : 'Néant'}
+                                                                </li>` : ``}
+
                                                             </ul>
                                                         </div>
                                                     </div>
@@ -1083,7 +1325,7 @@
                     const data = response.name;
 
                     // Élément de l'input et autres éléments HTML
-                    const input = document.getElementById('name_rech');
+                    const input = document.getElementById('nameRech');
                     const suggestionsDiv = document.getElementById('suggestions');
 
                     function displaySuggestions() {
@@ -1135,147 +1377,1597 @@
 
         function addGroup(data) {
 
-            var dynamicFields = document.getElementById("div_info_patient");
-            while (dynamicFields.firstChild) {
-                dynamicFields.removeChild(dynamicFields.firstChild);
-            }
+            const item = data;
 
-            var groupe = document.createElement("div");
-            groupe.className = "row gx-3";
-            groupe.innerHTML = `
-                <div class="col-xxl-3 col-lg-4 col-sm-6">
-                    <div class="mb-3">
-                        <label class="form-label" for="email">Email</label>
-                        <input value="${data.email ? data.email : `Néant` }" readonly class="form-control">
-                    </div>
-                </div>
-                <div class="col-xxl-3 col-lg-4 col-sm-6">
-                    <div class="mb-3">
-                        <label class="form-label" for="tel">Contact 1</label>
-                        <input value="+225 ${data.tel}" readonly class="form-control">
-                    </div>
-                </div>
-                <div class="col-xxl-3 col-lg-4 col-sm-6">
-                    <div class="mb-3">
-                        <label class="form-label" for="email">Contact 2</label>
-                        <input value="${data.tel2 ? `+225 `+data.tel2 : `Néant` }" readonly class="form-control">
-                    </div>
-                </div>
-                <div class="col-xxl-3 col-lg-4 col-sm-6">
-                    <div class="mb-3">
-                        <label class="form-label">Assurer</label>
-                        <input value="${data.assurer}" readonly class="form-control">
-                    </div>
+            const dynamicFields = document.getElementById("div_info_patient");
+            dynamicFields.innerHTML = "";
+
+            //--------------------------------------------------------------
+
+            var charge = `
+                <div class="d-flex justify-content-center align-items-center" id="laoder_stat">
+                    <div class="spinner-border text-warning me-2" role="status" aria-hidden="true"></div>
+                    <strong>Chargement des données...</strong>
                 </div>
             `;
+            dynamicFields.innerHTML = charge;
 
-            if (data.assurer === 'oui') {
-                groupe.innerHTML += `
-                    <div class="col-xxl-3 col-lg-4 col-sm-6">
-                        <div class="mb-3">
-                            <label class="form-label" for="adresse">Assurance</label>
-                            <input value="${data.assurance}" readonly class="form-control" placeholder="Néant">
-                        </div>
-                    </div>
-                    <div class="col-xxl-3 col-lg-4 col-sm-6">
-                        <div class="mb-3">
-                            <label class="form-label">Taux</label>
-                            <div class="input-group">      
-                                <input id="patient_taux" value="${data.taux}" readonly class="form-control" placeholder="Néant">
-                                <span class="input-group-text">%</span>
+            const url = `/api/patient_stat/${item.id}`;
+
+            fetch(url)
+                .then(response => response.json())
+                .then(data => {
+
+                    var loader = document.getElementById('laoder_stat');
+                    if (loader) loader.remove();
+
+                    //--------------------------------------------------
+
+                    const nbre_cons = data.nbre_cons;
+                    const nbre_hos = data.nbre_hos;
+                    const nbre_exam = data.nbre_exam;
+                    const nbre_soinsam = data.nbre_soinsam;
+                    const stats = data.data;
+                    const payer = data.fac_patient_payer;
+                    const impayer = data.fac_patient_impayer;
+                    const total = data.fac_patient_total;
+
+                    //--------------------------------------------------
+
+                    var groupe = document.createElement("div");
+                    groupe.className = "row gx-3";
+                    groupe.innerHTML = `
+                        <div class="col-xxl-3 col-lg-4 col-sm-6">
+                            <div class="mb-3">
+                                <label class="form-label" for="email">N° Dossier</label>
+                                <input value="${item.matricule ? 'P-'+item.matricule : `Néant` }" readonly class="form-control">
                             </div>
                         </div>
-                    </div>
-                    <div class="col-xxl-3 col-lg-4 col-sm-6">
-                        <div class="mb-3">
-                            <label class="form-label" for="adresse">Société</label>
-                            <input value="${data.societe}" readonly class="form-control" placeholder="Néant">
-                        </div>
-                    </div>
-                `;
-            }else{
-                groupe.innerHTML += `
-                    <div class="col-xxl-3 col-lg-4 col-sm-6">
-                        <div class="mb-3">
-                            <label class="form-label" for="adresse">Assurance</label>
-                            <input value="Aucun" readonly class="form-control" placeholder="Néant">
-                        </div>
-                    </div>
-                    <div class="col-xxl-3 col-lg-4 col-sm-6">
-                        <div class="mb-3">
-                            <label class="form-label" for="adresse">Taux</label>
-                            <div class="input-group">      
-                                <input id="patient_taux" value="0" readonly class="form-control" placeholder="Néant">
-                                <span class="input-group-text">%</span>
+                        <div class="col-xxl-3 col-lg-4 col-sm-6">
+                            <div class="mb-3">
+                                <label class="form-label" for="email">Email</label>
+                                <input value="${item.email ? item.email : `Néant` }" readonly class="form-control">
                             </div>
                         </div>
-                    </div>
-                    <div class="col-xxl-3 col-lg-4 col-sm-6">
-                        <div class="mb-3">
-                            <label class="form-label" for="adresse">Société</label>
-                            <input value="Aucune" readonly class="form-control" placeholder="Néant">
-                        </div>
-                    </div>
-                `;
-            }
-
-            dynamicFields.appendChild(groupe);
-        }
-
-        function addStat(data) {
-
-            var dynamicFields = document.getElementById("div_stat_patient");
-            while (dynamicFields.firstChild) {
-                dynamicFields.removeChild(dynamicFields.firstChild);
-            }
-
-            var groupe = document.createElement("div");
-            groupe.className = "row gx-3";
-            groupe.innerHTML = `
-                <div class="col-sm-12">
-                    <div class=" mb-3">
-                        <div class="card-body">
-                            <div class="card-header d-flex justify-content-center m">
-                                <h5 class="card-title">
-                                    Liste des actes éffectués
-                                </h5>
+                        <div class="col-xxl-3 col-lg-4 col-sm-6">
+                            <div class="mb-3">
+                                <label class="form-label" for="tel">Contact 1</label>
+                                <input value="+225 ${item.tel}" readonly class="form-control">
                             </div>
-                            <div class="custom-tabs-container">
-                                <ul class="nav nav-tabs justify-content-center" id="customTab4" role="tablist">
-                                    <li class="nav-item" role="presentation">
-                                        <a class="nav-link active" id="tab-one1" data-bs-toggle="tab" href="#one1" role="tab" aria-controls="one1" aria-selected="false" tabindex="-1">Consultations</a>
-                                    </li>
-                                    <li class="nav-item" role="presentation">
-                                        <a class="nav-link" id="tab-one2" data-bs-toggle="tab" href="#one2" role="tab" aria-controls="one2" aria-selected="false" tabindex="-1">Examens</a>
-                                    </li>
-                                    <li class="nav-item" role="presentation">
-                                        <a class="nav-link" id="tab-one3" data-bs-toggle="tab" href="#one3" role="tab" aria-controls="one3" aria-selected="true">Hospitalisations</a>
-                                    </li>
-                                    <li class="nav-item" role="presentation">
-                                        <a class="nav-link" id="tab-one4" data-bs-toggle="tab" href="#one4" role="tab" aria-controls="one4" aria-selected="true">Soins Ambulatoires</a>
-                                    </li>
-                                </ul>
-                                <div class="tab-content" id="customTabContent">
-                                    <div class="tab-pane fade active show" id="one1" role="tabpanel" aria-labelledby="tab-one1">
-                                        Row starts 1
+                        </div>
+                        <div class="col-xxl-3 col-lg-4 col-sm-6">
+                            <div class="mb-3">
+                                <label class="form-label" for="email">Contact 2</label>
+                                <input value="${item.tel2 ? `+225 `+item.tel2 : `Néant` }" readonly class="form-control">
+                            </div>
+                        </div>
+                        <div class="col-xxl-3 col-lg-4 col-sm-6">
+                            <div class="mb-3">
+                                <label class="form-label" for="email">Adresse</label>
+                                <input value="${item.adresse ? item.adresse : `Néant` }" readonly class="form-control">
+                            </div>
+                        </div>
+                        <div class="col-xxl-3 col-lg-4 col-sm-6">
+                            <div class="mb-3">
+                                <label class="form-label">Assurer</label>
+                                <input value="${item.assurer}" readonly class="form-control">
+                            </div>
+                        </div>
+                    `;
+
+                    if (item.assurer === 'oui') {
+                        groupe.innerHTML += `
+                            <div class="col-xxl-3 col-lg-4 col-sm-6">
+                                <div class="mb-3">
+                                    <label class="form-label" for="adresse">Assurance</label>
+                                    <input value="${item.assurance}" readonly class="form-control" placeholder="Néant">
+                                </div>
+                            </div>
+                            <div class="col-xxl-3 col-lg-4 col-sm-6">
+                                <div class="mb-3">
+                                    <label class="form-label">Taux</label>
+                                    <div class="input-group">      
+                                        <input id="patient_taux" value="${item.taux}" readonly class="form-control" placeholder="Néant">
+                                        <span class="input-group-text">%</span>
                                     </div>
-                                    <div class="tab-pane fade" id="one2" role="tabpanel" aria-labelledby="tab-one2">
-                                        Row starts 2
+                                </div>
+                            </div>
+                            <div class="col-xxl-3 col-lg-4 col-sm-6">
+                                <div class="mb-3">
+                                    <label class="form-label" for="adresse">Société</label>
+                                    <input value="${item.societe}" readonly class="form-control" placeholder="Néant">
+                                </div>
+                            </div>
+                        `;
+                    }
+
+                    groupe.innerHTML += `
+                        <div class="col-xxl-3 col-lg-4 col-sm-6">
+                            <div class="mb-3">
+                                <label class="form-label" for="adresse">Date de création</label>
+                                <input value="${formatDateHeure(item.created_at)}" readonly class="form-control" placeholder="Néant">
+                            </div>
+                        </div>
+                    `;
+
+                    dynamicFields.appendChild(groupe);
+
+                    //--------------------------------------------------
+
+                    var groupe1 = document.createElement("div");
+                    groupe1.className = "row gx-3";
+                    groupe1.innerHTML = `
+                        <div class=" mb-0">
+                            <div class="card-body">
+                                <div class="card-header d-flex flex-column justify-content-center align-items-center">
+                                    <h5 class="card-title mb-3">
+                                        Statistique des actes éffectués
+                                    </h5>
+                                </div>
+                                <div class="row gx-3 d-flex align-items-center justify-content-center">
+                                    <div class="mb-3 w-25">
+                                        <div class="border rounded-2 d-flex align-items-center justify-content-center flex-row p-2">
+                                            <div class="text-center">
+                                                <div class="d-flex align-items-center">
+                                                    <h4 class="m-0 fw-bold text-primary">
+                                                        ${formatPriceT(total)} Fcfa
+                                                    </h4>
+                                                </div>
+                                                <small>Montant Total</small>
+                                            </div>
+                                        </div>
                                     </div>
-                                    <div class="tab-pane fade" id="one3" role="tabpanel" aria-labelledby="tab-one3">
-                                        Row starts 3
+                                    <div class="mb-3 w-25">
+                                        <div class="border rounded-2 d-flex align-items-center justify-content-center flex-row p-2">
+                                            <div class="text-center">
+                                                <div class="d-flex align-items-center">
+                                                    <h4 class="m-0 fw-bold text-success">
+                                                        ${formatPriceT(payer)} Fcfa
+                                                    </h4>
+                                                </div>
+                                                <small>Montant Payer</small>
+                                            </div>
+                                        </div>
                                     </div>
-                                    <div class="tab-pane fade" id="one4" role="tabpanel" aria-labelledby="tab-one4">
-                                        Row starts 4
+                                    <div class="mb-3 w-25">
+                                        <div class="border rounded-2 d-flex align-items-center justify-content-center flex-row p-2">
+                                            <div class="text-center">
+                                                <div class="d-flex align-items-center">
+                                                    <h4 class="m-0 fw-bold text-danger">
+                                                        ${formatPriceT(impayer)} Fcfa
+                                                    </h4>
+                                                </div>
+                                                <small>Montant Impayer</small>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                </div>
-            `;
+                    `;
+                    dynamicFields.appendChild(groupe1);
 
-            dynamicFields.appendChild(groupe);
+                    //--------------------------------------------------
+
+                    var groupe01 = document.createElement("div");
+                    groupe01.className = "row gx-3 stat_acte";
+                    dynamicFields.appendChild(groupe01);
+
+                    groupe01.innerHTML = '';
+                    const cardData_acte = [
+                        { label: "Consultations", count: nbre_cons, icon: "ri-lungs-line", colorClass: "text-success", borderColor: "border-success", bgColor: "bg-success", mTotal : formatPrice(stats.m_cons.total_general), pTotal : formatPrice(stats.m_cons.total_payer), ipTotal : formatPrice(stats.m_cons.total_impayer), assurance : formatPrice(stats.m_cons.part_assurance), patient : formatPrice(stats.m_cons.part_patient)},
+                        { label: "Examens", count: nbre_exam, icon: "ri-medicine-bottle-line", colorClass: "text-danger", borderColor: "border-danger", bgColor: "bg-danger", mTotal : formatPrice(stats.m_exam.total_general), pTotal : formatPrice(stats.m_exam.total_payer), ipTotal : formatPrice(stats.m_exam.total_impayer), assurance : formatPrice(stats.m_exam.part_assurance), patient : formatPrice(stats.m_exam.part_patient)},
+                        { label: "Hospitalisations", count: nbre_hos, icon: "ri-hotel-bed-line", colorClass: "text-primary", borderColor: "border-primary", bgColor: "bg-primary", mTotal : formatPrice(stats.m_hos.total_general), pTotal : formatPrice(stats.m_hos.total_payer), ipTotal : formatPrice(stats.m_hos.total_impayer), assurance : formatPrice(stats.m_hos.part_assurance), patient : formatPrice(stats.m_hos.part_patient)},
+                        { label: "Soins Ambulatoires", count: nbre_soinsam, icon: "ri-dossier-line", colorClass: "text-warning", borderColor: "border-warning", bgColor: "bg-warning", mTotal : formatPrice(stats.m_soinsam.total_general), pTotal : formatPrice(stats.m_soinsam.total_payer), ipTotal : formatPrice(stats.m_soinsam.total_impayer), assurance : formatPrice(stats.m_soinsam.part_assurance), patient : formatPrice(stats.m_soinsam.part_patient)},
+                    ];
+
+                    cardData_acte.forEach(card => {
+                        const div = document.createElement('div');
+                        div.className = "col-xl-3 col-sm-6 col-12";
+                        div.innerHTML = `
+                            <div class="border rounded-2 d-flex align-items-center flex-row p-2">
+                                <div class="card-body">
+                                    <div class="d-flex align-items-center">
+                                        <div class="p-2 ${card.borderColor} rounded-circle me-3">
+                                            <div class="icon-box md ${card.bgColor} rounded-5">
+                                                <i class="${card.icon} fs-4 text-white"></i>
+                                            </div>
+                                        </div>
+                                        <div class="d-flex flex-column">
+                                            <h2 class="lh-1">${card.count}</h2>
+                                            <p class="m-0">${card.label}</p>
+                                        </div>
+                                    </div>
+                                    <div class="d-flex align-items-end justify-content-between mt-1">
+                                        <a class="${card.colorClass}" href="javascript:void(0);">
+                                            <span>Montant Total</span>
+                                            <i class="ri-arrow-right-line ${card.colorClass} ms-1"></i>
+                                        </a>
+                                        <div class="text-end">
+                                            <p class="mb-0 ${card.colorClass}">${card.mTotal} Fcfa</p>
+                                        </div>
+                                    </div>
+                                    <div class="d-flex align-items-end justify-content-between mt-1">
+                                        <a class="${card.colorClass}" href="javascript:void(0);">
+                                            <span>Montant Réglé</span>
+                                            <i class="ri-arrow-right-line ${card.colorClass} ms-1"></i>
+                                        </a>
+                                        <div class="text-end">
+                                            <p class="mb-0 ${card.colorClass}">${card.pTotal} Fcfa</p>
+                                        </div>
+                                    </div>
+                                    <div class="d-flex align-items-end justify-content-between mt-1">
+                                        <a class="${card.colorClass}" href="javascript:void(0);">
+                                            <span>Montant Non-Réglé</span>
+                                            <i class="ri-arrow-right-line ${card.colorClass} ms-1"></i>
+                                        </a>
+                                        <div class="text-end">
+                                            <p class="mb-0 ${card.colorClass}">${card.ipTotal} Fcfa</p>
+                                        </div>
+                                    </div>
+                                    <div class="d-flex align-items-end justify-content-between mt-1">
+                                        <a class="${card.colorClass}" href="javascript:void(0);">
+                                            <span>Part Assurance</span>
+                                            <i class="ri-arrow-right-line ${card.colorClass} ms-1"></i>
+                                        </a>
+                                        <div class="text-end">
+                                            <p class="mb-0 ${card.colorClass}">${card.assurance} Fcfa</p>
+                                        </div>
+                                    </div>
+                                    <div class="d-flex align-items-end justify-content-between mt-1">
+                                        <a class="${card.colorClass}" href="javascript:void(0);">
+                                            <span>Part Patient</span>
+                                            <i class="ri-arrow-right-line ${card.colorClass} ms-1"></i>
+                                        </a>
+                                        <div class="text-end">
+                                            <p class="mb-0 ${card.colorClass}">${card.patient} Fcfa</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                        groupe01.appendChild(div);
+                    });
+
+                    //--------------------------------------------------
+
+                    var groupe2 = document.createElement("div");
+                    groupe2.className = "row gx-3";
+                    groupe2.innerHTML = `
+                        <div class="col-sm-12">
+                            <div class=" mb-3">
+                                <div class="card-body">
+                                    <div class="card-header d-flex justify-content-center m">
+                                        <h5 class="card-title">
+                                            Liste des actes éffectués
+                                        </h5>
+                                    </div>
+                                    <div class="custom-tabs-container">
+                                        <ul class="nav nav-tabs justify-content-center" id="customTab4" role="tablist">
+                                            <li class="nav-item" role="presentation">
+                                                <a class="nav-link active" id="tab-one1" data-bs-toggle="tab" href="#one1" role="tab" aria-controls="one1" aria-selected="false" tabindex="-1">Consultations</a>
+                                            </li>
+                                            <li class="nav-item" role="presentation">
+                                                <a class="nav-link" id="tab-one2" data-bs-toggle="tab" href="#one2" role="tab" aria-controls="one2" aria-selected="false" tabindex="-1">Examens</a>
+                                            </li>
+                                            <li class="nav-item" role="presentation">
+                                                <a class="nav-link" id="tab-one3" data-bs-toggle="tab" href="#one3" role="tab" aria-controls="one3" aria-selected="true">Hospitalisations</a>
+                                            </li>
+                                            <li class="nav-item" role="presentation">
+                                                <a class="nav-link" id="tab-one4" data-bs-toggle="tab" href="#one4" role="tab" aria-controls="one4" aria-selected="true">Soins Ambulatoires</a>
+                                            </li>
+                                        </ul>
+                                        <div class="tab-content" id="customTabContent">
+                                            <div class="tab-pane fade active show" id="one1" role="tabpanel" aria-labelledby="tab-one1">
+                                                <div class="card-body">
+                                                    <div class="table-outer" id="div_TableC" style="display: none;">
+                                                        <div class="table-responsive">
+                                                            <table class="table align-middle table-hover m-0 truncate" id="TableC">
+                                                                <thead>
+                                                                    <tr>
+                                                                        <th scope="col">N°</th>
+                                                                        <th scope="col">Code</th>
+                                                                        <th scope="col">Médecin</th>
+                                                                        <th scope="col">Spécialité</th>
+                                                                        <th scope="col">Prix</th>
+                                                                        <th scope="col">Date et Heure</th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody>
+                                                                </tbody>
+                                                            </table>
+                                                        </div>
+                                                    </div>
+                                                    <div id="message_TableC" style="display: none;">
+                                                        <p class="text-center">
+                                                            Aucune Consultation n'a été trouvée
+                                                        </p>
+                                                    </div>
+                                                    <div id="div_Table_loaderC" style="display: none;">
+                                                        <div class="d-flex justify-content-center align-items-center">
+                                                            <div class="spinner-border text-warning me-2" role="status" aria-hidden="true"></div>
+                                                            <strong>Chargement des données...</strong>
+                                                        </div>
+                                                    </div>
+                                                    <div id="pagination-controlsC"></div>
+                                                </div>
+                                            </div>
+                                            <div class="tab-pane fade" id="one2" role="tabpanel" aria-labelledby="tab-one2">
+                                                <div class="card-body">
+                                                    <div class="table-outer" id="div_TableED" style="display: none;">
+                                                        <div class="table-responsive">
+                                                            <table class="table align-middle table-hover m-0 truncate" id="TableED">
+                                                                <thead>
+                                                                    <tr>
+                                                                        <th scope="col">N°</th>
+                                                                        <th scope="col">Type d'examen</th>
+                                                                        <th scope="col">Médecin</th>
+                                                                        <th scope="col">Nombre d'examen</th>
+                                                                        <th scope="col">Prélevement</th>
+                                                                        <th scope="col">Montant Total</th>
+                                                                        <th scope="col">Date de création</th>
+                                                                        <th scope="col"></th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody>
+                                                                </tbody>
+                                                            </table>
+                                                        </div>
+                                                    </div>
+                                                    <div id="message_TableED" style="display: none;">
+                                                        <p class="text-center" >
+                                                            Aucun examen demandé pour le moment
+                                                        </p>
+                                                    </div>
+                                                    <div id="div_Table_loaderED" style="display: none;">
+                                                        <div class="d-flex justify-content-center align-items-center">
+                                                            <div class="spinner-border text-warning me-2" role="status" aria-hidden="true"></div>
+                                                            <strong>Chargement des données...</strong>
+                                                        </div>
+                                                    </div>
+                                                    <div id="pagination-controlsED" ></div>
+                                                </div>
+                                            </div>
+                                            <div class="tab-pane fade" id="one3" role="tabpanel" aria-labelledby="tab-one3">
+                                                <div class="card-body">
+                                                    <div class="table-outer" id="div_Table_hos" style="display: none;">
+                                                        <div class="table-responsive">
+                                                            <table class="table align-middle table-hover m-0 truncate" id="Table_hos">
+                                                                <thead>
+                                                                    <tr>
+                                                                        <th scope="col">N°</th>
+                                                                        <th scope="col">Type</th>
+                                                                        <th scope="col">Nature</th>
+                                                                        <th scope="col">Date entrer</th>
+                                                                        <th scope="col">Date sorti</th>
+                                                                        <th scope="col">Médecin</th>
+                                                                        <th scope="col">Statut</th>
+                                                                        <th scope="col">Montant Chambre</th>
+                                                                        <th scope="col">Montant Soins</th>
+                                                                        <th scope="col">Montant Total</th>
+                                                                        <th scope="col"></th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody>
+                                                                </tbody>
+                                                            </table>
+                                                        </div>
+                                                    </div>
+                                                    <div id="message_Table_hos" style="display: none;">
+                                                        <p class="text-center" >
+                                                            Aucune hospitalisation pour le moment
+                                                        </p>
+                                                    </div>
+                                                    <div id="div_Table_loader_hos" style="display: none;">
+                                                        <div class="d-flex justify-content-center align-items-center">
+                                                            <div class="spinner-border text-warning me-2" role="status" aria-hidden="true"></div>
+                                                            <strong>Chargement des données...</strong>
+                                                        </div>
+                                                    </div>
+                                                    <div id="pagination-controls-hos" ></div>
+                                                </div>
+                                            </div>
+                                            <div class="tab-pane fade" id="one4" role="tabpanel" aria-labelledby="tab-one4">
+                                                <div class="card-body">
+                                                    <div class="table-outer" id="div_Tablesoinsam" style="display: none;">
+                                                        <div class="table-responsive">
+                                                            <table class="table align-middle table-hover m-0 truncate" id="Tablesoinsam">
+                                                                <thead>
+                                                                    <tr>
+                                                                        <th scope="col">N°</th>
+                                                                        <th scope="col">Statut</th>
+                                                                        <th scope="col">Type de Soins</th>
+                                                                        <th scope="col">Soins Infirmiers</th>
+                                                                        <th scope="col">Produits</th>
+                                                                        <th scope="col">Montant Total</th>
+                                                                        <th scope="col">Date de création</th>
+                                                                        <th scope="col"></th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody>
+                                                                </tbody>
+                                                            </table>
+                                                        </div>
+                                                    </div>
+                                                    <div id="message_Tablesoinsam" style="display: none;">
+                                                        <p class="text-center" >
+                                                            Aucun Soins Ambulatoires pour le moment
+                                                        </p>
+                                                    </div>
+                                                    <div id="div_Table_loadersoinsam" style="display: none;">
+                                                        <div class="d-flex justify-content-center align-items-center">
+                                                            <div class="spinner-border text-warning me-2" role="status" aria-hidden="true"></div>
+                                                            <strong>Chargement des données...</strong>
+                                                        </div>
+                                                    </div>
+                                                    <div id="pagination-controlssoinsam" ></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+
+                    dynamicFields.appendChild(groupe2);
+
+                    //--------------------------------------------------
+
+                    list_cons_patient(item.id);
+                    list_exam_patient(item.id);
+                    list_hos_patient(item.id);
+                    list_soinsam_patient(item.id);
+
+                })
+                .catch(error => {
+                    console.error('Erreur lors du chargement des données:', error);
+                });
+
+        }
+
+        function list_cons_patient(id,page = 1) {
+
+            const tableBody = document.querySelector('#TableC tbody');
+            const messageDiv = document.getElementById('message_TableC');
+            const tableDiv = document.getElementById('div_TableC');
+            const loaderDiv = document.getElementById('div_Table_loaderC');
+
+            messageDiv.style.display = 'none';
+            tableDiv.style.display = 'none';
+            loaderDiv.style.display = 'block';
+
+            const url = `/api/list_cons_patient/${id}?page=${page}`;
+            fetch(url)
+                .then(response => response.json())
+                .then(data => {
+
+                    const allCons = data.consultation || [] ;
+                    const pagination = data.pagination || {};
+
+                    const perPage = pagination.per_page || 10;
+                    const currentPage = pagination.current_page || 1;
+
+                    tableBody.innerHTML = '';
+
+                    if (allCons.length > 0) {
+
+                        loaderDiv.style.display = 'none';
+                        messageDiv.style.display = 'none';
+                        tableDiv.style.display = 'block';
+
+                        allCons.forEach((item, index) => {
+                            const row = document.createElement('tr');
+                            row.innerHTML = `
+                                <td>${((currentPage - 1) * perPage) + index + 1}</td>
+                                <td>C-${item.code}</td>
+                                <td>${item.medecin}</td>  
+                                <td>${item.type_motif}</td>
+                                <td>${item.montant} Fcfa</td>
+                                <td>${formatDateHeure(item.created_at)}</td>
+                            `;
+                            tableBody.appendChild(row);
+
+                        });
+
+                        updatePaginationControlsC(id,pagination);
+
+                    } else {
+                        loaderDiv.style.display = 'none';
+                        messageDiv.style.display = 'block';
+                        tableDiv.style.display = 'none';
+                    }
+                })
+                .catch(error => {
+                    console.error('Erreur lors du chargement des données:', error);
+
+                    loaderDiv.style.display = 'none';
+                    messageDiv.style.display = 'block';
+                    tableDiv.style.display = 'none';
+                });
+        }
+
+        function updatePaginationControlsC(id,pagination) {
+            const paginationDiv = document.getElementById('pagination-controlsC');
+            paginationDiv.innerHTML = '';
+
+            // Bootstrap pagination wrapper
+            const paginationWrapper = document.createElement('ul');
+            paginationWrapper.className = 'pagination justify-content-center';
+
+            // Previous button
+            if (pagination.current_page > 1) {
+                const prevButton = document.createElement('li');
+                prevButton.className = 'page-item';
+                prevButton.innerHTML = `<a class="page-link" href="#">Precédent</a>`;
+                prevButton.onclick = (event) => {
+                    event.preventDefault(); // Empêche le défilement en haut de la page
+                    list_cons_patient(id,pagination.current_page - 1);
+                };
+                paginationWrapper.appendChild(prevButton);
+            } else {
+                // Disable the previous button if on the first page
+                const prevButton = document.createElement('li');
+                prevButton.className = 'page-item disabled';
+                prevButton.innerHTML = `<a class="page-link" href="#">Precédent</a>`;
+                paginationWrapper.appendChild(prevButton);
+            }
+
+            // Page number links (show a few around the current page)
+            const totalPages = pagination.last_page;
+            const currentPage = pagination.current_page;
+            const maxVisiblePages = 5; // Max number of page links to display
+
+            let startPage = Math.max(1, currentPage - Math.floor(maxVisiblePages / 2));
+            let endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
+
+            // Adjust start page if end page exceeds the total pages
+            if (endPage - startPage < maxVisiblePages - 1) {
+                startPage = Math.max(1, endPage - maxVisiblePages + 1);
+            }
+
+            // Loop through pages and create page links
+            for (let i = startPage; i <= endPage; i++) {
+                const pageItem = document.createElement('li');
+                pageItem.className = `page-item ${i === currentPage ? 'active' : ''}`;
+                pageItem.innerHTML = `<a class="page-link" href="#">${i}</a>`;
+                pageItem.onclick = (event) => {
+                    event.preventDefault(); // Empêche le défilement en haut de la page
+                    list_cons_patient(id,i);
+                };
+                paginationWrapper.appendChild(pageItem);
+            }
+
+            // Ellipsis (...) if not all pages are shown
+            if (endPage < totalPages) {
+                const ellipsis = document.createElement('li');
+                ellipsis.className = 'page-item disabled';
+                ellipsis.innerHTML = `<a class="page-link" href="#">...</a>`;
+                paginationWrapper.appendChild(ellipsis);
+
+                // Add the last page link
+                const lastPageItem = document.createElement('li');
+                lastPageItem.className = `page-item`;
+                lastPageItem.innerHTML = `<a class="page-link" href="#">${totalPages}</a>`;
+                lastPageItem.onclick = (event) => {
+                    event.preventDefault(); // Empêche le défilement en haut de la page
+                    list_cons_patient(id,totalPages);
+                };
+                paginationWrapper.appendChild(lastPageItem);
+            }
+
+            // Next button
+            if (pagination.current_page < pagination.last_page) {
+                const nextButton = document.createElement('li');
+                nextButton.className = 'page-item';
+                nextButton.innerHTML = `<a class="page-link" href="#">Suivant</a>`;
+                nextButton.onclick = (event) => {
+                    event.preventDefault(); // Empêche le défilement en haut de la page
+                    list_cons_patient(id,pagination.current_page + 1);
+                };
+                paginationWrapper.appendChild(nextButton);
+            } else {
+                // Disable the next button if on the last page
+                const nextButton = document.createElement('li');
+                nextButton.className = 'page-item disabled';
+                nextButton.innerHTML = `<a class="page-link" href="#">Suivant</a>`;
+                paginationWrapper.appendChild(nextButton);
+            }
+
+            // Append pagination controls to the DOM
+            paginationDiv.appendChild(paginationWrapper);
+        }
+
+        function list_exam_patient(id,page = 1) {
+
+            const tableBody = document.querySelector('#TableED tbody');
+            const messageDiv = document.getElementById('message_TableED');
+            const tableDiv = document.getElementById('div_TableED');
+            const loaderDiv = document.getElementById('div_Table_loaderED');
+
+            messageDiv.style.display = 'none';
+            tableDiv.style.display = 'none';
+            loaderDiv.style.display = 'block';
+
+            const url = `/api/list_examend_patient/${id}?page=${page}`;
+
+            fetch(url)
+                .then(response => response.json())
+                .then(data => {
+                    const allExamens = data.examen || [] ;
+                    const pagination = data.pagination || {};
+
+                    const perPage = pagination.per_page || 10;
+                    const currentPage = pagination.current_page || 1;
+
+                    tableBody.innerHTML = '';
+
+                    if (allExamens.length > 0) {
+
+                        loaderDiv.style.display = 'none';
+                        messageDiv.style.display = 'none';
+                        tableDiv.style.display = 'block';
+
+                        allExamens.forEach((item, index) => {
+                            const row = document.createElement('tr');
+                            row.innerHTML = `
+                                <td>${((currentPage - 1) * perPage) + index + 1}</td>
+                                <td>${item.acte}</td>
+                                <td>Dr. ${item.medecin}</td>
+                                <td>${item.nbre}</td>
+                                <td>${item.prelevement} Fcfa</td>
+                                <td>${item.montant} Fcfa</td>
+                                <td>${formatDateHeure(item.created_at)}</td>
+                                <td>
+                                    <div class="d-inline-flex gap-1">
+                                        <a class="btn btn-outline-warning btn-sm rounded-5" data-bs-toggle="modal" data-bs-target="#Detailexam" id="detail-${item.id}">
+                                            <i class="ri-archive-2-line"></i>
+                                        </a>
+                                    </div>
+                                </td>
+                            `;
+                            tableBody.appendChild(row);
+
+                            document.getElementById(`detail-${item.id}`).addEventListener('click',()=>
+                                {
+                                    const tableBodyP = document.querySelector('#Tableexam tbody');
+                                    const messageDivP = document.getElementById('message_Tableexam');
+                                    const tableDivP = document.getElementById('div_Tableexam');
+                                    const loaderDivP = document.getElementById('div_Table_loaderexam');
+
+                                    messageDivP.style.display = 'none';
+                                    tableDivP.style.display = 'none';
+                                    loaderDivP.style.display = 'block';
+
+                                    fetch(`/api/list_facture_exam_d/${item.id}`) // API endpoint
+                                        .then(response => response.json())
+                                        .then(data => {
+
+                                            const factureds = data.factured;
+                                            const sumMontantEx = data.sumMontantEx;
+
+                                            tableBodyP.innerHTML = '';
+
+                                            if (factureds.length > 0) {
+
+                                                loaderDivP.style.display = 'none';
+                                                messageDivP.style.display = 'none';
+                                                tableDivP.style.display = 'block';
+
+                                                factureds.forEach((item, index) => {
+                                                    const row = document.createElement('tr');
+                                                    row.innerHTML = `
+                                                        <td>
+                                                            <h6>${item.nom_ex}</h6>
+                                                        </td>
+                                                        <td>
+                                                            <h6>${item.cotation_ex}${item.valeur_ex}</h6>
+                                                        </td>
+                                                        <td>
+                                                            <h6>${item.prix_ex} Fcfa</h6>
+                                                        </td>
+                                                        <td>
+                                                            <h6>${item.accepte}</h6>
+                                                        </td>
+                                                        <td>
+                                                            <h6>${item.montant_ex} Fcfa</h6>
+                                                        </td>
+                                                    `;
+                                                    tableBodyP.appendChild(row);
+
+                                                });
+
+                                                const row2 = document.createElement('tr');
+                                                row2.innerHTML = `
+                                                    <td colspan="3">&nbsp;</td>
+                                                    <td colspan="2" >
+                                                        <h5 class="mt-4 text-success">
+                                                            Total : ${formatPriceT(sumMontantEx)} Fcfa
+                                                        </h5>
+                                                    </td>
+                                                `;
+                                                tableBodyP.appendChild(row2);
+
+                                                const row3 = document.createElement('tr');
+                                                row3.innerHTML = `
+                                                    <td colspan="5">
+                                                        <h6 class="text-danger">NOTE</h6>
+                                                        <p class="small m-0">
+                                                            Le Montant Total des examens  ajouter au montant du prélevement.
+                                                        </p>
+                                                    </td>
+                                                `;
+
+                                                tableBodyP.appendChild(row3);
+
+                                            } else {
+                                                loaderDivP.style.display = 'none';
+                                                messageDivP.style.display = 'block';
+                                                tableDivP.style.display = 'none';
+                                            }
+                                        })
+                                        .catch(error => {
+                                            console.error('Erreur lors du chargement des données:', error);
+                                            loaderDivD.style.display = 'none';
+                                            messageDivD.style.display = 'block';
+                                            tableDivD.style.display = 'none';
+                                        });
+                                    
+                                });
+                        });
+
+                        updatePaginationControlsED(id,pagination);
+
+                    } else {
+                        tableDiv.style.display = 'none';
+                        loaderDiv.style.display = 'none';
+                        messageDiv.style.display = 'block';
+                    }
+                })
+                .catch(error => {
+                    console.error('Erreur lors du chargement des données:', error);
+                    loaderDiv.style.display = 'none';
+                    tableDiv.style.display = 'none';
+                    messageDiv.style.display = 'block';
+                });
+        }
+
+        function updatePaginationControlsED(id,pagination)
+        {
+            const paginationDiv = document.getElementById('pagination-controlsED');
+            paginationDiv.innerHTML = '';
+
+            // Bootstrap pagination wrapper
+            const paginationWrapper = document.createElement('ul');
+            paginationWrapper.className = 'pagination justify-content-center';
+
+            // Previous button
+            if (pagination.current_page > 1) {
+                const prevButton = document.createElement('li');
+                prevButton.className = 'page-item';
+                prevButton.innerHTML = `<a class="page-link" href="#">Precédent</a>`;
+                prevButton.onclick = () => list_exam_patient(id,pagination.current_page - 1);
+                paginationWrapper.appendChild(prevButton);
+            } else {
+                // Disable the previous button if on the first page
+                const prevButton = document.createElement('li');
+                prevButton.className = 'page-item disabled';
+                prevButton.innerHTML = `<a class="page-link" href="#">Precédent</a>`;
+                paginationWrapper.appendChild(prevButton);
+            }
+
+            // Page number links (show a few around the current page)
+            const totalPages = pagination.last_page;
+            const currentPage = pagination.current_page;
+            const maxVisiblePages = 5; // Max number of page links to display
+
+            let startPage = Math.max(1, currentPage - Math.floor(maxVisiblePages / 2));
+            let endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
+
+            // Adjust start page if end page exceeds the total pages
+            if (endPage - startPage < maxVisiblePages - 1) {
+                startPage = Math.max(1, endPage - maxVisiblePages + 1);
+            }
+
+            // Loop through pages and create page links
+            for (let i = startPage; i <= endPage; i++) {
+                const pageItem = document.createElement('li');
+                pageItem.className = `page-item ${i === currentPage ? 'active' : ''}`;
+                pageItem.innerHTML = `<a class="page-link" href="#">${i}</a>`;
+                pageItem.onclick = () => list_exam_patient(id,i);
+                paginationWrapper.appendChild(pageItem);
+            }
+
+            // Ellipsis (...) if not all pages are shown
+            if (endPage < totalPages) {
+                const ellipsis = document.createElement('li');
+                ellipsis.className = 'page-item disabled';
+                ellipsis.innerHTML = `<a class="page-link" href="#">...</a>`;
+                paginationWrapper.appendChild(ellipsis);
+
+                // Add the last page link
+                const lastPageItem = document.createElement('li');
+                lastPageItem.className = `page-item`;
+                lastPageItem.innerHTML = `<a class="page-link" href="#">${totalPages}</a>`;
+                lastPageItem.onclick = () => list_exam_patient(id,totalPages);
+                paginationWrapper.appendChild(lastPageItem);
+            }
+
+            // Next button
+            if (pagination.current_page < pagination.last_page) {
+                const nextButton = document.createElement('li');
+                nextButton.className = 'page-item';
+                nextButton.innerHTML = `<a class="page-link" href="#">Suivant</a>`;
+                nextButton.onclick = () => list_exam_patient(id,pagination.current_page + 1);
+                paginationWrapper.appendChild(nextButton);
+            } else {
+                // Disable the next button if on the last page
+                const nextButton = document.createElement('li');
+                nextButton.className = 'page-item disabled';
+                nextButton.innerHTML = `<a class="page-link" href="#">Suivant</a>`;
+                paginationWrapper.appendChild(nextButton);
+            }
+
+            // Append pagination controls to the DOM
+            paginationDiv.appendChild(paginationWrapper);
+        }
+
+        function list_hos_patient(id,page = 1) {
+
+            const tableBody = document.querySelector('#Table_hos tbody');
+            const messageDiv = document.getElementById('message_Table_hos');
+            const tableDiv = document.getElementById('div_Table_hos'); // The message div
+            const loaderDiv = document.getElementById('div_Table_loader_hos');
+
+            messageDiv.style.display = 'none';
+            tableDiv.style.display = 'none';
+            loaderDiv.style.display = 'block';
+
+            const url = `/api/list_hopital_patient/${id}?page=${page}`;
+            fetch(url) // API endpoint
+                .then(response => response.json())
+                .then(data => {
+
+                    const hopitals = data.hopital || [] ;
+                    const pagination = data.pagination || {};
+
+                    const perPage = pagination.per_page || 10;
+                    const currentPage = pagination.current_page || 1;
+
+                    // Clear any existing rows in the table body
+                    tableBody.innerHTML = '';
+
+                    if (hopitals.length > 0) {
+
+                        loaderDiv.style.display = 'none';
+                        messageDiv.style.display = 'none';
+                        tableDiv.style.display = 'block';
+
+                        hopitals.forEach((item, index) => {
+                            // Create a new row
+                            const row = document.createElement('tr');
+                            row.innerHTML = `
+                                <td>${((currentPage - 1) * perPage) + index + 1}</td>
+                                <td>${item.type}</td>
+                                <td>${item.nature}</td>
+                                <td>${formatDate(item.date_debut)}</td>
+                                <td>${formatDate(item.date_fin)}</td>
+                                <td>${item.medecin}</td>
+                                <td>
+                                    ${item.statut === 'Hospitaliser' ? 
+                                        `<span class="badge bg-danger">${item.statut}</span>` : 
+                                        `<span class="badge bg-success">${item.statut}</span>`}
+                                </td>
+                                <td>${item.montant_chambre} Fcfa</td>
+                                <td>${item.montant_soins} Fcfa</td>
+                                <td>${item.montant} Fcfa</td>
+                                <td>
+                                    <div class="d-inline-flex gap-1">
+                                        <a class="btn btn-outline-danger btn-sm" id="detail_produit-${item.id}" data-bs-toggle="modal" data-bs-target="#Detail_produithos">
+                                            <i class="ri-archive-2-fill"></i>
+                                        </a>
+                                        <a class="btn btn-outline-warning btn-sm" id="detailhos-${item.id}" data-bs-toggle="modal" data-bs-target="#Detailhos">
+                                            <i class="ri-eye-line"></i>
+                                        </a>
+                                    </div>
+                                </td>
+                                
+                            `;
+                            // Append the row to the table body
+                            tableBody.appendChild(row);
+
+                            document.getElementById(`detailhos-${item.id}`).addEventListener('click', () =>
+                            {
+                                fetch(`/api/detail_hos/${item.id}`) // API endpoint
+                                    .then(response => response.json())
+                                    .then(data => {
+                                        // Access the 'chambre' array from the API response
+                                        const modal = document.getElementById('modal_detailhos');
+                                        modal.innerHTML = '';
+
+                                        const hopital = data.hopital;
+                                        const facture = data.facture;
+                                        const patient = data.patient;
+                                        const nature = data.natureadmission;
+                                        const type = data.typeadmission;
+                                        const lit = data.lit;
+                                        const chambre = data.chambre;
+                                        const user = data.user;
+
+                                        const div = document.createElement('div');
+                                        div.innerHTML = `
+                                            <div class="row">
+                                                <div class="col-xl-12">
+                                                    <div class="">
+                                                        <div class="card-body">
+                                                            <div class="row justify-content-between">
+                                                                <div class="col-12 text-center">                  
+                                                                    <h6 class="fw-semibold">Docteur :</h6>
+                                                                    <p>${user.name}</p>
+                                                                    <h6 class="fw-semibold">Spécialité :</h6>
+                                                                    <p>${user.typeacte}</p>
+                                                                    <h6 class="fw-semibold">Chambre Occupé :</h6>
+                                                                    <p>CH-${chambre.code}</p>
+                                                                    <h6 class="fw-semibold">Lit Occupé :</h6>
+                                                                    <p>LIT-${lit.code}/${lit.type}</p>
+                                                                    <h6 class="fw-semibold">Prix :</h6>
+                                                                    <p>${chambre.prix} Fcfa</p>
+                                                                </div>
+                                                                <div class="col-12 text-center mt-4">
+                                                                    ${hopital.num_bon != null ? `
+                                                                        <h6 class="fw-semibold">Numéro de prise en charge :</h6>
+                                                                        <p>${hopital.num_bon}</p>
+                                                                    ` : ''}
+                                                                    <h6 class="fw-semibold">Type d'admission :</h6>
+                                                                    <p>${type.nom}</p>
+                                                                    <h6 class="fw-semibold">Nature d'admission :</h6>
+                                                                    <p>${nature.nom}</p>
+                                                                    <h6 class="fw-semibold">Date d'entrer :</h6>
+                                                                    <p>${formatDate(hopital.date_debut)}</p>
+                                                                    <h6 class="fw-semibold">Date de sortie Probable :</h6>
+                                                                    <p>${formatDate(hopital.date_fin)}</p>
+                                                                    <h6 class="fw-semibold">Nombre de jours :</h6>
+                                                                    <p>${calculateDaysBetween(hopital.date_debut, hopital.date_fin)}</p>
+                                                                </div>
+                                                                <div class="col-12 text-center mt-4">
+                                                                    <h6 class="fw-semibold">N° Dossier :</h6>
+                                                                    <p>${patient.matricule}</p>
+                                                                    <h6 class="fw-semibold">Nom du patient :</h6>
+                                                                    <p>${patient.np}</p>
+                                                                    <h6 class="fw-semibold">contact :</h6>
+                                                                    <p>${patient.tel}</p>
+                                                                    <h6 class="fw-semibold">Assurer :</h6>
+                                                                    <p>${patient.assurer}</p>
+                                                                    ${patient.assurer === 'oui' ? `
+                                                                        <h6 class="fw-semibold">Taux :</h6>
+                                                                        <p>${patient.taux}%</p>
+
+                                                                        <h6 class="fw-semibold">Assurance :</h6>
+                                                                        <p>${patient.assurance}</p> 
+
+                                                                        <h6 class="fw-semibold">Matricule :</h6>
+                                                                        <p>${patient.matricule_assurance}</p>
+                                                                    ` : ''}
+                                                                </div>
+                                                                <div class="col-12 text-center mt-4">
+                                                                    <h6 class="fw-semibold">Part Patient :</h6>
+                                                                    <p>${hopital.part_patient} Fcfa</p>
+                                                                    <h6 class="fw-semibold">Part Assurance :</h6>
+                                                                    <p>${hopital.part_assurance} Fcfa</p>
+                                                                    <h6 class="fw-semibold">Remise :</h6>
+                                                                    <p>${hopital.remise ? hopital.remise : '0'} Fcfa</p>
+                                                                    <h6 class="fw-semibold">Montant Total :</h6>
+                                                                    <p>${hopital.montant} Fcfa</p>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        `;
+
+                                        modal.appendChild(div);
+
+                                    })
+                                    .catch(error => {
+                                        console.error('Erreur lors du chargement des données:', error);
+                                    });
+                            });
+
+                            document.getElementById(`detail_produit-${item.id}`).addEventListener('click',()=>
+                                {
+                                    const tableBodyP = document.querySelector('#Tablehos tbody');
+                                    const messageDivP = document.getElementById('message_Tablehos');
+                                    const tableDivP = document.getElementById('div_Tablehos');
+                                    const loaderDivP = document.getElementById('div_Table_loaderhos');
+
+                                    messageDivP.style.display = 'none';
+                                    tableDivP.style.display = 'none';
+                                    loaderDivP.style.display = 'block';
+
+                                    fetch(`/api/list_facture_hos_d/${item.id}`) // API endpoint
+                                        .then(response => response.json())
+                                        .then(data => {
+                                            // Access the 'chambre' array from the API response
+                                            const factureds = data.factured;
+
+                                            // Clear any existing rows in the table body
+                                            tableBodyP.innerHTML = '';
+
+                                            if (factureds.length > 0) {
+
+                                                loaderDivP.style.display = 'none';
+                                                messageDivP.style.display = 'none';
+                                                tableDivP.style.display = 'block';
+
+                                                // Loop through each item in the chambre array
+                                                factureds.forEach((item, index) => {
+                                                    // Create a new row
+                                                    const row = document.createElement('tr');
+                                                    // Create and append cells to the row based on your table's structure
+                                                    row.innerHTML = `
+                                                        <td>
+                                                            <h6>${item.nom_produit}</h6>
+                                                        </td>
+                                                        <td>
+                                                            <h6>${item.prix_produit} Fcfa</h6>
+                                                        </td>
+                                                        <td>
+                                                            <h6>${item.quantite}</h6>
+                                                        </td>
+                                                        <td>
+                                                            <h6>${item.montant} Fcfa</h6>
+                                                        </td>
+                                                    `;
+                                                    // Append the row to the table body
+                                                    tableBodyP.appendChild(row);
+
+                                                });
+
+                                                const row2 = document.createElement('tr');
+                                                row2.innerHTML = `
+                                                    <td colspan="2">&nbsp;</td>
+                                                    <td colspan="2" >
+                                                        <h5 class="mt-4 text-success">
+                                                            Total : ${item.montant_soins} Fcfa
+                                                        </h5>
+                                                    </td>
+                                                `;
+                                                tableBodyP.appendChild(row2);
+
+                                                const row3 = document.createElement('tr');
+                                                row3.innerHTML = `
+                                                    <td colspan="4">
+                                                        <h6 class="text-danger">NOTE</h6>
+                                                        <p class="small m-0">
+                                                            Le Montant Total des produits utilisés
+                                                            seront ajouter au montant total de la
+                                                            chambre occupé par le patient.
+                                                        </p>
+                                                    </td>
+                                                `;
+
+                                                tableBodyP.appendChild(row3);
+
+                                            } else {
+                                                loaderDivP.style.display = 'none';
+                                                messageDivP.style.display = 'block';
+                                                tableDivP.style.display = 'none';
+                                            }
+                                        })
+                                        .catch(error => {
+                                            console.error('Erreur lors du chargement des données:', error);
+                                            loaderDivD.style.display = 'none';
+                                            messageDivD.style.display = 'block';
+                                            tableDivD.style.display = 'none';
+                                        });
+                                    
+                                });
+
+                        });
+
+                        updatePaginationControlshos(id,pagination);
+
+                    } else {
+                        document.getElementById(`btn_print_table_hos`).style.display = 'none';
+                        loaderDiv.style.display = 'none';
+                        messageDiv.style.display = 'block';
+                        tableDiv.style.display = 'none';
+                    }
+                })
+                .catch(error => {
+                    console.error('Erreur lors du chargement des données:', error);
+                    // Hide the table and show the error message in case of failure
+                    loaderDiv.style.display = 'none';
+                    messageDiv.style.display = 'block';
+                    tableDiv.style.display = 'none';
+                });
+        }
+
+        function calculateDaysBetween(startDate, endDate) {
+            const start = new Date(startDate);
+            const end = new Date(endDate);
+            
+            // Calcul de la différence en millisecondes
+            const diffInMilliseconds = end - start;
+
+            // Conversion en jours (millisecondes en secondes, minutes, heures, jours)
+            let diffInDays = diffInMilliseconds / (1000 * 60 * 60 * 24);
+
+            // Si la différence est inférieure ou égale à 0, on retourne 1 jour minimum
+            return diffInDays <= 0 ? 1 : Math.round(diffInDays); 
+        }
+
+        function updatePaginationControlshos(id,pagination) {
+            const paginationDiv = document.getElementById('pagination-controls-hos');
+            paginationDiv.innerHTML = '';
+
+            // Bootstrap pagination wrapper
+            const paginationWrapper = document.createElement('ul');
+            paginationWrapper.className = 'pagination justify-content-center';
+
+            // Previous button
+            if (pagination.current_page > 1) {
+                const prevButton = document.createElement('li');
+                prevButton.className = 'page-item';
+                prevButton.innerHTML = `<a class="page-link" href="#">Precédent</a>`;
+                prevButton.onclick = (event) => {
+                    event.preventDefault(); // Empêche le défilement en haut de la page
+                    list_hos_patient(id,pagination.current_page - 1);
+                };
+                paginationWrapper.appendChild(prevButton);
+            } else {
+                // Disable the previous button if on the first page
+                const prevButton = document.createElement('li');
+                prevButton.className = 'page-item disabled';
+                prevButton.innerHTML = `<a class="page-link" href="#">Precédent</a>`;
+                paginationWrapper.appendChild(prevButton);
+            }
+
+            // Page number links (show a few around the current page)
+            const totalPages = pagination.last_page;
+            const currentPage = pagination.current_page;
+            const maxVisiblePages = 5; // Max number of page links to display
+
+            let startPage = Math.max(1, currentPage - Math.floor(maxVisiblePages / 2));
+            let endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
+
+            // Adjust start page if end page exceeds the total pages
+            if (endPage - startPage < maxVisiblePages - 1) {
+                startPage = Math.max(1, endPage - maxVisiblePages + 1);
+            }
+
+            // Loop through pages and create page links
+            for (let i = startPage; i <= endPage; i++) {
+                const pageItem = document.createElement('li');
+                pageItem.className = `page-item ${i === currentPage ? 'active' : ''}`;
+                pageItem.innerHTML = `<a class="page-link" href="#">${i}</a>`;
+                pageItem.onclick = (event) => {
+                    event.preventDefault(); // Empêche le défilement en haut de la page
+                    list_hos_patient(id,i);
+                };
+                paginationWrapper.appendChild(pageItem);
+            }
+
+            // Ellipsis (...) if not all pages are shown
+            if (endPage < totalPages) {
+                const ellipsis = document.createElement('li');
+                ellipsis.className = 'page-item disabled';
+                ellipsis.innerHTML = `<a class="page-link" href="#">...</a>`;
+                paginationWrapper.appendChild(ellipsis);
+
+                // Add the last page link
+                const lastPageItem = document.createElement('li');
+                lastPageItem.className = `page-item`;
+                lastPageItem.innerHTML = `<a class="page-link" href="#">${totalPages}</a>`;
+                lastPageItem.onclick = (event) => {
+                    event.preventDefault(); // Empêche le défilement en haut de la page
+                    list_hos_patient(id,totalPages);
+                };
+                paginationWrapper.appendChild(lastPageItem);
+            }
+
+            // Next button
+            if (pagination.current_page < pagination.last_page) {
+                const nextButton = document.createElement('li');
+                nextButton.className = 'page-item';
+                nextButton.innerHTML = `<a class="page-link" href="#">Suivant</a>`;
+                nextButton.onclick = (event) => {
+                    event.preventDefault(); // Empêche le défilement en haut de la page
+                    list_hos_patient(id,pagination.current_page + 1);
+                };
+                paginationWrapper.appendChild(nextButton);
+            } else {
+                // Disable the next button if on the last page
+                const nextButton = document.createElement('li');
+                nextButton.className = 'page-item disabled';
+                nextButton.innerHTML = `<a class="page-link" href="#">Suivant</a>`;
+                paginationWrapper.appendChild(nextButton);
+            }
+
+            // Append pagination controls to the DOM
+            paginationDiv.appendChild(paginationWrapper);
+        }
+
+        function list_soinsam_patient(id,page = 1) {
+
+            const tableBody = document.querySelector('#Tablesoinsam tbody');
+            const messageDiv = document.getElementById('message_Tablesoinsam');
+            const tableDiv = document.getElementById('div_Tablesoinsam');
+            const loaderDiv = document.getElementById('div_Table_loadersoinsam');
+
+            messageDiv.style.display = 'none';
+            tableDiv.style.display = 'none';
+            loaderDiv.style.display = 'block';
+
+            const url = `/api/list_soinsam_patient/${id}?page=${page}`;
+            fetch(url) // API endpoint
+                .then(response => response.json())
+                .then(data => {
+
+                    const spatients = data.spatient || [] ;
+                    const pagination = data.pagination || {};
+
+                    const perPage = pagination.per_page || 10;
+                    const currentPage = pagination.current_page || 1;
+
+                    // Clear any existing rows in the table body
+                    tableBody.innerHTML = '';
+
+                    if (spatients.length > 0) {
+
+                        loaderDiv.style.display = 'none';
+                        messageDiv.style.display = 'none';
+                        tableDiv.style.display = 'block';
+
+                        // Loop through each item in the chambre array
+                        spatients.forEach((item, index) => {
+                            // Create a new row
+                            const row = document.createElement('tr');
+                            // Create and append cells to the row based on your table's structure
+                            row.innerHTML = `
+                                <td>${((currentPage - 1) * perPage) + index + 1}</td>
+                                <td>
+                                    ${item.statut === 'en cours' ? 
+                                        `<span class="badge bg-danger">${item.statut}</span>` : 
+                                        `<span class="badge bg-success">${item.statut}</span>`}
+                                </td>
+                                <td>${item.type}</td>
+                                <td>${item.nbre_soins}</td>
+                                <td>${item.nbre_produit}</td>
+                                <td>${item.montant} Fcfa</td>
+                                <td>${formatDateHeure(item.created_at)}</td>
+                                <td>
+                                    <div class="d-inline-flex gap-1">
+                                        <a class="btn btn-outline-danger btn-sm" id="detail_produit-${item.id}" data-bs-toggle="modal" data-bs-target="#Detail_produitsoinsam">
+                                            <i class="ri-archive-2-fill"></i>
+                                        </a>
+                                        <a class="btn btn-outline-warning btn-sm" id="detail-${item.id}" data-bs-toggle="modal" data-bs-target="#Detailsoinsam">
+                                            <i class="ri-eye-line"></i>
+                                        </a>
+                                    </div>
+                                </td>
+                                
+                            `;
+                            // Append the row to the table body
+                            tableBody.appendChild(row);
+
+                            document.getElementById(`detail-${item.id}`).addEventListener('click', () =>
+                            {
+                                fetch(`/api/detail_soinam/${item.id}`) // API endpoint
+                                    .then(response => response.json())
+                                    .then(data => {
+                                        const message_detail =document.getElementById('message_detailsoinsamd');
+                                        const modal_detail = document.getElementById('modal_detailsoinsamd');
+                                        const div_detail_loader=document.getElementById('div_detail_loadersoinsamd');
+
+                                        message_detail.style.display = 'none';
+                                        modal_detail.style.display = 'none';
+                                        div_detail_loader.style.display = 'block';
+
+                                        // Access the 'chambre' array from the API response
+                                        const modal = document.getElementById('modal_detailsoinsamd');
+                                        modal.innerHTML = '';
+
+                                        const soinspatient = data.soinspatient;
+                                        const facture = data.facture;
+                                        const patient = data.patient;
+                                        const typesoins = data.typesoins;
+                                        const soins = data.soins;
+                                        const produit = data.produit;
+
+                                        const div = document.createElement('div');
+                                        div.innerHTML = `
+                                            <div class="row">
+                                                <div class="col-xl-12">
+                                                    <div class="">
+                                                        <div class="card-body">
+                                                            <div class="row justify-content-between">
+                                                                <div class="col-12 text-center mt-4">
+                                                                    <h6 class="fw-semibold">Type de Soins :</h6>
+                                                                    <p>${typesoins.nom}</p>
+                                                                    <h6 class="fw-semibold">N° Dossier :</h6>
+                                                                    <p>${patient.matricule}</p>
+                                                                    <h6 class="fw-semibold">Nom du patient :</h6>
+                                                                    <p>${patient.np}</p>
+                                                                    <h6 class="fw-semibold">contact :</h6>
+                                                                    <p>${patient.tel}</p>
+                                                                    <h6 class="fw-semibold">Assurer :</h6>
+                                                                    <p>${patient.assurer}</p>
+                                                                    ${patient.assurer === 'oui' ? `
+                                                                        <h6 class="fw-semibold">Taux :</h6>
+                                                                        <p>${patient.taux}%</p>
+
+                                                                        <h6 class="fw-semibold">Assurance :</h6>
+                                                                        <p>${patient.assurance}</p> 
+
+                                                                        <h6 class="fw-semibold">Matricule :</h6>
+                                                                        <p>${patient.matricule_assurance}</p>
+                                                                    ` : ''}
+                                                                </div>
+                                                                <div class="col-12 text-center mt-4">
+                                                                    ${soinspatient.num_bon != null ? `
+                                                                        <h6 class="fw-semibold">Numéro de prise en charge :</h6>
+                                                                        <p>${soinspatient.num_bon}</p>
+                                                                    ` : ''}
+                                                                    <h6 class="fw-semibold">Part Patient :</h6>
+                                                                    <p>${soinspatient.part_patient} Fcfa</p>
+                                                                    <h6 class="fw-semibold">Part Assurance :</h6>
+                                                                    <p>${soinspatient.part_assurance} Fcfa</p>
+                                                                    <h6 class="fw-semibold">Remise :</h6>
+                                                                    <p>${soinspatient.remise ? soinspatient.remise : '0'} Fcfa</p>
+                                                                    <h6 class="fw-semibold">Montant Total :</h6>
+                                                                    <p>${soinspatient.montant} Fcfa</p>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        `;
+
+                                        modal.appendChild(div);
+
+                                        message_detail.style.display = 'none';
+                                        modal_detail.style.display = 'block';
+                                        div_detail_loader.style.display = 'none';
+
+                                    })
+                                    .catch(error => {
+                                        message_detail.style.display = 'block';
+                                        modal_detail.style.display = 'none';
+                                        div_detail_loader.style.display = 'none';
+                                        console.error('Erreur lors du chargement des données:', error);
+                                    });
+                            });
+
+                            document.getElementById(`detail_produit-${item.id}`).addEventListener('click', () => 
+                            {
+                                const tableBodyP = document.querySelector('#Tablesoinsamp tbody'); // Pour les soins infirmiers
+                                const tableBodyProdP = document.querySelector('#TableProdsoinsamp tbody'); // Pour les produits
+                                const messageDivP = document.getElementById('message_Tablesoinsamp');
+                                const tableDivP = document.getElementById('div_Tablesoinsamp');
+                                const tableDivProdP = document.getElementById('div_TableProdsoinsamp'); // Div pour les produits
+                                const loaderDivP = document.getElementById('div_Table_loadersoinsamp');
+
+                                messageDivP.style.display = 'none';
+                                tableDivP.style.display = 'none';
+                                tableDivProdP.style.display = 'none'; // Cacher au départ
+                                loaderDivP.style.display = 'block';
+
+                                fetch(`/api/detail_soinam/${item.id}`) // API endpoint
+                                    .then(response => response.json())
+                                    .then(data => {
+                                        const soinspatient = data.soinspatient;
+                                        const soins = data.soins;
+                                        const produit = data.produit; // Assurez-vous que l'API renvoie une liste de produits
+
+                                        // Clear existing rows
+                                        tableBodyP.innerHTML = '';
+                                        tableBodyProdP.innerHTML = ''; // Pour les produits
+
+                                        if (soins.length > 0 || produits.length > 0) {
+
+                                            loaderDivP.style.display = 'none';
+                                            messageDivP.style.display = 'none';
+                                            tableDivP.style.display = 'block';
+                                            tableDivProdP.style.display = 'block'; // Afficher le tableau des produits
+
+                                            // Remplir le tableau des soins
+                                            soins.forEach((item, index) => {
+                                                const row = document.createElement('tr');
+                                                row.innerHTML = `
+                                                    <td>
+                                                        <h6>${item.nom_si}</h6>
+                                                    </td>
+                                                    <td>
+                                                        <h6>${item.prix_si} Fcfa</h6>
+                                                    </td>
+                                                `;
+                                                tableBodyP.appendChild(row);
+                                            });
+
+                                            const rowTotalSoin = document.createElement('tr');
+                                            rowTotalSoin.innerHTML = `
+                                                <td >&nbsp;</td>
+                                                <td >
+                                                    <h5 class="mt-4 text-success">
+                                                        Total Soins : ${formatPriceT(soinspatient.stotal)} Fcfa
+                                                    </h5>
+                                                </td>
+                                            `;
+                                            tableBodyP.appendChild(rowTotalSoin);
+
+                                            // Remplir le tableau des produits
+                                            produit.forEach((item, index) => {
+                                                const rowProd = document.createElement('tr');
+                                                rowProd.innerHTML = `
+                                                    <td>
+                                                        <h6>${item.nom_pro}</h6>
+                                                    </td>
+                                                    <td>
+                                                        <h6>${item.prix_pro} Fcfa</h6>
+                                                    </td>
+                                                    <td>
+                                                        <h6>${item.quantite}</h6>
+                                                    </td>
+                                                    <td>
+                                                        <h6>${item.montant} Fcfa</h6>
+                                                    </td>
+                                                `;
+                                                tableBodyProdP.appendChild(rowProd);
+                                            });
+
+                                            const rowTotalProd = document.createElement('tr');
+                                            rowTotalProd.innerHTML = `
+                                                <td colspan="2" >&nbsp;</td>
+                                                <td colspan="2">
+                                                    <h5 class="mt-4 text-success">
+                                                        Total Produits : ${formatPriceT(soinspatient.prototal)} Fcfa
+                                                    </h5>
+                                                </td>
+                                            `;
+                                            tableBodyProdP.appendChild(rowTotalProd);
+
+                                            const rowNote = document.createElement('tr');
+                                            rowNote.innerHTML = `
+                                                <td colspan="4">
+                                                    <h6 class="text-danger">NOTE</h6>
+                                                    <p class="small m-0">
+                                                        Le Montant Total des produits utilisés
+                                                        seront ajoutés au montant total des soins.
+                                                    </p>
+                                                </td>
+                                            `;
+
+                                            tableBodyProdP.appendChild(rowNote);
+
+                                        } else {
+                                            loaderDivP.style.display = 'none';
+                                            messageDivP.style.display = 'block';
+                                            tableDivP.style.display = 'none';
+                                            tableDivProdP.style.display = 'none';
+                                        }
+                                    })
+                                    .catch(error => {
+                                        console.error('Erreur lors du chargement des données:', error);
+                                        loaderDivP.style.display = 'none';
+                                        messageDivP.style.display = 'block';
+                                        tableDivP.style.display = 'none';
+                                        tableDivProdP.style.display = 'none';
+                                    });
+                            });
+
+
+                        });
+
+                        updatePaginationControlssoinsam(id,pagination);
+
+                    } else {
+                        document.getElementById(`btn_print_table`).style.display = 'none';
+                        loaderDiv.style.display = 'none';
+                        messageDiv.style.display = 'block';
+                        tableDiv.style.display = 'none';
+                    }
+                })
+                .catch(error => {
+                    console.error('Erreur lors du chargement des données:', error);
+                    // Hide the table and show the error message in case of failure
+                    loaderDiv.style.display = 'none';
+                    messageDiv.style.display = 'block';
+                    tableDiv.style.display = 'none';
+                });
+        }
+
+        function updatePaginationControlssoinsam(id,pagination) {
+            const paginationDiv = document.getElementById('pagination-controlssoinsam');
+            paginationDiv.innerHTML = '';
+
+            // Bootstrap pagination wrapper
+            const paginationWrapper = document.createElement('ul');
+            paginationWrapper.className = 'pagination justify-content-center';
+
+            // Previous button
+            if (pagination.current_page > 1) {
+                const prevButton = document.createElement('li');
+                prevButton.className = 'page-item';
+                prevButton.innerHTML = `<a class="page-link" href="#">Precédent</a>`;
+                prevButton.onclick = (event) => {
+                    event.preventDefault(); // Empêche le défilement en haut de la page
+                    list_soinsam_patient(id,pagination.current_page - 1);
+                };
+                paginationWrapper.appendChild(prevButton);
+            } else {
+                // Disable the previous button if on the first page
+                const prevButton = document.createElement('li');
+                prevButton.className = 'page-item disabled';
+                prevButton.innerHTML = `<a class="page-link" href="#">Precédent</a>`;
+                paginationWrapper.appendChild(prevButton);
+            }
+
+            // Page number links (show a few around the current page)
+            const totalPages = pagination.last_page;
+            const currentPage = pagination.current_page;
+            const maxVisiblePages = 5; // Max number of page links to display
+
+            let startPage = Math.max(1, currentPage - Math.floor(maxVisiblePages / 2));
+            let endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
+
+            // Adjust start page if end page exceeds the total pages
+            if (endPage - startPage < maxVisiblePages - 1) {
+                startPage = Math.max(1, endPage - maxVisiblePages + 1);
+            }
+
+            // Loop through pages and create page links
+            for (let i = startPage; i <= endPage; i++) {
+                const pageItem = document.createElement('li');
+                pageItem.className = `page-item ${i === currentPage ? 'active' : ''}`;
+                pageItem.innerHTML = `<a class="page-link" href="#">${i}</a>`;
+                pageItem.onclick = (event) => {
+                    event.preventDefault(); // Empêche le défilement en haut de la page
+                    list_soinsam_patient(id,i);
+                };
+                paginationWrapper.appendChild(pageItem);
+            }
+
+            // Ellipsis (...) if not all pages are shown
+            if (endPage < totalPages) {
+                const ellipsis = document.createElement('li');
+                ellipsis.className = 'page-item disabled';
+                ellipsis.innerHTML = `<a class="page-link" href="#">...</a>`;
+                paginationWrapper.appendChild(ellipsis);
+
+                // Add the last page link
+                const lastPageItem = document.createElement('li');
+                lastPageItem.className = `page-item`;
+                lastPageItem.innerHTML = `<a class="page-link" href="#">${totalPages}</a>`;
+                lastPageItem.onclick = (event) => {
+                    event.preventDefault(); // Empêche le défilement en haut de la page
+                    list_soinsam_patient(id,totalPages);
+                };
+                paginationWrapper.appendChild(lastPageItem);
+            }
+
+            // Next button
+            if (pagination.current_page < pagination.last_page) {
+                const nextButton = document.createElement('li');
+                nextButton.className = 'page-item';
+                nextButton.innerHTML = `<a class="page-link" href="#">Suivant</a>`;
+                nextButton.onclick = (event) => {
+                    event.preventDefault(); // Empêche le défilement en haut de la page
+                    list_soinsam_patient(id,pagination.current_page + 1);
+                };
+                paginationWrapper.appendChild(nextButton);
+            } else {
+                // Disable the next button if on the last page
+                const nextButton = document.createElement('li');
+                nextButton.className = 'page-item disabled';
+                nextButton.innerHTML = `<a class="page-link" href="#">Suivant</a>`;
+                paginationWrapper.appendChild(nextButton);
+            }
+
+            // Append pagination controls to the DOM
+            paginationDiv.appendChild(paginationWrapper);
         }
 
     });

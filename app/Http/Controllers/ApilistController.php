@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Validator;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 use App\Models\assurance;
 use App\Models\taux;
@@ -919,6 +920,125 @@ class ApilistController extends Controller
                 'last_page' => $depot->lastPage(),
                 'per_page' => $depot->perPage(),
                 'total' => $depot->total(),
+            ]
+        ]);
+    }
+
+    public function list_cons_patient($id)
+    {
+        $consultationQuery = detailconsultation::join('consultations', 'consultations.id', '=', 'detailconsultations.consultation_id')
+                                    ->leftJoin('users', 'users.id', '=', 'consultations.user_id')
+                                    ->join('patients', 'patients.id', '=', 'consultations.patient_id')
+                                    ->where('patients.id', '=', $id)
+                                    ->select(
+                                        'detailconsultations.*',
+                                        'consultations.code as code', 
+                                        'patients.np as name',
+                                        'users.name as medecin',
+                                        'users.tel as tel', 
+                                        'users.tel2 as tel2',
+                                        'patients.matricule as matricule'
+                                    )
+                                    ->orderBy('detailconsultations.created_at', 'desc');
+
+        $consultation = $consultationQuery->paginate(15);
+
+        return response()->json([
+            'consultation' => $consultation->items(), // Paginated data
+            'pagination' => [
+                'current_page' => $consultation->currentPage(),
+                'last_page' => $consultation->lastPage(),
+                'per_page' => $consultation->perPage(),
+                'total' => $consultation->total(),
+            ]
+        ]);
+    }
+
+    public function list_examend_patient($id)
+    {
+        $examenQuery = examen::join('patients', 'patients.id', '=', 'examens.patient_id')
+                            ->join('actes', 'actes.id', '=', 'examens.acte_id')
+                            ->where('patients.id', '=', $id)
+                            ->select(
+                                'examens.*',
+                                'actes.nom as acte',
+                                'patients.np as patient',
+                            )
+                            ->orderBy('created_at', 'desc');
+
+        $examen = $examenQuery->paginate(15);
+
+        foreach ($examen->items() as $value) {
+            $nbre = examenpatient::where('examen_id', '=', $value->id)->count();
+            $value->nbre =  $nbre ?? 0;
+        }
+
+        return response()->json([
+            'examen' => $examen->items(),
+            'pagination' => [
+                'current_page' => $examen->currentPage(),
+                'last_page' => $examen->lastPage(),
+                'per_page' => $examen->perPage(),
+                'total' => $examen->total(),
+            ]
+        ]);
+    }
+
+    public function list_hopital_patient($id)
+    {
+        $hopitalQuery = detailhopital::join('natureadmissions', 'natureadmissions.id', '=', 'detailhopitals.natureadmission_id')
+                                ->join('typeadmissions', 'typeadmissions.id', '=', 'natureadmissions.typeadmission_id')
+                                ->join('patients', 'patients.id', '=', 'detailhopitals.patient_id')
+                                ->join('users', 'users.id', '=', 'detailhopitals.user_id')
+                                ->join('factures', 'factures.id','=','detailhopitals.facture_id')
+                                ->where('patients.id', '=', $id)
+                                ->select(
+                                    'detailhopitals.*',
+                                    'factures.statut as statut_fac',
+                                    'natureadmissions.nom as nature',
+                                    'typeadmissions.nom as type',
+                                    'patients.np as patient',
+                                    'users.name as medecin',
+                                )->orderBy('detailhopitals.created_at', 'desc');
+
+        $hopital = $hopitalQuery->paginate(15);
+
+        return response()->json([
+            'hopital' => $hopital->items(), // Paginated data
+            'pagination' => [
+                'current_page' => $hopital->currentPage(),
+                'last_page' => $hopital->lastPage(),
+                'per_page' => $hopital->perPage(),
+                'total' => $hopital->total(),
+            ]
+        ]);
+    }
+
+    public function list_soinsam_patient($id)
+    {
+        $spatientQuery = soinspatient::Join('patients', 'patients.id', '=', 'soinspatients.patient_id')
+                       ->Join('typesoins', 'typesoins.id', '=', 'soinspatients.typesoins_id')
+                       ->where('patients.id', '=', $id)
+                       ->select(
+                            'soinspatients.*', 
+                            'patients.np as patient', 
+                            'typesoins.nom as type')
+                       ->orderBy('created_at', 'desc');
+
+        $spatient = $spatientQuery->paginate(15);
+
+        foreach ($spatient->items() as $value) {
+            $value->nbre_soins = sp_soins::where('soinspatient_id', '=', $value->id)->count() ?: 0;
+            $value->nbre_produit = sp_produit::where('soinspatient_id', '=', $value->id)->count() ?: 0;
+        }
+
+        return response()->json([
+            'spatient' => $spatient->items(), // Paginated data
+            'pagination' => [
+                'current_page' => $spatient->currentPage(),
+                'last_page' => $spatient->lastPage(),
+                'per_page' => $spatient->perPage(),
+                'total' => $spatient->total(),
             ]
         ]);
     }

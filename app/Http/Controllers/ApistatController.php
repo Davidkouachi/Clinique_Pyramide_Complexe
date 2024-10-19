@@ -499,5 +499,94 @@ class ApistatController extends Controller
         ]);
     }
 
+    public function patient_stat($id)
+    {
+        $nbre_cons = consultation::where('patient_id', '=', $id)->count();
+        $nbre_hos = detailhopital::where('patient_id', '=', $id)->count();
+        $nbre_exam = examen::where('patient_id', '=', $id)->count();
+        $nbre_soinsam = soinspatient::where('patient_id', '=', $id)->count();
+
+        $m_cons = consultation::join('detailconsultations', 'detailconsultations.consultation_id', '=', 'consultations.id')
+        ->join('factures', 'factures.id', '=', 'consultations.facture_id')
+        ->where('consultations.patient_id', '=', $id)
+        ->select(DB::raw('
+            COALESCE(SUM(CASE WHEN factures.statut = "payer" THEN REPLACE(detailconsultations.montant, ".", "") + 0 ELSE 0 END), 0) as total_payer,
+            COALESCE(SUM(CASE WHEN factures.statut = "impayer" THEN REPLACE(detailconsultations.montant, ".", "") + 0 ELSE 0 END), 0) as total_impayer,
+            COALESCE(SUM(REPLACE(detailconsultations.montant, ".", "") + 0), 0) as total_general,
+            COALESCE(SUM(REPLACE(detailconsultations.part_assurance, ".", "") + 0), 0) as part_assurance,
+            COALESCE(SUM(REPLACE(detailconsultations.part_patient, ".", "") + 0), 0) as part_patient,
+            COALESCE(SUM(REPLACE(detailconsultations.remise, ".", "") + 0), 0) as remise,
+            COALESCE(SUM(CASE WHEN factures.statut = "payer" THEN REPLACE(detailconsultations.part_patient, ".", "") + 0 ELSE 0 END), 0) as part_patient_payer,
+            COALESCE(SUM(CASE WHEN factures.statut = "impayer" THEN REPLACE(detailconsultations.part_patient, ".", "") + 0 ELSE 0 END), 0) as part_patient_impayer
+        '))
+        ->first();
+
+
+        $m_hos = detailhopital::join('factures', 'factures.id', '=', 'detailhopitals.facture_id')
+        ->where('detailhopitals.patient_id', '=', $id)
+        ->select(DB::raw('
+            COALESCE(SUM(CASE WHEN factures.statut = "payer" THEN REPLACE(detailhopitals.montant, ".", "") + 0 ELSE 0 END), 0) as total_payer,
+            COALESCE(SUM(CASE WHEN factures.statut = "impayer" THEN REPLACE(detailhopitals.montant, ".", "") + 0 ELSE 0 END), 0) as total_impayer,
+            COALESCE(SUM(REPLACE(detailhopitals.montant, ".", "") + 0), 0) as total_general,
+            COALESCE(SUM(REPLACE(detailhopitals.part_assurance, ".", "") + 0), 0) as part_assurance,
+            COALESCE(SUM(REPLACE(detailhopitals.part_patient, ".", "") + 0), 0) as part_patient,
+            COALESCE(SUM(REPLACE(detailhopitals.remise, ".", "") + 0), 0) as remise,
+            COALESCE(SUM(CASE WHEN factures.statut = "payer" THEN REPLACE(detailhopitals.part_patient, ".", "") + 0 ELSE 0 END), 0) as part_patient_payer,
+            COALESCE(SUM(CASE WHEN factures.statut = "impayer" THEN REPLACE(detailhopitals.part_patient, ".", "") + 0 ELSE 0 END), 0) as part_patient_impayer
+        '))
+        ->first();
+
+        $m_exam = examen::join('factures', 'factures.id', '=', 'examens.facture_id')
+        ->where('examens.patient_id', '=', $id)
+        ->select(DB::raw('
+            COALESCE(SUM(CASE WHEN factures.statut = "payer" THEN REPLACE(examens.montant, ".", "") + 0 ELSE 0 END), 0) as total_payer,
+            COALESCE(SUM(CASE WHEN factures.statut = "impayer" THEN REPLACE(examens.montant, ".", "") + 0 ELSE 0 END), 0) as total_impayer,
+            COALESCE(SUM(REPLACE(examens.montant, ".", "") + 0), 0) as total_general,
+            COALESCE(SUM(REPLACE(examens.part_assurance, ".", "") + 0), 0) as part_assurance,
+            COALESCE(SUM(REPLACE(examens.part_patient, ".", "") + 0), 0) as part_patient,
+            COALESCE(SUM(CASE WHEN factures.statut = "payer" THEN REPLACE(examens.part_patient, ".", "") + 0 ELSE 0 END), 0) as part_patient_payer,
+            COALESCE(SUM(CASE WHEN factures.statut = "impayer" THEN REPLACE(examens.part_patient, ".", "") + 0 ELSE 0 END), 0) as part_patient_impayer
+        '))
+        ->first();
+
+        $m_soinsam = soinspatient::join('factures', 'factures.id', '=', 'soinspatients.facture_id')
+        ->where('soinspatients.patient_id', '=', $id)
+        ->select(DB::raw('
+            COALESCE(SUM(CASE WHEN factures.statut = "payer" THEN REPLACE(soinspatients.montant, ".", "") + 0 ELSE 0 END), 0) as total_payer,
+            COALESCE(SUM(CASE WHEN factures.statut = "impayer" THEN REPLACE(soinspatients.montant, ".", "") + 0 ELSE 0 END), 0) as total_impayer,
+            COALESCE(SUM(REPLACE(soinspatients.montant, ".", "") + 0), 0) as total_general,
+            COALESCE(SUM(REPLACE(soinspatients.part_assurance, ".", "") + 0), 0) as part_assurance,
+            COALESCE(SUM(REPLACE(soinspatients.part_patient, ".", "") + 0), 0) as part_patient,
+            COALESCE(SUM(REPLACE(soinspatients.remise, ".", "") + 0), 0) as remise,
+            COALESCE(SUM(CASE WHEN factures.statut = "payer" THEN REPLACE(soinspatients.part_patient, ".", "") + 0 ELSE 0 END), 0) as part_patient_payer,
+            COALESCE(SUM(CASE WHEN factures.statut = "impayer" THEN REPLACE(soinspatients.part_patient, ".", "") + 0 ELSE 0 END), 0) as part_patient_impayer
+        '))
+        ->first();
+
+        $data = [
+            'm_cons' => $m_cons,
+            'm_hos' => $m_hos,
+            'm_exam' => $m_exam,
+            'm_soinsam' => $m_soinsam,
+        ];
+
+        $fac_patient_payer = $m_cons->part_patient_payer + $m_hos->part_patient_payer + $m_exam->part_patient_payer + $m_soinsam->part_patient_payer ;
+
+        $fac_patient_impayer = $m_cons->part_patient_impayer + $m_hos->part_patient_impayer + $m_exam->part_patient_impayer + $m_soinsam->part_patient_impayer ;
+
+        $fac_patient_total = $fac_patient_impayer + $fac_patient_payer;
+
+        return response()->json([
+            'data' => $data,
+            'nbre_cons' => $nbre_cons ?? 0,
+            'nbre_hos' => $nbre_hos ?? 0,
+            'nbre_exam' => $nbre_exam ?? 0,
+            'nbre_soinsam' => $nbre_soinsam ?? 0,
+            'fac_patient_payer' => $fac_patient_payer ?? 0,
+            'fac_patient_impayer' => $fac_patient_impayer ?? 0,
+            'fac_patient_total' => $fac_patient_total ?? 0,
+        ]);
+    }
+
 
 }

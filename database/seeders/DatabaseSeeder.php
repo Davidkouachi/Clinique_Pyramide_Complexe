@@ -136,11 +136,11 @@ class DatabaseSeeder extends Seeder
 
         $assu3 = assurance::create(['nom' => 'MUGEFCI','email' => 'mugefci@gmail.com','tel' => '0759871689','fax' => '6786574789', 'adresse' => 'COCODY RIVERA M\'BADON']);
 
-        $societe1 = societe::create(['nom' => 'SOGEMAD','email' => 'sogemad@gmail.com','tel' => '0757671653', 'tel2' => '0757671653', 'fax' => '659625532', 'adresse' => 'COCODY RIVERA', 'sgeo' => 'COCODY RIVERA']);
+        $societe1 = societe::create(['nom' => 'MTN CI','email' => 'sogemad@gmail.com','tel' => '0757671653', 'tel2' => '0757671653', 'fax' => '659625532', 'adresse' => 'COCODY RIVERA', 'sgeo' => 'COCODY RIVERA']);
 
-        $societe2 = societe::create(['nom' => 'MCI','email' => 'mci@gmail.com','tel' => '0757671689', 'tel2' => '0757671654', 'fax' => '659684789', 'adresse' => 'COCODY RIVERA FAYA', 'sgeo' => 'COCODY RIVERA']);
+        $societe2 = societe::create(['nom' => 'ORANGE CI','email' => 'mci@gmail.com','tel' => '0757671689', 'tel2' => '0757671654', 'fax' => '659684789', 'adresse' => 'COCODY RIVERA FAYA', 'sgeo' => 'COCODY RIVERA']);
 
-        $societe3 = societe::create(['nom' => 'MUGEFCI','email' => 'mugefci@gmail.com','tel' => '0759871689', 'tel2' => '0757671655', 'fax' => '6786574789', 'adresse' => 'COCODY RIVERA M\'BADON', 'sgeo' => 'COCODY RIVERA']);
+        $societe3 = societe::create(['nom' => 'MOOV CI','email' => 'mugefci@gmail.com','tel' => '0759871689', 'tel2' => '0757671655', 'fax' => '6786574789', 'adresse' => 'COCODY RIVERA M\'BADON', 'sgeo' => 'COCODY RIVERA']);
 
         $produitsPharmaceutiques = [
             ['nom' => 'PARACÉTAMOL 500MG', 'prix' => '1.500', 'quantite' => '20'],
