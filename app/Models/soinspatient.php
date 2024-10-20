@@ -22,6 +22,7 @@ class soinspatient extends Model
         'facture_id',
         'typesoins_id',
         'num_bon',
+        'assurance_utiliser',
     ];
 
     public function patient()

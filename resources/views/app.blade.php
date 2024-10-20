@@ -23,8 +23,8 @@
 
 <body>
     <!-- Loading starts -->
-    {{-- <div id="loading-wrapper">
-        <div class='spin-wrapper'>
+    <div id="loading-wrapper" class="bg-white">
+        {{-- <div class='spin-wrapper'>
             <div class='spin'>
                 <div class='inner'></div>
             </div>
@@ -43,8 +43,13 @@
             <div class='spin'>
                 <div class='inner'></div>
             </div>
+        </div> --}}
+        <img src="{{asset('assets/images/logo.png')}}" height="200" width="200" class="mb-3">
+        <div class="d-flex justify-content-center align-items-center">
+            <div class="spinner-border text-primary me-3" role="status" aria-hidden="true"></div>
+            <strong>Un instant, s'il vous plaît...</strong>
         </div>
-    </div> --}}
+    </div>
     <div class="page-wrapper">
         <div class="app-header d-flex align-items-center">
             <div class="d-flex">
@@ -99,7 +104,7 @@
                 </div>
                 <div class="sidebarMenuScroll">
                     <ul class="sidebar-menu">
-                        <li @if(request()->routeIs('index_accueil','consultation_liste','patient_liste','societe_liste','horaire_medecin')) class="active current-page treeview" @else class="treeview" @endif >
+                        <li @if(request()->routeIs('index_accueil','consultation_liste','patient_liste','societe_liste','horaire_medecin','assurance_liste')) class="active current-page treeview" @else class="treeview" @endif >
                             <a href="#!">
                                 <i class="ri-computer-line"></i>
                                 <span class="menu-text text-primary">
@@ -118,18 +123,23 @@
                                     </a>
                                 </li>
                                 <li>
+                                    <a @if(request()->routeIs('assurance_liste')) class="text-primary" @endif href="{{route('assurance_liste')}}">
+                                        <b>Assurances</b>
+                                    </a>
+                                </li>
+                                <li>
                                     <a @if(request()->routeIs('patient_liste')) class="text-primary" @endif href="{{route('patient_liste')}}">
                                         <b>Patients</b>
                                     </a>
                                 </li>
                                 <li>
-                                    <a @if(request()->routeIs('horaire_medecin')) class="text-primary" @endif href="{{route('horaire_medecin')}}">
-                                        <b>Horaires Médecins</b>
+                                    <a @if(request()->routeIs('societe_liste')) class="text-primary" @endif href="{{route('societe_liste')}}">
+                                        <b>Sociétés</b>
                                     </a>
                                 </li>
                                 <li>
-                                    <a @if(request()->routeIs('societe_liste')) class="text-primary" @endif href="{{route('societe_liste')}}">
-                                        <b>Sociétés</b>
+                                    <a @if(request()->routeIs('horaire_medecin')) class="text-primary" @endif href="{{route('horaire_medecin')}}">
+                                        <b>Horaires Médecins</b>
                                     </a>
                                 </li>
                             </ul>

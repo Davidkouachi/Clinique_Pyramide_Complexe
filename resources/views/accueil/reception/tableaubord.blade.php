@@ -1768,8 +1768,9 @@
 
         function eng_consultation()
         {
+            const auth_id = {{ Auth::user()->id }};
             var num_patient = document.getElementById("matricule_patient");
-            // var acte_id = document.getElementById("acte_id");
+            var assurance_utiliser = document.getElementById("assurance_utiliser");
             var acte_id = '1';
             var typeacte_idS = document.getElementById("typeacte_idS");
             var medecin_id = document.getElementById("medecin_id");
@@ -1810,7 +1811,21 @@
             $.ajax({
                 url: '/api/new_consultation',
                 method: 'GET',  // Use 'POST' for data creation
-                data: {num_patient: num_patient.value, acte_id: acte_id, typeacte_id: typeacte_idS.value, user_id: medecin_id.value, periode: periode.value, montant_assurance: montant_assurance.value, montant_patient: montant_patient.value, taux_remise: taux_remise.value, total: montant_total.value, appliq_remise: appliq_remise.value, mumcode: mumcode.value || null},
+                data: {
+                    num_patient: num_patient.value, 
+                    acte_id: acte_id, 
+                    typeacte_id: typeacte_idS.value, 
+                    user_id: medecin_id.value, 
+                    periode: periode.value, 
+                    montant_assurance: montant_assurance.value, 
+                    montant_patient: montant_patient.value, 
+                    taux_remise: taux_remise.value, 
+                    total: montant_total.value, 
+                    appliq_remise: appliq_remise.value, 
+                    mumcode: mumcode.value || null,
+                    assurance_utiliser: assurance_utiliser.value,
+                    auth_id: auth_id,
+                },
                 success: function(response) {
                     var preloader = document.getElementById('preloader_ch');
                     if (preloader) {
@@ -2398,6 +2413,11 @@
             doc.setFont("Helvetica", "bold");
             doc.text(titlea, 120, 150, { align: 'center', angle: 40 });
 
+            const logoSrc = "{{asset('assets/images/logo.png')}}";
+            const logoWidth = 22;
+            const logoHeight = 22;
+            doc.addImage(logoSrc, 'PNG', 15, 13, logoWidth, logoHeight);
+
             // Informations de l'entreprise
             doc.setFontSize(10);
             doc.setTextColor(0, 0, 0);
@@ -2668,6 +2688,11 @@
                 doc.setTextColor(242, 237, 237); // Gray color for background effect
                 doc.setFont("Helvetica", "bold");
                 doc.text(titlea, 120, yPos + 120, { align: 'center', angle: 40 });
+
+                const logoSrc = "{{asset('assets/images/logo.png')}}";
+                const logoWidth = 22;
+                const logoHeight = 22;
+                doc.addImage(logoSrc, 'PNG', leftMargin, yPos - 7, logoWidth, logoHeight);
 
                 // Informations de l'entreprise
                 doc.setFontSize(10);

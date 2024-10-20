@@ -51,6 +51,8 @@ Route::middleware(['auth','statutchambre','dateRdv'])->group(function () {
 
 	Route::get('/Société', [Controller::class, 'societe_liste'])->name('societe_liste');
 
+	Route::get('/Assurances', [Controller::class, 'assurance_liste'])->name('assurance_liste');
+
 	Route::get('/Nouvel Taux', [tauxController::class, 'taux_new'])->name('taux_new');
 	Route::post('/insert taux', [tauxController::class, 'insert_taux'])->name('insert_taux');
 	Route::post('/update taux/{id}', [tauxController::class, 'update_taux'])->name('update_taux');

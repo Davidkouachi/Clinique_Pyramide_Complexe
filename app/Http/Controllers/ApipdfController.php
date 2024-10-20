@@ -107,7 +107,7 @@ class ApipdfController extends Controller
         // Calculate the remaining amount
         $remaining_amount = $total_amount - ($paid_amount + $remis_amount);
         // Format the remaining amount with periods and assign to 'montant_restant'
-        $consultation->montant_restant = formatWithPeriods($remaining_amount);
+        $consultation->montant_restant = $this->formatWithPeriods($remaining_amount);
 
         $patient = patient::leftjoin('assurances', 'assurances.id', '=', 'patients.assurance_id')->leftjoin('tauxes', 'tauxes.id', '=', 'patients.taux_id')
         ->where('patients.id', '=', $consultation->patient_id)

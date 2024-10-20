@@ -56,6 +56,11 @@ class Controller
         return view('accueil.reception.societe');
     }
 
+    public function assurance_liste()
+    {
+        return view('accueil.reception.assurance');
+    }
+
     public function typeadmission_new()
     {
         return view('soins_medicaux.hospitalisation.typeadmission');

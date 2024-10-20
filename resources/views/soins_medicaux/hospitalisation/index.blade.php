@@ -1043,6 +1043,7 @@
 
         function eng_hosp()
         {
+            const auth_id = {{ Auth::user()->id }};
             var matricule_patient = document.getElementById("matricule_patient").value;
             var medecin_id = document.getElementById("medecin_id").value;
             var id_typeadmission = document.getElementById("id_typeadmission").value;
@@ -1137,6 +1138,7 @@
                     nbre_jour: nbre_jour,
                     montant_chambre: montant_chambre,
                     numcode: numcode,
+                    auth_id: auth_id,
                 },
                 success: function(response) {
                     var preloader = document.getElementById('preloader_ch');
@@ -1891,6 +1893,11 @@
                 doc.setTextColor(242, 242, 242); // Gray color for background effect
                 doc.setFont("Helvetica", "bold");
                 doc.text(titlea, 120, yPos + 120, { align: 'center', angle: 40 });
+
+                const logoSrc = "{{asset('assets/images/logo.png')}}";
+                const logoWidth = 22;
+                const logoHeight = 22;
+                doc.addImage(logoSrc, 'PNG', leftMargin, yPos - 7, logoWidth, logoHeight);
 
                 // Informations de l'entreprise
                 doc.setFontSize(10);

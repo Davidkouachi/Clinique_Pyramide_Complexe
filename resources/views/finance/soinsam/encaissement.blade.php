@@ -318,6 +318,7 @@
 
         function payer()
         {
+            const auth_id = {{ Auth::user()->id }};
             const code_fac = document.getElementById("id_code_fac").value;
             const montant_verser = document.getElementById("input_montant_verser");
             const montant_remis = document.getElementById("input_montant_remis");
@@ -342,7 +343,11 @@
             $.ajax({
                 url: '/api/facture_payer_soinsam/' + code_fac,
                 method: 'GET',
-                data: { montant_verser: montant_verser.value, montant_remis: montant_remis.value,},
+                data: { 
+                    montant_verser: montant_verser.value, 
+                    montant_remis: montant_remis.value,
+                    auth_id: auth_id,
+                },
                 success: function(response) {
 
                     var preloader = document.getElementById('preloader_ch');
@@ -825,6 +830,11 @@
                     doc.setFont("Helvetica", "bold");
                     doc.text(titlea, 120, yPos + 120, { align: 'center', angle: 40 });
                 }
+
+                const logoSrc = "{{asset('assets/images/logo.png')}}";
+                const logoWidth = 22;
+                const logoHeight = 22;
+                doc.addImage(logoSrc, 'PNG', leftMargin, yPos - 7, logoWidth, logoHeight);
 
                 // Informations de l'entreprise
                 doc.setFontSize(10);

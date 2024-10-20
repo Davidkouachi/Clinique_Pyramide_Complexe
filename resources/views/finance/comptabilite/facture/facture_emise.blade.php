@@ -239,10 +239,6 @@
 
                     if (societes.length > 0) {
 
-                        assurance_id.value = "";
-                        date1.value = "";
-                        date2.value = "";
-
                         generatePDFInvoice_Fac_Assurance(societes,assurance,date1,date2);
 
                     } else {
@@ -332,10 +328,6 @@
 
                     if (societes.length > 0) {
 
-                        assurance_id.value = "";
-                        date1.value = "";
-                        date2.value = "";
-
                         generatePDFInvoice_Fac_Assurance_Bordo(societes,assurance,date1,date2);
 
                     } else {
@@ -371,6 +363,11 @@
                 doc.setFontSize(10);
                 doc.setTextColor(0, 0, 0);
                 doc.setFont("Helvetica", "bold");
+
+                const logoSrc = "{{asset('assets/images/logo.png')}}";
+                const logoWidth = 22;
+                const logoHeight = 22;
+                doc.addImage(logoSrc, 'PNG', leftMargin, yPos - 7, logoWidth, logoHeight);
 
                 const title = "ESPACE MEDICO SOCIAL LA PYRAMIDE DU COMPLEXE";
                 const titleWidth = doc.getTextWidth(title);
@@ -581,6 +578,11 @@
                 doc.setFontSize(10);
                 doc.setTextColor(0, 0, 0);
                 doc.setFont("Helvetica", "bold");
+
+                const logoSrc = "{{asset('assets/images/logo.png')}}";
+                const logoWidth = 22;
+                const logoHeight = 22;
+                doc.addImage(logoSrc, 'PNG', leftMargin, yPos - 7, logoWidth, logoHeight);
 
                 const title = "ESPACE MEDICO SOCIAL LA PYRAMIDE DU COMPLEXE";
                 const titleWidth = doc.getTextWidth(title);

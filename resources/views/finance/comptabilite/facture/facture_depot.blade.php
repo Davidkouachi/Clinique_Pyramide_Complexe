@@ -173,6 +173,7 @@
 
         function eng_depot()
         {
+            const auth_id = {{ Auth::user()->id }};
             const assurance_id = document.getElementById('assurance_id');
             const date1 = document.getElementById('date1');
             const date2 = document.getElementById('date2');
@@ -234,6 +235,7 @@
                     date1: date1.value, 
                     date2: date2.value, 
                     date_depot: date_depot.value,
+                    auth_id: auth_id,
                 },
                 success: function(response) {
 
@@ -294,6 +296,11 @@
                 doc.setFontSize(10);
                 doc.setTextColor(0, 0, 0);
                 doc.setFont("Helvetica", "bold");
+
+                const logoSrc = "{{asset('assets/images/logo.png')}}";
+                const logoWidth = 22;
+                const logoHeight = 22;
+                doc.addImage(logoSrc, 'PNG', leftMargin, yPos - 7, logoWidth, logoHeight);
 
                 const title = "ESPACE MEDICO SOCIAL LA PYRAMIDE DU COMPLEXE";
                 const titleWidth = doc.getTextWidth(title);
@@ -504,6 +511,11 @@
                 doc.setFontSize(10);
                 doc.setTextColor(0, 0, 0);
                 doc.setFont("Helvetica", "bold");
+
+                const logoSrc = "{{asset('assets/images/logo.png')}}";
+                const logoWidth = 22;
+                const logoHeight = 22;
+                doc.addImage(logoSrc, 'PNG', leftMargin, yPos - 7, logoWidth, logoHeight);
 
                 const title = "ESPACE MEDICO SOCIAL LA PYRAMIDE DU COMPLEXE";
                 const titleWidth = doc.getTextWidth(title);

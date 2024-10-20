@@ -21,6 +21,7 @@ return new class extends Migration
             $table->string('remise');
             $table->string('montant');
             $table->text('libelle')->nullable();
+            $table->text('assurance_utiliser')->nullable();
             $table->unsignedBigInteger('patient_id');
             $table->foreign('patient_id')->references('id')->on('patients')->onDelete('cascade');
             $table->unsignedBigInteger('facture_id');

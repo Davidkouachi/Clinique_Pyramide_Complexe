@@ -1210,6 +1210,7 @@
                 });
             });
 
+            const auth_id = {{ Auth::user()->id }};
             const matricule_patient = document.getElementById('matricule_patient').value;
             const typesoins_id = document.getElementById('typesoins_id').value;
 
@@ -1227,6 +1228,7 @@
             var taux_remise = document.getElementById('taux_remise').value;
             var montant_total = document.getElementById('montant_total').value;
             var montant_patient = document.getElementById('montant_patient').value;
+            var assurance_utiliser = document.getElementById('assurance_utiliser').value;
 
             // Validate monetary fields
             if (!montant_assurance || 
@@ -1275,6 +1277,8 @@
                     matricule_patient: matricule_patient,
                     typesoins_id: typesoins_id,
                     numcode: numcode || null,
+                    assurance_utiliser: assurance_utiliser,
+                    auth_id: auth_id,
                 },
                 success: function(response) {
                     var preloader = document.getElementById('preloader_ch');
@@ -1860,6 +1864,11 @@
                 doc.setTextColor(242, 242, 242); // Gray color for background effect
                 doc.setFont("Helvetica", "bold");
                 doc.text(titlea, 120, yPos + 120, { align: 'center', angle: 40 });
+
+                const logoSrc = "{{asset('assets/images/logo.png')}}";
+                const logoWidth = 22;
+                const logoHeight = 22;
+                doc.addImage(logoSrc, 'PNG', leftMargin, yPos - 7, logoWidth, logoHeight);
 
                 // Informations de l'entreprise
                 doc.setFontSize(10);

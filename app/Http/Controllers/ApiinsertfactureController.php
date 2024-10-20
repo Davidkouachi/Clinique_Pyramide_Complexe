@@ -60,6 +60,7 @@ class ApiinsertfactureController extends Controller
                $fac->montant_remis = $request->montant_remis;
                $fac->statut = 'payer';
                $fac->date_payer = Carbon::now();
+               $fac->encaisser_id = $request->auth_id;
 
                if (!$fac->save()) {
                     throw new \Exception('Erreur');
@@ -124,6 +125,7 @@ class ApiinsertfactureController extends Controller
                $fac->montant_remis = $request->montant_remis;
                $fac->statut = 'payer';
                $fac->date_payer = Carbon::now();
+               $fac->encaisser_id = $request->auth_id;
 
                 if (!$fac->save()) {
                     throw new \Exception('Erreur');
@@ -238,6 +240,7 @@ class ApiinsertfactureController extends Controller
                $fac->montant_remis = $request->montant_remis;
                $fac->statut = 'payer';
                $fac->date_payer = Carbon::now();
+               $fac->encaisser_id = $request->auth_id;
 
                 if (!$fac->save()) {
                     throw new \Exception('Erreur');
@@ -336,6 +339,7 @@ class ApiinsertfactureController extends Controller
                $fac->montant_remis = $request->montant_remis;
                $fac->statut = 'payer';
                $fac->date_payer = Carbon::now();
+               $fac->encaisser_id = $request->auth_id;
 
                 if (!$fac->save()) {
                     throw new \Exception('Erreur');

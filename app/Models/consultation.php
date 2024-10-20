@@ -16,6 +16,7 @@ class consultation extends Model
         'matricule_patient',
         'code',
         'num_bon',
+        'assurance_utiliser',
     ];
 
     public function patient()

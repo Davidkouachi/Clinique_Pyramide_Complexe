@@ -299,6 +299,40 @@ class ApiupdateController extends Controller
         $put = societe::find($id);
 
         if ($put) {
+
+            $verifications = [
+                'tel' => $request->tel,
+                'tel2' => $request->tel2 ?? null,
+                'email' => $request->email,
+                'nom' => $request->nom,
+                'fax' => $request->fax,
+            ];
+
+            $assuranceExist = societe::where('id', '!=', $id)
+                                    ->where(function($query) use ($verifications) {
+                                        $query->where('tel', $verifications['tel'])
+                                            ->orWhere(function($query) use ($verifications) {
+                                                if (!is_null($verifications['tel2'])) {
+                                                    $query->where('tel2', $verifications['tel2']);
+                                                }
+                                            })
+                                            ->orWhere('email', $verifications['email'])
+                                            ->orWhere('nom', $verifications['nom'])
+                                            ->orWhere('fax', $verifications['fax']);
+                                    })->first();
+
+            if ($assuranceExist ) {
+                if ($assuranceExist->tel === $verifications['tel'] || (!is_null($verifications['tel2']) && $assuranceExist->tel2 === $verifications['tel2'])) {
+                    return response()->json(['tel_existe' => true]);
+                } elseif ($assuranceExist->email === $verifications['email']) {
+                    return response()->json(['email_existe' => true]);
+                } elseif ($assuranceExist->nom === $verifications['nom']) {
+                    return response()->json(['nom_existe' => true]);
+                } elseif ($assuranceExist->fax === $verifications['fax']) {
+                    return response()->json(['fax_existe' => true]);
+                }
+            }
+
             $put->nom = $request->nom;
             $put->email = $request->email;
             $put->adresse = $request->adresse;
@@ -454,5 +488,61 @@ class ApiupdateController extends Controller
         }
     }
 
+    public function update_assurance(Request $request, $id)
+    {
+        $put = assurance::find($id);
+
+        if ($put) {
+
+            $verifications = [
+                'tel' => $request->tel,
+                'tel2' => $request->tel2 ?? null,
+                'email' => $request->email,
+                'nom' => $request->nom,
+                'fax' => $request->fax,
+            ];
+
+            $assuranceExist = assurance::where('id', '!=', $id)
+                                    ->where(function($query) use ($verifications) {
+                                        $query->where('tel', $verifications['tel'])
+                                            ->orWhere(function($query) use ($verifications) {
+                                                if (!is_null($verifications['tel2'])) {
+                                                    $query->where('tel2', $verifications['tel2']);
+                                                }
+                                            })
+                                            ->orWhere('email', $verifications['email'])
+                                            ->orWhere('nom', $verifications['nom'])
+                                            ->orWhere('fax', $verifications['fax']);
+                                    })->first();
+
+            if ($assuranceExist ) {
+                if ($assuranceExist->tel === $verifications['tel'] || (!is_null($verifications['tel2']) && $assuranceExist->tel2 === $verifications['tel2'])) {
+                    return response()->json(['tel_existe' => true]);
+                } elseif ($assuranceExist->email === $verifications['email']) {
+                    return response()->json(['email_existe' => true]);
+                } elseif ($assuranceExist->nom === $verifications['nom']) {
+                    return response()->json(['nom_existe' => true]);
+                } elseif ($assuranceExist->fax === $verifications['fax']) {
+                    return response()->json(['fax_existe' => true]);
+                }
+            }
+
+            $put->nom = $request->nom;
+            $put->email = $request->email;
+            $put->tel = $request->tel;
+            $put->tel2 = $request->tel2;
+            $put->fax = $request->fax;
+            $put->adresse = $request->adresse;
+
+            if($put->save()){
+                return response()->json(['success' => true]);
+            }else{
+                return response()->json(['error' => true]);
+            }
+
+        }
+
+        return response()->json(['error' => true]);
+    }
 
 }

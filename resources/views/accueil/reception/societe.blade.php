@@ -337,23 +337,30 @@
                     if (preloader) {
                         preloader.remove();
                     }
-                    if (response.warning) {
-                        showAlert('Alert', 'Cette société existe déjà.', 'warning');
+
+                    if (response.tel_existe) {
+                        showAlert('Alert', 'Ce numéro de téléphone appartient déjà a une Société.','warning');
+                    }else if (response.email_existe) {
+                        showAlert('Alert', 'Ce email appartient déjà a une Société.','warning');
+                    }else if (response.nom_existe) {
+                        showAlert('Alert', 'Cette Société existe déjà.','warning');
+                    }else if (response.fax_existe) {
+                        showAlert('Alert', 'Ce fax appartient déjà a une Société.','warning');
                     } else if (response.success) {
-                        showAlert('Succès', 'Société Enregistrée.', 'success');
+                        nom.value = '';
+                        email.value = '';
+                        adresse.value = '';
+                        fax.value = '';
+                        tel.value = '';
+                        tel2.value = '';
+                        sgeo.value = '';
+
+                        list();
+
+                        showAlert('Succès', 'Opérationn éffectué.','success');
                     } else if (response.error) {
-                        showAlert('Alert', 'Une erreur est survenue lors de l\'enregistrement.','error');
+                        showAlert('Alert', 'Une erreur est survenue.','error');
                     }
-
-                    nom.value = '';
-                    email.value = '';
-                    adresse.value = '';
-                    fax.value = '';
-                    tel.value = '';
-                    tel2.value = '';
-                    sgeo.value = '';
-
-                    list();
                 },
                 error: function() {
                     var preloader = document.getElementById('preloader_ch');
@@ -417,7 +424,6 @@
                                             <a class="btn btn-outline-info btn-sm rounded-5" data-bs-toggle="modal" data-bs-target="#Mmodif" id="edit-${item.id}">
                                                 <i class="ri-edit-box-line"></i>
                                             </a>
-                                            
                                         </div>
                                     </td>
                                 `;
@@ -638,8 +644,20 @@
                         preloader.remove();
                     }
 
-                    showAlert('Succès', 'Mise à jour éffectuée.','success');
-                    list();
+                    if (response.tel_existe) {
+                        showAlert('Alert', 'Ce numéro de téléphone appartient déjà a une Société.','warning');
+                    }else if (response.email_existe) {
+                        showAlert('Alert', 'Ce email appartient déjà a une Société.','warning');
+                    }else if (response.nom_existe) {
+                        showAlert('Alert', 'Cette Société existe déjà.','warning');
+                    }else if (response.fax_existe) {
+                        showAlert('Alert', 'Ce fax appartient déjà a une Société.','warning');
+                    } else if (response.success) {
+                        list();
+                        showAlert('Succès', 'Opérationn éffectué.','success');
+                    } else if (response.error) {
+                        showAlert('Alert', 'Une erreur est survenue.','error');
+                    }
                 },
                 error: function() {
 

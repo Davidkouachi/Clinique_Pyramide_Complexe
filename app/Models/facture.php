@@ -15,5 +15,18 @@ class facture extends Model
         'montant_remis',
         'code',
         'date_payer',
+        'acte',
+        'creer_id',
+        'encaisser_id',
     ];
+
+    public function creer()
+    {
+        return $this->belongsTo(user::class, 'creer_id');
+    }
+
+    public function encaisser()
+    {
+        return $this->belongsTo(user::class, 'encaisser_id');
+    }
 }

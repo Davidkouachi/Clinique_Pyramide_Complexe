@@ -125,13 +125,10 @@
             document.body.insertAdjacentHTML('beforeend', preloader_ch);
 
 
-            // Rafraîchir le token CSRF avant de soumettre le formulaire
             $.get('/refresh_csrf').done(function(data) {
-                // Mettre à jour le token CSRF dans le champ du formulaire
                 document.querySelector('input[name="_token"]').value = data.token;
-                // Soumettre le formulaire
                 this.submit();
-            }.bind(this)); // Utiliser bind pour référencer le contexte correct
+            }.bind(this));
 
             // function verifierMotDePasse(motDePasse) {
 

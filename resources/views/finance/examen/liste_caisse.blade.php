@@ -641,6 +641,11 @@
                     doc.text(titlea, 120, yPos + 120, { align: 'center', angle: 40 });
                 }
 
+                const logoSrc = "{{asset('assets/images/logo.png')}}";
+                const logoWidth = 22;
+                const logoHeight = 22;
+                doc.addImage(logoSrc, 'PNG', leftMargin, yPos - 7, logoWidth, logoHeight);
+
                 // Informations de l'entreprise
                 doc.setFontSize(10);
                 doc.setTextColor(0, 0, 0);

@@ -18,10 +18,22 @@ class depotfacture extends Model
         'num_cheque',
         'date_payer',
         'statut',
+        'creer_id',
+        'encaisser_id',
     ];
 
     public function assurance()
     {
         return $this->belongsTo(assurance::class, 'assurance_id');
+    }
+
+    public function creer()
+    {
+        return $this->belongsTo(user::class, 'creer_id');
+    }
+
+    public function encaisser()
+    {
+        return $this->belongsTo(user::class, 'encaisser_id');
     }
 }

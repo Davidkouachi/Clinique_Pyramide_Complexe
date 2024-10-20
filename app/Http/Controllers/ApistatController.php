@@ -588,5 +588,116 @@ class ApistatController extends Controller
         ]);
     }
 
+    public function assurance_stat($id)
+    {
+        $nbre_cons = consultation::join('patients', 'patients.id', '=', 'consultations.patient_id')
+                                ->join('assurances', 'assurances.id', '=', 'patients.assurance_id')
+                                ->where('patients.assurer', '=', 'oui')
+                                ->where('assurances.id', '=', $id)
+                                ->count();
+
+        $nbre_hos = detailhopital::join('patients', 'patients.id', '=', 'detailhopitals.patient_id')
+                                ->join('assurances', 'assurances.id', '=', 'patients.assurance_id')
+                                ->where('patients.assurer', '=', 'oui')
+                                ->where('assurances.id', '=', $id)
+                                ->count();
+
+        $nbre_exam = examen::join('patients', 'patients.id', '=', 'examens.patient_id')
+                                ->join('assurances', 'assurances.id', '=', 'patients.assurance_id')
+                                ->where('patients.assurer', '=', 'oui')
+                                ->where('assurances.id', '=', $id)
+                                ->count();
+
+        $nbre_soinsam = soinspatient::join('patients', 'patients.id', '=', 'soinspatients.patient_id')
+                                ->join('assurances', 'assurances.id', '=', 'patients.assurance_id')
+                                ->where('patients.assurer', '=', 'oui')
+                                ->where('assurances.id', '=', $id)
+                                ->count();
+
+        $m_cons = consultation::join('detailconsultations', 'detailconsultations.consultation_id', '=', 'consultations.id')
+        ->join('factures', 'factures.id', '=', 'consultations.facture_id')
+        ->join('patients', 'patients.id', '=', 'consultations.patient_id')
+        ->join('assurances', 'assurances.id', '=', 'patients.assurance_id')
+        ->where('patients.assurer', '=', 'oui')
+        ->where('assurances.id', '=', $id)
+        ->select(DB::raw('
+            COALESCE(SUM(CASE WHEN factures.statut = "payer" THEN REPLACE(detailconsultations.montant, ".", "") + 0 ELSE 0 END), 0) as total_payer,
+            COALESCE(SUM(CASE WHEN factures.statut = "impayer" THEN REPLACE(detailconsultations.montant, ".", "") + 0 ELSE 0 END), 0) as total_impayer,
+            COALESCE(SUM(REPLACE(detailconsultations.montant, ".", "") + 0), 0) as total_general,
+            COALESCE(SUM(REPLACE(detailconsultations.part_assurance, ".", "") + 0), 0) as part_assurance,
+            COALESCE(SUM(REPLACE(detailconsultations.part_patient, ".", "") + 0), 0) as part_patient,
+            COALESCE(SUM(REPLACE(detailconsultations.remise, ".", "") + 0), 0) as remise,
+            COALESCE(SUM(CASE WHEN factures.statut = "payer" THEN REPLACE(detailconsultations.part_patient, ".", "") + 0 ELSE 0 END), 0) as part_patient_payer,
+            COALESCE(SUM(CASE WHEN factures.statut = "impayer" THEN REPLACE(detailconsultations.part_patient, ".", "") + 0 ELSE 0 END), 0) as part_patient_impayer
+        '))
+        ->first();
+
+
+        $m_hos = detailhopital::join('factures', 'factures.id', '=', 'detailhopitals.facture_id')
+        ->join('patients', 'patients.id', '=', 'detailhopitals.patient_id')
+        ->join('assurances', 'assurances.id', '=', 'patients.assurance_id')
+        ->where('patients.assurer', '=', 'oui')
+        ->where('assurances.id', '=', $id)
+        ->select(DB::raw('
+            COALESCE(SUM(CASE WHEN factures.statut = "payer" THEN REPLACE(detailhopitals.montant, ".", "") + 0 ELSE 0 END), 0) as total_payer,
+            COALESCE(SUM(CASE WHEN factures.statut = "impayer" THEN REPLACE(detailhopitals.montant, ".", "") + 0 ELSE 0 END), 0) as total_impayer,
+            COALESCE(SUM(REPLACE(detailhopitals.montant, ".", "") + 0), 0) as total_general,
+            COALESCE(SUM(REPLACE(detailhopitals.part_assurance, ".", "") + 0), 0) as part_assurance,
+            COALESCE(SUM(REPLACE(detailhopitals.part_patient, ".", "") + 0), 0) as part_patient,
+            COALESCE(SUM(REPLACE(detailhopitals.remise, ".", "") + 0), 0) as remise,
+            COALESCE(SUM(CASE WHEN factures.statut = "payer" THEN REPLACE(detailhopitals.part_patient, ".", "") + 0 ELSE 0 END), 0) as part_patient_payer,
+            COALESCE(SUM(CASE WHEN factures.statut = "impayer" THEN REPLACE(detailhopitals.part_patient, ".", "") + 0 ELSE 0 END), 0) as part_patient_impayer
+        '))
+        ->first();
+
+        $m_exam = examen::join('factures', 'factures.id', '=', 'examens.facture_id')
+        ->join('patients', 'patients.id', '=', 'examens.patient_id')
+        ->join('assurances', 'assurances.id', '=', 'patients.assurance_id')
+        ->where('patients.assurer', '=', 'oui')
+        ->where('assurances.id', '=', $id)
+        ->select(DB::raw('
+            COALESCE(SUM(CASE WHEN factures.statut = "payer" THEN REPLACE(examens.montant, ".", "") + 0 ELSE 0 END), 0) as total_payer,
+            COALESCE(SUM(CASE WHEN factures.statut = "impayer" THEN REPLACE(examens.montant, ".", "") + 0 ELSE 0 END), 0) as total_impayer,
+            COALESCE(SUM(REPLACE(examens.montant, ".", "") + 0), 0) as total_general,
+            COALESCE(SUM(REPLACE(examens.part_assurance, ".", "") + 0), 0) as part_assurance,
+            COALESCE(SUM(REPLACE(examens.part_patient, ".", "") + 0), 0) as part_patient,
+            COALESCE(SUM(CASE WHEN factures.statut = "payer" THEN REPLACE(examens.part_patient, ".", "") + 0 ELSE 0 END), 0) as part_patient_payer,
+            COALESCE(SUM(CASE WHEN factures.statut = "impayer" THEN REPLACE(examens.part_patient, ".", "") + 0 ELSE 0 END), 0) as part_patient_impayer
+        '))
+        ->first();
+
+        $m_soinsam = soinspatient::join('factures', 'factures.id', '=', 'soinspatients.facture_id')
+        ->join('patients', 'patients.id', '=', 'soinspatients.patient_id')
+        ->join('assurances', 'assurances.id', '=', 'patients.assurance_id')
+        ->where('patients.assurer', '=', 'oui')
+        ->where('assurances.id', '=', $id)
+        ->select(DB::raw('
+            COALESCE(SUM(CASE WHEN factures.statut = "payer" THEN REPLACE(soinspatients.montant, ".", "") + 0 ELSE 0 END), 0) as total_payer,
+            COALESCE(SUM(CASE WHEN factures.statut = "impayer" THEN REPLACE(soinspatients.montant, ".", "") + 0 ELSE 0 END), 0) as total_impayer,
+            COALESCE(SUM(REPLACE(soinspatients.montant, ".", "") + 0), 0) as total_general,
+            COALESCE(SUM(REPLACE(soinspatients.part_assurance, ".", "") + 0), 0) as part_assurance,
+            COALESCE(SUM(REPLACE(soinspatients.part_patient, ".", "") + 0), 0) as part_patient,
+            COALESCE(SUM(REPLACE(soinspatients.remise, ".", "") + 0), 0) as remise,
+            COALESCE(SUM(CASE WHEN factures.statut = "payer" THEN REPLACE(soinspatients.part_patient, ".", "") + 0 ELSE 0 END), 0) as part_patient_payer,
+            COALESCE(SUM(CASE WHEN factures.statut = "impayer" THEN REPLACE(soinspatients.part_patient, ".", "") + 0 ELSE 0 END), 0) as part_patient_impayer
+        '))
+        ->first();
+
+        $data = [
+            'm_cons' => $m_cons,
+            'm_hos' => $m_hos,
+            'm_exam' => $m_exam,
+            'm_soinsam' => $m_soinsam,
+        ];
+
+        return response()->json([
+            'data' => $data,
+            'nbre_cons' => $nbre_cons ?? 0,
+            'nbre_hos' => $nbre_hos ?? 0,
+            'nbre_exam' => $nbre_exam ?? 0,
+            'nbre_soinsam' => $nbre_soinsam ?? 0,
+        ]);
+    }
+
 
 }

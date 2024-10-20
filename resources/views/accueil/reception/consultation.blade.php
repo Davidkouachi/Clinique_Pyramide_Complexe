@@ -734,6 +734,11 @@
             doc.setFont("Helvetica", "bold");
             doc.text(titlea, 120, 150, { align: 'center', angle: 40 });
 
+            const logoSrc = "{{asset('assets/images/logo.png')}}";
+            const logoWidth = 22;
+            const logoHeight = 22;
+            doc.addImage(logoSrc, 'PNG', 5, 13, logoWidth, logoHeight);
+
             // Informations de l'entreprise
             doc.setFontSize(10);
             doc.setTextColor(0, 0, 0);
@@ -1004,6 +1009,11 @@
                 doc.setTextColor(242, 237, 237); // Gray color for background effect
                 doc.setFont("Helvetica", "bold");
                 doc.text(titlea, 120, yPos + 120, { align: 'center', angle: 40 });
+
+                const logoSrc = "{{asset('assets/images/logo.png')}}";
+                const logoWidth = 22;
+                const logoHeight = 22;
+                doc.addImage(logoSrc, 'PNG', leftMargin, yPos - 7, logoWidth, logoHeight);
 
                 // Informations de l'entreprise
                 doc.setFontSize(10);

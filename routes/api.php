@@ -101,6 +101,7 @@ Route::middleware(['statutchambre','dateRdv'])->group(function () {
 	Route::get('/update_rdv/{id}', [ApiupdateController::class, 'update_rdv']);
 	Route::get('/update_specialite/{id}', [ApiupdateController::class, 'update_specialite']);
 	Route::get('/update_depot_fac/{id}', [ApiupdateController::class, 'update_depot_fac']);
+	Route::get('/update_assurance/{id}', [ApiupdateController::class, 'update_assurance']);
 	// update debut
 
 	// delete debut
@@ -152,6 +153,7 @@ Route::middleware(['statutchambre','dateRdv'])->group(function () {
 	Route::get('/list_examend_patient/{id}', [ApilistController::class, 'list_examend_patient']);
 	Route::get('/list_hopital_patient/{id}', [ApilistController::class, 'list_hopital_patient']);
 	Route::get('/list_soinsam_patient/{id}', [ApilistController::class, 'list_soinsam_patient']);
+	Route::get('/list_assurance_all', [ApilistController::class, 'list_assurance_all']);
 	// liste debut
 
 	// statistique debut
@@ -168,6 +170,7 @@ Route::middleware(['statutchambre','dateRdv'])->group(function () {
 	Route::get('/stat_acte_mois/{date1}/{date2}', [ApistatController::class, 'stat_acte_mois']);
 	Route::get('/statistique_patient', [ApistatController::class, 'statistique_patient']);
 	Route::get('/patient_stat/{id}', [ApistatController::class, 'patient_stat']);
+	Route::get('/assurance_stat/{id}', [ApistatController::class, 'assurance_stat']);
 	// statistique fin
 
 	// List facture debut

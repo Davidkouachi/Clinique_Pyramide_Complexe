@@ -511,6 +511,7 @@
         }
 
         function generatePDFInvoice(patient, user, typeacte, consultation) {
+            
             const { jsPDF } = window.jspdf;
             const doc = new jsPDF({ orientation: 'p', unit: 'mm', format: 'a4' });
 
@@ -530,7 +531,6 @@
                 return `${day}/${month}/${year} ${hours}:${minutes}:${seconds}`; // Format as dd/mm/yyyy hh:mm:ss
             }
 
-
             function drawConsultationSection(yPos) {
                 rightMargin = 15;
                 leftMargin = 15;
@@ -549,6 +549,11 @@
                     doc.setFont("Helvetica", "bold");
                     doc.text(titlea, 120, yPos + 120, { align: 'center', angle: 40 });
                 }
+
+                const logoSrc = "{{asset('assets/images/logo.png')}}";
+                const logoWidth = 22;
+                const logoHeight = 22;
+                doc.addImage(logoSrc, 'PNG', leftMargin, yPos - 7, logoWidth, logoHeight);  
 
                 // Informations de l'entreprise
                 doc.setFontSize(10);
@@ -739,7 +744,6 @@
             doc.setLineDashPattern([], 0);
 
             drawConsultationSection(yPos + 150);
-
 
             doc.output('dataurlnewwindow');
         }

@@ -563,7 +563,7 @@
                         const div = document.createElement('div');
                         div.className = "col-xl-3 col-sm-6 col-12";
                         div.innerHTML = `
-                            <div class="border rounded-2 d-flex align-items-center flex-row p-2 ">
+                            <div class="border rounded-2 d-flex align-items-center flex-row p-2 mb-3 ">
                                 <div class="card-body">
                                     <div class="d-flex align-items-center">
                                         <div class="p-2 border border-primary rounded-circle me-3">
@@ -605,7 +605,7 @@
                         const div = document.createElement('div');
                         div.className = "col-xl-3 col-sm-6 col-12";
                         div.innerHTML = `
-                            <div class="border rounded-2 d-flex align-items-center flex-row p-2 ">
+                            <div class="border rounded-2 d-flex align-items-center flex-row p-2 mb-3 ">
                                 <div class="card-body">
                                     <div class="d-flex flex-column align-items-center">
                                         <div class="icon-box xl ${card.bgColor} rounded-5 mb-2 no-shadow">
@@ -634,7 +634,7 @@
                         const div = document.createElement('div');
                         div.className = "col-xl-3 col-sm-6 col-12";
                         div.innerHTML = `
-                            <div class="border rounded-2 d-flex align-items-center flex-row p-2 ">
+                            <div class="border rounded-2 d-flex align-items-center flex-row p-2 mb-3 ">
                                 <div class="card-body">
                                     <div class="d-flex flex-column align-items-center">
                                         <div class="icon-box xl ${card.bgColor} rounded-5 mb-2 no-shadow">
@@ -664,7 +664,7 @@
                         const div = document.createElement('div');
                         div.className = "col-xl-3 col-sm-6 col-12";
                         div.innerHTML = `
-                            <div class="border rounded-2 d-flex align-items-center flex-row p-2">
+                            <div class="border rounded-2 d-flex align-items-center flex-row p-2 mb-3">
                                 <div class="card-body">
                                     <div class="d-flex align-items-center">
                                         <div class="p-2 ${card.borderColor} rounded-circle me-3">

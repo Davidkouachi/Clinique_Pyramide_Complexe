@@ -243,16 +243,19 @@
                                 <div class="row gx-3">
                                     <div class="row gx-3 justify-content-center align-items-center" >
                                         <div class="col-xxl-4 col-lg-4 col-sm-6">
-                                            <div class=" mb-3">
+                                            <div class=" mb-1">
                                                 <div class="card-body">
                                                     <div class="text-center">
                                                         <a class="d-flex align-items-center flex-column">
-                                                            <img src="{{asset('assets/images/user7.png')}}" class="img-7x rounded-circle mb-3 border border-3">
+                                                            <img src="{{asset('assets/images/user7.png')}}" class="img-7x rounded-circle border border-3">
                                                         </a>
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="mb-3">
+                                            <div class="mb-3 text-center">
+                                                <label class="form-label">
+                                                    Nom du Patient
+                                                </label>
                                                 <div class="input-group">
                                                     <input type="text" class="form-control text-center" id="nameRech" placeholder="Nom du patient" autocomplete="off">
                                                 </div>
@@ -836,29 +839,31 @@
                     }else if (response.nom_existe) {
                         showAlert('Alert', 'Cet patient existe déjà.','warning');
                     } else if (response.success) {
+
+                        nom.value = '';
+                        email.value = '';
+                        phone.value = '';
+                        phone2.value = '';
+                        adresse.value = '';
+                        datenais.value = '';
+                        sexe.value = '';
+                        filiation.value = '';
+                        matricule_assurance.value = '';
+                        assurance_id.value = "";
+                        taux_id.value = "";
+                        societe_id.value = "";
+
+                        assurer.value = 'non';
+
+                        divAssurer.style.display = "none";
+
+                        listP();
+                        Name_atient();
+
                         showAlert('Succès', 'Patient Enregistrée.','success');
                     } else if (response.error) {
                         showAlert('Alert', 'Une erreur est survenue lors de l\'enregistrement.','error');
                     }
-
-                    nom.value = '';
-                    email.value = '';
-                    phone.value = '';
-                    phone2.value = '';
-                    adresse.value = '';
-                    datenais.value = '';
-                    sexe.value = '';
-                    filiation.value = '';
-                    matricule_assurance.value = '';
-                    assurance_id.value = "";
-                    taux_id.value = "";
-                    societe_id.value = "";
-
-                    assurer.value = 'non';
-
-                    divAssurer.style.display = "none";
-
-                    listP();
 
                 },
                 error: function() {
@@ -1210,7 +1215,6 @@
                 </div>
             `;
             stat.appendChild(div);
-
 
             fetch('/api/statistique_patient') // API endpoint
                 .then(response => response.json())
@@ -1565,7 +1569,7 @@
                         const div = document.createElement('div');
                         div.className = "col-xl-3 col-sm-6 col-12";
                         div.innerHTML = `
-                            <div class="border rounded-2 d-flex align-items-center flex-row p-2">
+                            <div class="border rounded-2 d-flex align-items-center flex-row p-2 mb-3">
                                 <div class="card-body">
                                     <div class="d-flex align-items-center">
                                         <div class="p-2 ${card.borderColor} rounded-circle me-3">

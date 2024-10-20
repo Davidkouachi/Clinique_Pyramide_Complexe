@@ -1547,6 +1547,7 @@
                 });
             });
 
+            const auth_id = {{ Auth::user()->id }};
             const matricule_patient = document.getElementById('matricule_patient').value;
             const typeacte_id_exd = document.getElementById('typeacte_id_exd').value;
             const medecin = document.getElementById('medecin').value;
@@ -1620,6 +1621,7 @@
                     acte_id: typeacte_id_exd,
                     medecin: medecin,
                     numcode: numcode || null,
+                    auth_id: auth_id,
                 },
                 success: function(response) {
 
@@ -1966,6 +1968,11 @@
                 doc.setTextColor(242, 242, 242); // Gray color for background effect
                 doc.setFont("Helvetica", "bold");
                 doc.text(titlea, 120, yPos + 120, { align: 'center', angle: 40 });
+
+                const logoSrc = "{{asset('assets/images/logo.png')}}";
+                const logoWidth = 22;
+                const logoHeight = 22;
+                doc.addImage(logoSrc, 'PNG', leftMargin, yPos - 7, logoWidth, logoHeight);
 
                 // Informations de l'entreprise
                 doc.setFontSize(10);

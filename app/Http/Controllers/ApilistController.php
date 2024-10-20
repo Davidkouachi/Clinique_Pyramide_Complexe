@@ -1043,4 +1043,21 @@ class ApilistController extends Controller
         ]);
     }
 
+    public function list_assurance_all()
+    {
+        $assuQuery = assurance::orderBy('created_at', 'desc');
+
+        $assurance = $assuQuery->paginate(15);
+
+        return response()->json([
+            'assurance' => $assurance->items(),
+            'pagination' => [
+                'current_page' => $assurance->currentPage(),
+                'last_page' => $assurance->lastPage(),
+                'per_page' => $assurance->perPage(),
+                'total' => $assurance->total(),
+            ]
+        ]);
+    }
+
 }

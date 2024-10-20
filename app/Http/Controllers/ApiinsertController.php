@@ -54,10 +54,36 @@ class ApiinsertController extends Controller
     public function societe_new(Request $request)
     {
 
-        $verf = societe::where('nom', '=', $request->nom)->exists();
+        $verifications = [
+            'tel' => $request->tel,
+            'tel2' => $request->tel2 ?? null, // Allow tel2 to be null
+            'email' => $request->email,
+            'nom' => $request->nom,
+            'fax' => $request->fax,
+        ];
 
-        if ($verf) {
-            return response()->json(['warning' => true]);
+        $assuranceExist = societe::where(function($query) use ($verifications) {
+            $query->where('tel', $verifications['tel'])
+                  ->orWhere(function($query) use ($verifications) {
+                      if (!is_null($verifications['tel2'])) {
+                          $query->where('tel2', $verifications['tel2']);
+                      }
+                  })
+                  ->orWhere('email', $verifications['email'])
+                  ->orWhere('nom', $verifications['nom'])
+                  ->orWhere('fax', $verifications['fax']);
+        })->first();
+
+        if ($assuranceExist) {
+            if ($assuranceExist->tel === $verifications['tel'] || (!is_null($verifications['tel2']) && $assuranceExist->tel2 === $verifications['tel2'])) {
+                return response()->json(['tel_existe' => true]);
+            } elseif ($assuranceExist->email === $verifications['email']) {
+                return response()->json(['email_existe' => true]);
+            } elseif ($assuranceExist->nom === $verifications['nom']) {
+                return response()->json(['nom_existe' => true]);
+            } elseif ($assuranceExist->fax === $verifications['fax']) {
+                return response()->json(['fax_existe' => true]);
+            }
         }
 
         $add = new societe();
@@ -389,6 +415,7 @@ class ApiinsertController extends Controller
 
     public function new_consultation(Request $request)
     {
+
         $patient = patient::leftjoin('assurances', 'assurances.id', '=', 'patients.assurance_id')
         ->where('matricule', '=', $request->num_patient)
         ->select('patients.*', 'assurances.nom as assurance')
@@ -433,6 +460,8 @@ class ApiinsertController extends Controller
             $fac = new facture();
             $fac->code = $codeFac;
             $fac->statut = 'impayer';
+            $fac->acte = 'CONSULTATION';
+            $fac->creer_id = $request->auth_id;
 
             if (!$fac->save()) {
                 throw new \Exception('Erreur');
@@ -445,6 +474,12 @@ class ApiinsertController extends Controller
             $add->matricule_patient = $patient->matricule;
             $add->code = $code;
             $add->num_bon = $request->mumcode;
+
+            if ($patient->assurer === 'non') {
+                $add->assurance_utiliser = 'non';
+            }else{
+                $add->assurance_utiliser = $request->assurance_utiliser;
+            }
 
             if (!$add->save()) {
                 throw new \Exception('Erreur');
@@ -584,6 +619,8 @@ class ApiinsertController extends Controller
             $fac = new facture();
             $fac->code = $codeFac;
             $fac->statut = 'impayer';
+            $fac->acte = 'HOSPITALISATION';
+            $fac->creer_id = $request->auth_id;
 
             if (!$fac->save()) {
                 throw new \Exception('Erreur');
@@ -832,6 +869,8 @@ class ApiinsertController extends Controller
             $fac = new facture();
             $fac->code = $codeFac;
             $fac->statut = 'impayer';
+            $fac->acte = 'SOINS AMBULATOIRE';
+            $fac->creer_id = $request->auth_id;
 
             if (!$fac->save()) {
                 throw new \Exception('Erreur');
@@ -849,6 +888,12 @@ class ApiinsertController extends Controller
             $add->facture_id = $fac->id;
             $add->patient_id = $patient->id;
             $add->typesoins_id = $typesoins->id;
+
+            if ($patient->assurer === 'non') {
+                $add->assurance_utiliser = 'non';
+            }else{
+                $add->assurance_utiliser = $request->assurance_utiliser;
+            }
 
             if (!$add->save()) {
                 throw new \Exception('Erreur lors de la creation du soins patient');
@@ -966,6 +1011,8 @@ class ApiinsertController extends Controller
             $fac = new facture();
             $fac->code = $codeFac;
             $fac->statut = 'impayer';
+            $fac->acte = 'EXAMEN';
+            $fac->creer_id = $request->auth_id;
 
             if (!$fac->save()) {
                 throw new \Exception('Erreur');
@@ -1263,6 +1310,7 @@ class ApiinsertController extends Controller
         $add->date2 = $request->date2;
         $add->date_depot = $date_depot;
         $add->statut = 'non';
+        $add->creer_id = $request->auth_id;
 
         if ($add->save()) {
             return response()->json(['success' => true]);
@@ -1283,6 +1331,7 @@ class ApiinsertController extends Controller
         $add->type_paiement = $request->type;
         $add->num_cheque = $request->cheque;
         $add->statut = 'oui';
+        $add->encaisser_id = $request->auth_id;
 
         if ($add->save()) {
             return response()->json(['success' => true]);

@@ -68,6 +68,7 @@ class authController extends Controller
 
     public function refresh_csrf()
     {
-        return response()->json(['token' => csrf_token()]);
+        $token = csrf_token();
+        return response()->json(['token' => $token]);
     }
 }

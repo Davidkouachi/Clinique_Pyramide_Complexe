@@ -18,6 +18,11 @@ return new class extends Migration
             $table->string('montant_remis')->nullable();
             $table->string('code')->index()->unique();
             $table->string('date_payer')->index()->nullable();
+            $table->string('acte')->nullable();
+            $table->unsignedBigInteger('creer_id')->nullable();
+            $table->foreign('creer_id')->references('id')->on('users')->onDelete('cascade');
+            $table->unsignedBigInteger('encaisser_id')->nullable();
+            $table->foreign('encaisser_id')->references('id')->on('users')->onDelete('cascade');
             $table->timestamps();
         });
     }
