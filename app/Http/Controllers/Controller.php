@@ -158,6 +158,11 @@ class Controller
         return view('finance.comptabilite.index');
     }
 
+    public function caisse()
+    {
+        return view('finance.caisse.index');
+    }
+
     // --------------------------------------------------------
 
     public function etat_acte()

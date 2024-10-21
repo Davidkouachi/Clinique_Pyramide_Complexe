@@ -1,4 +1,4 @@
-<?php
+	<?php
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Controller;
@@ -93,6 +93,7 @@ Route::middleware(['auth','statutchambre','dateRdv'])->group(function () {
 
 	Route::get('/Horaires Médecin', [Controller::class, 'horaire_medecin'])->name('horaire_medecin');
 
+	Route::get('/Caisse', [Controller::class, 'caisse'])->name('caisse');
 	Route::get('/Tableau de Bord Comptabilité', [Controller::class, 'comptable'])->name('comptable');
 	Route::get('/Factures Emises', [Controller::class, 'facture_emise'])->name('facture_emise');
 	Route::get('/Depôts de factures', [Controller::class, 'facture_depot'])->name('facture_depot');

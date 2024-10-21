@@ -154,37 +154,29 @@ class ApistatController extends Controller
         return response()->json(['typeacte' => $typeacte]);
     }
 
-    public function getWeeklyConsultations()
-    {
-        $daysOfWeek = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
-
-        // Start of the week (Monday) and end of the week (Sunday)
-        $startOfWeek = Carbon::now()->startOfWeek(Carbon::MONDAY);
-        $endOfWeek = Carbon::now()->endOfWeek(Carbon::SUNDAY);
-
-        // Create an array to hold consultation counts for each day
-        $weeklyConsultations = [];
-
-        foreach ($daysOfWeek as $day) {
-            // Get the number of consultations for the current day
-            $count = consultation::whereDate('created_at', Carbon::parse($startOfWeek)->addDays(array_search($day, $daysOfWeek)))
-                ->count();
-            // Add the count to the array, defaulting to 0 if nothing is found
-            $weeklyConsultations[] = $count ?? 0;
-        }
-
-        return response()->json($weeklyConsultations);
-    }
-
     public function getConsultationComparison()
     {
-        $currentWeekCount = $this->getWeeklyConsultations()->getData(); // Assurez-vous que cette méthode retourne le bon format
-        $lastWeekCount = consultation::whereBetween('created_at', [now()->subWeek()->startOfWeek(), now()->subWeek()->endOfWeek()])->count();
+        // Get the current week consultation data
+        $currentWeekCount = $this->getWeeklyConsultations()->getData();
+        
+        // Get the total consultations for the last week
+        $lastWeekCount = consultation::whereBetween('created_at', [
+            now()->subWeek()->startOfWeek(), 
+            now()->subWeek()->endOfWeek()
+        ])->count();
 
-        // Calculer le pourcentage
+        // Calculate the total consultations for the current week
         $totalCurrentWeek = array_sum($currentWeekCount);
-        $percentageIncrease = $totalCurrentWeek > 0 ? (($totalCurrentWeek - $lastWeekCount) / $lastWeekCount) * 100 : 0;
 
+        // Handle division by zero by checking if lastWeekCount is zero
+        if ($lastWeekCount > 0) {
+            $percentageIncrease = (($totalCurrentWeek - $lastWeekCount) / $lastWeekCount) * 100;
+        } else {
+            // If there were no consultations last week, treat percentage increase as 100% if there are consultations this week
+            $percentageIncrease = $totalCurrentWeek > 0 ? 100 : 0;
+        }
+
+        // Return the response with the comparison data
         return response()->json([
             'currentWeek' => $totalCurrentWeek,
             'lastWeek' => $lastWeekCount,

@@ -48,6 +48,8 @@ use App\Models\joursemaine;
 use App\Models\rdvpatient;
 use App\Models\programmemedecin;
 use App\Models\depotfacture;
+use App\Models\caisse;
+use App\Models\historiquecaisse;
 
 class ApiinsertController extends Controller
 {
@@ -1323,19 +1325,128 @@ class ApiinsertController extends Controller
     {
         $add = depotfacture::find($id);
 
-        if (!$add) {
-            return response()->json(['non_touve' => true]);
-        }
+        try {
 
-        $add->date_payer = $request->date;
-        $add->type_paiement = $request->type;
-        $add->num_cheque = $request->cheque;
-        $add->statut = 'oui';
-        $add->encaisser_id = $request->auth_id;
+            if (!$add) {
+                return response()->json(['non_touve' => true]);
+            }
 
-        if ($add->save()) {
+            $add->date_payer = $request->date;
+            $add->type_paiement = $request->type;
+            $add->num_cheque = $request->cheque;
+            $add->statut = 'oui';
+            $add->encaisser_id = $request->auth_id;
+
+            if (!$add->save()) {
+                throw new \Exception('Erreur');
+            }
+
+            $assurance = assurance::find($add->assurance_id);
+
+            $date1 = Carbon::createFromFormat('Y-m-d', $add->date1)->startOfDay();
+            $date2 = Carbon::createFromFormat('Y-m-d', $add->date2)->endOfDay();
+
+            $total_assurance = 0;
+
+                $fac_cons = consultation::join('patients', 'patients.id', '=', 'consultations.patient_id')
+                ->join('assurances', 'assurances.id', '=', 'patients.assurance_id')
+                ->join('societes', 'societes.id', '=', 'patients.societe_id')
+                ->join('detailconsultations', 'detailconsultations.consultation_id', '=', 'consultations.id')
+                ->where('patients.assurer', '=', 'oui')
+                ->where('consultations.num_bon', '!=', null)
+                ->whereBetween(DB::raw('DATE(detailconsultations.created_at)'), [$date1, $date2])
+                ->where('assurances.id', '=', $assurance->id)
+                ->select(
+                    'detailconsultations.part_assurance as part_assurance',
+                )
+                ->get();
+
+            foreach ($fac_cons as $value) {
+                $total_assurance += intval(str_replace('.', '', $value->part_assurance));
+            }
+
+            $fac_exam = examen::join('patients', 'patients.id', '=', 'examens.patient_id')
+                ->join('assurances', 'assurances.id', '=', 'patients.assurance_id')
+                ->join('societes', 'societes.id', '=', 'patients.societe_id')
+                ->where('patients.assurer', '=', 'oui')
+                ->where('examens.num_bon', '!=', null)
+                ->whereBetween(DB::raw('DATE(examens.created_at)'), [$date1, $date2])
+                ->where('assurances.id', '=', $assurance->id)
+                ->select(
+                    'examens.part_assurance as part_assurance',
+                )
+                ->get();
+
+            foreach ($fac_exam as $value) {
+                $total_assurance += intval(str_replace('.', '', $value->part_assurance));
+            }
+
+            $fac_soinsam = soinspatient::join('patients', 'patients.id', '=', 'soinspatients.patient_id')
+                ->join('assurances', 'assurances.id', '=', 'patients.assurance_id')
+                ->join('societes', 'societes.id', '=', 'patients.societe_id')
+                ->where('patients.assurer', '=', 'oui')
+                ->where('soinspatients.num_bon', '!=', null)
+                ->whereBetween(DB::raw('DATE(soinspatients.created_at)'), [$date1, $date2])
+                ->where('assurances.id', '=', $assurance->id)
+                ->select(
+                    'soinspatients.part_assurance as part_assurance',
+                )
+                ->get();
+
+            foreach ($fac_soinsam as $value) {
+                $total_assurance += intval(str_replace('.', '', $value->part_assurance));
+            }
+
+            $fac_hopital = detailhopital::join('patients', 'patients.id', '=', 'detailhopitals.patient_id')
+                ->leftjoin('assurances', 'assurances.id', '=', 'patients.assurance_id')
+                ->leftjoin('societes', 'societes.id', '=', 'patients.societe_id')
+                ->where('patients.assurer', '=', 'oui')
+                ->where('detailhopitals.num_bon', '!=', null)
+                ->whereBetween(DB::raw('DATE(detailhopitals.created_at)'), [$date1, $date2])
+                ->where('assurances.id', '=', $assurance->id)
+                ->select(
+                    'detailhopitals.part_assurance as part_assurance',
+                )
+                ->get();
+
+            foreach ($fac_hopital as $value) {
+                $total_assurance += intval(str_replace('.', '', $value->part_assurance));
+            }
+
+            //-----------------------------------------------
+
+                $solde_caisse = caisse::find('1');
+
+                $solde_caisse_sans_point = str_replace('.', '', $solde_caisse->solde);
+                $part_patient_sans_point = $total_assurance;
+                $solde_apres = (int)$solde_caisse_sans_point + (int)$part_patient_sans_point;
+
+                $add_caisse = new historiquecaisse();
+                $add_caisse->motif = 'ENCAISSEMENT ASSURANCE';
+                $add_caisse->montant = $this->formatWithPeriods($total_assurance);
+                $add_caisse->libelle = 'Encaissment ASSURANCE '.$assurance->nom.' du '.$add->date1.' au '.$add->date2;
+                $add_caisse->solde_avant = $solde_caisse->solde;
+                $add_caisse->solde_apres = number_format($solde_apres, 0, '', '.');
+                $add_caisse->typemvt = 'Entrer de Caisse';
+                $add_caisse->creer_id = $request->auth_id;
+                
+                if (!$add_caisse->save()) {
+                    throw new \Exception('Erreur');
+                }
+
+                $solde_caisse->solde = number_format($solde_apres, 0, '', '.');
+
+                if (!$solde_caisse->save()) {
+                    throw new \Exception('Erreur');
+                }
+
+            //-----------------------------------------------
+
+            DB::commit();
             return response()->json(['success' => true]);
-        } else {
+
+        } catch (Exception $e) {
+            DB::rollback();
             return response()->json(['error' => true]);
         }
     }

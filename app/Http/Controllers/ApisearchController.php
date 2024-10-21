@@ -37,6 +37,8 @@ use App\Models\prelevement;
 use App\Models\joursemaine;
 use App\Models\rdvpatient;
 use App\Models\programmemedecin;
+use App\Models\caisse;
+use App\Models\historiquecaisse;
 
 class ApisearchController extends Controller
 {
@@ -225,6 +227,13 @@ class ApisearchController extends Controller
         $rech = joursemaine::all();
 
         return response()->json(['rech' => $rech]); 
+    }
+
+    public function montant_solde()
+    {
+        $solde = caisse::find('1');
+
+        return response()->json(['solde' => $solde]); 
     }
 
 }

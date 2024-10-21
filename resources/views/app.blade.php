@@ -45,10 +45,10 @@
             </div>
         </div> --}}
         <img src="{{asset('assets/images/logo.png')}}" height="200" width="200" class="mb-3">
-        <div class="d-flex justify-content-center align-items-center">
+        {{-- <div class="d-flex justify-content-center align-items-center">
             <div class="spinner-border text-primary me-3" role="status" aria-hidden="true"></div>
             <strong>Un instant, s'il vous plaît...</strong>
-        </div>
+        </div> --}}
     </div>
     <div class="page-wrapper">
         <div class="app-header d-flex align-items-center">
@@ -169,7 +169,7 @@
                                 </li>
                             </ul>
                         </li>
-                        <li @if(request()->routeIs('comptable','encaissement_cons','liste_caisse_cons','encaissement_hos','liste_caisse_hos','encaissement_soinsam','liste_caisse_soinsam','encaissement_examen','liste_caisse_examen')) class="active current-page treeview" @else class="treeview" @endif >
+                        <li @if(request()->routeIs('comptable','encaissement_cons','liste_caisse_cons','encaissement_hos','liste_caisse_hos','encaissement_soinsam','liste_caisse_soinsam','encaissement_examen','liste_caisse_examen','caisse')) class="active current-page treeview" @else class="treeview" @endif >
                             <a href="#!">
                                 <i class="ri-line-chart-fill"></i>
                                 <span class="menu-text text-primary">
@@ -180,6 +180,11 @@
                                 <li>
                                     <a @if(request()->routeIs('comptable')) class="text-primary" @endif href="{{route('comptable')}}">
                                         <b>Tableau de Bord</b>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a @if(request()->routeIs('caisse')) class="text-primary" @endif href="{{route('caisse')}}">
+                                        <b>Caisse</b>
                                     </a>
                                 </li>
                                 <li>

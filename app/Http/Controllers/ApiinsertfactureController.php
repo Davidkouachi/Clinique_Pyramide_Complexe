@@ -43,6 +43,8 @@ use App\Models\sp_soins;
 use App\Models\examenpatient;
 use App\Models\examen;
 use App\Models\prelevement;
+use App\Models\caisse;
+use App\Models\historiquecaisse;
 
 class ApiinsertfactureController extends Controller
 {
@@ -56,13 +58,13 @@ class ApiinsertfactureController extends Controller
 
             if ($fac) {
 
-               $fac->montant_verser = $request->montant_verser;
-               $fac->montant_remis = $request->montant_remis;
-               $fac->statut = 'payer';
-               $fac->date_payer = Carbon::now();
-               $fac->encaisser_id = $request->auth_id;
+                $fac->montant_verser = $request->montant_verser;
+                $fac->montant_remis = $request->montant_remis;
+                $fac->statut = 'payer';
+                $fac->date_payer = Carbon::now();
+                $fac->encaisser_id = $request->auth_id;
 
-               if (!$fac->save()) {
+                if (!$fac->save()) {
                     throw new \Exception('Erreur');
                 }
 
@@ -96,6 +98,35 @@ class ApiinsertfactureController extends Controller
                 $user = user::find($consultation->user_id);
 
                 $typeacte = typeacte::find($consultation->typeacte_id);
+
+                //-----------------------------------------------
+
+                $solde_caisse = caisse::find('1');
+
+                $solde_caisse_sans_point = str_replace('.', '', $solde_caisse->solde);
+                $part_patient_sans_point = str_replace('.', '', $consultation->part_patient);
+                $solde_apres = (int)$solde_caisse_sans_point + (int)$part_patient_sans_point;
+
+                $add_caisse = new historiquecaisse();
+                $add_caisse->motif = 'ENCAISSEMENT CONSULTATION';
+                $add_caisse->montant = $consultation->part_patient;
+                $add_caisse->libelle = 'Encaissment CONSULTATION Facture N°'.$fac->code;
+                $add_caisse->solde_avant = $solde_caisse->solde;
+                $add_caisse->solde_apres = number_format($solde_apres, 0, '', '.');
+                $add_caisse->typemvt = 'Entrer de Caisse';
+                $add_caisse->creer_id = $request->auth_id;
+                
+                if (!$add_caisse->save()) {
+                    throw new \Exception('Erreur');
+                }
+
+                $solde_caisse->solde = number_format($solde_apres, 0, '', '.');
+
+                if (!$solde_caisse->save()) {
+                    throw new \Exception('Erreur');
+                }
+
+                //-----------------------------------------------
 
                 DB::commit();
                 return response()->json(['success' => true, 'patient' => $patient, 'typeacte' => $typeacte, 'user' => $user, 'consultation' => $consultation]);
@@ -199,7 +230,34 @@ class ApiinsertfactureController extends Controller
                                     ->orderBy('soinshopitals.created_at', 'desc')
                                     ->get();
 
-                // ------------------------------------------------------------
+                //-----------------------------------------------
+
+                $solde_caisse = caisse::find('1');
+
+                $solde_caisse_sans_point = str_replace('.', '', $solde_caisse->solde);
+                $part_patient_sans_point = str_replace('.', '', $hopital->part_patient);
+                $solde_apres = (int)$solde_caisse_sans_point + (int)$part_patient_sans_point;
+
+                $add_caisse = new historiquecaisse();
+                $add_caisse->motif = 'ENCAISSEMENT HOSPITALISATION';
+                $add_caisse->montant = $hopital->part_patient;
+                $add_caisse->libelle = 'Encaissment HOSPITALISATION Facture N°'.$fac->code;
+                $add_caisse->solde_avant = $solde_caisse->solde;
+                $add_caisse->solde_apres = number_format($solde_apres, 0, '', '.');
+                $add_caisse->typemvt = 'Entrer de Caisse';
+                $add_caisse->creer_id = $request->auth_id;
+                
+                if (!$add_caisse->save()) {
+                    throw new \Exception('Erreur');
+                }
+
+                $solde_caisse->solde = number_format($solde_apres, 0, '', '.');
+
+                if (!$solde_caisse->save()) {
+                    throw new \Exception('Erreur');
+                }
+
+                //-----------------------------------------------
 
                 DB::commit();
                 return response()->json([
@@ -299,7 +357,34 @@ class ApiinsertfactureController extends Controller
                     ->select('sp_produits.*', 'produits.nom as nom_pro', 'produits.prix as prix_pro', 'produits.quantite as quantite_pro')
                     ->get();
 
-                // ------------------------------------------------------------
+                //-----------------------------------------------
+
+                $solde_caisse = caisse::find('1');
+
+                $solde_caisse_sans_point = str_replace('.', '', $solde_caisse->solde);
+                $part_patient_sans_point = str_replace('.', '', $soinspatient->part_patient);
+                $solde_apres = (int)$solde_caisse_sans_point + (int)$part_patient_sans_point;
+
+                $add_caisse = new historiquecaisse();
+                $add_caisse->motif = 'ENCAISSEMENT SOINS AMBULATOIRE';
+                $add_caisse->montant = $soinspatient->part_patient;
+                $add_caisse->libelle = 'Encaissment SOINS AMBULATOIRE Facture N°'.$fac->code;
+                $add_caisse->solde_avant = $solde_caisse->solde;
+                $add_caisse->solde_apres = number_format($solde_apres, 0, '', '.');
+                $add_caisse->typemvt = 'Entrer de Caisse';
+                $add_caisse->creer_id = $request->auth_id;
+                
+                if (!$add_caisse->save()) {
+                    throw new \Exception('Erreur');
+                }
+
+                $solde_caisse->solde = number_format($solde_apres, 0, '', '.');
+
+                if (!$solde_caisse->save()) {
+                    throw new \Exception('Erreur');
+                }
+
+                //-----------------------------------------------
 
                 DB::commit();
                 return response()->json([
@@ -405,7 +490,34 @@ class ApiinsertfactureController extends Controller
                                     ->orderBy('examenpatients.created_at', 'desc')
                                     ->get();
 
-                // ------------------------------------------------------------
+                //-----------------------------------------------
+
+                $solde_caisse = caisse::find('1');
+
+                $solde_caisse_sans_point = str_replace('.', '', $solde_caisse->solde);
+                $part_patient_sans_point = str_replace('.', '', $examen->part_patient);
+                $solde_apres = (int)$solde_caisse_sans_point + (int)$part_patient_sans_point;
+
+                $add_caisse = new historiquecaisse();
+                $add_caisse->motif = 'ENCAISSEMENT EXAMEN';
+                $add_caisse->montant = $examen->part_patient;
+                $add_caisse->libelle = 'Encaissment EXAMEN Facture N°'.$fac->code;
+                $add_caisse->solde_avant = $solde_caisse->solde;
+                $add_caisse->solde_apres = number_format($solde_apres, 0, '', '.');
+                $add_caisse->typemvt = 'Entrer de Caisse';
+                $add_caisse->creer_id = $request->auth_id;
+                
+                if (!$add_caisse->save()) {
+                    throw new \Exception('Erreur');
+                }
+
+                $solde_caisse->solde = number_format($solde_apres, 0, '', '.');
+
+                if (!$solde_caisse->save()) {
+                    throw new \Exception('Erreur');
+                }
+
+                //-----------------------------------------------
 
                 DB::commit();
                 return response()->json([

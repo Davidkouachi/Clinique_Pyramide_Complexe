@@ -30,6 +30,8 @@ class DatabaseSeeder extends Seeder
     {
         // User::factory(10)->create();
 
+        caisse::create(['solde' => '0']);
+
         prelevement::create(['prix' => '1.500','code' => '1']);
 
         $role_medecin = role::create(['nom' => 'MEDECIN']);

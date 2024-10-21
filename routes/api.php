@@ -13,6 +13,7 @@ use App\Http\Controllers\ApilistfactureController;
 use App\Http\Controllers\ApilistfacturedetailController;
 use App\Http\Controllers\ApiinsertfactureController;
 use App\Http\Controllers\ApipdfController;
+use App\Http\Controllers\ApihistoriqueController;
 
 // Route::get('/user', function (Request $request) {
 //     return $request->user();
@@ -74,6 +75,7 @@ Route::middleware(['statutchambre','dateRdv'])->group(function () {
 	Route::get('/select_examen/{id}', [ApisearchController::class, 'select_examen']);
 	Route::get('/select_specialite', [ApisearchController::class, 'select_specialite']);
 	Route::get('/select_jour', [ApisearchController::class, 'select_jour']);
+	Route::get('/montant_solde', [ApisearchController::class, 'montant_solde']);
 	// search debut
 
 	// liste day debut
@@ -212,5 +214,9 @@ Route::middleware(['statutchambre','dateRdv'])->group(function () {
 	Route::get('/etat_fac_caisse', [ApipdfController::class, 'etat_fac_caisse']);
 	Route::get('/etat_fac_acte', [ApipdfController::class, 'etat_fac_acte']);
 	// Etat fin
+
+	// Historique debut
+	Route::get('/historique_caisse/{date}', [ApihistoriqueController::class, 'historique_caisse']);
+	// Historique fin
 
 });
