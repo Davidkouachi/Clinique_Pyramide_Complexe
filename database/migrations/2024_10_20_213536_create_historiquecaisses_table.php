@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('solde_avant');
             $table->string('solde_apres');
             $table->string('typemvt')->index();
+            $table->string('date_ope')->index();
             $table->unsignedBigInteger('creer_id');
             $table->foreign('creer_id')->references('id')->on('users')->onDelete('cascade');
             $table->timestamps();

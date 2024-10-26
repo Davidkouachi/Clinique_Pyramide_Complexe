@@ -116,6 +116,7 @@
                                                     <tr>
                                                         <th>N°</th>
                                                         <th>Patient</th>
+                                                        <th>Contact</th>
                                                         <th>Médecin</th>
                                                         <th>Spécialité</th>
                                                         <th>Rdv prévu</th>
@@ -237,8 +238,10 @@
                     <div class="mb-3">
                         <label class="form-label">Patient</label>
                         <div class="input-group">
-                            <input type="text" class="form-control" id="patient_rdv" placeholder="Saisie Obligatoire" autocomplete="off">
                             <input type="hidden" id="patient_id_rdv">
+                            <input type="text" class="form-control" id="patient_rdv" placeholder="Saisie Obligatoire" autocomplete="off">
+                        </div>
+                        <div class="input-group">
                             <div class="suggestions w-100" id="suggestions_patient" style="display: none;">
                             </div>
                         </div>
@@ -346,10 +349,8 @@
         document.getElementById("btn_refresh_table_rdv").addEventListener("click", list_rdv);
         document.getElementById("statut_rdv").addEventListener("change", list_rdv);
         document.getElementById("btn_delete_rdv").addEventListener("click", delete_rdv);
-        document.getElementById("close_M_rdv").addEventListener("click", close_M_rdv);
 
         ["rech_medecin", "rech_specialite", "rech_jour", "rech_periode"].forEach(id => document.getElementById(id).addEventListener("change", list));
-
 
         function showAlert(title, message, type)
         {
@@ -895,11 +896,19 @@
                                     document.getElementById('medecin_rdv').value = `Dr. ${medecin.name}`;
                                     document.getElementById('specialite_rdv').value = `${medecin.specialité}`;
 
+                                    document.getElementById('date_rdv').value = "";
+                                    document.getElementById('patient_id_rdv').value = "";
+                                    document.getElementById('patient_rdv').value = "";
+                                    document.getElementById('motif_rdv').value = "";
+
                                     const allowedDays = medecin.horaires.map(horaire => horaire.jour);
 
                                     const dateInput = document.getElementById('date_rdv');
-                                    dateInput.addEventListener('input', (event) => {
-                                        
+                                    let previousDate = dateInput.value; // Track previous date
+
+                                    dateInput.addEventListener('blur', (event) => {
+                                        if (!event.target.value) return;
+
                                         const selectedDate = new Date(event.target.value);
                                         const selectedDay = selectedDate.getDay();
 
@@ -916,8 +925,10 @@
                                         const isValidDay = allowedDays.some(day => dayMapping[day] === selectedDay);
 
                                         if (!isValidDay) {
-                                            dateInput.value = "";
+                                            dateInput.value = previousDate;
                                             showAlert("ALERT", 'Veuillez sélectionner un jour valide selon les horaires du médecin.', "info");
+                                        } else {
+                                            previousDate = dateInput.value;
                                         }
                                     });
 
@@ -945,46 +956,53 @@
                 url: '/api/name_patient',
                 method: 'GET',
                 success: function(response) {
+                    // Récupérer les données de l'API
                     const data = response.name;
 
+                    // Élément de l'input et autres éléments HTML
                     const input = document.getElementById('patient_rdv');
                     const patient_id = document.getElementById('patient_id_rdv');
                     const suggestionsDiv = document.getElementById('suggestions_patient');
-                    
-                    let patientSelected = false;
-                    input.addEventListener('input', function() {
+
+                    // Fonction pour afficher les suggestions
+                    function displaySuggestions() {
                         const searchTerm = input.value.toLowerCase();
                         
+                        // Vider les suggestions précédentes
                         suggestionsDiv.style.display = 'block';
                         suggestionsDiv.innerHTML = '';
 
+                        // Filtrer les données en fonction de l'input
                         const filteredData = data.filter(item => item.np.toLowerCase().includes(searchTerm));
 
-                        // Display filtered data
+                        // Afficher les suggestions filtrées
                         filteredData.forEach(item => {
                             const suggestion = document.createElement('div');
                             suggestion.innerText = item.np;
                             suggestion.addEventListener('click', function() {
-                                // Set selected data in the input field
                                 input.value = item.np;
                                 patient_id.value = item.id;
                                 suggestionsDiv.innerHTML = '';
                                 suggestionsDiv.style.display = 'none';
-
-                                patientSelected = true;
                             });
                             suggestionsDiv.appendChild(suggestion);
                         });
 
+                        // Afficher/masquer les suggestions en fonction du résultat
                         suggestionsDiv.style.display = filteredData.length > 0 ? 'block' : 'none';
+                    }
 
-                        if (patientSelected) {
-                            patient_id.value = '';
-                            patientSelected = false;
-                        }
+                    // Afficher les suggestions dès que l'input est focus
+                    input.addEventListener('focus', function() {
+                        displaySuggestions(); // Afficher les suggestions dès que le curseur est sur l'input
                     });
 
-                    // Hide suggestions when clicking outside
+                    // Mettre à jour les suggestions lors de la saisie
+                    input.addEventListener('input', function() {
+                        displaySuggestions(); // Afficher les suggestions pendant la saisie
+                    });
+
+                    // Masquer les suggestions quand on clique en dehors de l'input ou des suggestions
                     document.addEventListener('click', function(e) {
                         if (!suggestionsDiv.contains(e.target) && e.target !== input) {
                             suggestionsDiv.style.display = 'none';
@@ -992,17 +1010,9 @@
                     });
                 },
                 error: function() {
-                    // Handle error
+                    console.error('Erreur lors du chargement des patients');
                 }
             });
-        }
-
-        function close_M_rdv() {
-            document.getElementById('date_rdv').value = "";
-            document.getElementById('patient_id_rdv').value = "";
-            document.getElementById('patient_rdv').value = "";
-            document.getElementById('motif_rdv').value = "";
-            document.getElementById('periode_rdv').value = "";
         }
 
         function eng_rdv()
@@ -1047,11 +1057,7 @@
                     if (response.success) {
 
                         list_rdv();
-
-                        document.getElementById('date_rdv').value = "";
-                        document.getElementById('patient_id_rdv').value = "";
-                        document.getElementById('patient_rdv').value = "";
-                        document.getElementById('motif_rdv').value = "";
+                        count_rdv_two_day();
 
                         showAlert("ALERT", 'Enregistrement éffectué', "success");
 
@@ -1108,7 +1114,7 @@
 
                                 let button = '';
 
-                                if (item.statut == 'en cours') {
+                                if (item.statut == 'en attente') {
                                     button = `
                                         <a class="btn btn-outline-info btn-sm rounded-5" data-bs-toggle="modal" data-bs-target="#Modif_Rdv_modal" id="modif-${item.id}">
                                             <i class="ri-edit-line"></i>
@@ -1123,11 +1129,12 @@
                                 row.innerHTML = `
                                     <td>${((currentPage - 1) * perPage) + index + 1}</td>
                                     <td>${item.patient}</td>
+                                    <td>+225 ${item.patient_tel}</td>
                                     <td>Dr. ${item.medecin}</td>
                                     <td>${item.specialite}</td>
                                     <td>${formatDate(item.date)}</td>
                                     <td>
-                                        <span class="badge ${item.statut === 'en cours' ? 'bg-warning' : 'bg-success'}">
+                                        <span class="badge ${item.statut === 'en attente' ? 'bg-danger' : 'bg-success'}">
                                             ${item.statut}
                                         </span>
                                     </td>
@@ -1155,6 +1162,7 @@
                                     modifButton.addEventListener('click', () => {
                                         document.getElementById('medecin_id_rdvM').value = item.id;
                                         document.getElementById('date_rdvM').value = item.date;
+                                        document.getElementById('date_rdvM').min = item.date; 
                                         document.getElementById('patient_rdvM').value = item.patient;
                                         document.getElementById('motif_rdvM').value = item.motif;
                                         document.getElementById('medecin_rdvM').value = item.medecin;
@@ -1163,8 +1171,8 @@
                                         const allowedDays = item.horaires.map(horaire => horaire.jour);
 
                                         const dateInput = document.getElementById('date_rdvM');
-                                        dateInput.addEventListener('input', (event) => {
-                                            
+                                        dateInput.addEventListener('blur', (event) => {
+
                                             const selectedDate = new Date(event.target.value);
                                             const selectedDay = selectedDate.getDay();
 
@@ -1341,6 +1349,7 @@
 
                     if (response.success) {
                         list_rdv();
+                        count_rdv_two_day();
                         showAlert('Succès', 'Rendez-Vous annulé.','success');
                     } else if (response.error) {
                         showAlert("ERREUR", 'Une erreur est survenue', "error");
@@ -1397,6 +1406,7 @@
                     if (response.success) {
 
                         list_rdv();
+                        count_rdv_two_day();
                         showAlert("ALERT", 'Mise à jour éffectué', "success");
 
                     } else if (response.error) {
@@ -1414,6 +1424,33 @@
                 }
             });
         }
+
+        function count_rdv_two_day() {
+
+                fetch('/api/count_rdv_two_day')
+                    .then(response => response.json())
+                    .then(data => {
+                        const nbre = data.nbre || 0;
+
+                        document.getElementById('div_two_rdv').innerHTML = '';
+
+                        if (nbre > 0) {
+
+                            const div = `
+                                <div class="sidebar-contact" style="background-color: red;">
+                                    <a class="text-white" href="{{route('rdv_two_day')}}">
+                                        <p class="fw-light mb-1 text-nowrap text-truncate">Rendez-Vous dans 2 jours</p>
+                                        <h5 class="m-0 lh-1 text-nowrap text-truncate">${nbre}</h5>
+                                        <i class="ri-calendar-schedule-line"></i>
+                                    </a>
+                                </div>
+                            `;
+
+                            document.getElementById('div_two_rdv').innerHTML = div;
+                        }
+                    })
+                    .catch(error => console.error('Error fetching data:', error));
+            }
 
     });
 </script>

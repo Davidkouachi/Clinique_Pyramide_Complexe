@@ -48,6 +48,8 @@ use App\Models\joursemaine;
 use App\Models\rdvpatient;
 use App\Models\programmemedecin;
 use App\Models\depotfacture;
+use App\Models\caisse;
+use App\Models\historiquecaisse;
 
 
 class ApilistController extends Controller
@@ -662,7 +664,8 @@ class ApilistController extends Controller
                         ->join('typeactes', 'typeactes.id', '=', 'typemedecins.typeacte_id')
                         ->select(
                             'rdvpatients.*', 
-                            'patients.np as patient', 
+                            'patients.np as patient',
+                            'patients.tel as patient_tel',
                             'users.name as medecin',
                             'typeactes.nom as specialite'
                         )
@@ -706,7 +709,8 @@ class ApilistController extends Controller
                         ->whereDate('rdvpatients.date', '=', $today)
                         ->select(
                             'rdvpatients.*', 
-                            'patients.np as patient', 
+                            'patients.np as patient',
+                            'patients.tel as patient_tel',
                             'users.name as medecin',
                             'typeactes.nom as specialite'
                         )
@@ -1059,5 +1063,97 @@ class ApilistController extends Controller
             ]
         ]);
     }
+
+    public function trace_operation($date1, $date2, $typemvt, $user_id)
+    {
+        $date1 = Carbon::parse($date1)->startOfDay();
+        $date2 = Carbon::parse($date2)->endOfDay();
+
+        $traceQuery = historiquecaisse::whereBetween('created_at', [$date1, $date2])
+                                            ->orderBy('created_at', 'desc');
+
+        if ($typemvt !== 'tous') {
+            $traceQuery->where('typemvt', '=', $typemvt);
+        }
+
+        if ($user_id !== 'tous') {
+            $traceQuery->where('creer_id', '=', $user_id);
+        }
+
+        $trace = $traceQuery->paginate(15);
+
+        foreach ($trace->items() as $value) {
+            $user = user::find($value->creer_id);
+            $value->user = $user->name;
+            $value->user_sexe = $user->sexe;
+        }
+
+        return response()->json([
+            'trace' => $trace->items(),
+            'pagination' => [
+                'current_page' => $trace->currentPage(),
+                'last_page' => $trace->lastPage(),
+                'per_page' => $trace->perPage(),
+                'total' => $trace->total(),
+            ]
+        ]);
+    }
+
+    public function list_user()
+    {
+ 
+        $user = user::join('roles', 'roles.id', '=', 'users.role_id')
+                    ->where('roles.nom', '!=', 'MEDECIN')
+                    ->orderBy('users.created_at', 'desc')
+                    ->select(
+                        'users.*',
+                    )
+                    ->get();
+
+        return response()->json(['user' => $user]);
+
+    }
+
+    public function list_rdv_two_days()
+    {
+        $twoDaysLater = Carbon::today()->addDays(2);
+
+        $rdvQuery = rdvpatient::Join('patients', 'patients.id', '=', 'rdvpatients.patient_id')
+                        ->Join('users', 'users.id', '=', 'rdvpatients.user_id')
+                        ->join('typemedecins', 'typemedecins.user_id', '=', 'users.id')
+                        ->join('typeactes', 'typeactes.id', '=', 'typemedecins.typeacte_id')
+                        ->whereDate('rdvpatients.date', '=', $twoDaysLater)
+                        ->select(
+                            'rdvpatients.*', 
+                            'patients.np as patient',
+                            'patients.tel as patient_tel', 
+                            'users.name as medecin',
+                            'typeactes.nom as specialite'
+                        )
+                        ->orderBy('rdvpatients.created_at', 'desc');
+
+        $rdv = $rdvQuery->paginate(15);
+
+        foreach ($rdv->items() as $value) {
+            $horaires = programmemedecin::join('joursemaines', 'joursemaines.id', '=', 'programmemedecins.jour_id')
+                                    ->where('programmemedecins.user_id', '=', $value->user_id)
+                                    ->where('programmemedecins.statut', '=', 'oui')
+                                    ->select('programmemedecins.*', 'joursemaines.jour as jour')
+                                    ->get();
+
+            $value->horaires = $horaires;
+        }
+
+        return response()->json([
+            'rdv' => $rdv->items(),
+            'pagination' => [
+                'current_page' => $rdv->currentPage(),
+                'last_page' => $rdv->lastPage(),
+                'per_page' => $rdv->perPage(),
+                'total' => $rdv->total(),
+            ]
+        ]);
+    }
+
 
 }

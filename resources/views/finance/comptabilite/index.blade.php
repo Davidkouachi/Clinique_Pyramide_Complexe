@@ -21,7 +21,21 @@
 
 <div class="app-body">
     <div class="row">
-        <div class="col-xxl-12 col-sm-12">
+        <div class="col-12">
+            <div class="card mb-3">
+                <div class="card-header d-flex align-items-center justify-content-between">
+                    <h5 class="card-title">Tendances des Opérations de caisse</h5>
+                    <div class="d-flex">
+                        <select class="form-select me-1" id="yearSelect2"></select>
+                        <a id="btn_refresh_stat_acte2" class="btn btn-outline-info ms-auto">
+                            <i class="ri-loop-left-line"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="card-body" id="contenu_gra2" ></div>
+            </div>
+        </div>
+        <div class="col-12">
             <div class="card mb-3">
                 <div class="card-header d-flex align-items-center justify-content-between">
                     <h5 class="card-title">Statistique des Actes</h5>
@@ -32,20 +46,7 @@
                         </a>
                     </div>
                 </div>
-                <div class="card-body">
-                    <div id="stat_acte" style="display: none;" ></div>
-                    <div id="message_stat_acte" style="display: none;">
-                        <p class="text-center">
-                            Aucune donnée n'a été trouvée
-                        </p>
-                    </div>
-                    <div id="div_Table_loader_stat_acte" style="display: none;">
-                        <div class="d-flex justify-content-center align-items-center">
-                            <div class="spinner-border text-warning me-2" role="status" aria-hidden="true"></div>
-                            <strong>Chargement des données...</strong>
-                        </div>
-                    </div>
-                </div>
+                <div class="card-body" id="contenu_gra1"></div>
             </div>
         </div>
         <div class="col-12">
@@ -53,8 +54,8 @@
                 <div class="card-body" >
                     <div class="row gx-3 justify-content-center align-items-center">
                         <div class="col-xxl-4 col-lg-4 col-sm-6">
-                            <div class="mb-3">
-                                <label class="form-label text-center">
+                            <div class="mb-3 text-center">
+                                <label class="form-label">
                                     Période
                                 </label>
                                 <div class="input-group">
@@ -90,12 +91,16 @@
 
         yearSelect();
         stat_acte();
+        stat_acte2();
         dateSelect();
         stat_acte_mois();
 
         document.getElementById("date1").addEventListener("change", datechange);
         document.getElementById("btn_rech").addEventListener("click", stat_acte_mois);
-        document.getElementById("btn_refresh_stat_acte").addEventListener("click", refresh_sam);
+        document.getElementById("btn_refresh_stat_acte").addEventListener("click", stat_acte);
+        document.getElementById("btn_refresh_stat_acte2").addEventListener("click", stat_acte2);
+        document.getElementById("yearSelect").addEventListener("change", stat_acte);
+        document.getElementById("yearSelect2").addEventListener("change", stat_acte2);
 
         function datechange()
         {
@@ -155,18 +160,31 @@
         }
 
         function yearSelect() {
+
             var yearSelect = document.getElementById('yearSelect');
+            var yearSelect2 = document.getElementById('yearSelect2');
+
             var currentYear = new Date().getFullYear();
             var startYear = 2024;
 
             for (var year = currentYear; year >= startYear; year--) {
+
                 var option = document.createElement('option');
                 option.value = year;
                 option.textContent = year;
                 if (year === currentYear) {
                     option.selected = true;
                 }
+
                 yearSelect.appendChild(option);
+
+                var option2 = document.createElement('option');
+                option2.value = year;
+                option2.textContent = year;
+                if (year === currentYear) {
+                    option2.selected = true;
+                }
+                yearSelect2.appendChild(option2);
             }
         }
 
@@ -190,7 +208,6 @@
             document.getElementById('date2').value = formatDate(endOfMonth);
         }
 
-
         function generateMonthlyData(stats, defaultMonths) {
             return defaultMonths.map(month => stats[month] || 0);
         }
@@ -199,13 +216,29 @@
 
             const yearSelect = document.getElementById("yearSelect").value;
 
-            const stat_acte = document.getElementById("stat_acte");
-            const message = document.getElementById('message_stat_acte');
-            const loader = document.getElementById('div_Table_loader_stat_acte');
+            const contenu = document.getElementById("contenu_gra1");
+            contenu.innerHTML = '';
 
-            message.style.display = 'none';
-            stat_acte.style.display = 'none';
-            loader.style.display = 'block';
+            var stat_acte = `
+                <div id="stat_acte"></div>
+            `;
+            var message = `
+                <div id="message_stat_acte">
+                    <p class="text-center">
+                        Aucune donnée n'a été trouvée
+                    </p>
+                </div>
+            `;
+            var loader = `
+                <div id="div_Table_loader_stat_acte">
+                    <div class="d-flex justify-content-center align-items-center">
+                        <div class="spinner-border text-warning me-2" role="status" aria-hidden="true"></div>
+                        <strong>Chargement des données...</strong>
+                    </div>
+                </div>
+            `;
+
+            contenu.innerHTML = loader;
 
             fetch('/api/stat_comp_acte/' + yearSelect)
                 .then(response => response.json())
@@ -218,8 +251,6 @@
                         "Nov", "Dec"
                     ];
 
-                    stat_acte.innerHTML = '';
-
                     const consultationsData = generateMonthlyData(monthlyStats.consultations, months);
                     const hospitalisationsData = generateMonthlyData(monthlyStats.hospitalisations, months);
                     const examensData = generateMonthlyData(monthlyStats.examens, months);
@@ -227,13 +258,12 @@
 
                     if (monthlyStats) {
 
-                        message.style.display = 'none';
-                        stat_acte.style.display = 'block';
-                        loader.style.display = 'none';
+                        contenu.innerHTML = '';
+                        contenu.innerHTML = stat_acte;
 
                         var options = {
                             chart: {
-                                height: 400,
+                                height: 300,
                                 type: "bar",
                                 toolbar: {
                                     show: false,
@@ -275,7 +305,7 @@
                                 },
                                 yaxis: {
                                     lines: {
-                                        show: false,
+                                        show: true,
                                     },
                                 },
                                 padding: {
@@ -298,12 +328,13 @@
                                     "Septembre",
                                     "Octobre",
                                     "Novembre",
-                                    "Dècembre",
+                                    "Decembre",
                                 ],
                             },
                             yaxis: {
                                 labels: {
-                                    show: false,
+                                    show: true,
+                                    offsetX: -10,
                                 },
                             },
                             colors: [
@@ -330,25 +361,201 @@
 
                     } else {
 
-                        message.style.display = 'block';
-                        stat_acte.style.display = 'none';
-                        loader.style.display = 'none';
+                        contenu.innerHTML = '';
+                        contenu.innerHTML = message;
 
                     }
                 })
                 .catch(error => {
                     console.error('Erreur lors du chargement des données:', error);
 
-                    message.style.display = 'block';
-                    stat_acte.style.display = 'none';
-                    loader.style.display = 'none';
+                    contenu.innerHTML = '';
+                    contenu.innerHTML = message;
 
                 });
         }
 
-        function refresh_sam() {
-            yearSelect();
-            stat_acte();
+        function stat_acte2() {
+
+            const yearSelect = document.getElementById("yearSelect2").value;
+
+            const contenu = document.getElementById("contenu_gra2");
+            contenu.innerHTML = '';
+
+            var stat_acte = `
+                <div id="stat_acte2"></div>
+                <div id="stat_acte2_bord" class="card-header">
+                </div>
+            `;
+            var message = `
+                <div id="message_stat_acte">
+                    <p class="text-center">
+                        Aucune donnée n'a été trouvée
+                    </p>
+                </div>
+            `;
+            var loader = `
+                <div id="div_Table_loader_stat_acte">
+                    <div class="d-flex justify-content-center align-items-center">
+                        <div class="spinner-border text-warning me-2" role="status" aria-hidden="true"></div>
+                        <strong>Chargement des données...</strong>
+                    </div>
+                </div>
+            `;
+
+            contenu.innerHTML = loader;
+
+            fetch('/api/stat_comp_ope/' + yearSelect)
+                .then(response => response.json())
+                .then(data => {
+
+                    const monthlyStats = data.monthlyStats;
+                    const months = [
+                        "Jan", "Feb", "Mar", "Apr", "May", 
+                        "Jun", "Jul", "Aug", "Sep", "Oct", 
+                        "Nov", "Dec"
+                    ];
+
+                    const entrer = generateMonthlyData(monthlyStats.entrer, months);
+                    const sortie = generateMonthlyData(monthlyStats.sortie, months);
+                    const total = generateMonthlyData(monthlyStats.total, months);
+
+                    if (monthlyStats) {
+
+                        contenu.innerHTML = '';
+                        contenu.innerHTML = stat_acte;
+
+                        var options = {
+                            chart: {
+                                height: 300,
+                                type: "line",
+                                toolbar: {
+                                    show: false,
+                                },
+                            },
+                            dataLabels: {
+                                enabled: false,
+                            },
+                            stroke: {
+                                curve: "smooth",
+                                width: 3,
+                            },
+                            series: [{
+                                    name: "Entrées",
+                                    data: entrer,
+                                },
+                                {
+                                    name: "Sorties",
+                                    data: sortie,
+                                },
+                                {
+                                    name: "Total",
+                                    data: total,
+                                }, 
+                            ],
+                            grid: {
+                                borderColor: "#d8dee6",
+                                strokeDashArray: 5,
+                                xaxis: {
+                                    lines: {
+                                        show: true,
+                                    },
+                                },
+                                yaxis: {
+                                    lines: {
+                                        show: true,
+                                    },
+                                },
+                                padding: {
+                                    top: 0,
+                                    right: 0,
+                                    bottom: 10,
+                                    left: 0,
+                                },
+                            },
+                            xaxis: {
+                                categories: [
+                                    "Janvier",
+                                    "Février",
+                                    "Mars",
+                                    "Avril",
+                                    "Mai",
+                                    "Juin",
+                                    "Juillet",
+                                    "Aôut",
+                                    "Septembre",
+                                    "Octobre",
+                                    "Novembre",
+                                    "Decembre",
+                                ],
+                            },
+                            yaxis: {
+                                labels: {
+                                    show: true,
+                                    formatter: function(val) {
+                                        return formatPrice(val) + " Fcfa"; // Format y-axis labels
+                                    },
+                                    offsetX: -10,
+                                },
+                            },
+                            colors: ["#0ebb13", "#ff5a39", "#436ccf"],
+                            markers: {
+                                size: 0,
+                                opacity: 0.5,
+                                colors: ["#0ebb13", "#ff5a39", "#436ccf"],
+                                strokeColor: "#ffffff",
+                                strokeWidth: 1,
+                                hover: {
+                                    size: 7,
+                                },
+                            },
+                            tooltip: {
+                                y: {
+                                    formatter: function(val) {
+                                        return formatPrice(val)+" Fcfa";
+                                    },
+                                },
+                            },
+                        };
+                        var chart = new ApexCharts(document.querySelector("#stat_acte2"), options);
+                        chart.render();
+
+                        var stat = `
+                            <div class="d-flex flex-wrap gap-1 justify-content-center align-items-center">
+                                <div class="d-flex align-items-center box-shadow px-3 py-1 rounded-2 me-2 mb-2 bg-success text-white">
+                                    <i class="ri-pie-chart-2-fill text-white fs-4"></i>
+                                    <span class="me-1 text-white ps-1">+ ${formatPrice(data.total_entrer)} Fcfa</span>
+                                    <span class="fw-semibold">Entrées</span>
+                                </div>
+                                <div class="d-flex align-items-center box-shadow px-3 py-1 rounded-2 me-2 mb-2 bg-danger text-white">
+                                    <i class="ri-pie-chart-2-fill text-white fs-4"></i>
+                                    <span class="me-1 text-white ps-1">- ${formatPrice(data.total_sortie)} Fcfa</span>
+                                    <span class="fw-semibold">Sorties</span>
+                                </div>
+                                <div class="d-flex align-items-center box-shadow px-3 py-1 rounded-2 me-2 mb-2 bg-primary text-white">
+                                    <i class="ri-pie-chart-2-fill text-white fs-4"></i>
+                                    <span class="me-1 text-white ps-1">${formatPrice(data.total)} Fcfa</span>
+                                    <span class="fw-semibold">Total</span>
+                                </div>
+                            </div>
+                        `;
+                        document.querySelector("#stat_acte2_bord").innerHTML = stat;
+
+
+                    } else {
+
+                        contenu.innerHTML = '';
+                        contenu.innerHTML = message;
+
+                    }
+                })
+                .catch(error => {
+                    console.error('Erreur lors du chargement des données:', error);
+
+                    contenu.innerHTML = '';
+                    contenu.innerHTML = message;
+
+                });
         }
 
         function isValidDate(dateString) {
@@ -435,7 +642,7 @@
                             <div class="card mb-3">
                                 <div class="card-header">
                                     <h5 class="card-title">
-                                    Répartition des mouvements de la caisse
+                                    Répartition des mouvements de la caisse : Encaissements Factures
                                     </h5>
                                 </div>
                                 <div class="card-body">
@@ -443,7 +650,7 @@
                                 </div>
                                 <div class="card-header">
                                     <h5 class="card-title">
-                                    Répartition des mouvements de la caisse : Pour le Patient
+                                        - Part des Patients
                                     </h5>
                                 </div>
                                 <div class="card-body">
@@ -479,10 +686,10 @@
                     stat_acte_mois.innerHTML = '';
 
                     const cardData_acte_mois = [
-                        { label: "Consultations", count: stats.cons, icon: "ri-lungs-line", colorClass: "text-success", borderColor: "border-success", bgColor: "bg-success-subtle", mTotal : formatPrice(stats.m_cons.total_general), pTotal : formatPrice(stats.m_cons.total_payer), ipTotal : formatPrice(stats.m_cons.total_impayer), assurance : formatPrice(stats.m_cons.part_assurance), patient : formatPrice(stats.m_cons.part_patient)},
-                        { label: "Hospitalisations", count: stats.hos, icon: "ri-hotel-bed-line", colorClass: "text-primary", borderColor: "border-primary", bgColor: "bg-primary-subtle", mTotal : formatPrice(stats.m_hos.total_general), pTotal : formatPrice(stats.m_hos.total_payer), ipTotal : formatPrice(stats.m_hos.total_impayer), assurance : formatPrice(stats.m_hos.part_assurance), patient : formatPrice(stats.m_hos.part_patient)},
-                        { label: "Examens", count: stats.exam, icon: "ri-medicine-bottle-line", colorClass: "text-danger", borderColor: "border-danger", bgColor: "bg-danger-subtle", mTotal : formatPrice(stats.m_exam.total_general), pTotal : formatPrice(stats.m_exam.total_payer), ipTotal : formatPrice(stats.m_exam.total_impayer), assurance : formatPrice(stats.m_exam.part_assurance), patient : formatPrice(stats.m_exam.part_patient)},
-                        { label: "Soins Ambulatoires", count: stats.soinsam, icon: "ri-dossier-line", colorClass: "text-warning", borderColor: "border-warning", bgColor: "bg-warning-subtle", mTotal : formatPrice(stats.m_soinsam.total_general), pTotal : formatPrice(stats.m_soinsam.total_payer), ipTotal : formatPrice(stats.m_soinsam.total_impayer), assurance : formatPrice(stats.m_soinsam.part_assurance), patient : formatPrice(stats.m_soinsam.part_patient)},
+                        { label: "Consultations", count: stats.cons, icon: "ri-lungs-line", colorClass: "text-success", borderColor: "border-success", bgColor: "bg-success-subtle", mTotal : formatPrice(stats.m_cons.total_general), pTotal : formatPrice(stats.m_cons.part_patient_payer), ipTotal : formatPrice(stats.m_cons.part_patient_impayer), assurance : formatPrice(stats.m_cons.part_assurance), patient : formatPrice(stats.m_cons.part_patient)},
+                        { label: "Hospitalisations", count: stats.hos, icon: "ri-hotel-bed-line", colorClass: "text-primary", borderColor: "border-primary", bgColor: "bg-primary-subtle", mTotal : formatPrice(stats.m_hos.total_general), pTotal : formatPrice(stats.m_hos.part_patient_payer), ipTotal : formatPrice(stats.m_hos.part_patient_impayer), assurance : formatPrice(stats.m_hos.part_assurance), patient : formatPrice(stats.m_hos.part_patient)},
+                        { label: "Examens", count: stats.exam, icon: "ri-medicine-bottle-line", colorClass: "text-danger", borderColor: "border-danger", bgColor: "bg-danger-subtle", mTotal : formatPrice(stats.m_exam.total_general), pTotal : formatPrice(stats.m_exam.part_patient_payer), ipTotal : formatPrice(stats.m_exam.part_patient_impayer), assurance : formatPrice(stats.m_exam.part_assurance), patient : formatPrice(stats.m_exam.part_patient)},
+                        { label: "Soins Ambulatoires", count: stats.soinsam, icon: "ri-dossier-line", colorClass: "text-warning", borderColor: "border-warning", bgColor: "bg-warning-subtle", mTotal : formatPrice(stats.m_soinsam.total_general), pTotal : formatPrice(stats.m_soinsam.part_patient_payer), ipTotal : formatPrice(stats.m_soinsam.part_patient_impayer), assurance : formatPrice(stats.m_soinsam.part_assurance), patient : formatPrice(stats.m_soinsam.part_patient)},
                     ];
 
                     cardData_acte_mois.forEach(card => {
@@ -513,24 +720,6 @@
                                     </div>
                                     <div class="d-flex align-items-end justify-content-between mt-1">
                                         <a class="${card.colorClass}" href="javascript:void(0);">
-                                            <span>Montant Réglé</span>
-                                            <i class="ri-arrow-right-line ${card.colorClass} ms-1"></i>
-                                        </a>
-                                        <div class="text-end">
-                                            <p class="mb-0 ${card.colorClass}">${card.pTotal} Fcfa</p>
-                                        </div>
-                                    </div>
-                                    <div class="d-flex align-items-end justify-content-between mt-1">
-                                        <a class="${card.colorClass}" href="javascript:void(0);">
-                                            <span>Montant Non-Réglé</span>
-                                            <i class="ri-arrow-right-line ${card.colorClass} ms-1"></i>
-                                        </a>
-                                        <div class="text-end">
-                                            <p class="mb-0 ${card.colorClass}">${card.ipTotal} Fcfa</p>
-                                        </div>
-                                    </div>
-                                    <div class="d-flex align-items-end justify-content-between mt-1">
-                                        <a class="${card.colorClass}" href="javascript:void(0);">
                                             <span>Part Assurance</span>
                                             <i class="ri-arrow-right-line ${card.colorClass} ms-1"></i>
                                         </a>
@@ -545,6 +734,24 @@
                                         </a>
                                         <div class="text-end">
                                             <p class="mb-0 ${card.colorClass}">${card.patient} Fcfa</p>
+                                        </div>
+                                    </div>
+                                    <div class="d-flex align-items-end justify-content-between mt-1">
+                                        <a class="${card.colorClass}" href="javascript:void(0);">
+                                            <span>Pat. Montant Réglé</span>
+                                            <i class="ri-arrow-right-line ${card.colorClass} ms-1"></i>
+                                        </a>
+                                        <div class="text-end">
+                                            <p class="mb-0 ${card.colorClass}">${card.pTotal} Fcfa</p>
+                                        </div>
+                                    </div>
+                                    <div class="d-flex align-items-end justify-content-between mt-1">
+                                        <a class="${card.colorClass}" href="javascript:void(0);">
+                                            <span>Pat. Montant Non-Réglé</span>
+                                            <i class="ri-arrow-right-line ${card.colorClass} ms-1"></i>
+                                        </a>
+                                        <div class="text-end">
+                                            <p class="mb-0 ${card.colorClass}">${card.ipTotal} Fcfa</p>
                                         </div>
                                     </div>
                                 </div>
@@ -595,8 +802,8 @@
                     const cardData_caisse = [
                         { label: "Factures", icon: "ri-bar-chart-2-line", colorClass: "text-primary", borderColor: "border-primary", bgColor: "bg-primary-subtle", data : formatPrice(statsCaisse.fac_nbre),},
                         { label: "Montant Total", icon: "ri-safe-2-line", colorClass: "text-success", borderColor: "border-success", bgColor: "bg-success-subtle", data : formatPrice(statsCaisse.fac_total)+" Fcfa",},
-                        { label: "Montant Impayer", icon: "ri-hand-coin-line", colorClass: "text-danger", borderColor: "border-danger", bgColor: "bg-danger-subtle", data : formatPrice(statsCaisse.fac_impayer)+" Fcfa",},
-                        { label: "Montant Payer", icon: "ri-funds-fill", colorClass: "text-success", borderColor: "border-success", bgColor: "bg-success-subtle", data : formatPrice(statsCaisse.fac_payer)+" Fcfa",},
+                        // { label: "Montant Impayer", icon: "ri-hand-coin-line", colorClass: "text-danger", borderColor: "border-danger", bgColor: "bg-danger-subtle", data : formatPrice(statsCaisse.fac_impayer)+" Fcfa",},
+                        // { label: "Montant Payer", icon: "ri-funds-fill", colorClass: "text-success", borderColor: "border-success", bgColor: "bg-success-subtle", data : formatPrice(statsCaisse.fac_payer)+" Fcfa",},
                         { label: "Part Assurance", icon: "ri-cash-fill", colorClass: "text-warning", borderColor: "border-warning", bgColor: "bg-warning-subtle", data : formatPrice(statsCaisse.fac_assurance)+" Fcfa",},
                         { label: "Total Remise", icon: "ri-percent-line", colorClass: "text-danger", borderColor: "border-danger", bgColor: "bg-danger-subtle", data : formatPrice(statsCaisse.fac_remise)+" Fcfa",},
                     ];
@@ -608,12 +815,12 @@
                             <div class="border rounded-2 d-flex align-items-center flex-row p-2 mb-3 ">
                                 <div class="card-body">
                                     <div class="d-flex flex-column align-items-center">
-                                        <div class="icon-box xl ${card.bgColor} rounded-5 mb-2 no-shadow">
-                                            <i class="${card.icon} fs-1 ${card.colorClass}"></i>
+                                        <div class="icon-box md ${card.bgColor} rounded-5 mb-2 no-shadow">
+                                            <i class="${card.icon} fs-5 ${card.colorClass}"></i>
                                         </div>
-                                        <h3 class="${card.colorClass}">
+                                        <h5 class="${card.colorClass}">
                                             ${card.data}
-                                        </h3>
+                                        </h5>
                                         <h4>${card.label}</h4>
                                     </div>
                                 </div>
@@ -625,9 +832,9 @@
                     const stat_caisse_patient = document.getElementById("stat_caisse_patient");
                     stat_caisse_patient.innerHTML = '';
                     const cardData_caisse_patient = [
-                        { label: "Part Patient", icon: "ri-cash-fill", colorClass: "text-warning", borderColor: "border-warning", bgColor: "bg-warning-subtle", data : formatPrice(statsCaisse.fac_patient_total)+" Fcfa",},
-                        { label: "Part Patient Impayer", icon: "ri-hand-coin-line", colorClass: "text-danger", borderColor: "border-danger", bgColor: "bg-danger-subtle", data : formatPrice(statsCaisse.fac_patient_impayer)+" Fcfa",},
-                        { label: "Part Patient Payer", icon: "ri-funds-fill", colorClass: "text-success", borderColor: "border-success", bgColor: "bg-success-subtle", data : formatPrice(statsCaisse.fac_patient_payer)+" Fcfa",},
+                        { label: "Montant Total", icon: "ri-cash-fill", colorClass: "text-warning", borderColor: "border-warning", bgColor: "bg-warning-subtle", data : formatPrice(statsCaisse.fac_patient_total)+" Fcfa",},
+                        { label: "Montant Impayer", icon: "ri-hand-coin-line", colorClass: "text-danger", borderColor: "border-danger", bgColor: "bg-danger-subtle", data : formatPrice(statsCaisse.fac_patient_impayer)+" Fcfa",},
+                        { label: "Montant Payer", icon: "ri-funds-fill", colorClass: "text-success", borderColor: "border-success", bgColor: "bg-success-subtle", data : formatPrice(statsCaisse.fac_patient_payer)+" Fcfa",},
                     ];
 
                     cardData_caisse_patient.forEach(card => {
@@ -637,12 +844,12 @@
                             <div class="border rounded-2 d-flex align-items-center flex-row p-2 mb-3 ">
                                 <div class="card-body">
                                     <div class="d-flex flex-column align-items-center">
-                                        <div class="icon-box xl ${card.bgColor} rounded-5 mb-2 no-shadow">
-                                            <i class="${card.icon} fs-1 ${card.colorClass}"></i>
+                                        <div class="icon-box md ${card.bgColor} rounded-5 mb-2 no-shadow">
+                                            <i class="${card.icon} fs-5 ${card.colorClass}"></i>
                                         </div>
-                                        <h3 class="${card.colorClass}">
+                                        <h5 class="${card.colorClass}">
                                             ${card.data}
-                                        </h3>
+                                        </h5>
                                         <h4>${card.label}</h4>
                                     </div>
                                 </div>
@@ -703,9 +910,10 @@
             `;
         }
 
-
     });
 </script>
+
+
 
 @endsection
 

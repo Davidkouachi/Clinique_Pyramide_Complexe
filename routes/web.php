@@ -69,6 +69,7 @@ Route::middleware(['auth','statutchambre','dateRdv'])->group(function () {
 	Route::get('/Consultation', [Controller::class,'consultation_liste'])->name('consultation_liste');
 
 	Route::get('/Patient', [Controller::class,'patient_liste'])->name('patient_liste');
+	Route::get('/Utilisateurs', [Controller::class,'utilisateur'])->name('utilisateur');
 
 	Route::get('/Hospitalisation', [Controller::class, 'hospitalisation'])->name('hospitalisation');
 	Route::get('/Type Admission', [Controller::class, 'typeadmission_new'])->name('typeadmission_new');
@@ -92,8 +93,10 @@ Route::middleware(['auth','statutchambre','dateRdv'])->group(function () {
 	Route::get('/Examens Liste Caisse', [Controller::class, 'liste_caisse_examen'])->name('liste_caisse_examen');
 
 	Route::get('/Horaires Médecin', [Controller::class, 'horaire_medecin'])->name('horaire_medecin');
+	Route::get('/Rendez-Vous', [Controller::class, 'rdv_two_day'])->name('rdv_two_day');
 
 	Route::get('/Caisse', [Controller::class, 'caisse'])->name('caisse');
+	Route::get('/Opération de Caisse', [Controller::class, 'operation_caisse'])->name('operation_caisse');
 	Route::get('/Tableau de Bord Comptabilité', [Controller::class, 'comptable'])->name('comptable');
 	Route::get('/Factures Emises', [Controller::class, 'facture_emise'])->name('facture_emise');
 	Route::get('/Depôts de factures', [Controller::class, 'facture_depot'])->name('facture_depot');

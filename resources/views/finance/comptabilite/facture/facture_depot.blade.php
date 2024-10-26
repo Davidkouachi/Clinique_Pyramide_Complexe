@@ -500,6 +500,11 @@
             const { jsPDF } = window.jspdf;
             const doc = new jsPDF({ orientation: 'p', unit: 'mm', format: 'a4' });
 
+            const pdfFilename = "FACTURES EMISES DEPOSER. Du " + formatDate(date1) + " au " + formatDate(date2);
+            doc.setProperties({
+                title: pdfFilename,
+            });
+
             let yPos = 10;
 
             function drawSection(yPos) {

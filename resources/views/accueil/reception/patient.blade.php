@@ -119,7 +119,7 @@
                                                 <label class="form-label">Sexe</label>
                                                 <select class="form-select" id="patient_sexe_new">
                                                     <option value="">Selectionner</option>
-                                                    <option value="M">Homme</option>
+                                                    <option value="Mr">Homme</option>
                                                     <option value="Mme">Femme</option>
                                                 </select>
                                             </div>

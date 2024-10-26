@@ -411,7 +411,7 @@
             const { jsPDF } = window.jspdf;
             const doc = new jsPDF({ orientation: 'l', unit: 'mm', format: 'a4' });
 
-            const pdfFilename = "Acte_éffectué_" + formatDate(date1) + "_au_" + formatDate(date2);
+            const pdfFilename = "ACTE EFFECTUEE du" + formatDate(date1) + " au " + formatDate(date2);
             doc.setProperties({
                 title: pdfFilename,
             });

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?PowerDesigner AppLocale="UTF16" ID="{6D9AA808-A48A-48BA-853F-39B7D7358112}" Label="" LastModificationDate="1729450776" Name="ModeleConceptuelDonnees_1" Objects="291" Symbols="78" Type="{1E597170-9350-11D1-AB3C-0020AF71E433}" signature="CDM_DATA_MODEL_XML" version="15.1.0.2850"?>
+<?PowerDesigner AppLocale="UTF16" ID="{6D9AA808-A48A-48BA-853F-39B7D7358112}" Label="" LastModificationDate="1729460347" Name="ModeleConceptuelDonnees_1" Objects="293" Symbols="78" Type="{1E597170-9350-11D1-AB3C-0020AF71E433}" signature="CDM_DATA_MODEL_XML" version="15.1.0.2850"?>
 <!-- Veuillez ne pas modifier ce fichier -->
 
 <Model xmlns:a="attribute" xmlns:c="collection" xmlns:o="object">
@@ -12,7 +12,7 @@
 <a:Code>MODELECONCEPTUELDONNEES_1</a:Code>
 <a:CreationDate>1726156394</a:CreationDate>
 <a:Creator>SARA KOUADIO</a:Creator>
-<a:ModificationDate>1729450770</a:ModificationDate>
+<a:ModificationDate>1729460347</a:ModificationDate>
 <a:Modifier>SARA KOUADIO</a:Modifier>
 <a:PackageOptionsText>[FolderOptions]
 
@@ -1587,8 +1587,8 @@ Shadow=0</a:DisplayPreferences>
 <o:ExtendedDependencySymbol Id="o118">
 <a:CreationDate>1729450703</a:CreationDate>
 <a:ModificationDate>1729450703</a:ModificationDate>
-<a:Rect>((-47308,-24450), (-40258,-23850))</a:Rect>
-<a:ListOfPoints>((-40258,-24150),(-47308,-24150))</a:ListOfPoints>
+<a:Rect>((-47264,-24460), (-40258,-23860))</a:Rect>
+<a:ListOfPoints>((-40258,-24160),(-47264,-24160))</a:ListOfPoints>
 <a:CornerStyle>2</a:CornerStyle>
 <a:ArrowStyle>8</a:ArrowStyle>
 <a:LineColor>4194432</a:LineColor>
@@ -1627,8 +1627,8 @@ Shadow=0</a:DisplayPreferences>
 <o:ExtendedDependencySymbol Id="o123">
 <a:CreationDate>1729450770</a:CreationDate>
 <a:ModificationDate>1729450776</a:ModificationDate>
-<a:Rect>((-48433,-20625), (3542,-13125))</a:Rect>
-<a:ListOfPoints>((3542,-13125),(-48433,-13125),(-48433,-20625))</a:ListOfPoints>
+<a:Rect>((-48403,-20172), (3542,-13125))</a:Rect>
+<a:ListOfPoints>((3542,-13125),(-48403,-13125),(-48403,-20172))</a:ListOfPoints>
 <a:CornerStyle>2</a:CornerStyle>
 <a:ArrowStyle>8</a:ArrowStyle>
 <a:LineColor>4194432</a:LineColor>
@@ -2320,7 +2320,7 @@ Identifiers 0 Arial,8,N</a:FontList>
 <a:CreationDate>1729437167</a:CreationDate>
 <a:ModificationDate>1729450503</a:ModificationDate>
 <a:IconMode>-1</a:IconMode>
-<a:Rect>((-56652,-27635), (-45464,-20369))</a:Rect>
+<a:Rect>((-56717,-28122), (-45399,-19882))</a:Rect>
 <a:LineColor>4227200</a:LineColor>
 <a:FillColor>8637161</a:FillColor>
 <a:ShadowColor>12632256</a:ShadowColor>
@@ -4104,7 +4104,7 @@ Identifiers 0 Arial,8,N</a:FontList>
 <a:Code>HISTORIQUE_CAISSE</a:Code>
 <a:CreationDate>1729437167</a:CreationDate>
 <a:Creator>SARA KOUADIO</a:Creator>
-<a:ModificationDate>1729437257</a:ModificationDate>
+<a:ModificationDate>1729460347</a:ModificationDate>
 <a:Modifier>SARA KOUADIO</a:Modifier>
 <c:Attributes>
 <o:EntityAttribute Id="o347">
@@ -4167,6 +4167,16 @@ Identifiers 0 Arial,8,N</a:FontList>
 <o:DataItem Ref="o354"/>
 </c:DataItem>
 </o:EntityAttribute>
+<o:EntityAttribute Id="o355">
+<a:ObjectID>9CA724BE-A731-44C4-A306-2614714A2BB9</a:ObjectID>
+<a:CreationDate>1729460332</a:CreationDate>
+<a:Creator>SARA KOUADIO</a:Creator>
+<a:ModificationDate>1729460347</a:ModificationDate>
+<a:Modifier>SARA KOUADIO</a:Modifier>
+<c:DataItem>
+<o:DataItem Ref="o356"/>
+</c:DataItem>
+</o:EntityAttribute>
 </c:Attributes>
 </o:Entity>
 <o:Entity Id="o158">
@@ -4178,7 +4188,7 @@ Identifiers 0 Arial,8,N</a:FontList>
 <a:ModificationDate>1729450579</a:ModificationDate>
 <a:Modifier>SARA KOUADIO</a:Modifier>
 <c:Attributes>
-<o:EntityAttribute Id="o355">
+<o:EntityAttribute Id="o357">
 <a:ObjectID>B28C6021-DE4F-4217-B7C6-2C534E3FD5D1</a:ObjectID>
 <a:CreationDate>1729450539</a:CreationDate>
 <a:Creator>SARA KOUADIO</a:Creator>
@@ -4188,17 +4198,17 @@ Identifiers 0 Arial,8,N</a:FontList>
 <o:DataItem Ref="o161"/>
 </c:DataItem>
 </o:EntityAttribute>
-<o:EntityAttribute Id="o356">
+<o:EntityAttribute Id="o358">
 <a:ObjectID>247FD268-637E-499C-9F09-A458B149FC0A</a:ObjectID>
 <a:CreationDate>1729450539</a:CreationDate>
 <a:Creator>SARA KOUADIO</a:Creator>
 <a:ModificationDate>1729450571</a:ModificationDate>
 <a:Modifier>SARA KOUADIO</a:Modifier>
 <c:DataItem>
-<o:DataItem Ref="o357"/>
+<o:DataItem Ref="o359"/>
 </c:DataItem>
 </o:EntityAttribute>
-<o:EntityAttribute Id="o358">
+<o:EntityAttribute Id="o360">
 <a:ObjectID>35DCA13E-8684-4E1F-9300-6E7C538A0CFC</a:ObjectID>
 <a:CreationDate>1729450539</a:CreationDate>
 <a:Creator>SARA KOUADIO</a:Creator>
@@ -4219,7 +4229,7 @@ Identifiers 0 Arial,8,N</a:FontList>
 <a:ModificationDate>1729450678</a:ModificationDate>
 <a:Modifier>SARA KOUADIO</a:Modifier>
 <c:Attributes>
-<o:EntityAttribute Id="o359">
+<o:EntityAttribute Id="o361">
 <a:ObjectID>6ECEBCA2-8D41-474A-91CF-8449B2C239A2</a:ObjectID>
 <a:CreationDate>1729450593</a:CreationDate>
 <a:Creator>SARA KOUADIO</a:Creator>
@@ -4229,18 +4239,8 @@ Identifiers 0 Arial,8,N</a:FontList>
 <o:DataItem Ref="o161"/>
 </c:DataItem>
 </o:EntityAttribute>
-<o:EntityAttribute Id="o360">
-<a:ObjectID>BF019BFC-2C6D-4F4E-B98A-9A34439E7763</a:ObjectID>
-<a:CreationDate>1729450593</a:CreationDate>
-<a:Creator>SARA KOUADIO</a:Creator>
-<a:ModificationDate>1729450678</a:ModificationDate>
-<a:Modifier>SARA KOUADIO</a:Modifier>
-<c:DataItem>
-<o:DataItem Ref="o361"/>
-</c:DataItem>
-</o:EntityAttribute>
 <o:EntityAttribute Id="o362">
-<a:ObjectID>FB269605-3591-47D5-8F9F-DE4CFD949550</a:ObjectID>
+<a:ObjectID>BF019BFC-2C6D-4F4E-B98A-9A34439E7763</a:ObjectID>
 <a:CreationDate>1729450593</a:CreationDate>
 <a:Creator>SARA KOUADIO</a:Creator>
 <a:ModificationDate>1729450678</a:ModificationDate>
@@ -4250,6 +4250,16 @@ Identifiers 0 Arial,8,N</a:FontList>
 </c:DataItem>
 </o:EntityAttribute>
 <o:EntityAttribute Id="o364">
+<a:ObjectID>FB269605-3591-47D5-8F9F-DE4CFD949550</a:ObjectID>
+<a:CreationDate>1729450593</a:CreationDate>
+<a:Creator>SARA KOUADIO</a:Creator>
+<a:ModificationDate>1729450678</a:ModificationDate>
+<a:Modifier>SARA KOUADIO</a:Modifier>
+<c:DataItem>
+<o:DataItem Ref="o365"/>
+</c:DataItem>
+</o:EntityAttribute>
+<o:EntityAttribute Id="o366">
 <a:ObjectID>73105C73-A656-4731-8103-8D6B29AAA445</a:ObjectID>
 <a:CreationDate>1729450593</a:CreationDate>
 <a:Creator>SARA KOUADIO</a:Creator>
@@ -4259,24 +4269,24 @@ Identifiers 0 Arial,8,N</a:FontList>
 <o:DataItem Ref="o173"/>
 </c:DataItem>
 </o:EntityAttribute>
-<o:EntityAttribute Id="o365">
+<o:EntityAttribute Id="o367">
 <a:ObjectID>8370D567-B4BD-4C30-810D-E8B6AFFEF3CD</a:ObjectID>
 <a:CreationDate>1729450593</a:CreationDate>
 <a:Creator>SARA KOUADIO</a:Creator>
 <a:ModificationDate>1729450678</a:ModificationDate>
 <a:Modifier>SARA KOUADIO</a:Modifier>
 <c:DataItem>
-<o:DataItem Ref="o366"/>
+<o:DataItem Ref="o368"/>
 </c:DataItem>
 </o:EntityAttribute>
-<o:EntityAttribute Id="o367">
+<o:EntityAttribute Id="o369">
 <a:ObjectID>9C066F7B-FB20-4E47-88A0-47F6F064715F</a:ObjectID>
 <a:CreationDate>1729450593</a:CreationDate>
 <a:Creator>SARA KOUADIO</a:Creator>
 <a:ModificationDate>1729450678</a:ModificationDate>
 <a:Modifier>SARA KOUADIO</a:Modifier>
 <c:DataItem>
-<o:DataItem Ref="o368"/>
+<o:DataItem Ref="o370"/>
 </c:DataItem>
 </o:EntityAttribute>
 </c:Attributes>
@@ -4346,7 +4356,7 @@ Identifiers 0 Arial,8,N</a:FontList>
 <a:ModificationDate>1726158377</a:ModificationDate>
 <a:Modifier>SARA KOUADIO</a:Modifier>
 </o:DataItem>
-<o:DataItem Id="o369">
+<o:DataItem Id="o371">
 <a:ObjectID>C9064A74-C215-456C-8B00-731BC5827F7C</a:ObjectID>
 <a:Name>categorie</a:Name>
 <a:Code>CATEGORIE</a:Code>
@@ -4454,7 +4464,7 @@ Identifiers 0 Arial,8,N</a:FontList>
 <a:ModificationDate>1727657086</a:ModificationDate>
 <a:Modifier>SARA KOUADIO</a:Modifier>
 </o:DataItem>
-<o:DataItem Id="o370">
+<o:DataItem Id="o372">
 <a:ObjectID>CDC82DF3-14B0-4367-B811-80E5E623C58C</a:ObjectID>
 <a:Name>Attribut_22</a:Name>
 <a:Code>ATTRIBUT_22</a:Code>
@@ -4778,7 +4788,7 @@ Identifiers 0 Arial,8,N</a:FontList>
 <a:ModificationDate>1729437257</a:ModificationDate>
 <a:Modifier>SARA KOUADIO</a:Modifier>
 </o:DataItem>
-<o:DataItem Id="o357">
+<o:DataItem Id="o359">
 <a:ObjectID>0D511ACF-C64D-4319-887C-C04E04B2D827</a:ObjectID>
 <a:Name>num_compte</a:Name>
 <a:Code>NUM_COMPTE</a:Code>
@@ -4787,7 +4797,7 @@ Identifiers 0 Arial,8,N</a:FontList>
 <a:ModificationDate>1729450571</a:ModificationDate>
 <a:Modifier>SARA KOUADIO</a:Modifier>
 </o:DataItem>
-<o:DataItem Id="o361">
+<o:DataItem Id="o363">
 <a:ObjectID>CD78813A-22A8-47BD-864C-4F687B385908</a:ObjectID>
 <a:Name>solde_caisse</a:Name>
 <a:Code>SOLDE_CAISSE</a:Code>
@@ -4796,7 +4806,7 @@ Identifiers 0 Arial,8,N</a:FontList>
 <a:ModificationDate>1729450678</a:ModificationDate>
 <a:Modifier>SARA KOUADIO</a:Modifier>
 </o:DataItem>
-<o:DataItem Id="o363">
+<o:DataItem Id="o365">
 <a:ObjectID>8270839C-6F03-4796-A5AD-D1A01037168C</a:ObjectID>
 <a:Name>solde_banque</a:Name>
 <a:Code>SOLDE_BANQUE</a:Code>
@@ -4805,7 +4815,7 @@ Identifiers 0 Arial,8,N</a:FontList>
 <a:ModificationDate>1729450678</a:ModificationDate>
 <a:Modifier>SARA KOUADIO</a:Modifier>
 </o:DataItem>
-<o:DataItem Id="o366">
+<o:DataItem Id="o368">
 <a:ObjectID>6C59ED20-0F23-487E-B6BD-6EBF71CA9F16</a:ObjectID>
 <a:Name>depart</a:Name>
 <a:Code>DEPART</a:Code>
@@ -4814,13 +4824,22 @@ Identifiers 0 Arial,8,N</a:FontList>
 <a:ModificationDate>1729450678</a:ModificationDate>
 <a:Modifier>SARA KOUADIO</a:Modifier>
 </o:DataItem>
-<o:DataItem Id="o368">
+<o:DataItem Id="o370">
 <a:ObjectID>E30B3253-2D87-49FD-83ED-33D009AD0109</a:ObjectID>
 <a:Name>arriver</a:Name>
 <a:Code>ARRIVER</a:Code>
 <a:CreationDate>1729450593</a:CreationDate>
 <a:Creator>SARA KOUADIO</a:Creator>
 <a:ModificationDate>1729450678</a:ModificationDate>
+<a:Modifier>SARA KOUADIO</a:Modifier>
+</o:DataItem>
+<o:DataItem Id="o356">
+<a:ObjectID>18E8D40D-1D66-47D0-884D-2B71DE07DFAD</a:ObjectID>
+<a:Name>typemvt</a:Name>
+<a:Code>TYPEMVT</a:Code>
+<a:CreationDate>1729460332</a:CreationDate>
+<a:Creator>SARA KOUADIO</a:Creator>
+<a:ModificationDate>1729460347</a:ModificationDate>
 <a:Modifier>SARA KOUADIO</a:Modifier>
 </o:DataItem>
 </c:DataItems>

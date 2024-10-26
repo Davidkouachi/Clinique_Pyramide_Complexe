@@ -20,6 +20,7 @@ use App\Models\typesoins;
 use App\Models\soinsinfirmier;
 use App\Models\prelevement;
 use App\Models\joursemaine;
+use App\Models\caisse;
 
 class DatabaseSeeder extends Seeder
 {
@@ -102,7 +103,7 @@ class DatabaseSeeder extends Seeder
             'name' => 'Test',
             'email' => 'test@gmail.com',
             'password' => bcrypt('0000'),
-            'matricule' => 'C1223450',
+            'matricule' => '1223450',
             'tel' => '0757803650',
             'role' => $role_admin->nom,
             'role_id' => $role_admin->id,

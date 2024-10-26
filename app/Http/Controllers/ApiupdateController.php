@@ -545,4 +545,90 @@ class ApiupdateController extends Controller
         return response()->json(['error' => true]);
     }
 
+    public function update_user(Request $request, $id)
+    {
+        $verifications = [
+            'tel' => $request->tel,
+            'tel2' => $request->tel2 ?? null, // Allow tel2 to be null
+            'email' => $request->email ?? null,
+            'nom' => $request->nom,
+        ];
+
+        // Check if the user exists except for the current user being updated
+        $Exist = user::where(function($query) use ($verifications) {
+                $query->where('tel', $verifications['tel'])
+                      ->orWhere(function($query) use ($verifications) {
+                          if (!is_null($verifications['tel2'])) {
+                              $query->where('tel2', $verifications['tel2']);
+                          }
+                      })
+                      ->orWhere(function($query) use ($verifications) {
+                          if (!is_null($verifications['email'])) {
+                              $query->where('email', $verifications['email']);
+                          }
+                      })
+                      ->orWhere(function($query) use ($verifications) {
+                          if (!is_null($verifications['nom'])) {
+                              $query->where('name', $verifications['nom']);
+                          }
+                      });
+            })->where('id', '!=', $id)->first();
+
+        // Return appropriate response based on existing data
+        if ($Exist) {
+            if ($Exist->tel === $verifications['tel'] || (!is_null($verifications['tel2']) && $Exist->tel2 === $verifications['tel2'])) {
+                return response()->json(['tel_existe' => true]);
+            } elseif ($Exist->email === $verifications['email']) {
+                return response()->json(['email_existe' => true]);
+            } elseif ($Exist->name === $verifications['nom']) {
+                return response()->json(['nom_existe' => true]);
+            }
+        }
+
+        DB::beginTransaction();
+
+        try {
+            $role = role::find($request->role_id);
+            // Update the user
+            $user = user::find($id);
+            $user->name = $request->nom;
+            $user->email = $request->email;
+            $user->sexe = $request->sexe;
+            $user->tel = $request->tel;
+            $user->tel2 = $request->tel2;
+            $user->adresse = $request->adresse;
+            $user->role_id = $role->id;
+            $user->role = $role->nom;
+
+            if (!$user->save()) {
+                throw new \Exception('Erreur lors de la mise à jour de l\'utilisateur.');
+            }
+
+            DB::commit();
+            return response()->json(['success' => true]);
+
+        } catch (\Exception $e) {
+            DB::rollback();
+            return response()->json(['error' => true, 'message' => $e->getMessage()]);
+        }
+    }
+
+    public function update_mdp(Request $request, $id)
+    {
+        $put = user::find($id);
+
+        if ($put) {
+            $put->password = bcrypt($request->mdp1);
+
+            if ($put->save()) {
+                return response()->json(['success' => true]);
+            }else{
+                return response()->json(['error' => true]);
+            }
+
+        }
+
+        return response()->json(['error' => true]);
+    }
+
 }

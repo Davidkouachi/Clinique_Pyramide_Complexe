@@ -675,6 +675,11 @@
             const { jsPDF } = window.jspdf;
             const doc = new jsPDF({ orientation: 'p', unit: 'mm', format: 'a4' });
 
+            const pdfFilename = "CONSULTATION Facture N°" + consultation.code_fac + " du " + formatDateHeure(consultation.created_at);
+            doc.setProperties({
+                title: pdfFilename,
+            });
+
             yPos = 10;
 
             function formatDate(dateString) {

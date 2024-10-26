@@ -108,7 +108,7 @@ class ApiinsertfactureController extends Controller
                 $solde_apres = (int)$solde_caisse_sans_point + (int)$part_patient_sans_point;
 
                 $add_caisse = new historiquecaisse();
-                $add_caisse->motif = 'ENCAISSEMENT CONSULTATION';
+                $add_caisse->motif = 'ENCAISSEMENT CONSULTATION Facture N°'.$fac->code;
                 $add_caisse->montant = $consultation->part_patient;
                 $add_caisse->libelle = 'Encaissment CONSULTATION Facture N°'.$fac->code;
                 $add_caisse->solde_avant = $solde_caisse->solde;

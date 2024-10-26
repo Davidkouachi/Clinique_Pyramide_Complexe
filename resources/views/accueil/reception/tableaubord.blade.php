@@ -108,7 +108,7 @@
                 <div class="p-2" id="div_alert" >
                     
                 </div>
-                <div class="card-body" style="margin-top: -30px;">
+                <div class="card-body" style="margin-top: -32px;">
                     <div class="custom-tabs-container">
                         <ul class="nav nav-tabs justify-content-center bg-primary bg-2" id="customTab4" role="tablist" style="background: rgba(0, 0, 0, 0.7);">
                             <li class="nav-item" role="presentation">
@@ -351,7 +351,7 @@
                                             <label class="form-label">Sexe</label>
                                             <select class="form-select" id="patient_sexe_new">
                                                 <option value="">Selectionner</option>
-                                                <option value="M">Homme</option>
+                                                <option value="Mr">Homme</option>
                                                 <option value="Mme">Femme</option>
                                             </select>
                                         </div>
@@ -432,10 +432,10 @@
                                                     <tr>
                                                         <th>N°</th>
                                                         <th>Patient</th>
+                                                        <th>Contact</th>
                                                         <th>Médecin</th>
                                                         <th>Spécialité</th>
                                                         <th>Rdv prévu</th>
-                                                        <th>Période</th>
                                                         <th>Statut</th>
                                                         <th>Date de création</th>
                                                         <th>Actions</th>
@@ -769,7 +769,7 @@
 
         // ------------------------------------------------------------------
 
-        var inputs = ['tel_assurance_new', 'tel2_assurance_new', 'patient_tel_new', 'patient_tel2_new', 'taux_remise', 'montant_assurance', 'montant_patient','tel_societe','tel2_societe']; // Array of element IDs
+        var inputs = ['tel_assurance_new', 'tel2_assurance_new', 'patient_tel_new', 'patient_tel2_new', 'taux_remise', 'montant_assurance', 'montant_patient','tel_societe','tel2_societe'];
         inputs.forEach(function(id) {
             var inputElement = document.getElementById(id); // Get each element by its ID
 
@@ -2407,267 +2407,220 @@
             const { jsPDF } = window.jspdf;
             const doc = new jsPDF();
 
-            const titlea = "Fiche";
-            doc.setFontSize(100);
-            doc.setTextColor(242, 237, 237); // Gray color for background effect
-            doc.setFont("Helvetica", "bold");
-            doc.text(titlea, 120, 150, { align: 'center', angle: 40 });
+            const pdfFilename = "Fiche Consultation N°" + consultation.code + " du " + formatDateHeure(consultation.created_at);
+            doc.setProperties({
+                title: pdfFilename,
+            });
 
-            const logoSrc = "{{asset('assets/images/logo.png')}}";
-            const logoWidth = 22;
-            const logoHeight = 22;
-            doc.addImage(logoSrc, 'PNG', 15, 13, logoWidth, logoHeight);
+            yPos = 10;
 
-            // Informations de l'entreprise
-            doc.setFontSize(10);
-            doc.setTextColor(0, 0, 0);
-            doc.setFont("Helvetica", "bold");
-            // Texte de l'entreprise
-            const title = "ESPACE MEDICO SOCIAL LA PYRAMIDE DU COMPLEXE";
-            const titleWidth = doc.getTextWidth(title);
-            const titleX = (doc.internal.pageSize.getWidth() - titleWidth) / 2;
-            doc.text(title, titleX, 20);
-            // Texte de l'adresse
-            doc.setFont("Helvetica", "normal");
-            const address = "Abidjan Yopougon Selmer, Non loin du complexe sportif Jesse-Jackson - 04 BP 1523";
-            const addressWidth = doc.getTextWidth(address);
-            const addressX = (doc.internal.pageSize.getWidth() - addressWidth) / 2;
-            doc.text(address, addressX, 25);
-            // Texte du téléphone
-            const phone = "Tél.: 20 24 44 70 / 20 21 71 92 - Cel.: 01 01 01 63 43";
-            const phoneWidth = doc.getTextWidth(phone);
-            const phoneX = (doc.internal.pageSize.getWidth() - phoneWidth) / 2;
-            doc.text(phone, phoneX, 30);
+            function drawConsultationSection(yPos) {
+                rightMargin = 15;
+                leftMargin = 15;
+                pdfWidth = doc.internal.pageSize.getWidth();
 
-            const consultationDate = new Date(consultation.created_at);
-            // Formatter la date et l'heure séparément
-            const formattedDate = consultationDate.toLocaleDateString(); // Formater la date
-            const formattedTime = consultationDate.toLocaleTimeString(); // Formater l'heure
-            doc.setFontSize(10);
-            doc.setFont("Helvetica", "normal");
-            doc.text("Date: " + formattedDate, 15, 47);
-            doc.text("Heure: " + formattedTime, 15, 52);
-
-            //Ligne de séparation
-            doc.setFontSize(15);
-            doc.setFont("Helvetica", "bold");
-            doc.setLineWidth(0.5);
-            doc.setTextColor(255, 0, 0);
-            // doc.line(10, 35, 200, 35); 
-            const titleR = "FICHE DE CONSULTATION";
-            const titleRWidth = doc.getTextWidth(titleR);
-            const titleRX = (doc.internal.pageSize.getWidth() - titleRWidth) / 2;
-            // Définir le padding
-            const paddingh = 0; // Padding vertical
-            const paddingw = 15; // Padding horizontal
-            // Calculer les dimensions du rectangle
-            const rectX = titleRX - paddingw; // X du rectangle
-            const rectY = 50 - (15 / 2) - paddingh; // Y du rectangle
-            const rectWidth = titleRWidth + (paddingw * 2); // Largeur du rectangle
-            const rectHeight = 12 + (paddingh * 2); // Hauteur du rectangle
-            // Définir la couleur pour le cadre (noir)
-            doc.setDrawColor(0, 0, 0);
-            doc.rect(rectX, rectY, rectWidth, rectHeight); // Dessiner le rectangle
-            // Ajouter le texte centré en gras
-            doc.setFontSize(15);
-            doc.setFont("Helvetica", "bold");
-            doc.setTextColor(255, 0, 0); // Couleur du texte rouge
-            doc.text(titleR, titleRX, 50); // Positionner le texte
-
-            doc.setFontSize(10);
-            doc.setFont("Helvetica", "bold");
-            doc.setTextColor(0, 0, 0);
-            doc.text("N° Dossier : P-" + patient.matricule, 160, 47);
-            doc.text("N° Cons : C-" + consultation.code, 160, 52);
-
-            // Informations du service
-            doc.setFontSize(9);
-            doc.setFont("Helvetica", "bold");
-            doc.setTextColor(0, 0, 0);
-            doc.text("Medecin", 15, 65);
-
-            doc.setFont("Helvetica", "normal");
-            doc.setTextColor(0, 0, 0);
-            doc.text(": Dr. "+ user.name, 55, 65);
-
-            // Informations du servic
-            doc.setFont("Helvetica", "bold");
-            doc.setTextColor(0, 0, 0);
-            doc.text("Spécialité", 15, 72);
-
-            doc.setFont("Helvetica", "normal");
-            doc.setTextColor(0, 0, 0);
-            doc.text(": " + typeacte.nom, 55, 72);
-
-            // Informations du servic
-            doc.setFont("Helvetica", "bold");
-            doc.setTextColor(0, 0, 0);
-            doc.text("Nom et Prénoms", 15, 79);
-
-            doc.setFont("Helvetica", "normal");
-            doc.setTextColor(0, 0, 0);
-            doc.text(": " + patient.np , 55, 79);
-
-            // Informations du servic
-            doc.setFont("Helvetica", "bold");
-            doc.setTextColor(0, 0, 0);
-            doc.text("Assurer", 15, 86);
-
-            doc.setFont("Helvetica", "normal");
-            doc.setTextColor(225, 0, 0);
-            doc.text(": " + patient.assurer, 55, 86);
-
-            // Informations du service
-            doc.setFont("Helvetica", "bold");
-            doc.setTextColor(0, 0, 0);
-            doc.text("Age", 15, 93);
-
-            doc.setFont("Helvetica", "normal");
-            doc.setTextColor(0, 0, 0);
-            doc.text(": " + patient.age +" an(s)", 55, 93);
-
-            // Informations du servic
-            doc.setFont("Helvetica", "bold");
-            doc.setTextColor(0, 0, 0);
-            doc.text("Domicile", 15, 100);
-
-            doc.setFont("Helvetica", "normal");
-            doc.setTextColor(0, 0, 0);
-            doc.text(": " + patient.adresse, 55, 100);
-
-            // Informations du servic
-            doc.setFont("Helvetica", "bold");
-            doc.setTextColor(0, 0, 0);
-            doc.text("Contact", 15, 107);
-
-            doc.setFont("Helvetica", "normal");
-            doc.setTextColor(0, 0, 0);
-            doc.text(": +225 " + patient.tel, 55, 107);
-
-            if (patient.assurer === 'oui') {
-                // Informations du service
+                const titlea = "Fiche";
+                doc.setFontSize(100);
+                doc.setTextColor(242, 237, 237); // Gray color for background effect
                 doc.setFont("Helvetica", "bold");
-                doc.setTextColor(225, 0, 0);
-                doc.text("Assurance", 15, 114);
+                doc.text(titlea, 120, yPos + 150, { align: 'center', angle: 40 });
 
-                doc.setFont("Helvetica", "normal");
-                doc.setTextColor(225, 0, 0);
-                doc.text(": " + patient.assurance, 55, 114);
+                const logoSrc = "{{asset('assets/images/logo.png')}}";
+                const logoWidth = 22;
+                const logoHeight = 22;
+                doc.addImage(logoSrc, 'PNG', leftMargin, yPos - 7, logoWidth, logoHeight);
 
-                // Informations du service
+                // Informations de l'entreprise
+                doc.setFontSize(10);
+                doc.setTextColor(0, 0, 0);
                 doc.setFont("Helvetica", "bold");
-                doc.setTextColor(225, 0, 0);
-                doc.text("Matricule", 15, 121);
-
+                // Texte de l'entreprise
+                const title = "ESPACE MEDICO SOCIAL LA PYRAMIDE DU COMPLEXE";
+                const titleWidth = doc.getTextWidth(title);
+                const titleX = (doc.internal.pageSize.getWidth() - titleWidth) / 2;
+                doc.text(title, titleX, yPos);
+                // Texte de l'adresse
                 doc.setFont("Helvetica", "normal");
-                doc.setTextColor(225, 0, 0);
-                doc.text(": " + patient.matricule_assurance, 55, 121);
+                const address = "Abidjan Yopougon Selmer, Non loin du complexe sportif Jesse-Jackson - 04 BP 1523";
+                const addressWidth = doc.getTextWidth(address);
+                const addressX = (doc.internal.pageSize.getWidth() - addressWidth) / 2;
+                doc.text(address, addressX, (yPos + 5));
+                // Texte du téléphone
+                const phone = "Tél.: 20 24 44 70 / 20 21 71 92 - Cel.: 01 01 01 63 43";
+                const phoneWidth = doc.getTextWidth(phone);
+                const phoneX = (doc.internal.pageSize.getWidth() - phoneWidth) / 2;
+                doc.text(phone, phoneX, (yPos + 10));
+                doc.setFontSize(10);
+                doc.setFont("Helvetica", "normal");
+                const consultationDate = new Date(consultation.created_at);
+                // Formatter la date et l'heure séparément
+                const formattedDate = consultationDate.toLocaleDateString(); // Formater la date
+                const formattedTime = consultationDate.toLocaleTimeString();
+                doc.text("Date: " + formattedDate, 15, (yPos + 25));
+                doc.text("Heure: " + formattedTime, 15, (yPos + 30));
+
+                //Ligne de séparation
+                doc.setFontSize(15);
+                doc.setFont("Helvetica", "bold");
+                doc.setLineWidth(0.5);
+                doc.setTextColor(255, 0, 0);
+                // doc.line(10, 35, 200, 35); 
+                const titleR = "FACTURE DE CONSULTATION";
+                const titleRWidth = doc.getTextWidth(titleR);
+                const titleRX = (doc.internal.pageSize.getWidth() - titleRWidth) / 2;
+                // Définir le padding
+                const paddingh = 0; // Padding vertical
+                const paddingw = 15; // Padding horizontal
+                // Calculer les dimensions du rectangle
+                const rectX = titleRX - paddingw; // X du rectangle
+                const rectY = (yPos + 18) - paddingh; // Y du rectangle
+                const rectWidth = titleRWidth + (paddingw * 2); // Largeur du rectangle
+                const rectHeight = 15 + (paddingh * 2); // Hauteur du rectangle
+                // Définir la couleur pour le cadre (noir)
+                doc.setDrawColor(0, 0, 0);
+                doc.rect(rectX, rectY, rectWidth, rectHeight); // Dessiner le rectangle
+                // Ajouter le texte centré en gras
+                doc.setFontSize(15);
+                doc.setFont("Helvetica", "bold");
+                doc.setTextColor(255, 0, 0); // Couleur du texte rouge
+                doc.text(titleR, titleRX, (yPos + 25)); // Positionner le texte
+                const titleN = "N° "+ consultation.code;
+                doc.text(titleN, (doc.internal.pageSize.getWidth() - doc.getTextWidth(titleN)) / 2, (yPos + 31));
+
+                doc.setFontSize(10);
+                doc.setFont("Helvetica", "bold");
+                doc.setTextColor(0, 0, 0);
+                const numDossier = "N° Dossier : P-"+ patient.matricule;
+                const numDossierWidth = doc.getTextWidth(numDossier);
+                doc.text(numDossier, pdfWidth - rightMargin - numDossierWidth, yPos + 25);
+
+                yPoss = (yPos + 45);
+
+                const patientInfo = [
+                    { label: "Medecin", value: "Dr. "+ user.name },
+                    { label: "Spécialité", value: typeacte.nom },
+                    { label: "Nom et Prénoms", value: patient.np },
+                    { label: "Assurer", value: patient.assurer },
+                    { label: "Age", value: patient.age +" an(s)" },
+                    { label: "Adresse", value: patient.adresse },
+                    { label: "Contact", value: "+225 "+patient.tel },
+                ];
+
+                if (patient.assurer == 'oui') {
+                    patientInfo.push(
+                        { label: "Assurance", value: patient.assurance },
+                        { label: "Matricule", value: patient.matricule_assurance },
+                    );
+                }
+
+                patientInfo.forEach(info => {
+                    doc.setFontSize(10);
+                    doc.setFont("Helvetica", "bold");
+                    doc.text(info.label, leftMargin, yPoss);
+                    doc.setFont("Helvetica", "normal");
+                    doc.text(": " + info.value, leftMargin + 35, yPoss);
+                    yPoss += 7;
+                });
+
+                doc.setFontSize(30);
+                doc.setLineWidth(0.5);
+                doc.line(10, yPoss, 200, yPoss);
+
+                doc.setFontSize(15);
+                doc.setFont("Helvetica", "bold");
+                doc.setTextColor(255, 0, 0);
+                const rendu = "Compte Rendu";
+                const titleRr = doc.getTextWidth(rendu);
+                const titlerendu = (doc.internal.pageSize.getWidth() - titleRr) / 2;
+                doc.text(rendu, titlerendu, yPoss + 10);
+                // Dessiner une ligne sous le texte pour le souligner
+                const underlineY = yPoss + 12; // Ajustez cette valeur selon vos besoins
+                doc.setDrawColor(255, 0, 0);
+                doc.setLineWidth(0.5); // Épaisseur de la ligne
+                doc.line(titlerendu, underlineY, titlerendu + titleRr, underlineY);
+
+                yPoss += 25;
+                hPoss = yPoss;
+                doc.setTextColor(0, 0, 0);
+
+                const pInfo1 = [
+                    { label: "TA", value: "..........." },
+                    { label: "Poids", value: "..........." },
+                ];
+
+                pInfo1.forEach(info => {
+                    doc.setFontSize(10);
+                    doc.setFont("Helvetica", "bold");
+                    doc.text(info.label, leftMargin, yPoss);
+                    doc.setFont("Helvetica", "normal");
+                    doc.text(": " + info.value, leftMargin + 15, yPoss);
+                    yPoss += 7;
+                });
+
+                const pInfo2 = [
+                    { label: "BD", value: "..........." },
+                    { label: "Pouls", value: "..........." },
+                ];
+
+                pInfo2.forEach(info => {
+                    doc.setFontSize(10);
+                    doc.setFont("Helvetica", "bold");
+                    doc.text(info.label, leftMargin + 40, yPoss - 14);
+                    doc.setFont("Helvetica", "normal");
+                    doc.text(": " + info.value, leftMargin + 55, yPoss - 14);
+                    yPoss += 7;
+                });
+
+                const pInfo3 = [
+                    { label: "BG", value: "..........." },
+                    { label: "Taille", value: "..........." },
+                ];
+
+                pInfo3.forEach(info => {
+                    doc.setFontSize(10);
+                    doc.setFont("Helvetica", "bold");
+                    doc.text(info.label, leftMargin + 75, yPoss - 28);
+                    doc.setFont("Helvetica", "normal");
+                    doc.text(": " + info.value, leftMargin + 90, yPoss - 28);
+                    yPoss += 7;
+                });
+
+                const pInfo4 = [
+                    { label: "Temp", value: "..........." },
+                ];
+
+                pInfo4.forEach(info => {
+                    doc.setFontSize(10);
+                    doc.setFont("Helvetica", "bold");
+                    doc.text(info.label, leftMargin + 110, yPoss - 42);
+                    doc.setFont("Helvetica", "normal");
+                    doc.text(": " + info.value, leftMargin + 125, yPoss - 42);
+                    yPoss += 7;
+                });
+
+                hPoss += 25;
+
+                doc.setFontSize(15);
+                doc.setFont("Helvetica", "bold");
+                doc.setTextColor(0, 0, 0);
+                const motif = "Motif";
+                const titleRm = doc.getTextWidth(motif);
+                const titlemotif = (doc.internal.pageSize.getWidth() - titleRm) / 2;
+                doc.text(motif, titlemotif, hPoss);
+                // Dessiner une ligne sous le texte pour le souligner
+                const underlineYm = hPoss + 2; // Ajustez cette valeur selon vos besoins
+                doc.setDrawColor(0, 0, 0);
+                doc.setLineWidth(0.5); // Épaisseur de la ligne
+                doc.line(titlemotif, underlineYm, titlemotif + titleRm, underlineYm);
+
+                doc.setFontSize(10);
+                doc.setFont("Helvetica", "bold");
+                doc.setTextColor(0, 0, 0);
+                doc.text("Imprimer le "+new Date().toLocaleDateString()+" à "+new Date().toLocaleTimeString() , 5, 295);
+
             }
 
-            doc.setFontSize(30);
-            doc.setLineWidth(0.5);
-            doc.line(10, 128, 200, 128);
-
-            doc.setFontSize(15);
-            doc.setFont("Helvetica", "bold");
-            doc.setTextColor(255, 0, 0);
-            const rendu = "Compte Rendu";
-            const titleRr = doc.getTextWidth(rendu);
-            const titlerendu = (doc.internal.pageSize.getWidth() - titleRr) / 2;
-            doc.text(rendu, titlerendu, 140);
-            // Dessiner une ligne sous le texte pour le souligner
-            const underlineY = 142; // Ajustez cette valeur selon vos besoins
-            doc.setDrawColor(255, 0, 0);
-            doc.setLineWidth(0.5); // Épaisseur de la ligne
-            doc.line(titlerendu, underlineY, titlerendu + titleRr, underlineY);
-
-            // Informations du service
-            doc.setFontSize(10);
-            doc.setFont("Helvetica", "bold");
-            doc.setTextColor(0, 0, 0);
-            doc.text("TA", 20, 155);
-
-            doc.setFont("Helvetica", "normal");
-            doc.setTextColor(0, 0, 0);
-            doc.text(": ..........", 35, 155);
-
-            // Informations du service
-            doc.setFontSize(10);
-            doc.setFont("Helvetica", "bold");
-            doc.setTextColor(0, 0, 0);
-            doc.text("BD", 60, 155);
-
-            doc.setFont("Helvetica", "normal");
-            doc.setTextColor(0, 0, 0);
-            doc.text(": ..........", 75, 155);
-
-            // Informations du service
-            doc.setFontSize(10);
-            doc.setFont("Helvetica", "bold");
-            doc.setTextColor(0, 0, 0);
-            doc.text("BG", 100, 155);
-
-            doc.setFont("Helvetica", "normal");
-            doc.setTextColor(0, 0, 0);
-            doc.text(": ..........", 115, 155);
-
-            // Informations du service
-            doc.setFontSize(10);
-            doc.setFont("Helvetica", "bold");
-            doc.setTextColor(0, 0, 0);
-            doc.text("Poids", 20, 165);
-
-            doc.setFont("Helvetica", "normal");
-            doc.setTextColor(0, 0, 0);
-            doc.text(": ..........", 35, 165);
-
-            // Informations du service
-            doc.setFontSize(10);
-            doc.setFont("Helvetica", "bold");
-            doc.setTextColor(0, 0, 0);
-            doc.text("Pouls", 60, 165);
-
-            doc.setFont("Helvetica", "normal");
-            doc.setTextColor(0, 0, 0);
-            doc.text(": ..........", 75, 165);
-
-            // Informations du service
-            doc.setFontSize(10);
-            doc.setFont("Helvetica", "bold");
-            doc.setTextColor(0, 0, 0);
-            doc.text("Taille", 100, 165);
-
-            doc.setFont("Helvetica", "normal");
-            doc.setTextColor(0, 0, 0);
-            doc.text(": ..........", 115, 165);
-
-            // Informations du service
-            doc.setFontSize(10);
-            doc.setFont("Helvetica", "bold");
-            doc.setTextColor(0, 0, 0);
-            doc.text("Temp", 140, 165);
-
-            doc.setFont("Helvetica", "normal");
-            doc.setTextColor(0, 0, 0);
-            doc.text(": ..........", 155, 165);
-
-            doc.setFontSize(15);
-            doc.setFont("Helvetica", "bold");
-            doc.setTextColor(0, 0, 0);
-            const motif = "Motif";
-            const titleRm = doc.getTextWidth(motif);
-            const titlemotif = (doc.internal.pageSize.getWidth() - titleRm) / 2;
-            doc.text(motif, titlemotif, 185);
-            // Dessiner une ligne sous le texte pour le souligner
-            const underlineYm = 187; // Ajustez cette valeur selon vos besoins
-            doc.setDrawColor(0, 0, 0);
-            doc.setLineWidth(0.5); // Épaisseur de la ligne
-            doc.line(titlemotif, underlineYm, titlemotif + titleRm, underlineYm);
-
-            doc.setFontSize(10);
-            doc.setFont("Helvetica", "bold");
-            doc.setTextColor(0, 0, 0);
-            doc.text("Imprimer le "+new Date().toLocaleDateString()+" à "+new Date().toLocaleTimeString() , 5, 295);
+            drawConsultationSection(yPos);
 
             doc.output('dataurlnewwindow');
         }
@@ -2675,6 +2628,11 @@
         function generatePDFInvoice(patient, user, typeacte, consultation) {
             const { jsPDF } = window.jspdf;
             const doc = new jsPDF({ orientation: 'p', unit: 'mm', format: 'a4' });
+
+            const pdfFilename = "Consultation Facture N°" + consultation.code_fac + " du " + formatDateHeure(consultation.created_at);
+            doc.setProperties({
+                title: pdfFilename,
+            });
 
             yPos = 10;
 
@@ -2786,18 +2744,12 @@
 
                 yPoss = (yPos + 50);
 
-                const medecinInfo = [];
-
-                if (consultation.num_bon && consultation.num_bon !== "") {
-                    medecinInfo.push({ label: "Numéro de Bon", value: consultation.num_bon });
-                }
-
-                medecinInfo.push(
-                    { label: "N° Consultation", value: "C-" + consultation.code },
-                    { label: "Medecin", value: "Dr. " + user.name },
+                const medecinInfo = [
+                    { label: "N° Consultation", value: "C-"+consultation.code},
+                    { label: "Medecin", value: "Dr. "+user.name },
                     { label: "Spécialité", value: typeacte.nom },
-                    { label: "Prix Consultation", value: typeacte.prix + " Fcfa" }
-                );
+                    { label: "Prix Consultation", value: typeacte.prix+" Fcfa" },
+                ];
 
                 medecinInfo.forEach(info => {
                     doc.setFontSize(8);
@@ -2898,7 +2850,7 @@
 
                                 let button = '';
 
-                                if (item.statut == 'en cours') {
+                                if (item.statut == 'en attente') {
                                     button = `
                                         <a class="btn btn-outline-info btn-sm rounded-5" data-bs-toggle="modal" data-bs-target="#Modif_Rdv_modal" id="modif-${item.id}">
                                             <i class="ri-edit-line"></i>
@@ -2913,11 +2865,12 @@
                                 row.innerHTML = `
                                     <td>${((currentPage - 1) * perPage) + index + 1}</td>
                                     <td>${item.patient}</td>
+                                    <td>+225 ${item.patient_tel}</td>
                                     <td>Dr. ${item.medecin}</td>
                                     <td>${item.specialite}</td>
                                     <td>${formatDate(item.date)}</td>
                                     <td>
-                                        <span class="badge ${item.statut === 'en cours' ? 'bg-warning' : 'bg-success'}">
+                                        <span class="badge ${item.statut === 'en attente' ? 'bg-warning' : 'bg-success'}">
                                             ${item.statut}
                                         </span>
                                     </td>
@@ -2945,6 +2898,7 @@
                                     modifButton.addEventListener('click', () => {
                                         document.getElementById('medecin_id_rdvM').value = item.id;
                                         document.getElementById('date_rdvM').value = item.date;
+                                        document.getElementById('date_rdvM').min = item.date; 
                                         document.getElementById('patient_rdvM').value = item.patient;
                                         document.getElementById('motif_rdvM').value = item.motif;
                                         document.getElementById('medecin_rdvM').value = item.medecin;
@@ -2953,8 +2907,8 @@
                                         const allowedDays = item.horaires.map(horaire => horaire.jour);
 
                                         const dateInput = document.getElementById('date_rdvM');
-                                        dateInput.addEventListener('input', (event) => {
-                                            
+                                        dateInput.addEventListener('blur', (event) => {
+
                                             const selectedDate = new Date(event.target.value);
                                             const selectedDay = selectedDate.getDay();
 
@@ -3131,6 +3085,7 @@
 
                     if (response.success) {
                         list_rdv();
+                        count_rdv_two_day();
                         showAlert('Succès', 'Rendez-Vous annulé.','success');
                     } else if (response.error) {
                         showAlert("ERREUR", 'Une erreur est survenue', "error");
@@ -3187,6 +3142,7 @@
                     if (response.success) {
 
                         list_rdv();
+                        count_rdv_two_day();
                         showAlert("ALERT", 'Mise à jour éffectué', "success");
 
                     } else if (response.error) {
@@ -3203,6 +3159,33 @@
                     showAlert("ERREUR", 'Une erreur est survenue lors de l\'enregistrement', "error");
                 }
             });
+        }
+
+        function count_rdv_two_day() {
+
+                fetch('/api/count_rdv_two_day')
+                    .then(response => response.json())
+                    .then(data => {
+                        const nbre = data.nbre || 0;
+
+                        document.getElementById('div_two_rdv').innerHTML = '';
+
+                        if (nbre > 0) {
+
+                            const div = `
+                                <div class="sidebar-contact" style="background-color: red;">
+                                    <a class="text-white" href="{{route('rdv_two_day')}}">
+                                        <p class="fw-light mb-1 text-nowrap text-truncate">Rendez-Vous dans 2 jours</p>
+                                        <h5 class="m-0 lh-1 text-nowrap text-truncate">${nbre}</h5>
+                                        <i class="ri-calendar-schedule-line"></i>
+                                    </a>
+                                </div>
+                            `;
+
+                            document.getElementById('div_two_rdv').innerHTML = div;
+                        }
+                    })
+                    .catch(error => console.error('Error fetching data:', error));
         }
 
     });

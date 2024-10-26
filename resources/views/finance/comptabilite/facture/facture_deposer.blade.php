@@ -20,6 +20,19 @@
 @section('content')
 
 <div class="app-body">
+    <div class="row gx-3">
+        <div class="col-xxl-12 col-sm-12">
+            <div class="card mb-3 bg-3">
+                <div class="card-body" style="background: rgba(0, 0, 0, 0.7);">
+                    <div class="py-4 px-3 text-white">
+                        <h6>Bienvenue,</h6>
+                        <h2>{{Auth::user()->sexe.'. '.Auth::user()->name}}</h2>
+                        <h5>Factures Déposer</h5>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
     <div class="row justify-content-center">
         <div class="col-12">
             <div class="card mb-3">
@@ -842,6 +855,11 @@
             const { jsPDF } = window.jspdf;
             const doc = new jsPDF({ orientation: 'l', unit: 'mm', format: 'a4' });
 
+            const pdfFilename = "FACTURES EMISES du " + formatDate(date1) + " au " + formatDate(date2);
+            doc.setProperties({
+                title: pdfFilename,
+            });
+
             let yPos = 10;
 
             function drawSection(yPos) {
@@ -1056,6 +1074,11 @@
 
             const { jsPDF } = window.jspdf;
             const doc = new jsPDF({ orientation: 'p', unit: 'mm', format: 'a4' });
+
+            const pdfFilename = "BORDEREAUX DES FACTURES EMISES DEPOSER. Du " + formatDate(date1) + " au " + formatDate(date2);
+            doc.setProperties({
+                title: pdfFilename,
+            });
 
             let yPos = 10;
 

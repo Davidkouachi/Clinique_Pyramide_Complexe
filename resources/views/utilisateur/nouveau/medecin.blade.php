@@ -20,130 +20,161 @@
 @section('content')
 
 <div class="app-body">
-    <!-- Row starts -->
-    <div class="row">
-        <div class="col-12">
-            <div class="card mb-3">
-                <div class="card-header">
-                    <h5 class="card-title">Formulaire Nouveau Médecin</h5>
-                </div>
-                <div class="card-body" >
-                    <!-- Row starts -->
-                    <div class="row gx-3">
-                        <div class="col-xxl-3 col-lg-4 col-sm-6">
-                            <div class="mb-3">
-                                <label class="form-label">Nom et Prénoms</label>
-                                <input type="text" class="form-control" id="nom" placeholder="Saisie Obligatoire" oninput="this.value = this.value.toUpperCase()">
-                            </div>
-                        </div>
-                        <div class="col-xxl-3 col-lg-4 col-sm-6">
-                            <div class="mb-3">
-                                <label class="form-label">Sexe</label>
-                                <select class="form-select" id="sexe">
-                                    <option value="">Selectionner</option>
-                                    <option value="M">Homme</option>
-                                    <option value="Mme">Femme</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col-xxl-3 col-lg-4 col-sm-6">
-                            <div class="mb-3">
-                                <label class="form-label">Email</label>
-                                <input type="email" class="form-control" id="email" placeholder="Saisie Obligatoire">
-                            </div>
-                        </div>
-                        <div class="col-xxl-3 col-lg-4 col-sm-6">
-                            <div class="mb-3">
-                                <label class="form-label">Contact</label>
-                                <input type="tel" class="form-control" id="tel" placeholder="Saisie Obligatoire" maxlength="10">
-                            </div>
-                        </div>
-                        <div class="col-xxl-3 col-lg-4 col-sm-6">
-                            <div class="mb-3">
-                                <label class="form-label">Contact 2</label>
-                                <input type="tel" class="form-control" id="tel2" placeholder="facultatif" maxlength="10">
-                            </div>
-                        </div>
-                        <div class="col-xxl-3 col-lg-4 col-sm-6">
-                            <div class="mb-3">
-                                <label class="form-label" for="adresse">Localisation</label>
-                                <input type="text" class="form-control" id="adresse" placeholder="Saisie Obligatoire">
-                            </div>
-                        </div>
-                        <div class="col-xxl-3 col-lg-4 col-sm-6">
-                            <div class="mb-3">
-                                <label class="form-label">Spécialité</label>
-                                <select class="form-select" id="typeacte_id">
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col-sm-12">
-                            <div class="mb-3 d-flex gap-2 justify-content-start">
-                                <button id="btn_eng" class="btn btn-success">
-                                    Enregistrer
-                                </button>
-                            </div>
-                        </div>
-                        <div class="col-sm-12" >
-                            <div class="mb-3" >
-                                <div id="div_alert" ></div>
-                            </div>
-                        </div>
+    <div class="row gx-3">
+        <div class="col-xxl-12 col-sm-12">
+            <div class="card mb-3 bg-3">
+                <div class="card-body" style="background: rgba(0, 0, 0, 0.7);">
+                    <div class="py-4 px-3 text-white">
+                        <h6>Bienvenue,</h6>
+                        <h2>{{Auth::user()->sexe.'. '.Auth::user()->name}}</h2>
+                        <h5>Médecins</h5>
                     </div>
-                    <!-- Row ends -->
                 </div>
             </div>
         </div>
-        <div class="col-12">
-            <div class="card mb-3">
-                <div class="card-header d-flex align-items-center justify-content-between">
-                    <h5 class="card-title">
-                        Liste des Médecins
-                    </h5>
-                    <a id="btn_refresh_table" class="btn btn-outline-info ms-auto">
-                        <i class="ri-loop-left-line"></i>
-                    </a>
-                </div>
-                <div class="card-body">
-                    <div id="div_alert_table" >
-                    
-                    </div>
-                    <div class="table-outer" id="div_Table" style="display: none;">
-                        <div class="table-responsive">
-                            <table class="table align-middle table-hover m-0 truncate" id="Table">
-                                <thead>
-                                    <tr>
-                                        <th scope="col">N°</th>
-                                        <th scope="col">Nom et Prénoms</th>
-                                        <th scope="col">Email</th>
-                                        <th scope="col">Matricule</th>
-                                        <th scope="col">Specialité</th>
-                                        <th scope="col">contact</th>
-                                        <th scope="col">Localisation</th>
-                                        <th scope="col">Actions</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                    <div id="message_Table" style="display: none;">
-                        <p class="text-center" >
-                            Aucun Medecin n'a été enregistrer
-                        </p>
-                    </div>
-                    <div id="div_Table_loader" style="display: none;">
-                        <div class="d-flex justify-content-center align-items-center">
-                            <div class="spinner-border text-warning me-2" role="status" aria-hidden="true"></div>
-                            <strong>Chargement des données...</strong>
+    </div>
+    <div class="row gx-3" >
+        <div class="col-sm-12">
+            <div class="card mb-3 mt-3">
+                <div class="card-body" style="margin-top: -30px;">
+                    <div class="custom-tabs-container">
+                        <ul class="nav nav-tabs justify-content-center bg-primary bg-2" id="customTab4" role="tablist" style="background: rgba(0, 0, 0, 0.7);">
+                            <li class="nav-item" role="presentation">
+                                <a class="nav-link active text-white" id="tab-twoAAAN" data-bs-toggle="tab" href="#twoAAAN" role="tab" aria-controls="twoAAAN" aria-selected="false" tabindex="-1">
+                                    <i class="ri-user-add-line me-2"></i>
+                                    Nouveau Médecin
+                                </a>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <a class="nav-link text-white" id="tab-twoAAA" data-bs-toggle="tab" href="#twoAAA" role="tab" aria-controls="twoAAA" aria-selected="false" tabindex="-1">
+                                    <i class="ri-contacts-line me-2"></i>
+                                    Liste des Médecins
+                                </a>
+                            </li>
+                        </ul>
+                        <div class="tab-content" id="customTabContent">
+                            <div class="tab-pane active show fade" id="twoAAAN" role="tabpanel" aria-labelledby="tab-twoAAAN">
+                                <div class="card-header">
+                                    <h5 class="card-title">Formulaire Nouveau Médecin</h5>
+                                </div>
+                                <div class="card-body" >
+                                    <!-- Row starts -->
+                                    <div class="row gx-3">
+                                        <div class="col-xxl-3 col-lg-4 col-sm-6">
+                                            <div class="mb-3">
+                                                <label class="form-label">Nom et Prénoms</label>
+                                                <input type="text" class="form-control" id="nom" placeholder="Saisie Obligatoire" oninput="this.value = this.value.toUpperCase()">
+                                            </div>
+                                        </div>
+                                        <div class="col-xxl-3 col-lg-4 col-sm-6">
+                                            <div class="mb-3">
+                                                <label class="form-label">Sexe</label>
+                                                <select class="form-select" id="sexe">
+                                                    <option value="">Selectionner</option>
+                                                    <option value="Mr">Homme</option>
+                                                    <option value="Mme">Femme</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-xxl-3 col-lg-4 col-sm-6">
+                                            <div class="mb-3">
+                                                <label class="form-label">Email</label>
+                                                <input type="email" class="form-control" id="email" placeholder="Saisie Obligatoire">
+                                            </div>
+                                        </div>
+                                        <div class="col-xxl-3 col-lg-4 col-sm-6">
+                                            <div class="mb-3">
+                                                <label class="form-label">Contact</label>
+                                                <input type="tel" class="form-control" id="tel" placeholder="Saisie Obligatoire" maxlength="10">
+                                            </div>
+                                        </div>
+                                        <div class="col-xxl-3 col-lg-4 col-sm-6">
+                                            <div class="mb-3">
+                                                <label class="form-label">Contact 2</label>
+                                                <input type="tel" class="form-control" id="tel2" placeholder="facultatif" maxlength="10">
+                                            </div>
+                                        </div>
+                                        <div class="col-xxl-3 col-lg-4 col-sm-6">
+                                            <div class="mb-3">
+                                                <label class="form-label" for="adresse">Localisation</label>
+                                                <input type="text" class="form-control" id="adresse" placeholder="Saisie Obligatoire">
+                                            </div>
+                                        </div>
+                                        <div class="col-xxl-3 col-lg-4 col-sm-6">
+                                            <div class="mb-3">
+                                                <label class="form-label">Spécialité</label>
+                                                <select class="form-select" id="typeacte_id">
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-12">
+                                            <div class="mb-3 d-flex gap-2 justify-content-start">
+                                                <button id="btn_eng" class="btn btn-success">
+                                                    Enregistrer
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-12" >
+                                            <div class="mb-3" >
+                                                <div id="div_alert" ></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- Row ends -->
+                                </div>
+                            </div>
+                            <div class="tab-pane fade" id="twoAAA" role="tabpanel" aria-labelledby="tab-twoAAA">
+                                <div class="card-header d-flex align-items-center justify-content-between">
+                                    <h5 class="card-title">
+                                        Liste des Médecins
+                                    </h5>
+                                    <a id="btn_refresh_table" class="btn btn-outline-info ms-auto">
+                                        <i class="ri-loop-left-line"></i>
+                                    </a>
+                                </div>
+                                <div class="card-body">
+                                    <div id="div_alert_table" >
+                                    
+                                    </div>
+                                    <div class="table-outer" id="div_Table" style="display: none;">
+                                        <div class="table-responsive">
+                                            <table class="table align-middle table-hover m-0 truncate" id="Table">
+                                                <thead>
+                                                    <tr>
+                                                        <th scope="col">N°</th>
+                                                        <th scope="col">Nom et Prénoms</th>
+                                                        <th scope="col">Email</th>
+                                                        <th scope="col">Matricule</th>
+                                                        <th scope="col">Specialité</th>
+                                                        <th scope="col">contact</th>
+                                                        <th scope="col">Localisation</th>
+                                                        <th scope="col">Actions</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                    <div id="message_Table" style="display: none;">
+                                        <p class="text-center" >
+                                            Aucun Medecin n'a été enregistrer
+                                        </p>
+                                    </div>
+                                    <div id="div_Table_loader" style="display: none;">
+                                        <div class="d-flex justify-content-center align-items-center">
+                                            <div class="spinner-border text-warning me-2" role="status" aria-hidden="true"></div>
+                                            <strong>Chargement des données...</strong>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    <!-- Row ends -->
 </div>
 
 <div class="modal fade" id="Mdelete" tabindex="-1" aria-labelledby="delRowLabel" aria-modal="true" role="dialog">

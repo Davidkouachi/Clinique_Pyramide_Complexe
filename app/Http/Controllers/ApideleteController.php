@@ -292,4 +292,19 @@ class ApideleteController extends Controller
         }
     }
 
+    public function delete_user($id)
+    {
+        $put = user::find($id);
+
+        if ($put) {
+            if ($put->delete()) {
+                return response()->json(['success' => true]);
+            }else{
+                return response()->json(['error' => true]);
+            }
+        }
+
+        return response()->json(['error' => true]);
+    }
+
 }

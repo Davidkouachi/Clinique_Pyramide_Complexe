@@ -55,12 +55,17 @@ class ApihistoriqueController extends Controller
 {
     public function historique_caisse($date)
     {
+        $total = 0;
 
         $trace = historiquecaisse::whereDate('created_at', '=', $date)->get();
 
-        $total = historiquecaisse::whereDate('created_at', $date)
-                                ->latest('created_at')
-                                ->first();
+        foreach ($trace as $value) {
+            if ($value->typemvt === 'Entrer de Caisse') {
+                $total += str_replace('.', '', $value->montant);
+            }else{
+                $total -= str_replace('.', '', $value->montant);
+            }
+        }
 
         return response()->json(['trace' => $trace,'total' => $total]);
 

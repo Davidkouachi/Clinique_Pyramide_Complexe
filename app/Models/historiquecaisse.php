@@ -17,6 +17,7 @@ class historiquecaisse extends Model
         'solde_apres',
         'typemvt',
         'creer_id',
+        'date_ope',
     ];
 
     public function user()

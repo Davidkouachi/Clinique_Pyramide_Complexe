@@ -80,6 +80,46 @@
         document.getElementById("btn_refresh_trace").addEventListener("click", historique);
         document.getElementById("date_trace").addEventListener("change", historique);
 
+        function formatPrice(price)
+        {
+
+            // Convert to float and round to the nearest whole number
+            let number = Math.round(parseFloat(price));
+            if (isNaN(number)) {
+                return '';
+            }
+
+            // Format the number with dot as thousands separator
+            return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+        }
+
+        function formatDate(dateString)
+        {
+
+            const date = new Date(dateString);
+            const day = String(date.getDate()).padStart(2, '0');
+            const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are zero-based
+            const year = date.getFullYear();
+
+            return `${day}/${month}/${year}`; // Format as dd/mm/yyyy
+        }
+
+        function formatDateHeure(dateString)
+        {
+
+            const date = new Date(dateString);
+                
+            const day = String(date.getDate()).padStart(2, '0');
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const year = date.getFullYear();
+
+            const hours = String(date.getHours()).padStart(2, '0');
+            const minutes = String(date.getMinutes()).padStart(2, '0');
+            const seconds = String(date.getSeconds()).padStart(2, '0');
+
+            return `${day}/${month}/${year} à ${hours}:${minutes}:${seconds}`;
+        }
+
         function solde() {
 
             const solde_caisse = document.getElementById("solde_caisse");
@@ -146,7 +186,7 @@
                             contenu_total.innerHTML = '';
 
                             const divT = `
-                                <h5 class="card-title">Montant Total : ${total.solde_apres} Fcfa</h5>   
+                                <h5 class="card-title">Montant Total : ${formatPrice(total)} Fcfa</h5>   
                             `;
                             contenu_total.innerHTML = divT;
 

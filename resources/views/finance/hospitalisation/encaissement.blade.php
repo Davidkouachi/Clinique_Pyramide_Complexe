@@ -808,6 +808,11 @@
             const { jsPDF } = window.jspdf;
             const doc = new jsPDF({ orientation: 'p', unit: 'mm', format: 'a4' });
 
+            const pdfFilename = "HOSPITALISATION Facture N°" + facture.code + " du " + formatDateHeure(facture.created_at);
+            doc.setProperties({
+                title: pdfFilename,
+            });
+
             let yPos = 10;
 
             function drawConsultationSection(yPos) {

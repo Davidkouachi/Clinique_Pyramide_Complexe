@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Validator;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 use App\Models\assurance;
 use App\Models\taux;
@@ -47,6 +48,8 @@ use App\Models\joursemaine;
 use App\Models\rdvpatient;
 use App\Models\programmemedecin;
 use App\Models\depotfacture;
+use App\Models\caisse;
+use App\Models\historiquecaisse;
 
 class ApipdfController extends Controller
 {
@@ -950,7 +953,7 @@ class ApipdfController extends Controller
         ]);
     }
 
-    public function etat_fac_caisse(Request $request)
+    public function etat_fac_encaissement(Request $request)
     {
 
         $date1 = Carbon::createFromFormat('Y-m-d', $request->date1)->startOfDay();
@@ -961,11 +964,16 @@ class ApipdfController extends Controller
                 ->leftjoin('societes', 'societes.id', '=', 'patients.societe_id')
                 ->join('detailconsultations', 'detailconsultations.consultation_id', '=', 'consultations.id')
                 ->join('factures', 'factures.id', '=', 'consultations.facture_id')
+                ->join('users', 'users.id', '=', 'factures.encaisser_id')
                 ->whereBetween(DB::raw('DATE(consultations.created_at)'), [$date1, $date2]);
 
                 if ($request->assurance_id != 'tous') {
                     $fac_cons->where('patients.assurer', '=', 'oui')
                              ->where('assurances.id', '=', $request->assurance_id);
+                }
+
+                if ($request->caissier_id != 'tous') {
+                    $fac_cons->where('users.id', '=', $request->caissier_id);
                 }
 
                 $fac_cons = $fac_cons->select(
@@ -979,6 +987,9 @@ class ApipdfController extends Controller
                     'assurances.nom as assurance',
                     'factures.code as code_fac',
                     'factures.statut as statut_fac',
+                    'factures.date_payer as date_payer',
+                    'users.name as user',
+                    'users.sexe as user_sexe',
                 )
                 ->get();
 
@@ -994,11 +1005,16 @@ class ApipdfController extends Controller
                 ->leftjoin('assurances', 'assurances.id', '=', 'patients.assurance_id')
                 ->leftjoin('societes', 'societes.id', '=', 'patients.societe_id')
                 ->join('factures', 'factures.id', '=', 'examens.facture_id')
+                ->join('users', 'users.id', '=', 'factures.encaisser_id')
                 ->whereBetween(DB::raw('DATE(examens.created_at)'), [$date1, $date2]);
 
                 if ($request->assurance_id != 'tous') {
                     $fac_exam->where('patients.assurer', '=', 'oui')
                              ->where('assurances.id', '=', $request->assurance_id);
+                }
+
+                if ($request->caissier_id != 'tous') {
+                    $fac_exam->where('users.id', '=', $request->caissier_id);
                 }
 
                 $fac_exam = $fac_exam->select(
@@ -1011,7 +1027,10 @@ class ApipdfController extends Controller
                     'assurances.nom as assurance',
                     'factures.code as code_fac',
                     'factures.statut as statut_fac',
+                    'factures.date_payer as date_payer',
                     'patients.matricule as code_patient',
+                    'users.name as user',
+                    'users.sexe as user_sexe',
                 )
                 ->get();
 
@@ -1019,11 +1038,16 @@ class ApipdfController extends Controller
                 ->leftjoin('assurances', 'assurances.id', '=', 'patients.assurance_id')
                 ->leftjoin('societes', 'societes.id', '=', 'patients.societe_id')
                 ->join('factures', 'factures.id', '=', 'soinspatients.facture_id')
+                ->join('users', 'users.id', '=', 'factures.encaisser_id')
                 ->whereBetween(DB::raw('DATE(soinspatients.created_at)'), [$date1, $date2]);
 
                 if ($request->assurance_id != 'tous') {
                     $fac_soinsam->where('patients.assurer', '=', 'oui')
                              ->where('assurances.id', '=', $request->assurance_id);
+                }
+
+                if ($request->caissier_id != 'tous') {
+                    $fac_soinsam->where('users.id', '=', $request->caissier_id);
                 }
 
                 $fac_soinsam = $fac_soinsam->select(
@@ -1037,7 +1061,10 @@ class ApipdfController extends Controller
                     'assurances.nom as assurance',
                     'factures.code as code_fac',
                     'factures.statut as statut_fac',
+                    'factures.date_payer as date_payer',
                     'patients.matricule as code_patient',
+                    'users.name as user',
+                    'users.sexe as user_sexe',
                 )
                 ->get();
 
@@ -1055,11 +1082,16 @@ class ApipdfController extends Controller
                 ->leftjoin('assurances', 'assurances.id', '=', 'patients.assurance_id')
                 ->leftjoin('societes', 'societes.id', '=', 'patients.societe_id')
                 ->join('factures', 'factures.id', '=', 'detailhopitals.facture_id')
+                ->join('users', 'users.id', '=', 'factures.encaisser_id')
                 ->whereBetween(DB::raw('DATE(detailhopitals.created_at)'), [$date1, $date2]);
 
                 if ($request->assurance_id != 'tous') {
                     $fac_hopital->where('patients.assurer', '=', 'oui')
                              ->where('assurances.id', '=', $request->assurance_id);
+                }
+
+                if ($request->caissier_id != 'tous') {
+                    $fac_hopital->where('users.id', '=', $request->caissier_id);
                 }
 
                 $fac_hopital = $fac_hopital->select(
@@ -1073,7 +1105,10 @@ class ApipdfController extends Controller
                     'assurances.nom as assurance',
                     'factures.code as code_fac',
                     'factures.statut as statut_fac',
+                    'factures.date_payer as date_payer',
                     'patients.matricule as code_patient',
+                    'users.name as user',
+                    'users.sexe as user_sexe',
                 )
                 ->get();
 
@@ -1258,6 +1293,55 @@ class ApipdfController extends Controller
             'acte_soinsam' => $acte_soinsam ?? 0,
             'date1' => $request->date1,
             'date2' => $request->date2,
+        ]);
+
+    }
+
+    public function etat_fac_ope_caisse(Request $request)
+    {
+        
+        $date1 = Carbon::createFromFormat('Y-m-d', $request->date1)->startOfDay();
+        $date2 = Carbon::createFromFormat('Y-m-d', $request->date2)->endOfDay();
+
+        $trace = historiquecaisse::join('users', 'users.id', '=', 'historiquecaisses.creer_id')
+                                ->whereBetween('historiquecaisses.created_at', [$date1, $date2])
+                                ->orderBy('historiquecaisses.created_at', 'desc');
+
+        if ($request->typemvt !== 'tous') {
+            $trace->where('historiquecaisses.typemvt', '=', $request->typemvt);
+        }
+
+        if ($request->user_id !== 'tous') {
+            $trace->where('historiquecaisses.creer_id', '=', $request->user_id);
+        }
+
+        $trace = $trace->select(
+            'historiquecaisses.*',
+            'users.name as user',
+            'users.sexe as user_sexe',
+        )
+        ->get();
+
+        $total = 0;
+
+        foreach ($trace as $value) {
+            if ($value->typemvt === 'Entrer de Caisse') {
+                $total += str_replace('.', '', $value->montant);
+            }else{
+                $total -= str_replace('.', '', $value->montant);
+            }
+        }
+
+        if (!$trace->isNotEmpty()) {
+            return response()->json(['donnee_0' => true]);
+        }
+
+        return response()->json([
+            'success' => true,
+            'trace' => $trace,
+            'total' => $total,
+            'date1' => $date1,
+            'date2' => $date2,
         ]);
 
     }

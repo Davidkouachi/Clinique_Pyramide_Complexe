@@ -24,7 +24,7 @@
     <!-- Container starts -->
     <div class="container ">
         <!-- Auth wrapper starts -->
-        <div class="auth-wrapper" style="margin-top: -100px; ">
+        <div class="auth-wrapper">
             <!-- Form starts -->
             <form id="formulaire" action="{{route('trait_login')}}" method="post" >
                 @csrf
@@ -37,15 +37,15 @@
                     </div>
                     <div class="mb-3">
                         <label class="form-label" for="email">login</label>
-                        <input type="text" id="login" name="login" class="form-control" placeholder="Entrer votre Login">
+                        <input type="text" id="login" name="login" class="form-control" placeholder="Entrer votre email" value="{{ old('login') }}">
                     </div>
                     <div class="mb-4">
                         <label class="form-label" for="pwd">Mot de passe</label>
                         <div class="input-group">
-                            <input type="password" name="password" id="pwd" class="form-control" placeholder="Entrer votre mot de passe">
-                            {{-- <button class="btn btn-outline-secondary" type="button">
-                                <i class="ri-eye-line text-primary"></i>
-                            </button> --}}
+                            <input type="password" name="password" id="pwd" class="form-control" placeholder="Entrer votre mot de passe" value="{{ old('password') }}">
+                            <a class="btn btn-white" id="btn_hidden_mpd">
+                                <i id="toggleIcon" class="ri-eye-line text-primary"></i>
+                            </a>
                         </div>
                     </div>
                     <p id="alert" class="text-danger" style="width: 300px;" ></p>
@@ -58,11 +58,8 @@
                     </div>
                 </div>
             </form>
-            <!-- Form ends -->
         </div>
-        <!-- Auth wrapper ends -->
     </div>
-    <!-- Container ends -->
 
     <script src="{{asset('assets/js/jquery.min.js')}}"></script>
     <script src="{{asset('assets/js/bootstrap.bundle.min.js')}}"></script>
@@ -96,63 +93,83 @@
     @endif
 
     <script>
-        document.getElementById("formulaire").addEventListener("submit", function(event) {
-            event.preventDefault();
+        document.addEventListener("DOMContentLoaded", function() {
 
-            var login = document.getElementById("login");
-            var password = document.getElementById("pwd");
+            document.getElementById("btn_hidden_mpd").addEventListener("click", function(event) {
+                event.preventDefault();
+                const passwordField = document.getElementById('pwd');
+                const toggleIcon = document.getElementById('toggleIcon');
+                
+                // Toggle the type attribute
+                if (passwordField.type === 'password') {
+                    passwordField.type = 'text';
+                    toggleIcon.classList.remove('ri-eye-line');
+                    toggleIcon.classList.add('ri-eye-off-line');
+                } else {
+                    passwordField.type = 'password';
+                    toggleIcon.classList.remove('ri-eye-off-line');
+                    toggleIcon.classList.add('ri-eye-line');
+                }
+            });
 
-            const alert = document.getElementById("alert");
+            document.getElementById("formulaire").addEventListener("submit", function(event) {
+                event.preventDefault();
 
-            if (!login.value.trim() || !password.value.trim()) {
-                alert.innerHTML = 'Veuillez remplir tous les champs';
-                return false;
-            }
+                var login = document.getElementById("login");
+                var password = document.getElementById("pwd");
 
-            var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            var phoneRegex = /^[0-9]{10}$/;
-            if (!emailRegex.test(login.value) && !phoneRegex.test(login.value)) {
-                alert.innerHTML = 'Veuillez saisir une adresse e-mail ou un numéro de téléphone valide.';
-                return false;
-            }
+                const alert = document.getElementById("alert");
 
-            var preloader_ch = `
-                <div id="preloader_ch">
-                    <div class="spinner_preloader_ch"></div>
-                </div>
-            `;
-            // Add the preloader to the body
-            document.body.insertAdjacentHTML('beforeend', preloader_ch);
+                if (!login.value.trim() || !password.value.trim()) {
+                    alert.innerHTML = 'Veuillez remplir tous les champs';
+                    return false;
+                }
 
+                var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                var phoneRegex = /^[0-9]{10}$/;
+                if (!emailRegex.test(login.value) && !phoneRegex.test(login.value)) {
+                    alert.innerHTML = 'Veuillez saisir une adresse e-mail valide.';
+                    return false;
+                }
 
-            $.get('/refresh_csrf').done(function(data) {
-                document.querySelector('input[name="_token"]').value = data.token;
+                var preloader_ch = `
+                    <div id="preloader_ch">
+                        <div class="spinner_preloader_ch"></div>
+                    </div>
+                `;
+
+                document.body.insertAdjacentHTML('beforeend', preloader_ch);
+
                 this.submit();
-            }.bind(this));
 
-            // function verifierMotDePasse(motDePasse) {
+                // $.get('/refresh_csrf').done(function(data) {
+                //     document.querySelector('input[name="_token"]').value = data.token;
+                //     this.submit();
+                // }.bind(this));
 
-            //     if (motDePasse.length < 8) {
-            //         return false;
-            //     }
+                // function verifierMotDePasse(motDePasse) {
 
-            //     if (!/[A-Z]/.test(motDePasse)) {
-            //         return false;
-            //     }
+                //     if (motDePasse.length < 8) {
+                //         return false;
+                //     }
 
-            //     if (!/[a-z]/.test(motDePasse)) {
-            //         return false;
-            //     }
+                //     if (!/[A-Z]/.test(motDePasse)) {
+                //         return false;
+                //     }
 
-            //     if (!/\d/.test(motDePasse)) {
-            //         return false;
-            //     }
+                //     if (!/[a-z]/.test(motDePasse)) {
+                //         return false;
+                //     }
 
-            //     return true;
-            // }
+                //     if (!/\d/.test(motDePasse)) {
+                //         return false;
+                //     }
+
+                //     return true;
+                // }
+            });
 
         });
-
     </script>   
 
 </body>

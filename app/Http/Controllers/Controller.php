@@ -163,6 +163,11 @@ class Controller
         return view('finance.caisse.index');
     }
 
+    public function operation_caisse()
+    {
+        return view('finance.caisse.operation');
+    }
+
     // --------------------------------------------------------
 
     public function etat_acte()
@@ -178,5 +183,17 @@ class Controller
     public function etat_caisse()
     {
         return view('pdf.caisse');
+    }
+
+    // -----------------------------------------------------------
+
+    public function utilisateur()
+    {
+        return view('utilisateur.nouveau.utilisateur');
+    }
+
+    public function rdv_two_day()
+    {
+        return view('accueil.reception.rdv_two_day');
     }
 }

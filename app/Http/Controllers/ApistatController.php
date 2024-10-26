@@ -43,6 +43,9 @@ use App\Models\sp_soins;
 use App\Models\examenpatient;
 use App\Models\examen;
 use App\Models\prelevement;
+use App\Models\caisse;
+use App\Models\historiquecaisse;
+use App\Models\rdvpatient;
 
 class ApistatController extends Controller
 {
@@ -154,25 +157,38 @@ class ApistatController extends Controller
         return response()->json(['typeacte' => $typeacte]);
     }
 
+    public function getWeeklyConsultations()
+    {
+        $startOfWeek = now()->startOfWeek();
+        $endOfWeek = now()->endOfWeek();
+
+        // Assuming your consultations are stored in a 'consultations' table
+        // You can modify this query as needed based on your schema
+        $weeklyCounts = [];
+        
+        for ($i = 0; $i < 7; $i++) {
+            $date = $startOfWeek->copy()->addDays($i);
+            $count = consultation::whereDate('created_at', $date)->count();
+            $weeklyCounts[] = $count;
+        }
+
+        return response()->json($weeklyCounts);
+    }
+
     public function getConsultationComparison()
     {
-        // Get the current week consultation data
         $currentWeekCount = $this->getWeeklyConsultations()->getData();
         
-        // Get the total consultations for the last week
         $lastWeekCount = consultation::whereBetween('created_at', [
             now()->subWeek()->startOfWeek(), 
             now()->subWeek()->endOfWeek()
         ])->count();
 
-        // Calculate the total consultations for the current week
         $totalCurrentWeek = array_sum($currentWeekCount);
 
-        // Handle division by zero by checking if lastWeekCount is zero
         if ($lastWeekCount > 0) {
             $percentageIncrease = (($totalCurrentWeek - $lastWeekCount) / $lastWeekCount) * 100;
         } else {
-            // If there were no consultations last week, treat percentage increase as 100% if there are consultations this week
             $percentageIncrease = $totalCurrentWeek > 0 ? 100 : 0;
         }
 
@@ -691,5 +707,99 @@ class ApistatController extends Controller
         ]);
     }
 
+    public function stat_comp_ope($yearSelect)
+    {
+        $monthlyStats = [
+            'entrer' => [
+                'Jan' => 0, 'Feb' => 0, 'Mar' => 0, 'Apr' => 0, 'May' => 0, 'Jun' => 0,
+                'Jul' => 0, 'Aug' => 0, 'Sep' => 0, 'Oct' => 0, 'Nov' => 0, 'Dec' => 0,
+            ],
+            'sortie' => [
+                'Jan' => 0, 'Feb' => 0, 'Mar' => 0, 'Apr' => 0, 'May' => 0, 'Jun' => 0,
+                'Jul' => 0, 'Aug' => 0, 'Sep' => 0, 'Oct' => 0, 'Nov' => 0, 'Dec' => 0,
+            ],
+            'total' => [
+                'Jan' => 0, 'Feb' => 0, 'Mar' => 0, 'Apr' => 0, 'May' => 0, 'Jun' => 0,
+                'Jul' => 0, 'Aug' => 0, 'Sep' => 0, 'Oct' => 0, 'Nov' => 0, 'Dec' => 0,
+            ]
+        ];
+
+        $totalG = 0;
+        $total_entrer = 0;
+        $total_sortie = 0;
+
+        // 1. Consultations
+        $entrer = historiquecaisse::select(
+                DB::raw('MONTH(created_at) as month'),
+                DB::raw('COALESCE(SUM(REPLACE(montant, ".", "") + 0), 0) as montant')
+            )
+            ->where('typemvt', '=', 'Entrer de Caisse')
+            ->whereYear('created_at', $yearSelect)
+            ->groupBy(DB::raw('MONTH(created_at)'))
+            ->get();
+
+        foreach ($entrer as $entre) {
+            $monthIndex = intval($entre->month);
+            $monthName = date('M', mktime(0, 0, 0, $monthIndex, 10));
+            $monthlyStats['entrer'][$monthName] = $entre->montant;
+            $total_entrer += $entre->montant;
+        }
+
+        // 2. Hospitalisations
+        $sortie = historiquecaisse::select(
+                DB::raw('MONTH(created_at) as month'),
+                DB::raw('COALESCE(SUM(REPLACE(montant, ".", "") + 0), 0) as montant')
+            )
+            ->where('typemvt', '=', 'Sortie de Caisse')
+            ->whereYear('created_at', $yearSelect)
+            ->groupBy(DB::raw('MONTH(created_at)'))
+            ->get();
+
+        foreach ($sortie as $sorti) {
+            $monthIndex = intval($sorti->month);
+            $monthName = date('M', mktime(0, 0, 0, $monthIndex, 10));
+            $monthlyStats['sortie'][$monthName] = $sorti->montant;
+            $total_sortie += $sorti->montant;
+        }
+
+        $total = historiquecaisse::whereYear('created_at', $yearSelect)
+            ->groupBy(DB::raw('MONTH(created_at)'))
+            ->select(
+                DB::raw('MONTH(created_at) as month'),
+                DB::raw('
+                    COALESCE(SUM(IF(typemvt = "Entrer de Caisse", REPLACE(montant, ".", "") + 0, 0)), 0) as total_entrer,
+                    COALESCE(SUM(IF(typemvt = "Sortie de Caisse", REPLACE(montant, ".", "") + 0, 0)), 0) as total_sortie
+                ')
+            )
+            ->get();
+
+        foreach ($total as $value) {
+            $Gtotal = (int)$value->total_entrer - (int)$value->total_sortie;
+            $monthIndex = intval($value->month);
+            $monthName = date('M', mktime(0, 0, 0, $monthIndex, 10));
+            $monthlyStats['total'][$monthName] = $Gtotal;
+            $totalG += $Gtotal;
+        }
+
+        // Retourner les résultats sous forme de réponse JSON
+        return response()->json([
+            'monthlyStats' => $monthlyStats,
+            'total_entrer' => $total_entrer,
+            'total_sortie' => $total_sortie,
+            'total' => $totalG,
+        ]);
+    }
+
+    public function count_rdv_two_day()
+    {
+        $twoDaysLater = Carbon::today()->addDays(2);
+
+        $nbre = rdvpatient::whereDate('date', '=', $twoDaysLater)->count();
+
+        return response()->json([
+            'nbre' => $nbre,
+        ]);
+
+    }
 
 }

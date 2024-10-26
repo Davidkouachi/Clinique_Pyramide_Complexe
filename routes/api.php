@@ -56,6 +56,8 @@ Route::middleware(['statutchambre','dateRdv'])->group(function () {
 	Route::get('/specialite_new', [ApiinsertController::class, 'specialite_new']);
 	Route::get('/new_depot_fac', [ApiinsertController::class, 'new_depot_fac']);
 	Route::get('/paiement_depot_fac/{id}', [ApiinsertController::class, 'paiement_depot_fac']);
+	Route::get('/ope_caisse_new', [ApiinsertController::class, 'ope_caisse_new']);
+	Route::get('/new_user', [ApiinsertController::class, 'new_user']);
 	// insert debut
 
 	// search debut
@@ -76,6 +78,8 @@ Route::middleware(['statutchambre','dateRdv'])->group(function () {
 	Route::get('/select_specialite', [ApisearchController::class, 'select_specialite']);
 	Route::get('/select_jour', [ApisearchController::class, 'select_jour']);
 	Route::get('/montant_solde', [ApisearchController::class, 'montant_solde']);
+	Route::get('/list_caissier', [ApisearchController::class, 'list_caissier']);
+	Route::get('/select_role', [ApisearchController::class, 'select_role']);
 	// search debut
 
 	// liste day debut
@@ -104,6 +108,8 @@ Route::middleware(['statutchambre','dateRdv'])->group(function () {
 	Route::get('/update_specialite/{id}', [ApiupdateController::class, 'update_specialite']);
 	Route::get('/update_depot_fac/{id}', [ApiupdateController::class, 'update_depot_fac']);
 	Route::get('/update_assurance/{id}', [ApiupdateController::class, 'update_assurance']);
+	Route::get('/update_user/{id}', [ApiupdateController::class, 'update_user']);
+	Route::get('/update_mdp/{id}', [ApiupdateController::class, 'update_mdp']);
 	// update debut
 
 	// delete debut
@@ -121,6 +127,7 @@ Route::middleware(['statutchambre','dateRdv'])->group(function () {
 	Route::get('/delete_specialite/{id}', [ApideleteController::class, 'delete_specialite']);
 	Route::get('/delete_depotfacture/{id}', [ApideleteController::class, 'delete_depotfacture']);
 	Route::get('/delete_Cons/{id}', [ApideleteController::class, 'delete_Cons']);
+	Route::get('/delete_user/{id}', [ApideleteController::class, 'delete_user']);
 	// delete debut
 
 	// liste debut
@@ -156,6 +163,8 @@ Route::middleware(['statutchambre','dateRdv'])->group(function () {
 	Route::get('/list_hopital_patient/{id}', [ApilistController::class, 'list_hopital_patient']);
 	Route::get('/list_soinsam_patient/{id}', [ApilistController::class, 'list_soinsam_patient']);
 	Route::get('/list_assurance_all', [ApilistController::class, 'list_assurance_all']);
+	Route::get('/trace_operation/{date1}/{date2}/{typemvt}/{user_id}', [ApilistController::class, 'trace_operation']);
+	Route::get('/list_rdv_two_days', [ApilistController::class, 'list_rdv_two_days']);
 	// liste debut
 
 	// statistique debut
@@ -169,10 +178,12 @@ Route::middleware(['statutchambre','dateRdv'])->group(function () {
 	Route::get('/statistique_soinsam', [ApistatController::class, 'statistique_soinsam']);
 	Route::get('/statistique_examen', [ApistatController::class, 'statistique_examen']);
 	Route::get('/stat_comp_acte/{yearSelect}', [ApistatController::class, 'stat_comp_acte']);
+	Route::get('/stat_comp_ope/{yearSelect}', [ApistatController::class, 'stat_comp_ope']);
 	Route::get('/stat_acte_mois/{date1}/{date2}', [ApistatController::class, 'stat_acte_mois']);
 	Route::get('/statistique_patient', [ApistatController::class, 'statistique_patient']);
 	Route::get('/patient_stat/{id}', [ApistatController::class, 'patient_stat']);
 	Route::get('/assurance_stat/{id}', [ApistatController::class, 'assurance_stat']);
+	Route::get('/count_rdv_two_day', [ApistatController::class, 'count_rdv_two_day']);
 	// statistique fin
 
 	// List facture debut
@@ -211,7 +222,8 @@ Route::middleware(['statutchambre','dateRdv'])->group(function () {
 	Route::get('/imp_fac_depot_bordo/{id}', [ApipdfController::class, 'imp_fac_depot_bordo']);
 
 	Route::get('/etat_fac_assurance', [ApipdfController::class, 'etat_fac_assurance']);
-	Route::get('/etat_fac_caisse', [ApipdfController::class, 'etat_fac_caisse']);
+	Route::get('/etat_fac_encaissement', [ApipdfController::class, 'etat_fac_encaissement']);
+	Route::get('/etat_fac_ope_caisse', [ApipdfController::class, 'etat_fac_ope_caisse']);
 	Route::get('/etat_fac_acte', [ApipdfController::class, 'etat_fac_acte']);
 	// Etat fin
 

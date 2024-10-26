@@ -20,90 +20,121 @@
 @section('content')
 
 <div class="app-body">
-    <!-- Row starts -->
-    <div class="row">
-        <div class="col-12">
-            <div class="card mb-3">
-                <div class="card-header">
-                    <h5 class="card-title">Formulaire Nouvelle Nature Admission</h5>
-                </div>
-                <div class="card-body" >
-                    <!-- Row starts -->
-                    <div class="row gx-3">
-                        <div class="col-xxl-3 col-lg-4 col-sm-6">
-                            <div class="mb-3">
-                                <label class="form-label">
-                                    Type Admission
-                                </label>
-                                <select class="form-select" id="type_id">
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col-xxl-3 col-lg-4 col-sm-6">
-                            <div class="mb-3">
-                                <label class="form-label">
-                                    Nature Admission
-                                </label>
-                                <input type="text" class="form-control" id="nom_nature" placeholder="Saisie Obligatoire" oninput="this.value = this.value.toUpperCase()">
-                            </div>
-                        </div>
-                        <div class="col-sm-12">
-                            <div class="mb-3">
-                                <div class="d-flex gap-2 justify-content-start">
-                                    <button id="btn_eng" class="btn btn-success">
-                                        Enregistrer
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
+    <div class="row gx-3">
+        <div class="col-xxl-12 col-sm-12">
+            <div class="card mb-3 bg-3">
+                <div class="card-body" style="background: rgba(0, 0, 0, 0.7);">
+                    <div class="py-4 px-3 text-white">
+                        <h6>Bienvenue,</h6>
+                        <h2>{{Auth::user()->sexe.'. '.Auth::user()->name}}</h2>
+                        <h5>Nature d'admission</h5>
                     </div>
-                    <!-- Row ends -->
                 </div>
             </div>
         </div>
-        <div class="col-12">
-            <div class="card mb-3">
-                <div class="card-header d-flex align-items-center justify-content-between">
-                    <h5 class="card-title">
-                        Liste des Nature Admissions
-                    </h5>
-                    <a id="btn_refresh_table" class="btn btn-outline-info ms-auto">
-                        <i class="ri-loop-left-line"></i>
-                    </a>
-                </div>
-                <div class="card-body">
-                    <div class="table-outer" id="div_Table" style="display: none;">
-                        <div class="table-responsive">
-                            <table class="table align-middle table-hover m-0 truncate" id="Table" >
-                                <thead>
-                                    <tr>
-                                        <th scope="col">N°</th>
-                                        <th scope="col">Type</th>
-                                        <th scope="col">Acte</th>
-                                        <th scope="col">Actions</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                    <div id="message_Table" style="display: none;">
-                        <p class="text-center" >
-                            Aucune nature d'admission n'a été enregistrer
-                        </p>
-                    </div>
-                    <div id="div_Table_loader" style="display: none;">
-                        <div class="d-flex justify-content-center align-items-center">
-                            <div class="spinner-border text-warning me-2" role="status" aria-hidden="true"></div>
-                            <strong>Chargement des données...</strong>
+    </div>
+    <div class="row gx-3" >
+        <div class="col-sm-12">
+            <div class="card mb-3 mt-3">
+                <div class="card-body" style="margin-top: -30px;">
+                    <div class="custom-tabs-container">
+                        <ul class="nav nav-tabs justify-content-center bg-primary bg-2" id="customTab4" role="tablist" style="background: rgba(0, 0, 0, 0.7);">
+                            <li class="nav-item" role="presentation">
+                                <a class="nav-link active text-white" id="tab-twoAAAN" data-bs-toggle="tab" href="#twoAAAN" role="tab" aria-controls="twoAAAN" aria-selected="false" tabindex="-1">
+                                    <i class="ri-add-line me-2"></i>
+                                    Nouvel nature d'admission
+                                </a>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <a class="nav-link text-white" id="tab-twoAAA" data-bs-toggle="tab" href="#twoAAA" role="tab" aria-controls="twoAAA" aria-selected="false" tabindex="-1">
+                                    <i class="ri-archive-drawer-line me-2"></i>
+                                    Liste des natures d'admissions
+                                </a>
+                            </li>
+                        </ul>
+                        <div class="tab-content" id="customTabContent">
+                            <div class="tab-pane active show fade" id="twoAAAN" role="tabpanel" aria-labelledby="tab-twoAAAN">
+                                <div class="card-header">
+                                    <h5 class="card-title">Formulaire Nouvelle Nature Admission</h5>
+                                </div>
+                                <div class="card-body" >
+                                    <!-- Row starts -->
+                                    <div class="row gx-3">
+                                        <div class="col-xxl-3 col-lg-4 col-sm-6">
+                                            <div class="mb-3">
+                                                <label class="form-label">
+                                                    Type Admission
+                                                </label>
+                                                <select class="form-select" id="type_id">
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-xxl-3 col-lg-4 col-sm-6">
+                                            <div class="mb-3">
+                                                <label class="form-label">
+                                                    Nature Admission
+                                                </label>
+                                                <input type="text" class="form-control" id="nom_nature" placeholder="Saisie Obligatoire" oninput="this.value = this.value.toUpperCase()">
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-12">
+                                            <div class="mb-3">
+                                                <div class="d-flex gap-2 justify-content-start">
+                                                    <button id="btn_eng" class="btn btn-success">
+                                                        Enregistrer
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- Row ends -->
+                                </div>
+                            </div>
+                            <div class="tab-pane fade" id="twoAAA" role="tabpanel" aria-labelledby="tab-twoAAA">
+                                <div class="card-header d-flex align-items-center justify-content-between">
+                                    <h5 class="card-title">
+                                        Liste des Nature Admissions
+                                    </h5>
+                                    <a id="btn_refresh_table" class="btn btn-outline-info ms-auto">
+                                        <i class="ri-loop-left-line"></i>
+                                    </a>
+                                </div>
+                                <div class="card-body">
+                                    <div class="table-outer" id="div_Table" style="display: none;">
+                                        <div class="table-responsive">
+                                            <table class="table align-middle table-hover m-0 truncate" id="Table" >
+                                                <thead>
+                                                    <tr>
+                                                        <th scope="col">N°</th>
+                                                        <th scope="col">Type</th>
+                                                        <th scope="col">Acte</th>
+                                                        <th scope="col">Actions</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                    <div id="message_Table" style="display: none;">
+                                        <p class="text-center" >
+                                            Aucune nature d'admission n'a été enregistrer
+                                        </p>
+                                    </div>
+                                    <div id="div_Table_loader" style="display: none;">
+                                        <div class="d-flex justify-content-center align-items-center">
+                                            <div class="spinner-border text-warning me-2" role="status" aria-hidden="true"></div>
+                                            <strong>Chargement des données...</strong>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    <!-- Row ends -->
 </div>
 
 <div class="modal fade" id="Mdelete" tabindex="-1" aria-labelledby="delRowLabel" aria-modal="true" role="dialog">

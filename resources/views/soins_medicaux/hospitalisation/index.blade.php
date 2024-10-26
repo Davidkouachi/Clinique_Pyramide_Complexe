@@ -1772,6 +1772,21 @@
             return `${day}-${month}-${year}`;
         }
 
+        function formatDateHeure(dateString) {
+
+            const date = new Date(dateString);
+                
+            const day = String(date.getDate()).padStart(2, '0');
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const year = date.getFullYear();
+
+            const hours = String(date.getHours()).padStart(2, '0');
+            const minutes = String(date.getMinutes()).padStart(2, '0');
+            const seconds = String(date.getSeconds()).padStart(2, '0');
+
+            return `${day}/${month}/${year} à ${hours}:${minutes}:${seconds}`;
+        }
+
         function calculateDaysBetween(startDate, endDate) {
             const start = new Date(startDate);
             const end = new Date(endDate);
@@ -1880,6 +1895,11 @@
         function generatePDFInvoice(hopital, facture, patient, nature, type, lit, chambre, user, produit) {
             const { jsPDF } = window.jspdf;
             const doc = new jsPDF({ orientation: 'p', unit: 'mm', format: 'a4' });
+
+            const pdfFilename = "HOSPITALISATION Facture N°" + facture.code + " du " + formatDateHeure(facture.created_at);
+            doc.setProperties({
+                title: pdfFilename,
+            });
 
             let yPos = 10;
 

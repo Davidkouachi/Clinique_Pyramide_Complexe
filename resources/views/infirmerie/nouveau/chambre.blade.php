@@ -20,108 +20,139 @@
 @section('content')
 
 <div class="app-body">
-    <!-- Row starts -->
-    <div class="row">
-        <div class="col-12">
-            <div class="card mb-3">
-                <div class="card-header">
-                    <h5 class="card-title">Formulaire Nouvelle Chambre</h5>
-                </div>
-                <div class="card-body" >
-                    <div class="row gx-3">
-                        <div class="col-xxl-3 col-lg-4 col-sm-6">
-                            <div class="mb-3">
-                                <label class="form-label">
-                                    Numero de la Chambre
-                                </label>
-                                <div class="input-group">
-                                    <span class="input-group-text">CH-</span>
-                                    <input type="text" class="form-control" id="num_chambre" placeholder="Saisie Obligatoire" maxlength="6">
-                                    <a id="btn_search_num" class="btn btn-success">
-                                        <i class="ri-loop-left-line"></i>
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-xxl-3 col-lg-4 col-sm-6">
-                            <div class="mb-3">
-                                <label class="form-label">
-                                    Numero de lit
-                                </label>
-                                <select class="form-select" id="nbre_lit">
-                                    <option value="">Selectionner</option>
-                                    @for($i = 1; $i <= 20; $i++)
-                                    <option value="{{$i}}">{{$i}}</option>
-                                    @endfor
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col-xxl-3 col-lg-4 col-sm-6">
-                            <div class="mb-3">
-                                <label class="form-label" for="prix">Prix</label>
-                                <div class="input-group">
-                                <input type="tel" class="form-control" id="prix" placeholder="Saisie Obligatoire">
-                                <span class="input-group-text">Fcfa</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-sm-12">
-                            <div class="mb-3 d-flex gap-2 justify-content-start">
-                                <button id="btn_eng_chambre" class="btn btn-success">
-                                    Enregistrer
-                                </button>
-                            </div>
-                        </div> 
+    <div class="row gx-3">
+        <div class="col-xxl-12 col-sm-12">
+            <div class="card mb-3 bg-3">
+                <div class="card-body" style="background: rgba(0, 0, 0, 0.7);">
+                    <div class="py-4 px-3 text-white">
+                        <h6>Bienvenue,</h6>
+                        <h2>{{Auth::user()->sexe.'. '.Auth::user()->name}}</h2>
+                        <h5>Chambres</h5>
                     </div>
-                    <!-- Row ends -->
                 </div>
             </div>
         </div>
-        <div class="col-12">
-            <div class="card mb-3">
-                <div class="card-header d-flex align-items-center justify-content-between">
-                    <h5 class="card-title">
-                        Chambre enregistrées Aujourd'hui
-                    </h5>
-                    <a id="btn_refresh_table_day" class="btn btn-outline-info ms-auto">
-                        <i class="ri-loop-left-line"></i>
-                    </a>
-                </div>
-                <div class="card-body">
-                    <div class="table-outer" id="div_Table_ch_day" style="display: none;" >
-                        <div class="table-responsive">
-                            <table class="table align-middle table-hover m-0 truncate" id="Table_ch_day">
-                                <thead>
-                                    <tr>
-                                        <th scope="col">N°</th>
-                                        <th scope="col">Numéro</th>
-                                        <th scope="col">Nombre de lit</th>
-                                        <th scope="col">Prix</th>
-                                        <th scope="col">Statut</th>
-                                        <th scope="col">Actions</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                    <div id="message_Table_ch_day" style="display: none;">
-                        <p class="text-center" >
-                            Aucune chambre n'a été enregistrer aujourd'hui
-                        </p>
-                    </div>
-                    <div id="div_Table_loader" style="display: none;">
-                        <div class="d-flex justify-content-center align-items-center">
-                            <div class="spinner-border text-warning me-2" role="status" aria-hidden="true"></div>
-                            <strong>Chargement des données...</strong>
+    </div>
+    <div class="row gx-3" >
+        <div class="col-sm-12">
+            <div class="card mb-3 mt-3">
+                <div class="card-body" style="margin-top: -30px;">
+                    <div class="custom-tabs-container">
+                        <ul class="nav nav-tabs justify-content-center bg-primary bg-2" id="customTab4" role="tablist" style="background: rgba(0, 0, 0, 0.7);">
+                            <li class="nav-item" role="presentation">
+                                <a class="nav-link active text-white" id="tab-twoAAAN" data-bs-toggle="tab" href="#twoAAAN" role="tab" aria-controls="twoAAAN" aria-selected="false" tabindex="-1">
+                                    <i class="ri-add-line me-2"></i>
+                                    Nouvelle Chambre
+                                </a>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <a class="nav-link text-white" id="tab-twoAAA" data-bs-toggle="tab" href="#twoAAA" role="tab" aria-controls="twoAAA" aria-selected="false" tabindex="-1">
+                                    <i class="ri-archive-drawer-line me-2"></i>
+                                    Liste des Chambres
+                                </a>
+                            </li>
+                        </ul>
+                        <div class="tab-content" id="customTabContent">
+                            <div class="tab-pane active show fade" id="twoAAAN" role="tabpanel" aria-labelledby="tab-twoAAAN">
+                                <div class="card-header">
+                                    <h5 class="card-title">Formulaire Nouvelle Chambre</h5>
+                                </div>
+                                <div class="card-body" >
+                                    <div class="row gx-3">
+                                        <div class="col-xxl-3 col-lg-4 col-sm-6">
+                                            <div class="mb-3">
+                                                <label class="form-label">
+                                                    Numero de la Chambre
+                                                </label>
+                                                <div class="input-group">
+                                                    <span class="input-group-text">CH-</span>
+                                                    <input type="text" class="form-control" id="num_chambre" placeholder="Saisie Obligatoire" maxlength="6">
+                                                    <a id="btn_search_num" class="btn btn-success">
+                                                        <i class="ri-loop-left-line"></i>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-xxl-3 col-lg-4 col-sm-6">
+                                            <div class="mb-3">
+                                                <label class="form-label">
+                                                    Numero de lit
+                                                </label>
+                                                <select class="form-select" id="nbre_lit">
+                                                    <option value="">Selectionner</option>
+                                                    @for($i = 1; $i <= 20; $i++)
+                                                    <option value="{{$i}}">{{$i}}</option>
+                                                    @endfor
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-xxl-3 col-lg-4 col-sm-6">
+                                            <div class="mb-3">
+                                                <label class="form-label" for="prix">Prix</label>
+                                                <div class="input-group">
+                                                <input type="tel" class="form-control" id="prix" placeholder="Saisie Obligatoire">
+                                                <span class="input-group-text">Fcfa</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-12">
+                                            <div class="mb-3 d-flex gap-2 justify-content-start">
+                                                <button id="btn_eng_chambre" class="btn btn-success">
+                                                    Enregistrer
+                                                </button>
+                                            </div>
+                                        </div> 
+                                    </div>
+                                    <!-- Row ends -->
+                                </div>
+                            </div>
+                            <div class="tab-pane fade" id="twoAAA" role="tabpanel" aria-labelledby="tab-twoAAA">
+                                <div class="card-header d-flex align-items-center justify-content-between">
+                                    <h5 class="card-title">
+                                        Chambre enregistrées Aujourd'hui
+                                    </h5>
+                                    <a id="btn_refresh_table_day" class="btn btn-outline-info ms-auto">
+                                        <i class="ri-loop-left-line"></i>
+                                    </a>
+                                </div>
+                                <div class="card-body">
+                                    <div class="table-outer" id="div_Table_ch_day" style="display: none;" >
+                                        <div class="table-responsive">
+                                            <table class="table align-middle table-hover m-0 truncate" id="Table_ch_day">
+                                                <thead>
+                                                    <tr>
+                                                        <th scope="col">N°</th>
+                                                        <th scope="col">Numéro</th>
+                                                        <th scope="col">Nombre de lit</th>
+                                                        <th scope="col">Prix</th>
+                                                        <th scope="col">Statut</th>
+                                                        <th scope="col">Actions</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                    <div id="message_Table_ch_day" style="display: none;">
+                                        <p class="text-center" >
+                                            Aucune chambre n'a été enregistrer aujourd'hui
+                                        </p>
+                                    </div>
+                                    <div id="div_Table_loader" style="display: none;">
+                                        <div class="d-flex justify-content-center align-items-center">
+                                            <div class="spinner-border text-warning me-2" role="status" aria-hidden="true"></div>
+                                            <strong>Chargement des données...</strong>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    <!-- Row ends -->
 </div>
 
 <div class="modal fade" id="Mdelete" tabindex="-1" aria-labelledby="delRowLabel" aria-modal="true" role="dialog">

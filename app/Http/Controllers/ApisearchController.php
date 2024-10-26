@@ -39,6 +39,7 @@ use App\Models\rdvpatient;
 use App\Models\programmemedecin;
 use App\Models\caisse;
 use App\Models\historiquecaisse;
+use App\Models\user;
 
 class ApisearchController extends Controller
 {
@@ -234,6 +235,20 @@ class ApisearchController extends Controller
         $solde = caisse::find('1');
 
         return response()->json(['solde' => $solde]); 
+    }
+
+    public function list_caissier()
+    {
+        $caissier = user::all();
+
+        return response()->json(['caissier' => $caissier]); 
+    }
+
+    public function select_role()
+    {
+        $role = role::where('nom', '!=', 'MEDECIN')->get();
+
+        return response()->json(['role' => $role]); 
     }
 
 }

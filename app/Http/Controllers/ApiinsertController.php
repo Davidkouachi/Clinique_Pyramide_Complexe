@@ -1125,7 +1125,7 @@ class ApiinsertController extends Controller
         $add->patient_id = $patient->id;
         $add->date = $request->date;
         $add->motif = $request->motif;
-        $add->statut = 'en cours';
+        $add->statut = 'en attente';
 
         if ($add->save()) {
             return response()->json(['success' => true]);
@@ -1415,30 +1415,30 @@ class ApiinsertController extends Controller
 
             //-----------------------------------------------
 
-                $solde_caisse = caisse::find('1');
+                // $solde_caisse = caisse::find('1');
 
-                $solde_caisse_sans_point = str_replace('.', '', $solde_caisse->solde);
-                $part_patient_sans_point = $total_assurance;
-                $solde_apres = (int)$solde_caisse_sans_point + (int)$part_patient_sans_point;
+                // $solde_caisse_sans_point = str_replace('.', '', $solde_caisse->solde);
+                // $part_patient_sans_point = $total_assurance;
+                // $solde_apres = (int)$solde_caisse_sans_point + (int)$part_patient_sans_point;
 
-                $add_caisse = new historiquecaisse();
-                $add_caisse->motif = 'ENCAISSEMENT ASSURANCE';
-                $add_caisse->montant = $this->formatWithPeriods($total_assurance);
-                $add_caisse->libelle = 'Encaissment ASSURANCE '.$assurance->nom.' du '.$add->date1.' au '.$add->date2;
-                $add_caisse->solde_avant = $solde_caisse->solde;
-                $add_caisse->solde_apres = number_format($solde_apres, 0, '', '.');
-                $add_caisse->typemvt = 'Entrer de Caisse';
-                $add_caisse->creer_id = $request->auth_id;
+                // $add_caisse = new historiquecaisse();
+                // $add_caisse->motif = 'ENCAISSEMENT ASSURANCE';
+                // $add_caisse->montant = $this->formatWithPeriods($total_assurance);
+                // $add_caisse->libelle = 'Encaissment ASSURANCE '.$assurance->nom.' du '.$add->date1.' au '.$add->date2;
+                // $add_caisse->solde_avant = $solde_caisse->solde;
+                // $add_caisse->solde_apres = number_format($solde_apres, 0, '', '.');
+                // $add_caisse->typemvt = 'Entrer de Caisse';
+                // $add_caisse->creer_id = $request->auth_id;
                 
-                if (!$add_caisse->save()) {
-                    throw new \Exception('Erreur');
-                }
+                // if (!$add_caisse->save()) {
+                //     throw new \Exception('Erreur');
+                // }
 
-                $solde_caisse->solde = number_format($solde_apres, 0, '', '.');
+                // $solde_caisse->solde = number_format($solde_apres, 0, '', '.');
 
-                if (!$solde_caisse->save()) {
-                    throw new \Exception('Erreur');
-                }
+                // if (!$solde_caisse->save()) {
+                //     throw new \Exception('Erreur');
+                // }
 
             //-----------------------------------------------
 
@@ -1449,6 +1449,128 @@ class ApiinsertController extends Controller
             DB::rollback();
             return response()->json(['error' => true]);
         }
+    }
+
+    public function ope_caisse_new(Request $request)
+    {
+        $solde_caisse = caisse::find('1');
+
+        $solde_caisse_sans_point = str_replace('.', '', $solde_caisse->solde);
+        $montant = str_replace('.', '', $request->montant_ope);
+
+        if ($request->type_ope === 'entrer') {
+            $solde_apres = (int)$solde_caisse_sans_point + (int)$montant;
+        }else if ($request->type_ope === 'sortie') {
+            $solde_apres = (int)$solde_caisse_sans_point - (int)$montant;
+        }
+
+        if ($solde_apres < 0) {
+            return response()->json(['solde_negatif' => true]);
+        }
+
+        $add_caisse = new historiquecaisse();
+        $add_caisse->motif = $request->libelle_ope;
+        $add_caisse->montant = $this->formatWithPeriods($montant);
+
+        if ($request->type_ope === 'entrer') {
+            $add_caisse->libelle = $request->libelle_ope.'. Montant de l\'opération a été apporter par '.$request->nom_ope;
+        }else if ($request->type_ope === 'sortie') {
+            $add_caisse->libelle = $request->libelle_ope.'. Montant de l\'opération a été remis à '.$request->nom_ope;
+        }
+        
+        $add_caisse->solde_avant = $solde_caisse->solde;
+        $add_caisse->solde_apres = number_format($solde_apres, 0, '', '.');
+
+        if ($request->type_ope === 'entrer') {
+            $add_caisse->typemvt = 'Entrer de Caisse';
+        }else if ($request->type_ope === 'sortie') {
+            $add_caisse->typemvt = 'Sortie de Caisse';
+        }
+
+        $add_caisse->creer_id = $request->auth_id;
+        $add_caisse->date_ope = $request->date_ope;
+
+        try {
+                
+            if (!$add_caisse->save()) {
+                throw new \Exception('Erreur');
+            }
+
+            $solde_caisse->solde = number_format($solde_apres, 0, '', '.');
+
+            if (!$solde_caisse->save()) {
+                throw new \Exception('Erreur');
+            }
+
+            DB::commit();
+            return response()->json(['success' => true]);
+
+        } catch (Exception $e) {
+            DB::rollback();
+            return response()->json(['error' => true]);
+        }
+    }
+
+    public function new_user(Request $request)
+    {
+        $verifications = [
+            'tel' => $request->tel,
+            'tel2' => $request->tel2 ?? null, // Allow tel2 to be null
+            'email' => $request->email ?? null,
+            'nom' => $request->nom,
+        ];
+
+        $Exist = user::where(function($query) use ($verifications) {
+            $query->where('tel', $verifications['tel'])
+                  ->orWhere(function($query) use ($verifications) {
+                      if (!is_null($verifications['tel2'])) {
+                          $query->where('tel2', $verifications['tel2']);
+                      }
+                  })
+                  ->orWhere(function($query) use ($verifications) {
+                      if (!is_null($verifications['email'])) {
+                          $query->where('email', $verifications['email']);
+                      }
+                  })
+                  ->orWhere(function($query) use ($verifications) {
+                      if (!is_null($verifications['nom'])) {
+                          $query->where('name', $verifications['nom']);
+                      }
+                  });
+        })->first();
+
+        if ($Exist) {
+            if ($Exist->tel === $verifications['tel'] || (!is_null($verifications['tel2']) && $Exist->tel2 === $verifications['tel2'])) {
+                return response()->json(['tel_existe' => true]);
+            } elseif ($Exist->email === $verifications['email']) {
+                return response()->json(['email_existe' => true]);
+            } elseif ($Exist->nom === $verifications['nom']) {
+                return response()->json(['nom_existe' => true]);
+            }
+        }
+
+        $matricule = $this->generateUniqueMatricule();
+
+        $role = role::find($request->role_id);
+
+        $add = new user();
+        $add->name = $request->nom;
+        $add->email = $request->email;
+        $add->sexe = $request->sexe;
+        $add->tel = $request->tel;
+        $add->tel2 = $request->tel2;
+        $add->password = bcrypt($request->password);
+        $add->adresse = $request->adresse;
+        $add->matricule = $matricule;
+        $add->role_id = $role->id;
+        $add->role = $role->nom;
+
+        if ($add->save()) {
+            return response()->json(['success' => true]);
+        }
+
+        return response()->json(['error' => true]);
+
     }
 
 }

@@ -23,12 +23,20 @@
     <!-- Row starts -->
     <div class="row justify-content-center">
         <div class="col-xxl-4 col-lg-6 col-md-8 col-sm-8">
-            <div class="card mb-3">
+            <div class="card mb-3 h-100">
                 <div class="card-header">
-                    <h5 class="card-title">Point de Caisse</h5>
+                    <h5 class="card-title">Point des encaissments</h5>
                 </div>
                 <div class="card-body" >
                     <div class="row gx-3">
+                        <div class="col-12">
+                            <div class="mb-3">
+                                <label class="form-label">
+                                    Caissier(ère)
+                                </label>
+                                <select class="form-select" id="caissier_id"></select>
+                            </div>
+                        </div>
                         <div class="col-12">
                             <div class="mb-3">
                                 <label class="form-label">
@@ -65,6 +73,59 @@
                 </div>
             </div>
         </div>
+        <div class="col-xxl-4 col-lg-6 col-md-8 col-sm-8">
+            <div class="card mb-3 h-100">
+                <div class="card-header">
+                    <h5 class="card-title">Point des opérations de caisse</h5>
+                </div>
+                <div class="card-body" >
+                    <div class="row gx-3">
+                        <div class="col-12">
+                            <div class="mb-3">
+                                <label class="form-label">
+                                    Caissier(ère)
+                                </label>
+                                <select class="form-select" id="caissier_id_ope"></select>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="mb-3">
+                                <label class="form-label">Type d'opération</label>
+                                <select class="form-select" id="type_ope">
+                                    <option value="tous">Tout</option>
+                                    <option value="Entrer de Caisse">Entrer d'argent</option>
+                                    <option value="Sortie de Caisse">Sortie d'argent</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="mb-3">
+                                <label class="form-label">
+                                    Date début
+                                </label>
+                                <input type="date" class="form-control" id="date1_ope" max="{{ date('Y-m-d') }}">
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="mb-3">
+                                <label class="form-label">
+                                    Date Fin
+                                </label>
+                                <input type="date" class="form-control" id="date2_ope" max="{{ date('Y-m-d') }}">
+                            </div>
+                        </div>
+                        <div class="col-sm-12 d-flex justify-content-center">
+                            <div class="mb-3 d-flex gap-2 justify-content-center">
+                                <button id="btn_imp_ope" class="btn btn-primary">
+                                    <i class="ri-printer-line"></i>
+                                    Imprimer
+                                </button>
+                            </div>
+                        </div>  
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
     <!-- Row ends -->
 </div>
@@ -76,10 +137,50 @@
 <script>
     document.addEventListener("DOMContentLoaded", function() {
 
+        select_caissier();
         select_assurance();
 
         document.getElementById("date1").addEventListener("change", datechange);
+        document.getElementById("date1_ope").addEventListener("change", datechange_ope);
         document.getElementById("btn_imp").addEventListener("click", imp_fac);
+        document.getElementById("btn_imp_ope").addEventListener("click", imp_fac_ope);
+
+        function select_caissier()
+        {
+            const selectElement = document.getElementById('caissier_id');
+            const selectElement_ope = document.getElementById('caissier_id_ope');
+
+            selectElement.innerHTML = '';
+            selectElement_ope.innerHTML = '';
+
+            const defaultOption = document.createElement('option');
+            defaultOption.value = 'tous';
+            defaultOption.textContent = 'Tout';
+            selectElement.appendChild(defaultOption);
+
+            const defaultOption_ope = document.createElement('option');
+            defaultOption_ope.value = 'tous';
+            defaultOption_ope.textContent = 'Tout';
+            selectElement_ope.appendChild(defaultOption_ope);
+
+            fetch('/api/list_caissier')
+                .then(response => response.json())
+                .then(data => {
+                    const caissiers = data.caissier;
+                    caissiers.forEach((item, index) => {
+                        const option = document.createElement('option');
+                        option.value = `${item.id}`;
+                        option.textContent = `${item.sexe}. ${item.name}`;
+                        selectElement.appendChild(option);
+
+                        const option_ope = document.createElement('option');
+                        option_ope.value = `${item.id}`;
+                        option_ope.textContent = `${item.sexe}. ${item.name}`;
+                        selectElement_ope.appendChild(option_ope);
+                    });
+                })
+                .catch(error => console.error('Erreur lors du chargement des societes:', error));
+        }
 
         function showAlert(title, message, type) {
             Swal.fire({
@@ -137,6 +238,15 @@
             date2.min = date1Value;
         }
 
+        function datechange_ope()
+        {
+            const date1Value = document.getElementById('date1_ope').value;
+            const date2 = document.getElementById('date2_ope');
+
+            date2.value = date1Value;
+            date2.min = date1Value;
+        }
+
         function select_assurance()
         {
             const selectElement = document.getElementById('assurance_id');
@@ -162,6 +272,7 @@
 
         function imp_fac()
         {
+            const caissier_id = document.getElementById('caissier_id');
             const assurance_id = document.getElementById('assurance_id');
             const date1 = document.getElementById('date1');
             const date2 = document.getElementById('date2');
@@ -213,9 +324,10 @@
             document.body.insertAdjacentHTML('beforeend', preloader_ch);
 
             $.ajax({
-                url: '/api/etat_fac_caisse',
+                url: '/api/etat_fac_encaissement',
                 method: 'GET',
                 data: {
+                    caissier_id: caissier_id.value || null, 
                     assurance_id: assurance_id.value || null, 
                     date1: date1.value, 
                     date2: date2.value,
@@ -240,10 +352,104 @@
 
                     } else if (response.success) {
 
-                        document.getElementById('date1').value = "";
-                        document.getElementById('date2').value = "";
-
                         generatePDFInvoice(fac_cons,fac_exam,fac_soinsam,fac_hopital,date1,date2);
+
+                    } else {
+                        showAlert('Informations', 'Aucune donnée n\'a été trouvée pour cette période','info');
+                    }
+
+                },
+                error: function() {
+
+                    var preloader = document.getElementById('preloader_ch');
+                    if (preloader) {
+                        preloader.remove();
+                    }
+
+                    showAlert('Alert', ' Une erreur est survenue.','error');
+                }
+            });
+        }
+
+        function imp_fac_ope()
+        {
+            const caissier_id = document.getElementById('caissier_id_ope');
+            const type_ope = document.getElementById('type_ope');
+            const date1 = document.getElementById('date1_ope');
+            const date2 = document.getElementById('date2_ope');
+
+            if (!date1.value.trim() || !date2.value.trim()) {
+                showAlert('Alert', 'Veuillez saisir des dates S\'il vous plaît.','warning');
+                return false; 
+            }
+
+            function isValidDate(dateString) {
+                const regEx = /^\d{4}-\d{2}-\d{2}$/;
+                if (!dateString.match(regEx)) return false;
+                const date = new Date(dateString);
+                const timestamp = date.getTime();
+                if (typeof timestamp !== 'number' || isNaN(timestamp)) return false;
+                return dateString === date.toISOString().split('T')[0];
+            }
+
+            if (!isValidDate(date1.value)) {
+                showAlert('Erreur', 'La première date est invalide.', 'error');
+                return false;
+            }
+
+            if (!isValidDate(date2.value)) {
+                showAlert('Erreur', 'La deuxième date est invalide.', 'error');
+                return false;
+            }
+
+            const startDate = new Date(date1.value);
+            const endDate = new Date(date2.value);
+
+            if (startDate > endDate) {
+                showAlert('Erreur', 'La date de début ne peut pas être supérieur à la date de fin.', 'error');
+                return false;
+            }
+
+            const oneYearInMs = 365 * 24 * 60 * 60 * 1000;
+            if (endDate - startDate > oneYearInMs) {
+                showAlert('Erreur', 'La plage de dates ne peut pas dépasser un an.', 'error');
+                return false;
+            }
+
+            var preloader_ch = `
+                <div id="preloader_ch">
+                    <div class="spinner_preloader_ch"></div>
+                </div>
+            `;
+            // Add the preloader to the body
+            document.body.insertAdjacentHTML('beforeend', preloader_ch);
+
+            $.ajax({
+                url: '/api/etat_fac_ope_caisse',
+                method: 'GET',
+                data: {
+                    user_id: caissier_id.value || null,
+                    typemvt: type_ope.value || null,
+                    date1: date1.value, 
+                    date2: date2.value,
+                },
+                success: function(response) {
+
+                    var preloader = document.getElementById('preloader_ch');
+                    if (preloader) preloader.remove();
+
+                    if (response.donnee_0) {
+
+                        showAlert('Informations', 'Aucune donnée n\'a été trouvée pour cette période','info');
+
+                    } else if (response.success) {
+
+                        const trace = response.trace || [];
+                        const total = response.total;
+                        const date1 = response.date1;
+                        const date2 = response.date2;
+
+                        generatePDFInvoice_ope(trace,total,date1,date2);
 
                     } else {
                         showAlert('Informations', 'Aucune donnée n\'a été trouvée pour cette période','info');
@@ -268,7 +474,7 @@
             const { jsPDF } = window.jspdf;
             const doc = new jsPDF({ orientation: 'l', unit: 'mm', format: 'a4' });
 
-            const pdfFilename = "Point_Caisse_" + formatDate(date1) + "_au_" + formatDate(date2);
+            const pdfFilename = "POINT DES ENCAISSEMENTS du" + formatDate(date1) + " au " + formatDate(date2);
             doc.setProperties({
                 title: pdfFilename,
             });
@@ -315,9 +521,9 @@
                 let titleR;
 
                 if (formatDate(date1) === formatDate(date2)) {
-                    titleR = "Point de la Caisse du "+formatDate(date1);
+                    titleR = "Point des encaissments du "+formatDate(date1);
                 }else{
-                    titleR = "Point de la Caisse du "+formatDate(date1)+" au "+formatDate(date2);
+                    titleR = "Point des encaissments du "+formatDate(date1)+" au "+formatDate(date2);
                 }
 
                 const titleRWidth = doc.getTextWidth(titleR);
@@ -364,25 +570,26 @@
                 ];
 
                 if (fac_global.length > 0) {
+
+                    fac_global.sort((a, b) => new Date(b.date_payer) - new Date(a.created_at));
                             
                     doc.autoTable({
                         startY: yPoss,
-                        head: [['N°', 'N° Dossier', 'Patient', 'Assurance', 'Acte effectué', 'Montant Total', 'Part Assurance', 'Part assuré', 'Statut', 'Date']],
+                        head: [['N°', 'Patient', 'Acte effectué', 'Montant Total', 'Part Assurance', 'Part assuré', 'Statut', 'Encaisser par', 'Date']],
                         body: fac_global.map((item, index) => [
                             index + 1,
-                            "P-"+item.code_patient || '',
                             item.patient || '',
-                            item.assurance || 'Néant',
                             item.acte,
                             item.montant + " Fcfa" || '' ,
                             item.part_assurance + " Fcfa" || '' ,
                             item.part_patient + " Fcfa" || '',
                             (item.statut_fac || ''),
+                            item.user_sexe + ". "+item.user ,
                             formatDateHeure(item.created_at) || '',
                         ]),
                         theme: 'striped',
                         didParseCell: function (data) {
-                            if (data.section === 'body' && data.column.index === 8) {
+                            if (data.section === 'body' && data.column.index === 6) {
                                 if (data.cell.raw.toLowerCase() === 'payer') {
                                     data.cell.styles.textColor = [0, 128, 0];
                                 } else {
@@ -431,7 +638,152 @@
                     doc.setFontSize(7);
                     doc.setFont("Helvetica", "bold");
                     doc.setTextColor(0, 0, 0);
-                    doc.text(footerText, 5, 295);
+                    doc.text(footerText, 5, 208);
+                }
+            }
+
+            drawSection(yPos);
+
+            addFooter();
+
+            doc.output('dataurlnewwindow');
+        }
+
+        function generatePDFInvoice_ope(trace,total,date1,date2)
+        {
+
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF({ orientation: 'l', unit: 'mm', format: 'a4' });
+
+            const pdfFilename = "POINT DE OPERATION DE CAISSE du" + formatDate(date1) + " au " + formatDate(date2);
+
+            doc.setProperties({
+                title: pdfFilename,
+            });
+
+            let yPos = 10;
+
+            function drawSection(yPos) {
+
+                rightMargin = 15;
+                leftMargin = 15;
+                pdfWidth = doc.internal.pageSize.getWidth();
+
+                const logoSrc = "{{asset('assets/images/logo.png')}}";
+                const logoWidth = 22;
+                const logoHeight = 22;
+                doc.addImage(logoSrc, 'PNG', leftMargin, yPos - 7, logoWidth, logoHeight);
+
+                doc.setFontSize(10);
+                doc.setTextColor(0, 0, 0);
+                doc.setFont("Helvetica", "bold");
+
+                const title = "ESPACE MEDICO SOCIAL LA PYRAMIDE DU COMPLEXE";
+                const titleWidth = doc.getTextWidth(title);
+                const titleX = (doc.internal.pageSize.getWidth() - titleWidth) / 2;
+                doc.text(title, titleX, yPos);
+
+                doc.setFont("Helvetica", "normal");
+                const address = "Abidjan Yopougon Selmer, Non loin du complexe sportif Jesse-Jackson - 04 BP 1523";
+                const addressWidth = doc.getTextWidth(address);
+                const addressX = (doc.internal.pageSize.getWidth() - addressWidth) / 2;
+                doc.text(address, addressX, (yPos + 5));
+
+                const phone = "Tél.: 20 24 44 70 / 20 21 71 92 - Cel.: 01 01 01 63 43";
+                const phoneWidth = doc.getTextWidth(phone);
+                const phoneX = (doc.internal.pageSize.getWidth() - phoneWidth) / 2;
+                doc.text(phone, phoneX, (yPos + 10));
+
+                // Définir le style pour le texte
+                doc.setFontSize(12);
+                doc.setFont("Helvetica", "bold");
+                doc.setLineWidth(0.5);
+                doc.setTextColor(0, 0, 0);
+
+                let titleR;
+
+                if (formatDate(date1) === formatDate(date2)) {
+                    titleR = "Point des opérations caisse du "+formatDate(date1);
+                }else{
+                    titleR = "Point des opérations caisse du "+formatDate(date1)+" au "+formatDate(date2);
+                }
+
+                const titleRWidth = doc.getTextWidth(titleR);
+                const titleRX = (doc.internal.pageSize.getWidth() - titleRWidth) / 2;
+
+                const paddingh = 5;  // Ajuster le padding en hauteur
+                const paddingw = 5;  // Ajuster le padding en largeur
+
+                const rectX = titleRX - paddingw;
+                let rectY = yPos + 15; // Position initiale du rectangle
+                const rectWidth = titleRWidth + (paddingw * 2);
+                const rectHeight = 2 + (paddingh * 2);
+
+                doc.setDrawColor(0, 0, 0);
+                doc.rect(rectX, rectY, rectWidth, rectHeight);
+
+                // Centrer le texte dans le rectangle
+                const textY = rectY + (rectHeight / 2) + 2;  // Ajustement de la position Y du texte pour centrer verticalement
+                doc.text(titleR, titleRX, textY);
+
+                yPoss = (yPos + 40);
+                                
+                    doc.autoTable({
+                        startY: yPoss,
+                        head: [['N°', 'Type de mouvement', 'Motifs', 'Montant', 'Créer par', 'Date d\'opération', 'Date de création']],
+                        body: trace.map((item, index) => [
+                            index + 1,
+                            item.typemvt.toUpperCase(),
+                            item.motif,
+                            item.typemvt == 'Entrer de Caisse' ? '+ '+item.montant + " Fcfa" : '- '+item.montant + " Fcfa" ,
+                            item.user_sexe + ". "+item.user ,
+                            item.date_ope == '' ? formatDate(item.created_at) : formatDate(item.date_ope) ,
+                            formatDateHeure(item.created_at) || '',
+                        ]),
+                        theme: 'striped',
+                        didParseCell: function (data) {
+                            // Check if the section is 'body'
+                            if (data.section === 'body') {
+                                // Apply color based on the value in column index 1
+                                if (data.column.index === 3) { // Apply color to index 3
+                                    if (data.row.cells[1].raw.toLowerCase() === 'entrer de caisse') {
+                                        data.cell.styles.textColor = [0, 128, 0]; // Green color
+                                    } else {
+                                        data.cell.styles.textColor = [255, 0, 0]; // Red color
+                                    }
+                                }
+                            }
+                        }
+                    });
+
+                    const finalY = doc.autoTable.previous.finalY || yPoss + 10;
+                    yPoss = finalY + 10;
+
+                    const finalInfo = [
+                        { label: "Montant Total", value: formatPrice(total) + " Fcfa" },
+                        
+                    ];
+
+                    finalInfo.forEach(info => {
+                        doc.setFontSize(11);
+                        doc.setFont("Helvetica", "bold");
+                        doc.text(info.label, leftMargin + 200, yPoss);
+                        doc.setFont("Helvetica", "normal");
+                        doc.text(": " + info.value, leftMargin + 235, yPoss);
+                        yPoss += 7;
+                    });
+
+            }
+
+            function addFooter() {
+                const pageCount = doc.internal.getNumberOfPages();
+                for (let i = 1; i <= pageCount; i++) {
+                    doc.setPage(i);
+                    const footerText = "Imprimer le " + new Date().toLocaleDateString() + " à " + new Date().toLocaleTimeString();
+                    doc.setFontSize(7);
+                    doc.setFont("Helvetica", "bold");
+                    doc.setTextColor(0, 0, 0);
+                    doc.text(footerText, 5, 208);
                 }
             }
 
