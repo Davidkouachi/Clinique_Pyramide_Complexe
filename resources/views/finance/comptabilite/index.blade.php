@@ -41,8 +41,11 @@
                     <h5 class="card-title">Statistique des Actes</h5>
                     <div class="d-flex">
                         <select class="form-select me-1" id="yearSelect"></select>
-                        <a id="btn_refresh_stat_acte" class="btn btn-outline-info ms-auto">
+                        <a id="btn_refresh_stat_acte" class="btn btn-outline-info ms-auto me-1">
                             <i class="ri-loop-left-line"></i>
+                        </a>
+                        <a id="btn_prinft_stat_acte" class="btn btn-outline-warning ms-auto" style="display: none;">
+                            <i class="ri-printer-line"></i>
                         </a>
                     </div>
                 </div>
@@ -55,8 +58,11 @@
                     <h5 class="card-title">Chiffres d'affaires mensuels des Actes</h5>
                     <div class="d-flex">
                         <select class="form-select me-1" id="yearSelect3"></select>
-                        <a id="btn_refresh_stat_chiff_acte" class="btn btn-outline-info ms-auto">
+                        <a id="btn_refresh_stat_chiff_acte" class="btn btn-outline-info ms-auto me-1">
                             <i class="ri-loop-left-line"></i>
+                        </a>
+                        <a id="btn_prinft_chiff_aff" class="btn btn-outline-warning ms-auto" style="display: none;">
+                            <i class="ri-printer-line"></i>
                         </a>
                     </div>
                 </div>
@@ -129,7 +135,8 @@
             date2.min = date1Value;
         }
 
-        function showAlert(title, message, type) {
+        function showAlert(title, message, type) 
+        {
             Swal.fire({
                 title: title,
                 text: message,
@@ -137,7 +144,8 @@
             });
         }
 
-        function formatPrice(price) {
+        function formatPrice(price) 
+        {
 
             // Convert to float and round to the nearest whole number
             let number = Math.round(parseFloat(price));
@@ -176,14 +184,15 @@
             return `${day}/${month}/${year} à ${hours}:${minutes}:${seconds}`;
         }
 
-        function yearSelect() {
+        function yearSelect() 
+        {
 
             var yearSelect = document.getElementById('yearSelect');
             var yearSelect2 = document.getElementById('yearSelect2');
             var yearSelect3 = document.getElementById('yearSelect3');
 
             var currentYear = new Date().getFullYear();
-            var startYear = 2020;
+            var startYear = 2024;
 
             for (var year = currentYear; year >= startYear; year--) {
 
@@ -213,7 +222,8 @@
             }
         }
 
-        function dateSelect() {
+        function dateSelect() 
+        {
             // Obtenir la date actuelle
             const today = new Date();
             
@@ -233,11 +243,13 @@
             document.getElementById('date2').value = formatDate(endOfMonth);
         }
 
-        function generateMonthlyData(stats, defaultMonths) {
+        function generateMonthlyData(stats, defaultMonths) 
+        {
             return defaultMonths.map(month => stats[month] || 0);
         }
 
-        function stat_acte() {
+        function stat_acte() 
+        {
 
             const yearSelect = document.getElementById("yearSelect").value;
 
@@ -270,11 +282,7 @@
                 .then(data => {
 
                     const monthlyStats = data.monthlyStats;
-                    const months = [
-                        "Jan", "Feb", "Mar", "Apr", "May", 
-                        "Jun", "Jul", "Aug", "Sep", "Oct", 
-                        "Nov", "Dec"
-                    ];
+                    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun','Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec',];
 
                     const consultationsData = generateMonthlyData(monthlyStats.consultations, months);
                     const hospitalisationsData = generateMonthlyData(monthlyStats.hospitalisations, months);
@@ -384,6 +392,12 @@
 
                         chart.render();
 
+                        const btnPrintStatActe = document.getElementById("btn_prinft_stat_acte");
+                        btnPrintStatActe.style.display = "block";
+                        btnPrintStatActe.addEventListener("click", function() {
+                            generatePDFStatActe(monthlyStats, yearSelect);
+                        });
+
                     } else {
 
                         contenu.innerHTML = '';
@@ -400,7 +414,8 @@
                 });
         }
 
-        function stat_acte2() {
+        function stat_acte2() 
+        {
 
             const yearSelect = document.getElementById("yearSelect2").value;
 
@@ -435,11 +450,7 @@
                 .then(data => {
 
                     const monthlyStats = data.monthlyStats;
-                    const months = [
-                        "Jan", "Feb", "Mar", "Apr", "May", 
-                        "Jun", "Jul", "Aug", "Sep", "Oct", 
-                        "Nov", "Dec"
-                    ];
+                    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun','Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec',];
 
                     const entrer = generateMonthlyData(monthlyStats.entrer, months);
                     const sortie = generateMonthlyData(monthlyStats.sortie, months);
@@ -583,7 +594,8 @@
                 });
         }
 
-        function stat_chiff_acte() {
+        function stat_chiff_acte() 
+        {
 
             const yearSelect = document.getElementById("yearSelect3").value;
 
@@ -609,6 +621,7 @@
                                         <th scope="col">Octobre</th>
                                         <th scope="col">Novembre</th>
                                         <th scope="col">Décembre</th>
+                                        <th scope="col">Total</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -647,7 +660,7 @@
                         contenu.innerHTML = stat_acte;
                 
                         const tableBody = document.querySelector('#Table_chiff_acte tbody');
-                        const months = ['Jan', 'Fev', 'Mar', 'Avr', 'Mai', 'Jui', 'Jul', 'Aout', 'Sept', 'Oct', 'Nov', 'Dec'];
+                        const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun','Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec',];
 
                         // Effacer les anciennes données du tableau
                         tableBody.innerHTML = '';
@@ -662,7 +675,7 @@
                             minMaxValues[month] = {
                                 max: max,
                                 min: min,
-                                allEqual: max === min, // Vérifie si tous les chiffres sont identiques pour le mois
+                                allEqual: max === min,
                             };
                         });
 
@@ -670,15 +683,43 @@
                         Object.keys(monthlyStats).forEach(acte => {
                             const row = document.createElement('tr');
 
-                            // Première colonne avec le nom de l'acte
+                            // Première colonne avec le nom de l'acte et des couleurs différentes par type d'acte
                             const acteCell = document.createElement('td');
-                            acteCell.textContent = acte.charAt(0).toUpperCase() + acte.slice(1);
+
+                            // Définir la couleur en fonction de l'acte
+                            let colorClass = '';
+                            switch (acte) {
+                                case 'consultation':
+                                    colorClass = 'bg-primary'; // bleu
+                                    break;
+                                case 'examen':
+                                    colorClass = 'bg-warning'; // jaune
+                                    break;
+                                case 'hospitalisation':
+                                    colorClass = 'bg-danger'; // rouge
+                                    break;
+                                case 'soins ambulatoire':
+                                    colorClass = 'bg-success'; // vert
+                                    break;
+                                default:
+                                    colorClass = 'bg-secondary'; // gris par défaut
+                            }
+
+                            // Insérer l'acte avec la couleur appropriée
+                            acteCell.innerHTML = `
+                                <span class="badge ${colorClass}">
+                                    ${acte.charAt(0).toUpperCase() + acte.slice(1)}
+                                </span>
+                            `;
                             row.appendChild(acteCell);
 
-                             // Colonnes pour chaque mois
+                            let total = 0; // Initialiser le total pour chaque acte
+
+                            // Colonnes pour chaque mois
                             months.forEach(month => {
                                 const cell = document.createElement('td');
                                 const montant = parseFloat(monthlyStats[acte][month]) || 0;
+                                total += montant; // Ajouter le montant au total de l'acte
                                 cell.textContent = `${formatPrice(montant)} Fcfa`;
 
                                 // Appliquer la couleur en fonction des valeurs min/max
@@ -687,14 +728,30 @@
                                         cell.style.color = 'green';
                                     } else if (montant === minMaxValues[month].min) {
                                         cell.style.color = 'red';
+                                    }else{
+                                       cell.style.color = 'blue'; 
                                     }
+                                }else{
+                                   cell.style.color = 'blue'; 
                                 }
 
                                 row.appendChild(cell);
                             });
 
+                            // Ajouter la cellule Total pour l'acte
+                            const totalCell = document.createElement('td');
+                            totalCell.textContent = `${formatPrice(total)} Fcfa`;
+                            totalCell.style.fontWeight = 'bold';
+                            row.appendChild(totalCell);
+
                             // Ajouter la ligne au tableau
                             tableBody.appendChild(row);
+                        });
+
+                        const btnPrintChiffAff = document.getElementById("btn_prinft_chiff_aff");
+                        btnPrintChiffAff.style.display = "block";
+                        btnPrintChiffAff.addEventListener("click", function() {
+                            generatePDFStatChiffActe(monthlyStats, yearSelect);
                         });
 
                     } else {
@@ -713,7 +770,299 @@
                 });
         }
 
-        function isValidDate(dateString) {
+        function generatePDFStatActe(monthlyStats,yearSelect)
+        {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF({ orientation: 'l', unit: 'mm', format: 'a4' });
+
+            const pdfFilename = "Statistiques du chiffres d'affaire des actes - Année " +yearSelect;
+            doc.setProperties({
+                title: pdfFilename,
+            });
+
+            let yPos = 10;
+
+            function drawSection(yPos) {
+
+                rightMargin = 15;
+                leftMargin = 15;
+                pdfWidth = doc.internal.pageSize.getWidth();
+
+                doc.setFontSize(10);
+                doc.setTextColor(0, 0, 0);
+                doc.setFont("Helvetica", "bold");
+
+                const logoSrc = "{{asset('assets/images/logo.png')}}";
+                const logoWidth = 22;
+                const logoHeight = 22;
+                doc.addImage(logoSrc, 'PNG', leftMargin, yPos - 7, logoWidth, logoHeight);
+
+                const title = "ESPACE MEDICO SOCIAL LA PYRAMIDE DU COMPLEXE";
+                const titleWidth = doc.getTextWidth(title);
+                const titleX = (doc.internal.pageSize.getWidth() - titleWidth) / 2;
+                doc.text(title, titleX, yPos);
+
+                doc.setFont("Helvetica", "normal");
+                const address = "Abidjan Yopougon Selmer, Non loin du complexe sportif Jesse-Jackson - 04 BP 1523";
+                const addressWidth = doc.getTextWidth(address);
+                const addressX = (doc.internal.pageSize.getWidth() - addressWidth) / 2;
+                doc.text(address, addressX, (yPos + 5));
+
+                const phone = "Tél.: 20 24 44 70 / 20 21 71 92 - Cel.: 01 01 01 63 43";
+                const phoneWidth = doc.getTextWidth(phone);
+                const phoneX = (doc.internal.pageSize.getWidth() - phoneWidth) / 2;
+                doc.text(phone, phoneX, (yPos + 10));
+
+                // Définir le style pour le texte
+                doc.setFontSize(12);
+                doc.setFont("Helvetica", "bold");
+                doc.setLineWidth(0.5);
+                doc.setTextColor(0, 0, 0);
+
+                const titleR = "Statistiques des actes";
+                const titleRWidth = doc.getTextWidth(titleR);
+                const titleRX = (doc.internal.pageSize.getWidth() - titleRWidth) / 2;
+
+                const paddingh = 5;  // Ajuster le padding en hauteur
+                const paddingw = 5;  // Ajuster le padding en largeur
+
+                const rectX = titleRX - paddingw;
+                let rectY = yPos + 18; // Position initiale du rectangle
+                const rectWidth = titleRWidth + (paddingw * 2);
+                const rectHeight = 15 + (paddingh * 2);
+
+                doc.setDrawColor(0, 0, 0);
+                doc.rect(rectX, rectY, rectWidth, rectHeight);
+
+                // Centrer le texte dans le rectangle
+                const textY = rectY + (rectHeight / 2) - 2;  // Ajustement de la position Y du texte pour centrer verticalement
+                doc.text(titleR, titleRX, textY);
+
+                // Ajout de la date sous le titre avec un saut de ligne
+                const dateText = "Année " +yearSelect; // Assurez-vous que formatDate est une fonction qui formate la date comme vous le souhaitez
+                const dateTextWidth = doc.getTextWidth(dateText);
+                const dateTextX = (doc.internal.pageSize.getWidth() - dateTextWidth) / 2; // Centrer la date
+                // Positionner la date sous le rectangle
+                doc.text(dateText, dateTextX, textY + 10);
+
+                yPoss = (yPos + 50);
+
+                // Prepare data for the table
+                const tableBody = [];
+                const monthsTbale = ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'];
+                const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun','Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec',];
+
+                // Custom display names for each acte
+                const acteNames = {
+                    consultations: "Consultations",
+                    hospitalisations: "Hospitalisations",
+                    examens: "Examens",
+                    soins_ambulatoires: "Soins Ambulatoires"
+                };
+
+                // Populate table data with monthly statistics
+                Object.keys(monthlyStats).forEach(acte => {
+                    // Get the customized name for the acte or default to capitalized acte name
+                    const displayName = acteNames[acte] || (acte.charAt(0).toUpperCase() + acte.slice(1));
+                    const rowData = [displayName];
+                    let total = 0;
+
+                    months.forEach(month => {
+                        const count = parseInt(generateMonthlyData(monthlyStats[acte], [month]), 10) || 0;
+                        total += count;
+                        rowData.push(count.toString());
+                    });
+
+                    // Add the total to the end of the row
+                    rowData.push(total.toString());
+
+                    // Push the completed row to the table body
+                    tableBody.push(rowData);
+                });
+
+                // Render the table using autoTable
+                doc.autoTable({
+                    startY: yPoss,
+                    head: [['Acte', 'Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre', 'Total']],
+                    body: tableBody,
+                    theme: 'striped',
+                    headStyles: { fillColor: [100, 100, 255] },
+                    bodyStyles: { textColor: 50 },
+                    alternateRowStyles: { fillColor: [240, 240, 240] },
+                    margin: { top: 10, bottom: 10 },
+                    tableWidth: 'auto'
+                });
+
+            }
+
+            function addFooter() {
+                // Add footer with current date and page number in X/Y format
+                const pageCount = doc.internal.getNumberOfPages();
+                const footerY = doc.internal.pageSize.getHeight() - 2; // 10 mm from the bottom
+
+                for (let i = 1; i <= pageCount; i++) {
+                    doc.setPage(i);
+                    doc.setFontSize(8);
+                    doc.setTextColor(0, 0, 0);
+                    
+                    // Page number centered
+                    const pageText = `Page ${i} sur ${pageCount}`;
+                    const pageTextWidth = doc.getTextWidth(pageText);
+                    const centerX = (doc.internal.pageSize.getWidth() - pageTextWidth) / 2;
+                    doc.text(pageText, centerX, footerY); // Centered at the bottom
+
+                    // Date at the left
+                    doc.text("Imprimé le : " + new Date().toLocaleDateString() + " à " + new Date().toLocaleTimeString(), 10, footerY); // Left-aligned
+                }
+            }
+
+            drawSection(yPos);
+
+            addFooter();
+
+            // Open the generated PDF in a new window
+            doc.output('dataurlnewwindow');
+        }
+
+        function generatePDFStatChiffActe(monthlyStats,yearSelect)
+        {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF({ orientation: 'l', unit: 'mm', format: 'a4' });
+
+            const pdfFilename = "Statistiques du chiffres d'affaire des actes - Année " +yearSelect;
+            doc.setProperties({
+                title: pdfFilename,
+            });
+
+            let yPos = 10;
+
+            function drawSection(yPos) {
+
+                rightMargin = 15;
+                leftMargin = 15;
+                pdfWidth = doc.internal.pageSize.getWidth();
+
+                doc.setFontSize(10);
+                doc.setTextColor(0, 0, 0);
+                doc.setFont("Helvetica", "bold");
+
+                const logoSrc = "{{asset('assets/images/logo.png')}}";
+                const logoWidth = 22;
+                const logoHeight = 22;
+                doc.addImage(logoSrc, 'PNG', leftMargin, yPos - 7, logoWidth, logoHeight);
+
+                const title = "ESPACE MEDICO SOCIAL LA PYRAMIDE DU COMPLEXE";
+                const titleWidth = doc.getTextWidth(title);
+                const titleX = (doc.internal.pageSize.getWidth() - titleWidth) / 2;
+                doc.text(title, titleX, yPos);
+
+                doc.setFont("Helvetica", "normal");
+                const address = "Abidjan Yopougon Selmer, Non loin du complexe sportif Jesse-Jackson - 04 BP 1523";
+                const addressWidth = doc.getTextWidth(address);
+                const addressX = (doc.internal.pageSize.getWidth() - addressWidth) / 2;
+                doc.text(address, addressX, (yPos + 5));
+
+                const phone = "Tél.: 20 24 44 70 / 20 21 71 92 - Cel.: 01 01 01 63 43";
+                const phoneWidth = doc.getTextWidth(phone);
+                const phoneX = (doc.internal.pageSize.getWidth() - phoneWidth) / 2;
+                doc.text(phone, phoneX, (yPos + 10));
+
+                // Définir le style pour le texte
+                doc.setFontSize(12);
+                doc.setFont("Helvetica", "bold");
+                doc.setLineWidth(0.5);
+                doc.setTextColor(0, 0, 0);
+
+                const titleR = "Statistiques du chiffres d'affaire des actes";
+                const titleRWidth = doc.getTextWidth(titleR);
+                const titleRX = (doc.internal.pageSize.getWidth() - titleRWidth) / 2;
+
+                const paddingh = 5;  // Ajuster le padding en hauteur
+                const paddingw = 5;  // Ajuster le padding en largeur
+
+                const rectX = titleRX - paddingw;
+                let rectY = yPos + 18; // Position initiale du rectangle
+                const rectWidth = titleRWidth + (paddingw * 2);
+                const rectHeight = 15 + (paddingh * 2);
+
+                doc.setDrawColor(0, 0, 0);
+                doc.rect(rectX, rectY, rectWidth, rectHeight);
+
+                // Centrer le texte dans le rectangle
+                const textY = rectY + (rectHeight / 2) - 2;  // Ajustement de la position Y du texte pour centrer verticalement
+                doc.text(titleR, titleRX, textY);
+
+                // Ajout de la date sous le titre avec un saut de ligne
+                const dateText = "Année " +yearSelect; // Assurez-vous que formatDate est une fonction qui formate la date comme vous le souhaitez
+                const dateTextWidth = doc.getTextWidth(dateText);
+                const dateTextX = (doc.internal.pageSize.getWidth() - dateTextWidth) / 2; // Centrer la date
+                // Positionner la date sous le rectangle
+                doc.text(dateText, dateTextX, textY + 10);
+
+                yPoss = (yPos + 50);
+
+                // Prepare data for the table
+                const tableBody = [];
+                const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+
+                Object.keys(monthlyStats).forEach(acte => {
+                    const rowData = [acte.charAt(0).toUpperCase() + acte.slice(1)];
+
+                    let total = 0;
+                    months.forEach(month => {
+                        const montant = parseFloat(monthlyStats[acte][month]) || 0;
+                        total += montant;
+                        rowData.push(`${formatPrice(montant)} Fcfa`);
+                    });
+
+                    rowData.push(`${formatPrice(total)} Fcfa`);
+                    tableBody.push(rowData);
+                });
+
+                // Generate table with jsPDF autoTable
+                doc.autoTable({
+                    startY: yPoss,
+                    head: [['Acte', 'Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre', 'Total']],
+                    body: tableBody,
+                    theme: 'striped',
+                    headStyles: { fillColor: [100, 100, 255] },
+                    bodyStyles: { textColor: 50 },
+                    alternateRowStyles: { fillColor: [240, 240, 240] },
+                });
+
+            }
+
+            function addFooter() {
+                // Add footer with current date and page number in X/Y format
+                const pageCount = doc.internal.getNumberOfPages();
+                const footerY = doc.internal.pageSize.getHeight() - 2; // 10 mm from the bottom
+
+                for (let i = 1; i <= pageCount; i++) {
+                    doc.setPage(i);
+                    doc.setFontSize(8);
+                    doc.setTextColor(0, 0, 0);
+                    
+                    // Page number centered
+                    const pageText = `Page ${i} sur ${pageCount}`;
+                    const pageTextWidth = doc.getTextWidth(pageText);
+                    const centerX = (doc.internal.pageSize.getWidth() - pageTextWidth) / 2;
+                    doc.text(pageText, centerX, footerY); // Centered at the bottom
+
+                    // Date at the left
+                    doc.text("Imprimé le : " + new Date().toLocaleDateString() + " à " + new Date().toLocaleTimeString(), 10, footerY); // Left-aligned
+                }
+            }
+
+            drawSection(yPos);
+
+            addFooter();
+
+            // Open the generated PDF in a new window
+            doc.output('dataurlnewwindow');
+        }
+
+        function isValidDate(dateString) 
+        {
             const regEx = /^\d{4}-\d{2}-\d{2}$/;
             if (!dateString.match(regEx)) return false;
             const date = new Date(dateString);
@@ -722,7 +1071,8 @@
             return dateString === date.toISOString().split('T')[0];
         }
 
-        function stat_acte_mois() {
+        function stat_acte_mois() 
+        {
 
             const date1 = document.getElementById("date1");
             const date2 = document.getElementById("date2");
@@ -1052,7 +1402,8 @@
                 });
         }
 
-        function createStatRow(label, value, colorClass) {
+        function createStatRow(label, value, colorClass) 
+        {
             return `
                 <div class="d-flex align-items-end justify-content-between mt-1">
                     <div class="text-start">
