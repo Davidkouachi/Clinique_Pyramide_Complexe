@@ -115,6 +115,8 @@ class ApiinsertfactureController extends Controller
                 $add_caisse->solde_apres = number_format($solde_apres, 0, '', '.');
                 $add_caisse->typemvt = 'Entrer de Caisse';
                 $add_caisse->creer_id = $request->auth_id;
+                $today = Carbon::today();
+                $add_caisse->date_ope = $today;
                 
                 if (!$add_caisse->save()) {
                     throw new \Exception('Erreur');
@@ -246,6 +248,8 @@ class ApiinsertfactureController extends Controller
                 $add_caisse->solde_apres = number_format($solde_apres, 0, '', '.');
                 $add_caisse->typemvt = 'Entrer de Caisse';
                 $add_caisse->creer_id = $request->auth_id;
+                $today = Carbon::today();
+                $add_caisse->date_ope = $today;
                 
                 if (!$add_caisse->save()) {
                     throw new \Exception('Erreur');
@@ -373,6 +377,8 @@ class ApiinsertfactureController extends Controller
                 $add_caisse->solde_apres = number_format($solde_apres, 0, '', '.');
                 $add_caisse->typemvt = 'Entrer de Caisse';
                 $add_caisse->creer_id = $request->auth_id;
+                $today = Carbon::today();
+                $add_caisse->date_ope = $today;
                 
                 if (!$add_caisse->save()) {
                     throw new \Exception('Erreur');
@@ -506,6 +512,8 @@ class ApiinsertfactureController extends Controller
                 $add_caisse->solde_apres = number_format($solde_apres, 0, '', '.');
                 $add_caisse->typemvt = 'Entrer de Caisse';
                 $add_caisse->creer_id = $request->auth_id;
+                $today = Carbon::today();
+                $add_caisse->date_ope = $today;
                 
                 if (!$add_caisse->save()) {
                     throw new \Exception('Erreur');

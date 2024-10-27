@@ -90,7 +90,7 @@
                         </div>
                         <div class="mx-3 my-2 d-grid">
                             <a class="btn btn-primary d-flex align-items-center justify-content-between" data-bs-toggle="modal" data-bs-target="#DetailProfil" id="detailprofil">
-                                <span class="me-3" >Profil</span>
+                                <span class="me-3" >Mon Profil</span>
                                 <i class="ri-user-3-line"></i>
                             </a>
                         </div>

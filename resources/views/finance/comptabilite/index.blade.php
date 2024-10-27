@@ -51,6 +51,20 @@
         </div>
         <div class="col-12">
             <div class="card mb-3">
+                <div class="card-header d-flex align-items-center justify-content-between">
+                    <h5 class="card-title">Chiffres d'affaires mensuels des Actes</h5>
+                    <div class="d-flex">
+                        <select class="form-select me-1" id="yearSelect3"></select>
+                        <a id="btn_refresh_stat_chiff_acte" class="btn btn-outline-info ms-auto">
+                            <i class="ri-loop-left-line"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="card-body" id="contenu_gra3"></div>
+            </div>
+        </div>
+        <div class="col-12">
+            <div class="card mb-3">
                 <div class="card-body" >
                     <div class="row gx-3 justify-content-center align-items-center">
                         <div class="col-xxl-4 col-lg-4 col-sm-6">
@@ -92,6 +106,7 @@
         yearSelect();
         stat_acte();
         stat_acte2();
+        stat_chiff_acte();
         dateSelect();
         stat_acte_mois();
 
@@ -99,8 +114,10 @@
         document.getElementById("btn_rech").addEventListener("click", stat_acte_mois);
         document.getElementById("btn_refresh_stat_acte").addEventListener("click", stat_acte);
         document.getElementById("btn_refresh_stat_acte2").addEventListener("click", stat_acte2);
+        document.getElementById("btn_refresh_stat_chiff_acte").addEventListener("click", stat_chiff_acte);
         document.getElementById("yearSelect").addEventListener("change", stat_acte);
         document.getElementById("yearSelect2").addEventListener("change", stat_acte2);
+        document.getElementById("yearSelect3").addEventListener("change", stat_chiff_acte);
 
         function datechange()
         {
@@ -163,9 +180,10 @@
 
             var yearSelect = document.getElementById('yearSelect');
             var yearSelect2 = document.getElementById('yearSelect2');
+            var yearSelect3 = document.getElementById('yearSelect3');
 
             var currentYear = new Date().getFullYear();
-            var startYear = 2024;
+            var startYear = 2020;
 
             for (var year = currentYear; year >= startYear; year--) {
 
@@ -175,7 +193,6 @@
                 if (year === currentYear) {
                     option.selected = true;
                 }
-
                 yearSelect.appendChild(option);
 
                 var option2 = document.createElement('option');
@@ -185,6 +202,14 @@
                     option2.selected = true;
                 }
                 yearSelect2.appendChild(option2);
+
+                var option3 = document.createElement('option');
+                option3.value = year;
+                option3.textContent = year;
+                if (year === currentYear) {
+                    option3.selected = true;
+                }
+                yearSelect3.appendChild(option3);
             }
         }
 
@@ -541,6 +566,136 @@
                         `;
                         document.querySelector("#stat_acte2_bord").innerHTML = stat;
 
+
+                    } else {
+
+                        contenu.innerHTML = '';
+                        contenu.innerHTML = message;
+
+                    }
+                })
+                .catch(error => {
+                    console.error('Erreur lors du chargement des données:', error);
+
+                    contenu.innerHTML = '';
+                    contenu.innerHTML = message;
+
+                });
+        }
+
+        function stat_chiff_acte() {
+
+            const yearSelect = document.getElementById("yearSelect3").value;
+
+            const contenu = document.getElementById("contenu_gra3");
+            contenu.innerHTML = '';
+
+            var stat_acte = `
+                <div class="table-outer">
+                        <div class="table-responsive">
+                            <table class="table align-middle table-hover m-0 truncate" id="Table_chiff_acte">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">Acte</th>
+                                        <th scope="col">Janvier</th>
+                                        <th scope="col">Février</th>
+                                        <th scope="col">Mars</th>
+                                        <th scope="col">Avril</th>
+                                        <th scope="col">Mai</th>
+                                        <th scope="col">Juin</th>
+                                        <th scope="col">Juillet</th>
+                                        <th scope="col">Août</th>
+                                        <th scope="col">Septembre</th>
+                                        <th scope="col">Octobre</th>
+                                        <th scope="col">Novembre</th>
+                                        <th scope="col">Décembre</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+            `;
+            var message = `
+                <div id="message_stat_acte">
+                    <p class="text-center">
+                        Aucune donnée n'a été trouvée
+                    </p>
+                </div>
+            `;
+            var loader = `
+                <div id="div_Table_loader_stat_acte">
+                    <div class="d-flex justify-content-center align-items-center">
+                        <div class="spinner-border text-warning me-2" role="status" aria-hidden="true"></div>
+                        <strong>Chargement des données...</strong>
+                    </div>
+                </div>
+            `;
+
+            contenu.innerHTML = loader;
+
+            fetch('/api/stat_chiff_acte/' + yearSelect)
+                .then(response => response.json())
+                .then(data => {
+
+                    const monthlyStats = data.monthlyStats;
+
+                    if (monthlyStats) {
+
+                        contenu.innerHTML = '';
+                        contenu.innerHTML = stat_acte;
+                
+                        const tableBody = document.querySelector('#Table_chiff_acte tbody');
+                        const months = ['Jan', 'Fev', 'Mar', 'Avr', 'Mai', 'Jui', 'Jul', 'Aout', 'Sept', 'Oct', 'Nov', 'Dec'];
+
+                        // Effacer les anciennes données du tableau
+                        tableBody.innerHTML = '';
+
+                        // Pré-calculer le min et le max pour chaque mois
+                        const minMaxValues = {};
+
+                        months.forEach(month => {
+                            const values = Object.keys(monthlyStats).map(acte => parseFloat(monthlyStats[acte][month]) || 0);
+                            const max = Math.max(...values);
+                            const min = Math.min(...values);
+                            minMaxValues[month] = {
+                                max: max,
+                                min: min,
+                                allEqual: max === min, // Vérifie si tous les chiffres sont identiques pour le mois
+                            };
+                        });
+
+                        // Générer des lignes pour chaque type d'acte
+                        Object.keys(monthlyStats).forEach(acte => {
+                            const row = document.createElement('tr');
+
+                            // Première colonne avec le nom de l'acte
+                            const acteCell = document.createElement('td');
+                            acteCell.textContent = acte.charAt(0).toUpperCase() + acte.slice(1);
+                            row.appendChild(acteCell);
+
+                             // Colonnes pour chaque mois
+                            months.forEach(month => {
+                                const cell = document.createElement('td');
+                                const montant = parseFloat(monthlyStats[acte][month]) || 0;
+                                cell.textContent = `${formatPrice(montant)} Fcfa`;
+
+                                // Appliquer la couleur en fonction des valeurs min/max
+                                if (!minMaxValues[month].allEqual) {
+                                    if (montant === minMaxValues[month].max) {
+                                        cell.style.color = 'green';
+                                    } else if (montant === minMaxValues[month].min) {
+                                        cell.style.color = 'red';
+                                    }
+                                }
+
+                                row.appendChild(cell);
+                            });
+
+                            // Ajouter la ligne au tableau
+                            tableBody.appendChild(row);
+                        });
 
                     } else {
 

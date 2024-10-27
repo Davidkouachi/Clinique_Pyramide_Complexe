@@ -184,6 +184,7 @@ Route::middleware(['statutchambre','dateRdv'])->group(function () {
 	Route::get('/patient_stat/{id}', [ApistatController::class, 'patient_stat']);
 	Route::get('/assurance_stat/{id}', [ApistatController::class, 'assurance_stat']);
 	Route::get('/count_rdv_two_day', [ApistatController::class, 'count_rdv_two_day']);
+	Route::get('/stat_chiff_acte/{yearSelect}', [ApistatController::class, 'stat_chiff_acte']);
 	// statistique fin
 
 	// List facture debut

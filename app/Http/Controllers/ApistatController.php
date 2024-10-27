@@ -802,4 +802,96 @@ class ApistatController extends Controller
 
     }
 
+    public function stat_chiff_acte($yearSelect)
+    {
+        $monthlyStats = [
+            'consultation' => [
+                'Jan' => 0, 'Feb' => 0, 'Mar' => 0, 'Apr' => 0, 'May' => 0, 'Jun' => 0,
+                'Jul' => 0, 'Aug' => 0, 'Sep' => 0, 'Oct' => 0, 'Nov' => 0, 'Dec' => 0,
+            ],
+            'examen' => [
+                'Jan' => 0, 'Feb' => 0, 'Mar' => 0, 'Apr' => 0, 'May' => 0, 'Jun' => 0,
+                'Jul' => 0, 'Aug' => 0, 'Sep' => 0, 'Oct' => 0, 'Nov' => 0, 'Dec' => 0,
+            ],
+            'hospitalisation' => [
+                'Jan' => 0, 'Feb' => 0, 'Mar' => 0, 'Apr' => 0, 'May' => 0, 'Jun' => 0,
+                'Jul' => 0, 'Aug' => 0, 'Sep' => 0, 'Oct' => 0, 'Nov' => 0, 'Dec' => 0,
+            ],
+            'soins ambulatoire' => [
+                'Jan' => 0, 'Feb' => 0, 'Mar' => 0, 'Apr' => 0, 'May' => 0, 'Jun' => 0,
+                'Jul' => 0, 'Aug' => 0, 'Sep' => 0, 'Oct' => 0, 'Nov' => 0, 'Dec' => 0,
+            ],
+        ];
+
+        $consultation = consultation::join('detailconsultations', 'detailconsultations.consultation_id', '=', 'consultations.id')
+        ->join('factures', 'factures.id', '=', 'consultations.facture_id')
+        ->where('factures.statut', '=', 'payer')
+        ->groupBy(DB::raw('MONTH(consultations.created_at)'))
+        ->whereYear('consultations.created_at', $yearSelect)
+        ->select(
+            DB::raw('MONTH(consultations.created_at) as month'),
+            DB::raw('COALESCE(SUM(REPLACE(detailconsultations.montant, ".", "") + 0), 0) as montant')
+        )
+        ->get();
+
+        foreach ($consultation as $value) {
+            $monthIndex = intval($value->month);
+            $monthName = date('M', mktime(0, 0, 0, $monthIndex, 10));
+            $monthlyStats['consultation'][$monthName] = $value->montant;
+        }
+
+        $examen = examen::join('factures', 'factures.id', '=', 'examens.facture_id')
+        ->where('factures.statut', '=', 'payer')
+        ->groupBy(DB::raw('MONTH(examens.created_at)'))
+        ->whereYear('examens.created_at', $yearSelect)
+        ->select(
+            DB::raw('MONTH(examens.created_at) as month'),
+            DB::raw('COALESCE(SUM(REPLACE(examens.montant, ".", "") + 0), 0) as montant')
+        )
+        ->get();
+
+        foreach ($examen as $value) {
+            $monthIndex = intval($value->month);
+            $monthName = date('M', mktime(0, 0, 0, $monthIndex, 10));
+            $monthlyStats['examen'][$monthName] = $value->montant;
+        }
+
+        $hos = detailhopital::join('factures', 'factures.id', '=', 'detailhopitals.facture_id')
+        ->where('factures.statut', '=', 'payer')
+        ->groupBy(DB::raw('MONTH(detailhopitals.created_at)'))
+        ->whereYear('detailhopitals.created_at', $yearSelect)
+        ->select(
+            DB::raw('MONTH(detailhopitals.created_at) as month'),
+            DB::raw('COALESCE(SUM(REPLACE(detailhopitals.montant, ".", "") + 0), 0) as montant')
+        )
+        ->get();
+
+        foreach ($hos as $value) {
+            $monthIndex = intval($value->month);
+            $monthName = date('M', mktime(0, 0, 0, $monthIndex, 10));
+            $monthlyStats['hospitalisation'][$monthName] = $value->montant;
+        }
+
+        $soinsam = soinspatient::join('factures', 'factures.id', '=', 'soinspatients.facture_id')
+        ->where('factures.statut', '=', 'payer')
+        ->groupBy(DB::raw('MONTH(soinspatients.created_at)'))
+        ->whereYear('soinspatients.created_at', $yearSelect)
+        ->select(
+            DB::raw('MONTH(soinspatients.created_at) as month'),
+            DB::raw('COALESCE(SUM(REPLACE(soinspatients.montant, ".", "") + 0), 0) as montant')
+        )
+        ->get();
+
+        foreach ($soinsam as $value) {
+            $monthIndex = intval($value->month);
+            $monthName = date('M', mktime(0, 0, 0, $monthIndex, 10));
+            $monthlyStats['soins ambulatoire'][$monthName] = $value->montant;
+        }
+
+        // Retourner les résultats sous forme de réponse JSON
+        return response()->json([
+            'monthlyStats' => $monthlyStats,
+        ]);
+    }
+
 }
