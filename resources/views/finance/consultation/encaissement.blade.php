@@ -785,12 +785,14 @@
                 const numDossierWidth = doc.getTextWidth(numDossier);
                 doc.text(numDossier, pdfWidth - rightMargin - numDossierWidth, yPos + 28);
 
-                doc.setFontSize(10);
-                doc.setFont("Helvetica", "bold");
-                doc.setTextColor(0, 0, 0);
-                const numDate = "Date de paiement : "+ formatDate(consultation.date_payer) ;
-                const numDateWidth = doc.getTextWidth(numDate);
-                doc.text(numDate, (doc.internal.pageSize.getWidth() - numDateWidth) / 2, yPos + 40);
+                if (consultation.statut_fac == 'payer') {
+                    doc.setFontSize(10);
+                    doc.setFont("Helvetica", "bold");
+                    doc.setTextColor(0, 0, 0);
+                    const numDate = "Date de paiement : "+ formatDate(consultation.date_payer) ;
+                    const numDateWidth = doc.getTextWidth(numDate);
+                    doc.text(numDate, (doc.internal.pageSize.getWidth() - numDateWidth) / 2, yPos + 40);
+                }                    
 
                 yPoss = (yPos + 50);
 

@@ -52,7 +52,7 @@
     </div>
     <div class="page-wrapper">
         <div class="app-header d-flex align-items-center">
-            <div class="d-flex">
+            <div class="d-flex" >
                 <button class="toggle-sidebar">
                     <i class="ri-menu-line"></i>
                 </button>
@@ -61,11 +61,14 @@
                 </button>
             </div>
             <div class="app-brand ms-3 me-2">
-                <a href="" class="d-lg-block d-none">
-                    <img src="{{asset('assets/images/logo.png')}}" height="40" width="40" class="" style="border-radius: 10%;" alt="Medicare Admin Template">
+                {{-- <a href="" class="d-lg-block d-none">
+                    <img src="{{asset('assets/images/logo.png')}}" height="40" width="40" class="" style="border-radius: 10%;">
                 </a>
                 <a href="" class="d-lg-none d-md-block">
-                    <img src="{{asset('assets/images/logo.png')}}" height="40" width="40" class="" style="border-radius: 10%;" alt="Medicare Admin Template">
+                    <img src="{{asset('assets/images/logo.png')}}" height="40" width="40" class="" style="border-radius: 10%;">
+                </a> --}}
+                <a href="" class="">
+                    <img src="{{asset('assets/images/logo.png')}}" height="40" width="40" class="" style="border-radius: 5%;">
                 </a>
             </div>
             {{-- <marquee>
@@ -594,7 +597,7 @@
                             <div class="card-body">
                                 <div class="text-center">
                                     <a class="d-flex align-items-center flex-column">
-                                        <img src="{{asset('assets/images/user7.png')}}" class="img-7x rounded-circle mb-3 border border-3">
+                                        <img src="{{asset('assets/images/user8.png')}}" class="img-7x rounded-circle mb-3 border border-3">
                                         <h5>{{Auth::user()->sexe}}. {{Auth::user()->name}}</h5>
                                         <h6 class="text-truncate">
                                             {{Auth::user()->role}}

@@ -171,43 +171,6 @@
         list();
 
         document.getElementById("btn_refresh_table").addEventListener("click", list);
-        document.getElementById("btn_valider").addEventListener("click", payer);
-
-        // ->----------------------------
-
-        document.getElementById('input_montant_verser').addEventListener('input', function() {
-            // Nettoyer la valeur entrée en supprimant les caractères non numériques sauf le point
-            const rawValue = this.value.replace(/[^0-9]/g, ''); // Supprimer tous les caractères non numériques
-            
-            // Ajouter des points pour les milliers
-            const formattedValue = formatPrice(rawValue);
-            
-            // Mettre à jour la valeur du champ avec la valeur formatée
-            this.value = formattedValue;
-
-            // Convertir la valeur formatée en nombre pour les calculs
-            const montantPayer = parseFloat(document.getElementById('input_montant_payer').value.replace(/\./g, '')) || 0;
-            const montantVerser = parseFloat(rawValue) || 0;
-
-            // Calculer le montant remis
-            const montantRemis = montantVerser - montantPayer;
-            document.getElementById('input_montant_remis').value = `${formatPrice(montantRemis)}`;
-
-            const btnValider = document.getElementById('div_btn_valider');
-            if (montantRemis >= 0) {
-                btnValider.style.display = 'block';
-            } else {
-                btnValider.style.display = 'none';
-            }
-        });
-
-        document.getElementById('input_montant_verser').addEventListener('keypress', function(event) {
-            // Permettre uniquement les chiffres et le point
-            const key = event.key;
-            if (isNaN(key)) {
-                event.preventDefault();
-            }
-        });
         
         // -----------------------------------------
 
@@ -950,14 +913,19 @@
             }
 
             function addFooter() {
+                // Add footer with current date and page number in X/Y format
                 const pageCount = doc.internal.getNumberOfPages();
+                const footerY = doc.internal.pageSize.getHeight() - 2; // 10 mm from the bottom
+
                 for (let i = 1; i <= pageCount; i++) {
                     doc.setPage(i);
-                    const footerText = "Imprimer le " + new Date().toLocaleDateString() + " à " + new Date().toLocaleTimeString();
-                    doc.setFontSize(7);
-                    doc.setFont("Helvetica", "bold");
+                    doc.setFontSize(8);
                     doc.setTextColor(0, 0, 0);
-                    doc.text(footerText, 5, 295); // Position near the bottom of the page (5mm from the left, 290mm from the top)
+                    const pageText = `Page ${i} sur ${pageCount}`;
+                    const pageTextWidth = doc.getTextWidth(pageText);
+                    const centerX = (doc.internal.pageSize.getWidth() - pageTextWidth) / 2;
+                    doc.text(pageText, centerX, footerY);
+                    doc.text("Imprimé le : " + new Date().toLocaleDateString() + " à " + new Date().toLocaleTimeString(), 15, footerY); // Left-aligned
                 }
             }
 

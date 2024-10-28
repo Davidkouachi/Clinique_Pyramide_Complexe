@@ -733,11 +733,6 @@
                 doc.text('Montant à payer', leftMargin + 110, yPoss);
                 doc.setFont("Helvetica", "bold");
                 doc.text(": "+consultation.part_patient+" Fcfa", leftMargin + 140, yPoss);
-
-                // doc.setFontSize(10);
-                // doc.setFont("Helvetica", "bold");
-                // doc.setTextColor(0, 0, 0);
-                // doc.text("Imprimer le "+new Date().toLocaleDateString()+" à "+new Date().toLocaleTimeString() , 5, yPoss + 15);
             }
 
             drawConsultationSection(yPos);

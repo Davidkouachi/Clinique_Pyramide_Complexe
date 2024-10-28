@@ -157,7 +157,6 @@
         list();
 
         document.getElementById("btn_refresh_table").addEventListener("click", list);
-        document.getElementById("btn_valider").addEventListener("click", payer);
         
         // -----------------------------------------
 
@@ -207,6 +206,7 @@
         }
 
         function list(page = 1) {
+
             const tableBody = document.querySelector('#Table tbody');
             const messageDiv = document.getElementById('message_Table');
             const tableDiv = document.getElementById('div_Table');
@@ -496,6 +496,7 @@
                             });
                         }
 
+                        searchInput.addEventListener('input', applySearchFilter);
                         // Update table with filtered factures
                         function applySearchFilter() {
                             const searchTerm = searchInput.value.toLowerCase();
@@ -505,14 +506,11 @@
                             displayRows(filteredFactures); // Display only filtered factures
                         }
 
-                        searchInput.addEventListener('input', applySearchFilter);
-
                         displayRows(allFactures);
 
                         updatePaginationControls(pagination);
 
                     } else {
-                        document.getElementById('btn_print_table').style.display = 'none';
                         loaderDiv.style.display = 'none';
                         messageDiv.style.display = 'block';
                         tableDiv.style.display = 'none';
@@ -967,14 +965,19 @@
             }
 
             function addFooter() {
+                // Add footer with current date and page number in X/Y format
                 const pageCount = doc.internal.getNumberOfPages();
+                const footerY = doc.internal.pageSize.getHeight() - 2; // 10 mm from the bottom
+
                 for (let i = 1; i <= pageCount; i++) {
                     doc.setPage(i);
-                    const footerText = "Imprimer le " + new Date().toLocaleDateString() + " à " + new Date().toLocaleTimeString();
-                    doc.setFontSize(7);
-                    doc.setFont("Helvetica", "bold");
+                    doc.setFontSize(8);
                     doc.setTextColor(0, 0, 0);
-                    doc.text(footerText, 5, 295); // Position near the bottom of the page (5mm from the left, 290mm from the top)
+                    const pageText = `Page ${i} sur ${pageCount}`;
+                    const pageTextWidth = doc.getTextWidth(pageText);
+                    const centerX = (doc.internal.pageSize.getWidth() - pageTextWidth) / 2;
+                    doc.text(pageText, centerX, footerY);
+                    doc.text("Imprimé le : " + new Date().toLocaleDateString() + " à " + new Date().toLocaleTimeString(), 15, footerY); // Left-aligned
                 }
             }
 

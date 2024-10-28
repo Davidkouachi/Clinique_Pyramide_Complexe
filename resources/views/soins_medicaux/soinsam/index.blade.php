@@ -2087,14 +2087,19 @@
             }
 
             function addFooter() {
+                // Add footer with current date and page number in X/Y format
                 const pageCount = doc.internal.getNumberOfPages();
+                const footerY = doc.internal.pageSize.getHeight() - 2; // 10 mm from the bottom
+
                 for (let i = 1; i <= pageCount; i++) {
                     doc.setPage(i);
-                    const footerText = "Imprimer le " + new Date().toLocaleDateString() + " à " + new Date().toLocaleTimeString();
-                    doc.setFontSize(7);
-                    doc.setFont("Helvetica", "bold");
+                    doc.setFontSize(8);
                     doc.setTextColor(0, 0, 0);
-                    doc.text(footerText, 5, 295); // Position near the bottom of the page (5mm from the left, 290mm from the top)
+                    const pageText = `Page ${i} sur ${pageCount}`;
+                    const pageTextWidth = doc.getTextWidth(pageText);
+                    const centerX = (doc.internal.pageSize.getWidth() - pageTextWidth) / 2;
+                    doc.text(pageText, centerX, footerY);
+                    doc.text("Imprimé le : " + new Date().toLocaleDateString() + " à " + new Date().toLocaleTimeString(), 15, footerY); // Left-aligned
                 }
             }
 

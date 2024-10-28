@@ -247,7 +247,7 @@
                                                 <div class="card-body">
                                                     <div class="text-center">
                                                         <a class="d-flex align-items-center flex-column">
-                                                            <img src="{{asset('assets/images/user7.png')}}" class="img-7x rounded-circle border border-3">
+                                                            <img src="{{asset('assets/images/user8.png')}}" class="img-7x rounded-circle border border-3">
                                                         </a>
                                                     </div>
                                                 </div>
@@ -1350,7 +1350,6 @@
                                 suggestionsDiv.style.display = 'none';
 
                                 addGroup(item);
-                                addStat(item);
 
                             });
                             suggestionsDiv.appendChild(suggestion);

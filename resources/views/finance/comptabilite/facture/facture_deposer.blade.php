@@ -963,16 +963,28 @@
                         if (fac_global.length > 0) {
                             // Titre de la société
                             yPoss += 20;
+                            
                             doc.setFontSize(14);
                             doc.setFont("Helvetica", "bold");
-                            doc.text("Société : " + societe.nom, 15, yPoss);
+                            doc.setTextColor(0, 0, 0);
+                            const text = "Société " + societe.nom;
+                            const textWidth = doc.getTextWidth(text);
+                            const pageWidth = doc.internal.pageSize.getWidth();
+                            const centerX = (pageWidth - textWidth) / 2;
+                            doc.text(text, centerX, yPoss);
+                            const underlineY = yPoss + 2;
+                            doc.setLineWidth(0.5);
+                            doc.setDrawColor(0, 0, 0);
+                            doc.line(centerX, underlineY, centerX + textWidth, underlineY);
+                            
                             yPoss += 10;
 
                             // Générer le tableau unique pour consultations, examens et soins ambulatoires
+                            const sortedFacGlobal = fac_global.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
                             doc.autoTable({
                                 startY: yPoss,
                                 head: [['N°', 'Date', 'Numéro de Bon', 'Patient', 'Acte effectué', 'Montant Total', 'Part Assurance', 'Part assuré']],
-                                body: fac_global.map((item, index) => [
+                                body: sortedFacGlobal.map((item, index) => [
                                     index + 1,
                                     formatDate(item.created_at) || '',
                                     item.num_bon || '',
@@ -1052,14 +1064,19 @@
             }
 
             function addFooter() {
+                // Add footer with current date and page number in X/Y format
                 const pageCount = doc.internal.getNumberOfPages();
+                const footerY = doc.internal.pageSize.getHeight() - 2; // 10 mm from the bottom
+
                 for (let i = 1; i <= pageCount; i++) {
                     doc.setPage(i);
-                    const footerText = "Imprimer le " + new Date().toLocaleDateString() + " à " + new Date().toLocaleTimeString();
-                    doc.setFontSize(7);
-                    doc.setFont("Helvetica", "bold");
+                    doc.setFontSize(8);
                     doc.setTextColor(0, 0, 0);
-                    doc.text(footerText, 5, 208);
+                    const pageText = `Page ${i} sur ${pageCount}`;
+                    const pageTextWidth = doc.getTextWidth(pageText);
+                    const centerX = (doc.internal.pageSize.getWidth() - pageTextWidth) / 2;
+                    doc.text(pageText, centerX, footerY);
+                    doc.text("Imprimé le : " + new Date().toLocaleDateString() + " à " + new Date().toLocaleTimeString(), 15, footerY); // Left-aligned
                 }
             }
 
@@ -1221,14 +1238,19 @@
             }
 
             function addFooter() {
+                // Add footer with current date and page number in X/Y format
                 const pageCount = doc.internal.getNumberOfPages();
+                const footerY = doc.internal.pageSize.getHeight() - 2; // 10 mm from the bottom
+
                 for (let i = 1; i <= pageCount; i++) {
                     doc.setPage(i);
-                    const footerText = "Imprimer le " + new Date().toLocaleDateString() + " à " + new Date().toLocaleTimeString();
-                    doc.setFontSize(7);
-                    doc.setFont("Helvetica", "bold");
+                    doc.setFontSize(8);
                     doc.setTextColor(0, 0, 0);
-                    doc.text(footerText, 5, 295);
+                    const pageText = `Page ${i} sur ${pageCount}`;
+                    const pageTextWidth = doc.getTextWidth(pageText);
+                    const centerX = (doc.internal.pageSize.getWidth() - pageTextWidth) / 2;
+                    doc.text(pageText, centerX, footerY);
+                    doc.text("Imprimé le : " + new Date().toLocaleDateString() + " à " + new Date().toLocaleTimeString(), 15, footerY); // Left-aligned
                 }
             }
 

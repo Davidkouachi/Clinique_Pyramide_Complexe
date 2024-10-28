@@ -314,7 +314,7 @@
                                             <input type="text" class="form-control" id="patient_np_new" placeholder="Saisie Obligatoire" oninput="this.value = this.value.toUpperCase()">
                                         </div>
                                     </div>
-                                    <div class="col-sm-3 col-12">
+                                    <div class="col-xxl-3 col-lg-4 col-sm-6">
                                         <div class="mb-3">
                                             <label class="form-label">
                                                 Date de naissance
@@ -2001,15 +2001,13 @@
                         updatePaginationControls(pagination);
 
                     } else {
-                        document.getElementById(`btn_print_table`).style.display = 'none';
                         loaderDiv.style.display = 'none';
                         messageDiv.style.display = 'block';
                         tableDiv.style.display = 'none';
                     }
                 })
                 .catch(error => {
-                    console.error('Erreur lors du chargement des données:', error);
-                    // Hide the table and show the error message in case of failure
+                    console.error('Erreur lors du chargement des donnée:', error);
                     loaderDiv.style.display = 'none';
                     messageDiv.style.display = 'block';
                     tableDiv.style.display = 'none';

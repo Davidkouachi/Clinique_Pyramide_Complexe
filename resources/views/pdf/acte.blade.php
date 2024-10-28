@@ -491,8 +491,17 @@
 
                     doc.setFontSize(14);
                     doc.setFont("Helvetica", "bold");
-                    doc.text("Consulations", 15, yPoss);
-                    yPoss += 10;
+                    doc.setTextColor(0, 0, 0);
+                    const text_c = "Consultations";
+                    const textWidth_c = doc.getTextWidth(text_c);
+                    const pageWidth_c = doc.internal.pageSize.getWidth();
+                    const centerX_c = (pageWidth_c - textWidth_c) / 2;
+                    doc.text(text_c, centerX_c, yPoss);
+                    const underlineY = yPoss + 2;
+                    doc.setLineWidth(0.5);
+                    doc.setDrawColor(0, 0, 0);
+                    doc.line(centerX_c, underlineY, centerX_c + textWidth_c, underlineY);
+                    yPoss += 5;
                             
                     doc.autoTable({
                         startY: yPoss,
@@ -533,6 +542,7 @@
                     finalInfo.forEach(info => {
                         doc.setFontSize(11);
                         doc.setFont("Helvetica", "bold");
+                        doc.setTextColor(0, 0, 0)
                         doc.text(info.label, leftMargin + 200, yPoss);
                         doc.setFont("Helvetica", "normal");
                         doc.text(": " + info.value, leftMargin + 235, yPoss);
@@ -541,7 +551,7 @@
 
                     if (acte_hop.length > 0) {
                         doc.addPage();
-                        yPoss = 10;
+                        yPoss = 20;
                     }
 
                 }
@@ -550,8 +560,17 @@
 
                     doc.setFontSize(14);
                     doc.setFont("Helvetica", "bold");
-                    doc.text("Hospitalisations", 15, yPoss);
-                    yPoss += 10;
+                    doc.setTextColor(0, 0, 0);
+                    const text_hos = "Hospitalisations";
+                    const textWidth_hos = doc.getTextWidth(text_hos);
+                    const pageWidth_hos = doc.internal.pageSize.getWidth();
+                    const centerX_hos = (pageWidth_hos - textWidth_hos) / 2;
+                    doc.text(text_hos, centerX_hos, yPoss);
+                    const underlineY = yPoss + 2;
+                    doc.setLineWidth(0.5);
+                    doc.setDrawColor(0, 0, 0);
+                    doc.line(centerX_hos, underlineY, centerX_hos + textWidth_hos, underlineY);
+                    yPoss += 5;
                             
                     doc.autoTable({
                         startY: yPoss,
@@ -592,6 +611,7 @@
                     finalInfo.forEach(info => {
                         doc.setFontSize(11);
                         doc.setFont("Helvetica", "bold");
+                        doc.setTextColor(0, 0, 0);
                         doc.text(info.label, leftMargin + 200, yPoss);
                         doc.setFont("Helvetica", "normal");
                         doc.text(": " + info.value, leftMargin + 235, yPoss);
@@ -600,7 +620,7 @@
 
                     if (acte_exam.length > 0) {
                         doc.addPage();
-                        yPoss = 10;
+                        yPoss = 20;
                     }
 
                 }
@@ -609,8 +629,17 @@
 
                     doc.setFontSize(14);
                     doc.setFont("Helvetica", "bold");
-                    doc.text("Examens", 15, yPoss);
-                    yPoss += 10;
+                    doc.setTextColor(0, 0, 0);
+                    const text_exam = "Examens";
+                    const textWidth_exam = doc.getTextWidth(text_exam);
+                    const pageWidth_exam = doc.internal.pageSize.getWidth();
+                    const centerX_exam = (pageWidth_exam - textWidth_exam) / 2;
+                    doc.text(text_exam, centerX_exam, yPoss);
+                    const underlineY = yPoss + 2;
+                    doc.setLineWidth(0.5);
+                    doc.setDrawColor(0, 0, 0);
+                    doc.line(centerX_exam, underlineY, centerX_exam + textWidth_exam, underlineY);
+                    yPoss += 5;
                             
                     doc.autoTable({
                         startY: yPoss,
@@ -651,6 +680,7 @@
                     finalInfo.forEach(info => {
                         doc.setFontSize(11);
                         doc.setFont("Helvetica", "bold");
+                        doc.setTextColor(0, 0, 0);
                         doc.text(info.label, leftMargin + 200, yPoss);
                         doc.setFont("Helvetica", "normal");
                         doc.text(": " + info.value, leftMargin + 235, yPoss);
@@ -659,7 +689,7 @@
 
                     if (acte_soinsam.length > 0) {
                         doc.addPage();
-                        yPoss = 10;
+                        yPoss = 20;
                     }
 
                 }
@@ -668,8 +698,17 @@
 
                     doc.setFontSize(14);
                     doc.setFont("Helvetica", "bold");
-                    doc.text("Soins Ambulatoires", 15, yPoss);
-                    yPoss += 10;
+                    doc.setTextColor(0, 0, 0);
+                    const text_soinsam = "Soins Ambulatoires";
+                    const textWidth_soinsam = doc.getTextWidth(text_soinsam);
+                    const pageWidth_soinsam = doc.internal.pageSize.getWidth();
+                    const centerX_soinsam = (pageWidth_soinsam - textWidth_soinsam) / 2;
+                    doc.text(text_soinsam, centerX_soinsam, yPoss);
+                    const underlineY = yPoss + 2;
+                    doc.setLineWidth(0.5);
+                    doc.setDrawColor(0, 0, 0);
+                    doc.line(centerX_soinsam, underlineY, centerX_soinsam + textWidth_soinsam, underlineY);
+                    yPoss += 5;
                             
                     doc.autoTable({
                         startY: yPoss,
@@ -708,6 +747,7 @@
                     finalInfo.forEach(info => {
                         doc.setFontSize(11);
                         doc.setFont("Helvetica", "bold");
+                        doc.setTextColor(0, 0, 0);
                         doc.text(info.label, leftMargin + 200, yPoss);
                         doc.setFont("Helvetica", "normal");
                         doc.text(": " + info.value, leftMargin + 235, yPoss);
@@ -721,6 +761,7 @@
 
                 doc.setFontSize(14);
                 doc.setFont("Helvetica", "bold");
+                doc.setTextColor(0, 0, 0);
                 doc.text("TOTAL DES ACTES", 15, yPoss);
                 yPoss += 10;
 
@@ -733,6 +774,7 @@
                 grandTotalInfo.forEach(info => {
                     doc.setFontSize(11);
                     doc.setFont("Helvetica", "bold");
+                    doc.setTextColor(0, 0, 0);
                     doc.text(info.label, leftMargin, yPoss);
                     doc.setFont("Helvetica", "normal");
                     doc.text(": " + info.value, leftMargin + 50, yPoss);
@@ -742,14 +784,19 @@
             }
 
             function addFooter() {
+                // Add footer with current date and page number in X/Y format
                 const pageCount = doc.internal.getNumberOfPages();
+                const footerY = doc.internal.pageSize.getHeight() - 2; // 10 mm from the bottom
+
                 for (let i = 1; i <= pageCount; i++) {
                     doc.setPage(i);
-                    const footerText = "Imprimer le " + new Date().toLocaleDateString() + " à " + new Date().toLocaleTimeString();
-                    doc.setFontSize(7);
-                    doc.setFont("Helvetica", "bold");
+                    doc.setFontSize(8);
                     doc.setTextColor(0, 0, 0);
-                    doc.text(footerText, 5, 295);
+                    const pageText = `Page ${i} sur ${pageCount}`;
+                    const pageTextWidth = doc.getTextWidth(pageText);
+                    const centerX = (doc.internal.pageSize.getWidth() - pageTextWidth) / 2;
+                    doc.text(pageText, centerX, footerY);
+                    doc.text("Imprimé le : " + new Date().toLocaleDateString() + " à " + new Date().toLocaleTimeString(), 15, footerY); // Left-aligned
                 }
             }
 
