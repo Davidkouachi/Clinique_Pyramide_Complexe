@@ -400,7 +400,8 @@
                         list_ofc();
 
                     } else if (response.error) {
-                        showAlert('Alert', 'Une erreur est survenue lors de l\'ouverture de la caisse.','error');
+                        showAlert('Alert', 'Une erreur est survenue lors de l\'ouverture de la caisse.', 'error');
+                        console.log('message erreur controlleur : '+response.message);
                     }
 
                 },
@@ -410,6 +411,8 @@
                         preloader.remove();
                     }
                     showAlert('Alert', 'Une erreur est survenue.','error');
+                    let errorMessage = xhr.responseJSON && xhr.responseJSON.message ? xhr.responseJSON.message : 'Une erreur est survenue.';
+                    console.log('message erreur controlleur : '+ errorMessage);
                 }
             });
         }
@@ -450,7 +453,8 @@
                         list_ofc();
 
                     } else if (response.error) {
-                        showAlert('Alert', 'Une erreur est survenue lors de la fermeture de la caisse.','error');
+                        showAlert('Alert','Une erreur est survenue lors de la fermeture de la caisse.','error');
+                        console.log('message erreur controlleur : '+ response.message);
                     }
 
                 },
@@ -460,6 +464,8 @@
                         preloader.remove();
                     }
                     showAlert('Alert', 'Une erreur est survenue.','error');
+                    let errorMessage = xhr.responseJSON && xhr.responseJSON.message ? xhr.responseJSON.message : 'Une erreur est survenue.';
+                    console.log('message erreur controlleur : '+ errorMessage);
                 }
             });
         }
@@ -1083,7 +1089,7 @@
             // Append pagination controls to the DOM
             paginationDiv.appendChild(paginationWrapper);
         }
-        
+
         function historique() {
 
             const date = document.getElementById('searchDate1_bj').value;
