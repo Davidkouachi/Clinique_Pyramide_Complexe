@@ -5,13 +5,18 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class caisse extends Model
+class portecaisse extends Model
 {
     use HasFactory;
 
     protected $fillable = [
-        'id',
-        'solde',
-        'statut',
+        'montant',
+        'motif',
+        'creer_id',
     ];
+
+    public function user()
+    {
+        return $this->belongsTo(user::class, 'creer_id');
+    }
 }

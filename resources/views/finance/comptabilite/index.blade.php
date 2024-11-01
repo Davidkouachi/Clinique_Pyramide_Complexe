@@ -73,7 +73,7 @@
             <div class="card mb-3">
                 <div class="card-body" >
                     <div class="row gx-3 justify-content-center align-items-center">
-                        <div class="col-xxl-4 col-lg-4 col-sm-6">
+                        <div class="col-xxl-4 col-lg-6 col-sm-6 col-12">
                             <div class="mb-3 text-center">
                                 <label class="form-label">
                                     Période
@@ -952,7 +952,7 @@
                                     </div>
                                     <div class="d-flex align-items-end justify-content-between mt-1">
                                         <a class="${card.colorClass}" href="javascript:void(0);">
-                                            <span>Pat. Montant Réglé</span>
+                                            <span>Montant Réglé</span>
                                             <i class="ri-arrow-right-line ${card.colorClass} ms-1"></i>
                                         </a>
                                         <div class="text-end">
@@ -961,7 +961,7 @@
                                     </div>
                                     <div class="d-flex align-items-end justify-content-between mt-1">
                                         <a class="${card.colorClass}" href="javascript:void(0);">
-                                            <span>Pat. Montant Non-Réglé</span>
+                                            <span>Montant Non-Réglé</span>
                                             <i class="ri-arrow-right-line ${card.colorClass} ms-1"></i>
                                         </a>
                                         <div class="text-end">
@@ -1130,7 +1130,7 @@
             const { jsPDF } = window.jspdf;
             const doc = new jsPDF({ orientation: 'l', unit: 'mm', format: 'a4' });
 
-            const pdfFilename = "Statistiques du chiffres d'affaire des actes - Année " +yearSelect;
+            const pdfFilename = "Statistiques des actes - Année " +yearSelect;
             doc.setProperties({
                 title: pdfFilename,
             });

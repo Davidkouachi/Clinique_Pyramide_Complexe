@@ -58,6 +58,8 @@ Route::middleware(['statutchambre','dateRdv'])->group(function () {
 	Route::get('/paiement_depot_fac/{id}', [ApiinsertController::class, 'paiement_depot_fac']);
 	Route::get('/ope_caisse_new', [ApiinsertController::class, 'ope_caisse_new']);
 	Route::get('/new_user', [ApiinsertController::class, 'new_user']);
+	Route::get('/caisse_ouvert', [ApiinsertController::class, 'caisse_ouvert']);
+	Route::get('/caisse_fermer', [ApiinsertController::class, 'caisse_fermer']);
 	// insert debut
 
 	// search debut
@@ -80,6 +82,8 @@ Route::middleware(['statutchambre','dateRdv'])->group(function () {
 	Route::get('/montant_solde', [ApisearchController::class, 'montant_solde']);
 	Route::get('/list_caissier', [ApisearchController::class, 'list_caissier']);
 	Route::get('/select_role', [ApisearchController::class, 'select_role']);
+	Route::get('/rech_hos_patient/{id}', [ApisearchController::class, 'rech_hos_patient']);
+	Route::get('/verf_caisse', [ApisearchController::class, 'verf_caisse']);
 	// search debut
 
 	// liste day debut
@@ -139,25 +143,25 @@ Route::middleware(['statutchambre','dateRdv'])->group(function () {
 	Route::get('/list_lit', [ApilistController::class, 'list_lit']);
 	Route::get('/list_typeadmission', [ApilistController::class, 'list_typeadmission']);
 	Route::get('/list_natureadmission', [ApilistController::class, 'list_natureadmission']);
-	Route::get('/list_hopital/{statut}', [ApilistController::class, 'list_hopital']);
+	Route::get('/list_hopital/{date1}/{date2}/{statut}', [ApilistController::class, 'list_hopital']);
 	Route::get('/detail_hos/{id}', [ApilistController::class, 'detail_hos']);
 	Route::get('/list_produit', [ApilistController::class, 'list_produit']);
 	Route::get('/list_produit_all', [ApilistController::class, 'list_produit_all']);
-	Route::get('/list_patient_all/{statut}', [ApilistController::class, 'list_patient_all']);
-	Route::get('/list_cons_all', [ApilistController::class, 'list_cons_all']);
+	Route::get('/list_patient_all/{date1}/{date2}/{statut}', [ApilistController::class, 'list_patient_all']);
+	Route::get('/list_cons_all/{date1}/{date2}', [ApilistController::class, 'list_cons_all']);
 	Route::get('/list_typesoins', [ApilistController::class, 'list_typesoins']);
 	Route::get('/list_soinsIn', [ApilistController::class, 'list_soinsIn']);
-	Route::get('/list_soinsam_all/{statut}', [ApilistController::class, 'list_soinsam_all']);
+	Route::get('/list_soinsam_all/{date1}/{date2}/{statut}', [ApilistController::class, 'list_soinsam_all']);
 	Route::get('/detail_soinam/{id}', [ApilistController::class, 'detail_soinam']);
 	Route::get('/list_societe_all', [ApilistController::class, 'list_societe_all']);
 	Route::get('/list_examen_all', [ApilistController::class, 'list_examen_all']);
-	Route::get('/list_examend_all', [ApilistController::class, 'list_examend_all']);
+	Route::get('/list_examend_all/{date1}/{date2}', [ApilistController::class, 'list_examend_all']);
 	Route::get('/detail_examen/{id}', [ApilistController::class, 'detail_examen']);
 	Route::get('/select_jours', [ApilistController::class, 'select_jours']);
 	Route::get('/list_horaire/{medecin}/{specialite}/{jour}/{periode}', [ApilistController::class, 'list_horaire']);
 	Route::get('/list_rdv/{statut}', [ApilistController::class, 'list_rdv']);
 	Route::get('/list_specialite', [ApilistController::class, 'list_specialite']);
-	Route::get('/list_depotfacture/{statut}', [ApilistController::class, 'list_depotfacture']);
+	Route::get('/list_depotfacture/{date1}/{date2}/{statut}', [ApilistController::class, 'list_depotfacture']);
 	Route::get('/list_cons_patient/{id}', [ApilistController::class, 'list_cons_patient']);
 	Route::get('/list_examend_patient/{id}', [ApilistController::class, 'list_examend_patient']);
 	Route::get('/list_hopital_patient/{id}', [ApilistController::class, 'list_hopital_patient']);
@@ -165,6 +169,7 @@ Route::middleware(['statutchambre','dateRdv'])->group(function () {
 	Route::get('/list_assurance_all', [ApilistController::class, 'list_assurance_all']);
 	Route::get('/trace_operation/{date1}/{date2}/{typemvt}/{user_id}', [ApilistController::class, 'trace_operation']);
 	Route::get('/list_rdv_two_days', [ApilistController::class, 'list_rdv_two_days']);
+	Route::get('/trace_ouvert_fermer/{date1}/{date2}', [ApilistController::class, 'trace_ouvert_fermer']);
 	// liste debut
 
 	// statistique debut
@@ -189,13 +194,13 @@ Route::middleware(['statutchambre','dateRdv'])->group(function () {
 
 	// List facture debut
 	Route::get('/list_facture_inpayer', [ApilistfactureController::class, 'list_facture_inpayer']);
-	Route::get('/list_facture/{statut}', [ApilistfactureController::class, 'list_facture']);
+	Route::get('/list_facture/{date1}/{date2}/{statut}', [ApilistfactureController::class, 'list_facture']);
 	Route::get('/list_facture_hos', [ApilistfactureController::class, 'list_facture_hos']);
-	Route::get('/list_facture_hos_all', [ApilistfactureController::class, 'list_facture_hos_all']);
+	Route::get('/list_facture_hos_all/{date1}/{date2}/{statut}', [ApilistfactureController::class, 'list_facture_hos_all']);
 	Route::get('/list_facture_soinsam', [ApilistfactureController::class, 'list_facture_soinsam']);
-	Route::get('/list_facture_soinsam_all', [ApilistfactureController::class, 'list_facture_soinsam_all']);
+	Route::get('/list_facture_soinsam_all/{date1}/{date2}/{statut}', [ApilistfactureController::class, 'list_facture_soinsam_all']);
 	Route::get('/list_facture_examen', [ApilistfactureController::class, 'list_facture_examen']);
-	Route::get('/list_facture_examen_all/{statut}', [ApilistfactureController::class, 'list_facture_examen_all']);
+	Route::get('/list_facture_examen_all/{date1}/{date2}/{statut}', [ApilistfactureController::class, 'list_facture_examen_all']);
 	// List facture fin
 
 	// List facture detail debut

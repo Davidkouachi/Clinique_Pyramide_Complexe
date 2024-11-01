@@ -52,8 +52,11 @@
                                 <div class="card-header d-flex align-items-center justify-content-between">
                                     <h5 class="card-title">Liste des Rendez-Vous dans 2 jours</h5>
                                     <div class="d-flex">
-                                        <a id="btn_refresh_table_rdv" class="btn btn-outline-info ms-auto">
+                                        <a id="btn_refresh_table_rdv" class="btn btn-outline-info ms-auto me-1">
                                             <i class="ri-loop-left-line"></i>
+                                        </a>
+                                        <a style="display: none;" id="btn_sms" class="btn btn-outline-warning ms-auto" data-bs-toggle="modal" data-bs-target="#Message">
+                                            <i class="ri-mail-add-line"></i>
                                         </a>
                                     </div>
                                 </div>
@@ -170,6 +173,35 @@
     </div>
 </div>
 
+<div class="modal fade" id="Message" tabindex="-1" aria-modal="true" role="dialog">
+    <div class="modal-dialog modal-dialog-centered modal-md">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalToggleLabel">
+                    Notification Rappel
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row gx-3">
+                    <div class="col-12">
+                        <div class="mb-3">
+                            <label class="form-label">Message</label>
+                            <textarea style="resize: none;" class="form-control" id="libelle_ope" rows="5"></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" data-bs-dismiss="modal" class="btn btn-success" >
+                    <span class="me-1" >Envoyer</span>
+                    <i class="ri-send-plane-fill"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script src="{{asset('assets/js/app/js/jspdfinvoicetemplate/dist/index.js')}}" ></script>
 <script src="{{asset('jsPDF-master/dist/jspdf.umd.js')}}"></script>
 <script src="{{asset('assets/vendor/apex/apexcharts.min.js')}}"></script>
@@ -240,6 +272,8 @@
                     tableBody.innerHTML = '';
 
                     if (rdvs.length > 0) {
+
+                        document.getElementById('btn_sms').style.display = 'block';
 
                         loaderDiv.style.display = 'none';
                         messageDiv.style.display = 'none';
@@ -366,6 +400,7 @@
                         updatePaginationControlsRdv(pagination);
 
                     } else {
+                        document.getElementById('btn_sms').style.display = 'none';
                         tableDiv.style.display = 'none';
                         loaderDiv.style.display = 'none';
                         messageDiv.style.display = 'block';

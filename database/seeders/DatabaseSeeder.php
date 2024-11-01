@@ -31,7 +31,7 @@ class DatabaseSeeder extends Seeder
     {
         // User::factory(10)->create();
 
-        caisse::create(['solde' => '0']);
+        caisse::create(['solde' => '0','statut' => 'fermer']);
 
         prelevement::create(['prix' => '1.500','code' => '1']);
 

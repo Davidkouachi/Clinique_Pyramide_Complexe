@@ -50,6 +50,7 @@ use App\Models\programmemedecin;
 use App\Models\depotfacture;
 use App\Models\caisse;
 use App\Models\historiquecaisse;
+use App\Models\portecaisse;
 
 
 class ApilistController extends Controller
@@ -191,13 +192,17 @@ class ApilistController extends Controller
         return response()->json(['natureadmission' => $natureadmission]);
     }
 
-    public function list_hopital($statut)
+    public function list_hopital($date1, $date2,$statut)
     {
+        $date1 = Carbon::parse($date1)->startOfDay();
+        $date2 = Carbon::parse($date2)->endOfDay();
+        
         $hopitalQuery = detailhopital::join('natureadmissions', 'natureadmissions.id', '=', 'detailhopitals.natureadmission_id')
                                 ->join('typeadmissions', 'typeadmissions.id', '=', 'natureadmissions.typeadmission_id')
                                 ->join('patients', 'patients.id', '=', 'detailhopitals.patient_id')
                                 ->join('users', 'users.id', '=', 'detailhopitals.user_id')
                                 ->join('factures', 'factures.id','=','detailhopitals.facture_id')
+                                ->whereBetween('detailhopitals.created_at', [$date1, $date2])
                                 ->select(
                                     'detailhopitals.*',
                                     'factures.statut as statut_fac',
@@ -300,17 +305,21 @@ class ApilistController extends Controller
         return response()->json(['produit' => $produit]);
     }
 
-    public function list_patient_all($statut)
+    public function list_patient_all($date1,$date2,$statut)
     {
+        $date1 = Carbon::parse($date1)->startOfDay();
+        $date2 = Carbon::parse($date2)->endOfDay();
+
         $patientQuery = patient::leftJoin('assurances', 'assurances.id', '=', 'patients.assurance_id')
                        ->leftJoin('tauxes', 'tauxes.id', '=', 'patients.taux_id')
                        ->leftJoin('societes', 'societes.id', '=', 'patients.societe_id')
+                       ->whereBetween('patients.created_at', [$date1, $date2])
                        ->select(
                             'patients.*', 
                             'assurances.nom as assurance', 
                             'tauxes.taux as taux', 
                             'societes.nom as societe')
-                       ->orderBy('created_at', 'desc');
+                       ->orderBy('patients.created_at', 'desc');
 
         if ($statut !== 'tous') {
             $patientQuery->where('patients.assurer', '=', $statut);
@@ -326,6 +335,7 @@ class ApilistController extends Controller
         }
 
         return response()->json([
+            'nbre' => $patient->count(),
             'patient' => $patient->items(), // Paginated data
             'pagination' => [
                 'current_page' => $patient->currentPage(),
@@ -336,12 +346,15 @@ class ApilistController extends Controller
         ]);
     }
 
-    public function list_cons_all()
+    public function list_cons_all($date1,$date2)
     {
+        $date1 = Carbon::parse($date1)->startOfDay();
+        $date2 = Carbon::parse($date2)->endOfDay();
 
         $consultationQuery = detailconsultation::join('consultations', 'consultations.id', '=', 'detailconsultations.consultation_id')
                                     ->leftJoin('users', 'users.id', '=', 'consultations.user_id')
                                     ->join('patients', 'patients.id', '=', 'consultations.patient_id')
+                                    ->whereBetween('consultations.created_at', [$date1, $date2])
                                     ->select(
                                         'detailconsultations.*',
                                         'consultations.code as code', 
@@ -383,10 +396,14 @@ class ApilistController extends Controller
         return response()->json(['soinsin' => $soinsin]);
     }
 
-    public function list_soinsam_all($statut)
+    public function list_soinsam_all($date1, $date2,$statut)
     {
+        $date1 = Carbon::parse($date1)->startOfDay();
+        $date2 = Carbon::parse($date2)->endOfDay();
+
         $spatientQuery = soinspatient::Join('patients', 'patients.id', '=', 'soinspatients.patient_id')
                        ->Join('typesoins', 'typesoins.id', '=', 'soinspatients.typesoins_id')
+                       ->whereBetween('soinspatients.created_at', [$date1, $date2])
                        ->select(
                             'soinspatients.*', 
                             'patients.np as patient', 
@@ -524,16 +541,20 @@ class ApilistController extends Controller
         ]);
     }
 
-    public function list_examend_all()
+    public function list_examend_all($date1, $date2)
     {
+        $date1 = Carbon::parse($date1)->startOfDay();
+        $date2 = Carbon::parse($date2)->endOfDay();
+
         $examenQuery = examen::join('patients', 'patients.id', '=', 'examens.patient_id')
                             ->join('actes', 'actes.id', '=', 'examens.acte_id')
+                            ->whereBetween('examens.created_at', [$date1, $date2])
                             ->select(
                                 'examens.*',
                                 'actes.nom as acte',
                                 'patients.np as patient',
                             )
-                            ->orderBy('created_at', 'desc');
+                            ->orderBy('examens.created_at', 'desc');
 
         $examen = $examenQuery->paginate(15);
 
@@ -750,19 +771,23 @@ class ApilistController extends Controller
         return response()->json(['typeacte' => $typeacte]);
     }
 
-    private function formatWithPeriods($number) {
+    private function formatWithPeriods($number) 
+    {
         return number_format($number, 0, '', '.');
     }
 
-    public function list_depotfacture($statut)
+    public function list_depotfacture($date1, $date2,$statut)
     {
+        $date1 = Carbon::parse($date1)->startOfDay();
+        $date2 = Carbon::parse($date2)->endOfDay();
 
         $depotQuery = depotfacture::join('assurances', 'assurances.id', '=', 'depotfactures.assurance_id')
-        ->select(
-            'depotfactures.*',
-            'assurances.nom as assurance',
-        )
-        ->orderBy('depotfactures.created_at', 'desc');
+                                ->whereBetween('depotfactures.created_at', [$date1, $date2])
+                                ->select(
+                                    'depotfactures.*',
+                                    'assurances.nom as assurance',
+                                )
+                                ->orderBy('depotfactures.created_at', 'desc');
 
         if ($statut !== 'tous') {
             $depotQuery->where('depotfactures.statut', '=', $statut);
@@ -1155,5 +1180,31 @@ class ApilistController extends Controller
         ]);
     }
 
+    public function trace_ouvert_fermer($date1, $date2)
+    {
+        $date1 = Carbon::parse($date1)->startOfDay();
+        $date2 = Carbon::parse($date2)->endOfDay();
+
+        $traceQuery = portecaisse::whereBetween('created_at', [$date1, $date2])
+                                            ->orderBy('created_at', 'desc');
+
+        $trace = $traceQuery->paginate(15);
+
+        foreach ($trace->items() as $value) {
+            $user = user::find($value->creer_id);
+            $value->user = $user->name;
+            $value->user_sexe = $user->sexe;
+        }
+
+        return response()->json([
+            'trace' => $trace->items(),
+            'pagination' => [
+                'current_page' => $trace->currentPage(),
+                'last_page' => $trace->lastPage(),
+                'per_page' => $trace->perPage(),
+                'total' => $trace->total(),
+            ]
+        ]);
+    }
 
 }

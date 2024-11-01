@@ -50,6 +50,13 @@ class ApiinsertfactureController extends Controller
 {
     public function facture_payer(Request $request,$code_fac)
     {
+
+        $caisse_verf = caisse::find(1);
+
+        if ($caisse_verf->statut === 'fermer') {
+            return response()->json(['caisse_fermer' => true]);
+        }
+
         DB::beginTransaction();
 
         $fac = facture::where('code', '=', $code_fac)->first();
@@ -146,6 +153,13 @@ class ApiinsertfactureController extends Controller
 
     public function facture_payer_hos(Request $request,$code_fac)
     {
+
+        $caisse_verf = caisse::find(1);
+
+        if ($caisse_verf->statut === 'fermer') {
+            return response()->json(['caisse_fermer' => true]);
+        }
+
         DB::beginTransaction();
 
         $fac = facture::where('code', '=', $code_fac)->first();
@@ -290,6 +304,13 @@ class ApiinsertfactureController extends Controller
 
     public function facture_payer_soinsam(Request $request,$code_fac)
     {
+
+        $caisse_verf = caisse::find(1);
+
+        if ($caisse_verf->statut === 'fermer') {
+            return response()->json(['caisse_fermer' => true]);
+        }
+
         DB::beginTransaction();
 
         $fac = facture::where('code', '=', $code_fac)->first();
@@ -418,6 +439,13 @@ class ApiinsertfactureController extends Controller
 
     public function facture_payer_examen(Request $request,$code_fac)
     {
+
+        $caisse_verf = caisse::find(1);
+
+        if ($caisse_verf->statut === 'fermer') {
+            return response()->json(['caisse_fermer' => true]);
+        }
+        
         DB::beginTransaction();
 
         $fac = facture::where('code', '=', $code_fac)->first();

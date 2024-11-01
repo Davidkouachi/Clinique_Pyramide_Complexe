@@ -168,7 +168,7 @@
                                                 <div class="card-body">
                                                     <div class="text-center">
                                                         <a class="d-flex align-items-center flex-column">
-                                                            <img src="{{asset('assets/images/assurance2.jpg')}}" class="img-7x rounded-circle border border-3">
+                                                            <img src="{{asset('assets/images/assurance3.jpg')}}" class="img-7x rounded-circle border border-3">
                                                         </a>
                                                     </div>
                                                 </div>

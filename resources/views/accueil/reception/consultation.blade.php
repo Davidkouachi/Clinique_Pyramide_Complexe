@@ -53,14 +53,22 @@
                     </h5>
                     <div class="d-flex">
                         <input type="text" id="searchInputC" placeholder="N° Consultation" class="form-control me-1">
-                        <a id="btn_refresh_tableC" class="btn btn-outline-info ms-auto">
-                            <i class="ri-loop-left-line"></i>
-                        </a>
+                    </div>
+                </div>
+                <div class="card-header d-flex align-items-center justify-content-between">
+                    <div class="w-100">
+                        <div class="input-group">
+                            <span class="input-group-text">Du</span>
+                            <input type="date" id="searchDate1" placeholder="Recherche" class="form-control me-1" value="{{ date('Y-m-d') }}" max="{{ date('Y-m-d') }}">
+                            <span class="input-group-text">au</span>
+                            <input type="date" id="searchDate2" placeholder="Recherche" class="form-control me-1" value="{{ date('Y-m-d') }}" max="{{ date('Y-m-d') }}">
+                            <a id="btn_search_table" class="btn btn-outline-success ms-auto">
+                                <i class="ri-search-2-line"></i>
+                            </a>
+                        </div>
                     </div>
                 </div>
                 <div class="card-body">
-                    <div id="div_alert_tableC">
-                    </div>
                     <div class="table-outer" id="div_TableC" style="display: none;">
                         <div class="table-responsive">
                             <table class="table align-middle table-hover m-0 truncate" id="TableC">
@@ -190,7 +198,7 @@
 
         list_cons_all();
 
-        document.getElementById("btn_refresh_tableC").addEventListener("click", list_cons_all);
+        document.getElementById("btn_search_table").addEventListener("click", list_cons_all);
 
         document.getElementById('btn_affiche_stat').addEventListener('click',function(){
 
@@ -379,14 +387,16 @@
             const tableDiv = document.getElementById('div_TableC'); // The message div
             const loaderDiv = document.getElementById('div_Table_loaderC');
 
+            const date1 = document.getElementById('searchDate1').value;
+            const date2 = document.getElementById('searchDate2').value;
+
             messageDiv.style.display = 'none';
             tableDiv.style.display = 'none';
             loaderDiv.style.display = 'block';
 
             let allCons = [];
 
-            // Fetch data from the API
-            const url = `/api/list_cons_all?page=${page}`;
+            const url = `/api/list_cons_all/${date1}/${date2}?page=${page}`;
             fetch(url) // API endpoint
                 .then(response => response.json())
                 .then(data => {
@@ -617,7 +627,6 @@
                         updatePaginationControlsC(pagination);
 
                     } else {
-                        document.getElementById(`btn_print_tableC`).style.display = 'none';
                         loaderDiv.style.display = 'none';
                         messageDiv.style.display = 'block';
                         tableDiv.style.display = 'none';

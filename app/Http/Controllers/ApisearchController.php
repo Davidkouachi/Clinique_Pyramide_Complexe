@@ -40,6 +40,7 @@ use App\Models\programmemedecin;
 use App\Models\caisse;
 use App\Models\historiquecaisse;
 use App\Models\user;
+use App\Models\portecaisse;
 
 class ApisearchController extends Controller
 {
@@ -249,6 +250,22 @@ class ApisearchController extends Controller
         $role = role::where('nom', '!=', 'MEDECIN')->get();
 
         return response()->json(['role' => $role]); 
+    }
+
+    public function rech_hos_patient($id)
+    {
+        $hos = detailhopital::where('patient_id', '=', $id)
+                            ->where('statut', '=', 'Hospitaliser')
+                            ->count();
+
+        return response()->json(['hos' => $hos]);
+    }
+
+    public function verf_caisse()
+    {
+        $caisse = caisse::find(1);
+
+        return response()->json(['caisse' => $caisse]);
     }
 
 }

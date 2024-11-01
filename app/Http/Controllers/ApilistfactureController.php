@@ -96,11 +96,14 @@ class ApilistfactureController extends Controller
         ]);
     }
 
-    public function list_facture($statut)
+    public function list_facture($date1, $date2,$statut)
     {
+        $date1 = Carbon::parse($date1)->startOfDay();
+        $date2 = Carbon::parse($date2)->endOfDay();
         // Fetching consultations and related facture and patient data
         $factureQuery = consultation::join('factures', 'factures.id', '=', 'consultations.facture_id')
                                     ->join('patients', 'patients.id', '=', 'consultations.patient_id')
+                                    ->whereBetween('factures.created_at', [$date1, $date2])
                                     ->select(
                                         'consultations.*',
                                         'factures.code as code_fac',
@@ -177,14 +180,22 @@ class ApilistfactureController extends Controller
         ]);
     }
 
-    public function list_facture_hos_all()
+    public function list_facture_hos_all($date1, $date2,$statut)
     {
+        $date1 = Carbon::parse($date1)->startOfDay();
+        $date2 = Carbon::parse($date2)->endOfDay();
+
         $hopitalQuery = detailhopital::join('factures', 'factures.id','=','detailhopitals.facture_id')
+                                ->whereBetween('factures.created_at', [$date1, $date2])
                                 ->select(
                                     'detailhopitals.*',
                                     'factures.code as code_fac',
                                     'factures.statut as statut_fac',
                                 )->orderBy('detailhopitals.created_at', 'desc');
+
+        if ($statut !== 'tous') {
+            $hopitalQuery->where('factures.statut', '=', $statut);
+        }
 
         $hopital = $hopitalQuery->paginate(15);
 
@@ -237,9 +248,13 @@ class ApilistfactureController extends Controller
         ]);
     }
 
-    public function list_facture_soinsam_all()
+    public function list_facture_soinsam_all($date1, $date2,$statut)
     {
+        $date1 = Carbon::parse($date1)->startOfDay();
+        $date2 = Carbon::parse($date2)->endOfDay();
+
         $spatientQuery = soinspatient::join('factures', 'factures.id','=','soinspatients.facture_id')
+                                ->whereBetween('factures.created_at', [$date1, $date2])
                                 ->select(
                                     'soinspatients.*',
                                     'factures.code as code_fac',
@@ -247,6 +262,9 @@ class ApilistfactureController extends Controller
                                     'factures.montant_verser as montant_verser',
                                     'factures.montant_remis as montant_remis',
                                 )->orderBy('soinspatients.created_at', 'desc');
+        if ($statut !== 'tous') {
+            $spatientQuery->where('factures.statut', '=', $statut);
+        }
 
         $soinspatient = $spatientQuery->paginate(15);
 
@@ -318,17 +336,21 @@ class ApilistfactureController extends Controller
         ]);
     }
 
-    public function list_facture_examen_all($statut)
+    public function list_facture_examen_all($date1, $date2,$statut)
     {
+        $date1 = Carbon::parse($date1)->startOfDay();
+        $date2 = Carbon::parse($date2)->endOfDay();
+        
         $examenQuery = examen::join('factures', 'factures.id', '=', 'examens.facture_id')
                             ->join('actes', 'actes.id', '=', 'examens.acte_id')
+                            ->whereBetween('factures.created_at', [$date1, $date2])
                             ->select(
                                 'examens.*',
                                 'actes.nom as acte',
                                 'factures.code as code_fac',
                                 'factures.statut as statut_fac',
                             )
-                            ->orderBy('created_at', 'desc');
+                            ->orderBy('factures.created_at', 'desc');
 
         if ($statut !== 'tous') {
             $examenQuery->where('factures.statut', '=', $statut);

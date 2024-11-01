@@ -21,62 +21,96 @@
 
 <div class="app-body">
 
-    @include('finance.btnFacNonRegle')
-
-    <div class="row justify-content-center">
+    <div class="row justify-content-center" id="div_caisse_verf" style="display: none;">
         <div class="col-12">
             <div class="card mb-3">
-                <div class="card-header d-flex align-items-center justify-content-between">
-                    <h5 class="card-title">
-                        Consultations factures non-réglées
-                    </h5>
-                    <div class="d-flex" >
-                        <input type="text" id="searchInput" placeholder="N° facture" class="form-control me-1" >
-                        <a id="btn_refresh_table" class="btn btn-outline-info ms-auto">
-                            <i class="ri-loop-left-line"></i>
-                        </a>
-                    </div>
-                </div>
-                <div class="card-body">
-                    <div class="table-outer" id="div_Table" style="display: none;">
-                        <div class="table-responsive">
-                            <table class="table align-middle table-hover m-0 truncate" id="Table">
-                                <thead>
-                                    <tr>
-                                        <th scope="col">N°</th>
-                                        <th scope="col">Id facture</th>
-                                        <th scope="col">Nom et Prénoms</th>
-                                        <th scope="col">Contact</th>
-                                        <th scope="col">Part Assurance</th>
-                                        <th scope="col">Part Patient</th>
-                                        <th scope="col">Remise</th>
-                                        <th scope="col">Total</th>
-                                        <th scope="col">Date de création</th>
-                                        <th scope="col">Actions</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                </tbody>
-                            </table>
+                <div class="card-body row gx-3 d-flex align-items-center justify-content-between">
+                    <div class="col-12">
+                        <div class="mb-1 text-center">
+                            <a class="d-flex align-items-center flex-column">
+                                <img src="{{asset('assets/images/caisse.jpg')}}" class="img-7x rounded-circle border border-3">
+                            </a>
                         </div>
                     </div>
-                    <div id="message_Table" style="display: none;">
-                        <p class="text-center" >
-                            Aucune facture disponible
-                        </p>
-                    </div>
-                    <div id="div_Table_loader" style="display: none;">
-                        <div class="d-flex justify-content-center align-items-center">
-                            <div class="spinner-border text-warning me-2" role="status" aria-hidden="true"></div>
-                            <strong>Chargement des données...</strong>
+                    <div class="col-12" id="btn_ouvert">
+                        <div class="mb-1 text-center">
+                            <button id="btn_ouvert_C" type="button" class="btn btn-outline-success">
+                                Ouverture de Caisse
+                                <i class="ri-door-open-line"></i>
+                            </button>
                         </div>
                     </div>
-                    <div id="pagination-controls" ></div>
+                    <div class="col-12" id="btn_fermer">
+                        <div class="mb-1 text-center">
+                            <button id="btn_fermer_C" type="button" class="btn btn-outline-danger">
+                                Fermeture de Caisse
+                                <i class="ri-door-close-line"></i>
+                            </button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-    <!-- Row ends -->
+
+    <div id="div_caisse" style="display: none;" >
+        @include('finance.btnFacNonRegle')
+
+        <div class="row justify-content-center">
+            <div class="col-12">
+                <div class="card mb-3">
+                    <div class="card-header d-flex align-items-center justify-content-between">
+                        <h5 class="card-title">
+                            Consultations factures non-réglées
+                        </h5>
+                        <div class="d-flex" >
+                            <input type="text" id="searchInput" placeholder="N° facture" class="form-control me-1" >
+                            <a id="btn_refresh_table" class="btn btn-outline-info ms-auto">
+                                <i class="ri-loop-left-line"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-outer" id="div_Table" style="display: none;">
+                            <div class="table-responsive">
+                                <table class="table align-middle table-hover m-0 truncate" id="Table">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">N°</th>
+                                            <th scope="col">Id facture</th>
+                                            <th scope="col">Nom et Prénoms</th>
+                                            <th scope="col">Contact</th>
+                                            <th scope="col">Part Assurance</th>
+                                            <th scope="col">Part Patient</th>
+                                            <th scope="col">Remise</th>
+                                            <th scope="col">Total</th>
+                                            <th scope="col">Date de création</th>
+                                            <th scope="col">Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div id="message_Table" style="display: none;">
+                            <p class="text-center" >
+                                Aucune facture disponible
+                            </p>
+                        </div>
+                        <div id="div_Table_loader" style="display: none;">
+                            <div class="d-flex justify-content-center align-items-center">
+                                <div class="spinner-border text-warning me-2" role="status" aria-hidden="true"></div>
+                                <strong>Chargement des données...</strong>
+                            </div>
+                        </div>
+                        <div id="pagination-controls" ></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
 </div>
 
 <div class="modal fade" id="Detail" tabindex="-1" aria-modal="true" role="dialog" >
@@ -186,10 +220,13 @@
 <script>
     document.addEventListener("DOMContentLoaded", function() {
 
-        list();
+        caisse_verf();
 
         document.getElementById("btn_refresh_table").addEventListener("click", list);
         document.getElementById("btn_valider").addEventListener("click", payer);
+
+        document.getElementById("btn_ouvert_C").addEventListener("click", caisse_ouvert);
+        document.getElementById("btn_fermer_C").addEventListener("click", caisse_fermer);
 
         // ->----------------------------
 
@@ -228,6 +265,125 @@
         });
         
         // -----------------------------------------
+
+        function caisse_verf()
+        {
+            fetch('/api/verf_caisse')
+                .then(response => response.json())
+                .then(data => {
+                    
+                    if (data.caisse.statut == 'ouvert') {
+                        document.getElementById('div_caisse').style.display = 'block';
+                        document.getElementById('div_caisse_verf').style.display = 'block';
+                        document.getElementById('btn_ouvert').style.display = 'none';
+                        document.getElementById('btn_fermer').style.display = 'block';
+                        list();
+                    }else{
+                        document.getElementById('div_caisse').style.display = 'none';
+                        document.getElementById('div_caisse_verf').style.display = 'block';
+                        document.getElementById('btn_ouvert').style.display = 'block';
+                        document.getElementById('btn_fermer').style.display = 'none';
+                    }
+
+                })
+                .catch(error => console.error('Erreur lors du chargement des donnée caisse:', error));
+        }
+
+        function caisse_ouvert()
+        {
+            const auth_id = {{ Auth::user()->id }};
+
+            var preloader_ch = `
+                <div id="preloader_ch">
+                    <div class="spinner_preloader_ch"></div>
+                </div>
+            `;
+            // Add the preloader to the body
+            document.body.insertAdjacentHTML('beforeend', preloader_ch);
+
+            $.ajax({
+                url: '/api/caisse_ouvert',
+                method: 'GET',
+                data: { 
+                    auth_id: auth_id,
+                },
+                success: function(response) {
+
+                    var preloader = document.getElementById('preloader_ch');
+                    if (preloader) {
+                        preloader.remove();
+                    }
+
+                    if (response.success) {
+
+                        document.getElementById('div_caisse').style.display = 'block';
+                        document.getElementById('div_caisse_verf').style.display = 'block';
+                        document.getElementById('btn_ouvert').style.display = 'none';
+                        document.getElementById('btn_fermer').style.display = 'block';
+
+                        list();
+
+                    } else if (response.error) {
+                        showAlert('Alert', 'Une erreur est survenue lors de l\'ouverture de la caisse.','error');
+                    }
+
+                },
+                error: function(xhr, status, error) {
+                    var preloader = document.getElementById('preloader_ch');
+                    if (preloader) {
+                        preloader.remove();
+                    }
+                    showAlert('Alert', 'Une erreur est survenue.','error');
+                }
+            });
+        }
+
+        function caisse_fermer()
+        {
+            const auth_id = {{ Auth::user()->id }};
+
+            var preloader_ch = `
+                <div id="preloader_ch">
+                    <div class="spinner_preloader_ch"></div>
+                </div>
+            `;
+            // Add the preloader to the body
+            document.body.insertAdjacentHTML('beforeend', preloader_ch);
+
+            $.ajax({
+                url: '/api/caisse_fermer',
+                method: 'GET',
+                data: { 
+                    auth_id: auth_id,
+                },
+                success: function(response) {
+
+                    var preloader = document.getElementById('preloader_ch');
+                    if (preloader) {
+                        preloader.remove();
+                    }
+
+                    if (response.success) {
+
+                        document.getElementById('div_caisse').style.display = 'none';
+                        document.getElementById('div_caisse_verf').style.display = 'block';
+                        document.getElementById('btn_ouvert').style.display = 'block';
+                        document.getElementById('btn_fermer').style.display = 'none';
+
+                    } else if (response.error) {
+                        showAlert('Alert', 'Une erreur est survenue lors de la fermeture de la caisse.','error');
+                    }
+
+                },
+                error: function(xhr, status, error) {
+                    var preloader = document.getElementById('preloader_ch');
+                    if (preloader) {
+                        preloader.remove();
+                    }
+                    showAlert('Alert', 'Une erreur est survenue.','error');
+                }
+            });
+        }
 
         function formatPrice(price) {
 
@@ -313,6 +469,8 @@
                         preloader.remove();
                     }
 
+                    caisse_verf();
+
                     if (response.success) {
 
                         const patient = response.patient;
@@ -328,6 +486,8 @@
 
                     } else if (response.error) {
                         showAlert('Alert', 'Une erreur est survenue lors du paiement.','error');
+                    } else if (response.caisse_fermer) {
+                        showAlert('Alert', 'La caisse est actuellement fermer, Veuillez ouvrir la caisse avant d\'éffectuer un encaissement.','info');
                     }
 
                 },
@@ -578,7 +738,6 @@
                     tableDiv.style.display = 'none';
                 });
         }
-
 
         function updatePaginationControls(pagination) {
             const paginationDiv = document.getElementById('pagination-controls');

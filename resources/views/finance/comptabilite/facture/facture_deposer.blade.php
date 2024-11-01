@@ -40,15 +40,24 @@
                     <h5 class="card-title">
                         Liste des Dépôts
                     </h5>
-                    <div class="d-flex">
-                        <select class="form-select me-1" id="statut">
-                            <option selected value="tous">Tous</option>
-                            <option value="oui">Réglée</option>
-                            <option value="non">Non Réglée</option>
-                        </select>
-                        <a id="btn_refresh_table" class="btn btn-outline-info ms-auto">
-                            <i class="ri-loop-left-line"></i>
-                        </a>
+                </div>
+                <div class="card-header d-flex align-items-center justify-content-between">
+                    <div class="w-100">
+                        <div class="input-group">
+                            <span class="input-group-text">Du</span>
+                            <input type="date" id="searchDate1" placeholder="Recherche" class="form-control me-1" value="{{ date('Y-m-d') }}" max="{{ date('Y-m-d') }}">
+                            <span class="input-group-text">au</span>
+                            <input type="date" id="searchDate2" placeholder="Recherche" class="form-control me-1" value="{{ date('Y-m-d') }}" max="{{ date('Y-m-d') }}">
+                            <span class="input-group-text">Statut</span>
+                            <select class="form-select me-1" id="statut">
+                                <option selected value="tous">Tous</option>
+                                <option value="oui">Réglée</option>
+                                <option value="non">Non Réglée</option>
+                            </select>
+                            <a id="btn_search_table" class="btn btn-outline-success ms-auto">
+                                <i class="ri-search-2-line"></i>
+                            </a>
+                        </div>
                     </div>
                 </div>
                 <div class="card-body">
@@ -219,8 +228,7 @@
         list();
 
         document.getElementById("btn_paiement").addEventListener("click", eng_paiement);
-        document.getElementById("btn_refresh_table").addEventListener("click", list);
-        document.getElementById("statut").addEventListener("change", list);
+        document.getElementById("btn_search_table").addEventListener("click", list);
         document.getElementById("updateBtn").addEventListener("click", updatee);
         document.getElementById("deleteBtn").addEventListener("click", deletee);
         document.getElementById("type_payer").addEventListener("change", num_cheque);
@@ -412,12 +420,15 @@
             const tableDiv = document.getElementById('div_Table');
             const loaderDiv = document.getElementById('div_Table_loader');
 
+            const date1 = document.getElementById('searchDate1').value;
+            const date2 = document.getElementById('searchDate2').value;
+
             messageDiv.style.display = 'none';
             tableDiv.style.display = 'none';
             loaderDiv.style.display = 'block';
 
             const statut = document.getElementById('statut').value;
-            const url = `/api/list_depotfacture/${statut}?page=${page}`;
+            const url = `/api/list_depotfacture/${date1}/${date2}/${statut}?page=${page}`;
 
             fetch(url)
                 .then(response => response.json())

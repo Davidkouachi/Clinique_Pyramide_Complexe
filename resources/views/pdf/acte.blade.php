@@ -550,8 +550,7 @@
                     });
 
                     if (acte_hop.length > 0) {
-                        doc.addPage();
-                        yPoss = 20;
+                        yPoss += 10;
                     }
 
                 }
@@ -619,8 +618,7 @@
                     });
 
                     if (acte_exam.length > 0) {
-                        doc.addPage();
-                        yPoss = 20;
+                        yPoss += 10;
                     }
 
                 }
@@ -688,8 +686,7 @@
                     });
 
                     if (acte_soinsam.length > 0) {
-                        doc.addPage();
-                        yPoss = 20;
+                        yPoss += 10;
                     }
 
                 }

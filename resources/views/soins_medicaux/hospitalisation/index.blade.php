@@ -139,7 +139,7 @@
                                             <label class="form-label">
                                                 Date d'entrée
                                             </label>
-                                            <input type="date" class="form-control" placeholder="Selectionner une date" id="date_entrer" min="{{ date('Y-m-d') }}" max="{{ date('Y-m-d') }}" value="{{ date('Y-m-d') }}">
+                                            <input type="date" class="form-control" id="date_entrer" min="{{ date('Y-m-d') }}" max="{{ date('Y-m-d') }}" value="{{ date('Y-m-d') }}">
                                         </div>
                                     </div>
                                     <div class="col-xxl-3 col-lg-4 col-sm-6">
@@ -147,7 +147,7 @@
                                             <label class="form-label">
                                                 Date de sortie probable
                                             </label>
-                                            <input type="date" class="form-control" placeholder="Sélectionner une date" id="date_sortie" min="{{ date('Y-m-d')}}" value="{{ date('Y-m-d') }}">
+                                            <input type="date" class="form-control" id="date_sortie" min="{{ date('Y-m-d')}}" value="{{ date('Y-m-d') }}">
                                         </div>
                                     </div>
                                     <div class="col-xxl-3 col-lg-4 col-sm-6">
@@ -258,15 +258,24 @@
                                                 <h5 class="card-title">
                                                     List des hospitalisation
                                                 </h5>
-                                                <div class="d-flex" >
-                                                    <select class="form-select me-1" id="statut">
-                                                        <option selected value="tous">Tous</option>
-                                                        <option value="Hospitaliser">Hospitaliser</option>
-                                                        <option value="Liberé">Liberé</option>
-                                                    </select>
-                                                    <a id="btn_refresh_table_hos" class="btn btn-outline-info ms-auto">
-                                                        <i class="ri-loop-left-line"></i>
-                                                    </a>
+                                            </div>
+                                            <div class="card-header d-flex align-items-center justify-content-between">
+                                                <div class="w-100">
+                                                    <div class="input-group">
+                                                        <span class="input-group-text">Du</span>
+                                                        <input type="date" id="searchDate1" placeholder="Recherche" class="form-control me-1" value="{{ date('Y-m-d') }}" max="{{ date('Y-m-d') }}">
+                                                        <span class="input-group-text">au</span>
+                                                        <input type="date" id="searchDate2" placeholder="Recherche" class="form-control me-1" value="{{ date('Y-m-d') }}" max="{{ date('Y-m-d') }}">
+                                                        <span class="input-group-text">Statut</span>
+                                                        <select class="form-select me-1" id="statut">
+                                                            <option selected value="tous">Tous</option>
+                                                            <option value="Hospitaliser">Hospitaliser</option>
+                                                            <option value="Liberé">Liberé</option>
+                                                        </select>
+                                                        <a id="btn_search_table" class="btn btn-outline-success ms-auto">
+                                                            <i class="ri-search-2-line"></i>
+                                                        </a>
+                                                    </div>
                                                 </div>
                                             </div>
                                             <div class="card-body">
@@ -478,7 +487,6 @@
 
         Statistique();
         Name_atient();
-        calculerJours();
         select_medecin();
         select_chambre();
         select_typeadmission();
@@ -492,8 +500,7 @@
         document.getElementById('date_sortie').addEventListener('change', calculerJours);
         document.getElementById('btn_calcul').addEventListener('click', calculAmounts);
         document.getElementById('btn_eng_hosp').addEventListener('click', eng_hosp);
-        document.getElementById("btn_refresh_table_hos").addEventListener("click", list_hos);
-        document.getElementById("statut").addEventListener("change", list_hos);
+        document.getElementById("btn_search_table").addEventListener("click", list_hos);
 
         function Name_atient() {
             $.ajax({
@@ -526,36 +533,51 @@
                             suggestion.innerText = item.np;
                             suggestion.addEventListener('click', function() {
                                 // Set selected data in the input field
-                                input.value = item.np;
-                                matricule_patient.value = item.matricule;
-                                suggestionsDiv.innerHTML = ''; // Clear suggestions
-                                suggestionsDiv.style.display = 'none';
 
-                                // Assign patient rate (taux)
-                                patient_taux.value = item.taux ? item.taux : 0;
+                                const url = '/api/rech_hos_patient/' + item.id;
+                                fetch(url)
+                                    .then(response => response.json())
+                                    .then(data => {
 
-                                document.getElementById('numcode').value = '';
-                                if (item.assurer == 'oui') {
-                                    document.getElementById('div_numcode').style.display = 'block';
-                                }else{
-                                    document.getElementById('div_numcode').style.display = 'none';
-                                }
+                                        if (data.hos >= 1) {
 
-                                // Cacher ou afficher l'option "Assurance" selon le taux
-                                if (patient_taux.value == 0) {
-                                    for (let i = 0; i < appliq_remise.options.length; i++) {
-                                        if (appliq_remise.options[i].value === 'assurance') {
-                                            appliq_remise.options[i].style.display = 'none'; // Cacher l'option
+                                            showAlert('Alert', 'Ce patient est déjà hospitalisation.','info');
+                                            document.getElementById('btn_eng_hosp').style.display='none';
+
+                                            return false;
                                         }
-                                    }
-                                } else {
-                                    for (let i = 0; i < appliq_remise.options.length; i++) {
-                                        if (appliq_remise.options[i].value === 'assurance') {
-                                            appliq_remise.options[i].style.display = 'block'; // Afficher l'option
-                                        }
-                                    }
-                                }
 
+                                        input.value = item.np;
+                                        matricule_patient.value = item.matricule;
+                                        suggestionsDiv.innerHTML = ''; // Clear suggestions
+                                        suggestionsDiv.style.display = 'none';
+
+                                        patient_taux.value = item.taux ? item.taux : 0;
+
+                                        document.getElementById('numcode').value = '';
+                                        if (item.assurer == 'oui') {
+                                            document.getElementById('div_numcode').style.display = 'block';
+                                        }else{
+                                            document.getElementById('div_numcode').style.display = 'none';
+                                        }
+
+                                        if (patient_taux.value == 0) {
+                                            for (let i = 0; i < appliq_remise.options.length; i++) {
+                                                if (appliq_remise.options[i].value === 'assurance') {
+                                                    appliq_remise.options[i].style.display = 'none';
+                                                }
+                                            }
+                                        } else {
+                                            for (let i = 0; i < appliq_remise.options.length; i++) {
+                                                if (appliq_remise.options[i].value === 'assurance') {
+                                                    appliq_remise.options[i].style.display = 'block';
+                                                }
+                                            }
+                                        }
+                                        
+
+                                    })
+                                    .catch(error => console.error('Erreur Recherche Patient:', error));
                             });
                             suggestionsDiv.appendChild(suggestion);
                         });
@@ -865,6 +887,7 @@
             document.getElementById('div_loader').style.display = 'none';
             document.getElementById('div_calcul').style.display = 'flex';
             document.getElementById('btn_calcul').style.display = 'block';
+            document.getElementById('btn_eng_hosp').style.display='block';
 
             return false;
         }
@@ -1155,6 +1178,8 @@
                         var newConsultationTab = new bootstrap.Tab(document.getElementById('tab-oneAAA'));
                         newConsultationTab.show();
 
+                        list_hos();
+
                     } else if (response.error) {
 
                         showAlert('Alert', 'Une erreur est survenue lors de l\'hospitalisation.','error');
@@ -1183,8 +1208,10 @@
             document.getElementById("id_natureadmission").value = '';
             document.getElementById("id_chambre").value = '';
             document.getElementById('id_lit').value = '';
-            document.getElementById('date_entrer').value = '';
-            document.getElementById('date_sortie').value = '';
+
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('date_entrer').value = today;
+            document.getElementById('date_sortie').value = today;
 
             document.getElementById('montant_assurance').value = '';
             document.getElementById('taux_remise').value = '';
@@ -1201,12 +1228,6 @@
             document.getElementById('div_numcode').style.display = 'none';
 
             calculerJours();
-            Name_atient();
-            select_medecin();
-            select_chambre();
-            select_typeadmission();
-            list_lit();
-            list_hos();
             Statistique();
         }
 
@@ -1217,13 +1238,16 @@
             const tableDiv = document.getElementById('div_Table_hos'); // The message div
             const loaderDiv = document.getElementById('div_Table_loader_hos');
 
+            const date1 = document.getElementById('searchDate1').value;
+            const date2 = document.getElementById('searchDate2').value;
+
             messageDiv.style.display = 'none';
             tableDiv.style.display = 'none';
             loaderDiv.style.display = 'block';
 
             // Fetch data from the API
             const statut = document.getElementById('statut').value;
-            const url = `/api/list_hopital/${statut}?page=${page}`;
+            const url = `/api/list_hopital/${date1}/${date2}/${statut}?page=${page}`;
             fetch(url) // API endpoint
                 .then(response => response.json())
                 .then(data => {
@@ -1532,7 +1556,6 @@
                         updatePaginationControls(pagination);
 
                     } else {
-                        document.getElementById(`btn_print_table_hos`).style.display = 'none';
                         loaderDiv.style.display = 'none';
                         messageDiv.style.display = 'block';
                         tableDiv.style.display = 'none';

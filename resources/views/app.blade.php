@@ -319,7 +319,7 @@
                                 </li>
                                 <li>
                                     <a @if(request()->routeIs('facture_deposer')) class="text-primary" @endif href="{{route('facture_deposer')}}">
-                                        <b>Factures</b>
+                                        <b>Liste des Factures</b>
                                     </a>
                                 </li>
                             </ul>
@@ -814,7 +814,6 @@
                         }
                     });
                 }
-
             });
 
             function update_info() {

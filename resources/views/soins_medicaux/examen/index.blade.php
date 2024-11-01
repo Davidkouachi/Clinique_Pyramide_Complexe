@@ -154,7 +154,7 @@
 
                                                     </div>
                                                     <div class="row gx-3" id="div_btn_examen" style="display: none;">
-                                                        <div class="col-xxl-4 col-lg-4 col-sm-6">
+                                                        <div class="col-xxl-5 col-lg-6 col-sm-6">
                                                             <div class="input-group mb-3">
                                                                 <span class="input-group-text w-25">
                                                                     Prélevement
@@ -163,7 +163,7 @@
                                                                 <span class="input-group-text w-25">Fcfa</span>
                                                             </div>
                                                         </div>
-                                                        <div class="col-xxl-4 col-lg-4 col-sm-6">
+                                                        <div class="col-xxl-5 col-lg-6 col-sm-6">
                                                             <div class="input-group mb-3">
                                                                 <span class="input-group-text w-25">
                                                                     Taux
@@ -172,7 +172,7 @@
                                                                 <span class="input-group-text w-25">%</span>
                                                             </div>
                                                         </div>
-                                                        <div class="col-xxl-4 col-lg-4 col-sm-6">
+                                                        <div class="col-xxl-5 col-lg-6 col-sm-6">
                                                             <div class="input-group mb-3">
                                                                 <span class="input-group-text w-25">
                                                                     Assurance
@@ -181,7 +181,7 @@
                                                                 <span class="input-group-text w-25">Fcfa</span>
                                                             </div>
                                                         </div>
-                                                        <div class="col-xxl-4 col-lg-4 col-sm-6">
+                                                        <div class="col-xxl-5 col-lg-6 col-sm-6">
                                                             <div class="input-group mb-3">
                                                                 <span class="input-group-text w-25">
                                                                     Patient
@@ -190,7 +190,7 @@
                                                                 <span class="input-group-text w-25">Fcfa</span>
                                                             </div>
                                                         </div>
-                                                        <div class="col-xxl-4 col-lg-4 col-sm-6">
+                                                        <div class="col-xxl-5 col-lg-6 col-sm-6">
                                                             <div class="input-group mb-3">
                                                                 <span class="input-group-text w-25">
                                                                     Total
@@ -291,9 +291,19 @@
                                                 </h5>
                                                 <div class="d-flex" >
                                                     <input type="text" id="searchInputd" placeholder="Recherche" class="form-control me-1">
-                                                    <a id="btn_refresh_tableED" class="btn btn-outline-info ms-auto">
-                                                        <i class="ri-loop-left-line"></i>
-                                                    </a>
+                                                </div>
+                                            </div>
+                                            <div class="card-header d-flex align-items-center justify-content-between">
+                                                <div class="w-100">
+                                                    <div class="input-group">
+                                                        <span class="input-group-text">Du</span>
+                                                        <input type="date" id="searchDate1" placeholder="Recherche" class="form-control me-1" value="{{ date('Y-m-d') }}" max="{{ date('Y-m-d') }}">
+                                                        <span class="input-group-text">au</span>
+                                                        <input type="date" id="searchDate2" placeholder="Recherche" class="form-control me-1" value="{{ date('Y-m-d') }}" max="{{ date('Y-m-d') }}">
+                                                        <a id="btn_search_table" class="btn btn-outline-success ms-auto">
+                                                            <i class="ri-search-2-line"></i>
+                                                        </a>
+                                                    </div>
                                                 </div>
                                             </div>
                                             <div class="card-body">
@@ -574,8 +584,7 @@
         document.getElementById("btn_eng_pre").addEventListener("click", eng_pre);
         document.getElementById("add_select_examen").addEventListener("click", add_select);
         document.getElementById("btn_eng_exd").addEventListener("click", eng_exd);
-        document.getElementById("btn_refresh_tableED").addEventListener("click", listED);
-
+        document.getElementById("btn_search_table").addEventListener("click", listED);
 
         function allowOnlyLetters(event) {
             const key = event.key;
@@ -1646,7 +1655,6 @@
 
                         var newTab = new bootstrap.Tab(document.getElementById('tab-oneAAAD'));
                         newTab.show();
-                        newTab.active();
 
                     } else if (response.error) {
                         showAlert("ERREUR", 'Une erreur est survenue', "error");
@@ -1675,13 +1683,16 @@
             const tableDiv = document.getElementById('div_TableED');
             const loaderDiv = document.getElementById('div_Table_loaderED');
 
+            const date1 = document.getElementById('searchDate1').value;
+            const date2 = document.getElementById('searchDate2').value;
+
             let allExamens = [];
 
             messageDiv.style.display = 'none';
             tableDiv.style.display = 'none';
             loaderDiv.style.display = 'block';
 
-            const url = `/api/list_examend_all?page=${page}`;
+            const url = `/api/list_examend_all/${date1}/${date2}?page=${page}`;
 
             fetch(url)
                 .then(response => response.json())

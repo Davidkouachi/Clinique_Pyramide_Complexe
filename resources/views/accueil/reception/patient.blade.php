@@ -191,14 +191,25 @@
                                     </h5>
                                     <div class="d-flex">
                                         <input type="text" id="searchInputP" placeholder="Recherche" class="form-control me-1">
-                                        <select class="form-select me-1" id="statutP">
-                                            <option selected value="tous">Tous</option>
-                                            <option value="oui">Assurer</option>
-                                            <option value="non">Non Assurer</option>
-                                        </select>
-                                        <a id="btn_refresh_tableP" class="btn btn-outline-info ms-auto">
-                                            <i class="ri-loop-left-line"></i>
-                                        </a>
+                                    </div>
+                                </div>
+                                <div class="card-header d-flex align-items-center justify-content-between">
+                                    <div class="w-100">
+                                        <div class="input-group">
+                                            <span class="input-group-text">Du</span>
+                                            <input type="date" id="searchDate1" placeholder="Recherche" class="form-control me-1" value="{{ date('Y-m-d') }}" max="{{ date('Y-m-d') }}">
+                                            <span class="input-group-text">au</span>
+                                            <input type="date" id="searchDate2" placeholder="Recherche" class="form-control me-1" value="{{ date('Y-m-d') }}" max="{{ date('Y-m-d') }}">
+                                            <span class="input-group-text">Assurer</span>
+                                            <select class="form-select me-1" id="statutP">
+                                                <option selected value="tous">Tous</option>
+                                                <option value="oui">Assurer</option>
+                                                <option value="non">Non Assurer</option>
+                                            </select>
+                                            <a id="btn_search_table" class="btn btn-outline-success ms-auto">
+                                                <i class="ri-search-2-line"></i>
+                                            </a>
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="card-body">
@@ -520,8 +531,7 @@
         Name_atient();
 
         document.getElementById("btn_eng_patient").addEventListener("click", eng_patient);
-        document.getElementById("btn_refresh_tableP").addEventListener("click", listP);
-        document.getElementById("statutP").addEventListener("change", listP);
+        document.getElementById("btn_search_table").addEventListener("click", listP);
 
         document.getElementById('btn_affiche_stat').addEventListener('click',function(){
 
@@ -825,7 +835,8 @@
             $.ajax({
                 url: '/api/patient_new',
                 method: 'GET',  // Use 'POST' for data creation
-                data: { nom: nom.value, email: email.value || null , tel: phone.value, tel2: phone2.value || null, adresse: adresse.value || null, assurer: assurer.value, assurance_id: assurance_id.value || null, taux_id: taux_id.value || null, societe_id: societe_id.value || null, datenais: datenais.value, sexe: sexe.value, filiation: filiation.value || null, matricule_assurance: matricule_assurance.value || null},
+                data: { nom: nom.value, email: email.value || null , tel: phone.value, tel2: phone2.value || null, adresse: adresse.value || null, assurer: assurer.value, assurance_id: assurance_id.value || null, taux_id: taux_id.value || null, societe_id: societe_id.value || null, datenais: datenais.value, sexe: sexe.value, filiation: filiation.value || null, matricule_assurance: matricule_assurance.value || null
+                },
                 success: function(response) {
                     var preloader = document.getElementById('preloader_ch');
                     if (preloader) {
@@ -857,6 +868,7 @@
 
                         divAssurer.style.display = "none";
 
+                        Statistique();
                         listP();
                         Name_atient();
 
@@ -885,6 +897,9 @@
             const tableDiv = document.getElementById('div_TableP');
             const loaderDiv = document.getElementById('div_Table_loaderP');
 
+            const date1 = document.getElementById('searchDate1').value;
+            const date2 = document.getElementById('searchDate2').value;
+
             let allPatients = [];
 
             messageDiv.style.display = 'none';
@@ -892,7 +907,7 @@
             loaderDiv.style.display = 'block';
 
             const statut = document.getElementById('statutP').value;
-            const url = `/api/list_patient_all/${statut}?page=${page}`;
+            const url = `/api/list_patient_all/${date1}/${date2}/${statut}?page=${page}`;
 
             fetch(url)
                 .then(response => response.json())
@@ -1092,7 +1107,7 @@
                     }
                 })
                 .catch(error => {
-                    console.error('Erreur lors du chargement des données:', error);
+                    console.error('Erreur lors du chargement des donnée:', error);
                     loaderDiv.style.display = 'none';
                     tableDiv.style.display = 'none';
                     messageDiv.style.display = 'block';
@@ -2472,7 +2487,6 @@
                         updatePaginationControlshos(id,pagination);
 
                     } else {
-                        document.getElementById(`btn_print_table_hos`).style.display = 'none';
                         loaderDiv.style.display = 'none';
                         messageDiv.style.display = 'block';
                         tableDiv.style.display = 'none';
@@ -2867,7 +2881,6 @@
                         updatePaginationControlssoinsam(id,pagination);
 
                     } else {
-                        document.getElementById(`btn_print_table`).style.display = 'none';
                         loaderDiv.style.display = 'none';
                         messageDiv.style.display = 'block';
                         tableDiv.style.display = 'none';

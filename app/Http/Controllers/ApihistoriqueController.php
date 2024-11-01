@@ -50,6 +50,7 @@ use App\Models\programmemedecin;
 use App\Models\depotfacture;
 use App\Models\caisse;
 use App\Models\historiquecaisse;
+use App\Models\portecaisse;
 
 class ApihistoriqueController extends Controller
 {
@@ -59,6 +60,8 @@ class ApihistoriqueController extends Controller
 
         $trace = historiquecaisse::whereDate('created_at', '=', $date)->get();
 
+        $ofc = portecaisse::whereDate('created_at', '=', $date)->get();
+
         foreach ($trace as $value) {
             if ($value->typemvt === 'Entrer de Caisse') {
                 $total += str_replace('.', '', $value->montant);
@@ -67,7 +70,7 @@ class ApihistoriqueController extends Controller
             }
         }
 
-        return response()->json(['trace' => $trace,'total' => $total]);
+        return response()->json(['trace' => $trace, 'ofc' => $ofc, 'total' => $total]);
 
     }
 }

@@ -57,8 +57,6 @@ class authController extends Controller
 
         if (Auth::attempt([$fieldType => $login, 'password' => $password])) {
 
-            Session::forget('url.intended');
-
             return redirect()->route('index_accueil');
         }
 
