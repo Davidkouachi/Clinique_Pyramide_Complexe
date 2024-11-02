@@ -74,6 +74,9 @@
             {{-- <marquee>
                 Liste des Rendez-Vous : 
             </marquee> --}}
+            <div class="d-flex justify-content-center align-items-center text-center w-100" >
+                <h4 class="text-white" >ESPACE MEDICO-SOCIAL LA PYRAMIDE</h4>
+            </div>
             <div class="header-actions">
                 <div class="dropdown ms-2">
                     <a id="userSettings" class="dropdown-toggle d-flex align-items-center" href="#!" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -115,7 +118,7 @@
         </div>
         <div class="main-container">
             <nav id="sidebar" class="sidebar-wrapper">
-                <a class="sidebar-profile" href="{{route('index_accueil')}}" >
+                <a class="sidebar-profile" >
                     <img src="{{asset('assets/images/user8.png')}}" class="img-shadow img-3x me-3 rounded-5">
                     <div class="m-0">
                         <h6 class="mb-1 profile-name text-nowrap text-truncate ">
@@ -654,6 +657,13 @@
                 const div = document.createElement('div');
                 div.className = 'border rounded-2 p-2 mb-3 justify-content-center';
                 div.innerHTML = `
+                    <div class="card-body mt-2">
+                        <div class="text-center">
+                            <a class="d-flex align-items-center flex-column">
+                                <img src="{{asset('assets/images/info_user.png')}}" class="img-7x">
+                            </a>
+                        </div>
+                    </div>
                     <div class="card-header mb-4 text-center mt-3">
                         <h5 class="card-title">Modification des Informations</h5>
                     </div>
@@ -713,6 +723,13 @@
                 const div2 = document.createElement('div');
                 div2.className = 'border rounded-2 p-2 mb-3 justify-content-center';
                 div2.innerHTML = `
+                    <div class="card-body mt-2">
+                        <div class="text-center">
+                            <a class="d-flex align-items-center flex-column">
+                                <img src="{{asset('assets/images/password.png')}}" class="img-7x">
+                            </a>
+                        </div>
+                    </div>
                     <div class="card-header mb-4 text-center mt-3">
                         <h5 class="card-title">Modification du mot de passe</h5>
                     </div>

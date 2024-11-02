@@ -13,16 +13,6 @@
         <li class="breadcrumb-item text-primary" aria-current="page">
             Liste des consultations
         </li>
-        <li class="breadcrumb-item" style="display: block;" id="div_btn_affiche_stat">
-            <a class="btn btn-sm btn-warning" id="btn_affiche_stat">
-                Afficher les Statstiques
-            </a>
-        </li>
-        <li class="breadcrumb-item" style="display: none;" id="div_btn_cache_stat">
-            <a class="btn btn-sm btn-danger" id="btn_cache_stat">
-                Cacher les Statstiques
-            </a>
-        </li>
     </ol>
 </div>
 @endsection
@@ -42,8 +32,26 @@
                 </div>
             </div>
         </div>
+        <div class="col-12">
+            <div class="card mb-3">
+                <div class="card-body ">
+                    <ol class="breadcrumb justify-content-center align-items-center">
+                        <li class="" style="display: block;" id="div_btn_affiche_stat">
+                            <a class="btn btn-sm btn-warning" id="btn_affiche_stat">
+                                Afficher les Statstiques
+                            </a>
+                        </li>
+                        <li class="" style="display: none;" id="div_btn_cache_stat">
+                            <a class="btn btn-sm btn-danger" id="btn_cache_stat">
+                                Cacher les Statstiques
+                            </a>
+                        </li>
+                    </ol>
+                </div>
+            </div>
+        </div>
     </div>
-    <div class="row gx-3 mb-3" id="stat_consultation"></div>
+    <div class="row gx-3" id="stat_consultation"></div>
     <div class="row gx-3">
         <div class="col-12">
             <div class="card mb-3">

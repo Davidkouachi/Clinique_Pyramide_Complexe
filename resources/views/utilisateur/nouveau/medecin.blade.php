@@ -463,7 +463,14 @@
                             // Create and append cells to the row based on your table's structure
                             row.innerHTML = `
                                 <td>${index + 1}</td>
-                                <td>${item.sexe}. ${item.name}</td>
+                                <td>
+                                    <div class="d-flex align-items-center ">
+                                        <a class="d-flex align-items-center flex-column me-2">
+                                            <img src="{{asset('assets/images/user8.png')}}" class="img-3x rounded-circle border border-1">
+                                        </a>
+                                        Dr. ${item.name}
+                                    </div>
+                                </td>
                                 <td>${item.email}</td>
                                 <td>M-${item.matricule}</td>
                                 <td>${item.typeacte}</td>

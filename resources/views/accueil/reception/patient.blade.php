@@ -13,16 +13,6 @@
         <li class="breadcrumb-item text-primary" aria-current="page">
             Liste des patients
         </li>
-        <li class="breadcrumb-item" style="display: block;" id="div_btn_affiche_stat">
-            <a class="btn btn-sm btn-warning" id="btn_affiche_stat">
-                Afficher les Statstiques
-            </a>
-        </li>
-        <li class="breadcrumb-item" style="display: none;" id="div_btn_cache_stat">
-            <a class="btn btn-sm btn-danger" id="btn_cache_stat">
-                Cacher les Statstiques
-            </a>
-        </li>
     </ol>
 </div>
 @endsection
@@ -42,8 +32,26 @@
                 </div>
             </div>
         </div>
-        <div class="row gx-3" id="stat"></div>
+        <div class="col-12">
+            <div class="card mb-3">
+                <div class="card-body ">
+                    <ol class="breadcrumb justify-content-center align-items-center">
+                        <li class="" style="display: block;" id="div_btn_affiche_stat">
+                            <a class="btn btn-sm btn-warning" id="btn_affiche_stat">
+                                Afficher les Statstiques
+                            </a>
+                        </li>
+                        <li class="" style="display: none;" id="div_btn_cache_stat">
+                            <a class="btn btn-sm btn-danger" id="btn_cache_stat">
+                                Cacher les Statstiques
+                            </a>
+                        </li>
+                    </ol>
+                </div>
+            </div>
+        </div>
     </div>
+    <div class="row gx-3" id="stat"></div>
     <div class="row gx-3" >
         <div class="col-sm-12">
             <div class="card mb-3 mt-3">
@@ -221,8 +229,8 @@
                                                 <thead>
                                                     <tr>
                                                         <th scope="col">N°</th>
-                                                        <th scope="col">N° Dossier</th>
                                                         <th scope="col">Nom et Prénoms</th>
+                                                        <th scope="col">N° Dossier</th>
                                                         <th scope="col">Date de naissance</th>
                                                         <th scope="col">Age</th>
                                                         <th scope="col">Assurer</th>
@@ -868,7 +876,6 @@
 
                         divAssurer.style.display = "none";
 
-                        Statistique();
                         listP();
                         Name_atient();
 
@@ -933,8 +940,15 @@
                                 const row = document.createElement('tr');
                                 row.innerHTML = `
                                     <td>${((currentPage - 1) * perPage) + index + 1}</td>
+                                    <td>
+                                        <div class="d-flex align-items-center ">
+                                            <a class="d-flex align-items-center flex-column me-2">
+                                                <img src="{{asset('assets/images/user8.png')}}" class="img-3x rounded-circle border border-1">
+                                            </a>
+                                            ${item.sexe}. ${item.np}
+                                        </div>
+                                    </td>
                                     <td>P-${item.matricule}</td>
-                                    <td>${item.sexe}. ${item.np}</td>
                                     <td>${formatDate(item.datenais)}</td>
                                     <td>${item.age} an(s)</td>
                                     <td>
@@ -1254,7 +1268,7 @@
                     }
 
                     const rowDiv = document.createElement('div');
-                    rowDiv.classList.add('row');
+                    rowDiv.classList.add('row', 'justify-content-center', 'align-items-center');
 
                     const div1 = document.createElement('div');
                     div1.classList.add('col-xxl-3', 'col-sm-6', 'mb-3');

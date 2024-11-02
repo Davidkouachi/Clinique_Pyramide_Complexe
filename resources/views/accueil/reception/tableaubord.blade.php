@@ -13,16 +13,6 @@
         <li class="breadcrumb-item">
             Tableau de bord
         </li>
-        <li class="breadcrumb-item" style="display: block;" id="div_btn_affiche_stat">
-            <a class="btn btn-sm btn-warning" id="btn_affiche_stat">
-                Afficher les Statstiques
-            </a>
-        </li>
-        <li class="breadcrumb-item" style="display: none;" id="div_btn_cache_stat">
-            <a class="btn btn-sm btn-danger" id="btn_cache_stat">
-                Cacher les Statstiques
-            </a>
-        </li>
     </ol>
 </div>
 @endsection
@@ -95,6 +85,24 @@
                 </div>
             </div>
         </div>
+        <div class="col-12">
+            <div class="card mb-3">
+                <div class="card-body ">
+                    <ol class="breadcrumb justify-content-center align-items-center">
+                        <li class="" style="display: block;" id="div_btn_affiche_stat">
+                            <a class="btn btn-sm btn-warning" id="btn_affiche_stat">
+                                Afficher les Statstiques
+                            </a>
+                        </li>
+                        <li class="" style="display: none;" id="div_btn_cache_stat">
+                            <a class="btn btn-sm btn-danger" id="btn_cache_stat">
+                                Cacher les Statstiques
+                            </a>
+                        </li>
+                    </ol>
+                </div>
+            </div>
+        </div>
     </div>
 
     <div class="row gx-3 mb-3" id="stat_consultation"></div>
@@ -102,12 +110,6 @@
     <div class="row gx-3" >
         <div class="col-sm-12">
             <div class="card mb-3">
-                <div class="card-header" hidden >
-                    <h5 class="card-title">Réception</h5>
-                </div>
-                <div class="p-2" id="div_alert" >
-                    
-                </div>
                 <div class="card-body" style="margin-top: -32px;">
                     <div class="custom-tabs-container">
                         <ul class="nav nav-tabs justify-content-center bg-primary bg-2" id="customTab4" role="tablist" style="background: rgba(0, 0, 0, 0.7);">
@@ -149,14 +151,25 @@
                                 </div>
                                 <div class="row gx-3">
                                     <div class="row gx-3 justify-content-center align-items-center" >
+                                        <div class="col-12">
+                                            <div class=" mb-0">
+                                                <div class="card-body">
+                                                    <div class="text-center">
+                                                        <a class="d-flex align-items-center flex-column">
+                                                            <img src="{{asset('assets/images/user8.png')}}" class="img-7x rounded-circle border border-3">
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
                                         <div class="col-xxl-4 col-lg-4 col-sm-6">
-                                            <div class="mb-3">
+                                            <div class="mb-3 text-center">
                                                 <label class="form-label">
                                                     Nom du patient
                                                 </label>
                                                 <div class="input-group">
                                                     <input type="hidden" class="form-control" id="matricule_patient" autocomplete="off">
-                                                    <input type="text" class="form-control" id="name_rech" placeholder="Saisie Obligatoire" autocomplete="off">
+                                                    <input type="text" class="form-control text-center" id="name_rech" placeholder="Saisie Obligatoire" autocomplete="off">
                                                     <button hidden id="btn_rech_num_dossier" class="btn btn-outline-success">
                                                         <i class="ri-search-line"></i>
                                                     </button>
@@ -2211,7 +2224,7 @@
 
             const div = document.createElement('div');
             div.innerHTML = `
-                <div class="d-flex justify-content-center align-items-center">
+                <div class="d-flex justify-content-center align-items-center mb-3">
                     <div class="spinner-border text-warning me-2" role="status" aria-hidden="true"></div>
                     <strong>Chargement des données...</strong>
                 </div>
