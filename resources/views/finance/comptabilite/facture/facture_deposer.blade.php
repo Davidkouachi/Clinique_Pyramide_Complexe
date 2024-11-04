@@ -67,10 +67,10 @@
                                 <thead>
                                     <tr>
                                         <th scope="col">N°</th>
-                                        <th scope="col">Date du dépôt</th>
                                         <th scope="col">Assurance</th>
                                         <th scope="col">Du</th>
                                         <th scope="col">Au</th>
+                                        <th scope="col">Date du dépôt</th>
                                         <th scope="col">Statut</th>
                                         <th scope="col">Part assurance</th>
                                         <th scope="col">Part patient</th>
@@ -453,10 +453,17 @@
                                 const row = document.createElement('tr');
                                 row.innerHTML = `
                                     <td>${((currentPage - 1) * perPage) + index + 1}</td>
-                                    <td>${formatDate(item.date_depot)}</td>
-                                    <td>${item.assurance}</td>
+                                    <td>
+                                        <div class="d-flex align-items-center ">
+                                            <a class="d-flex align-items-center flex-column me-2">
+                                                <img src="{{asset('assets/images/depot_fac.jpg')}}" class="img-2x rounded-circle">
+                                            </a>
+                                            ${item.assurance}
+                                        </div>
+                                    </td>
                                     <td>${formatDate(item.date1)}</td>
                                     <td>${formatDate(item.date2)}</td>
+                                    <td>${formatDate(item.date_depot)}</td>
                                     <td>
                                         <span class="badge ${item.statut === 'oui' ? 'bg-success' : 'bg-danger'}">
                                             ${item.statut === 'oui' ? 'Réglée' : 'Non Réglée'}

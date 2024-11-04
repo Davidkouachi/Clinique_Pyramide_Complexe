@@ -22,6 +22,8 @@ return new class extends Migration
             $table->string('statut')->index();
             $table->unsignedBigInteger('assurance_id');
             $table->foreign('assurance_id')->references('id')->on('assurances')->onDelete('cascade');
+            $table->unsignedBigInteger('creer_id');
+            $table->foreign('creer_id')->references('id')->on('users')->onDelete('cascade');
             $table->timestamps();
         });
     }

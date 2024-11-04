@@ -55,11 +55,18 @@
                         <div class="tab-content" id="customTabContent">
                             <div class="tab-pane active show fade" id="twoAAAN" role="tabpanel" aria-labelledby="tab-twoAAAN">
                                 <div class="card-header">
-                                    <h5 class="card-title">Formulaire Nouvelle Nature Admission</h5>
+                                    <h5 class="card-title text-center">Formulaire Nouvelle Nature Admission</h5>
+                                </div>
+                                <div class="card-header">
+                                    <div class="text-center">
+                                        <a class="d-flex align-items-center flex-column">
+                                            <img src="{{asset('assets/images/type_admission.jpg')}}" class="img-7x rounded-circle border border-1">
+                                        </a>
+                                    </div>
                                 </div>
                                 <div class="card-body" >
                                     <!-- Row starts -->
-                                    <div class="row gx-3">
+                                    <div class="row gx-3 align-items-center justify-content-center">
                                         <div class="col-xxl-3 col-lg-4 col-sm-6">
                                             <div class="mb-3">
                                                 <label class="form-label">
@@ -79,7 +86,7 @@
                                         </div>
                                         <div class="col-sm-12">
                                             <div class="mb-3">
-                                                <div class="d-flex gap-2 justify-content-start">
+                                                <div class="d-flex gap-2 justify-content-center">
                                                     <button id="btn_eng" class="btn btn-success">
                                                         Enregistrer
                                                     </button>
@@ -95,9 +102,12 @@
                                     <h5 class="card-title">
                                         Liste des Nature Admissions
                                     </h5>
-                                    <a id="btn_refresh_table" class="btn btn-outline-info ms-auto">
-                                        <i class="ri-loop-left-line"></i>
-                                    </a>
+                                    <div class="d-flex">
+                                        <input type="text" id="searchInput" placeholder="Recherche" class="form-control me-1">
+                                        <a id="btn_refresh_table" class="btn btn-outline-info ms-auto">
+                                            <i class="ri-loop-left-line"></i>
+                                        </a>
+                                    </div>
                                 </div>
                                 <div class="card-body">
                                     <div class="table-outer" id="div_Table" style="display: none;">
@@ -127,6 +137,7 @@
                                             <strong>Chargement des données...</strong>
                                         </div>
                                     </div>
+                                    <div id="pagination-controls"></div>
                                 </div>
                             </div>
                         </div>
@@ -320,9 +331,9 @@
             });
         }
 
-        function list() {
+        function list(page = 1) {
 
-            const tableBody = document.querySelector('#Table tbody'); // Target the specific table by id
+            const tableBody = document.querySelector('#Table tbody');
             const messageDiv = document.getElementById('message_Table');
             const tableDiv = document.getElementById('div_Table'); // The message div
             const loaderDiv = document.getElementById('div_Table_loader');
@@ -331,73 +342,103 @@
             tableDiv.style.display = 'none';
             loaderDiv.style.display = 'block';
 
-            // Fetch data from the API
-            fetch('/api/list_natureadmission') // API endpoint
+            let allNatureadmissions = [];
+
+            const url = `/api/list_natureadmission?page=${page}`;
+            fetch(url) // API endpoint
                 .then(response => response.json())
                 .then(data => {
-                    // Access the 'chambre' array from the API response
-                    const natureadmissions = data.natureadmission;
 
-                    // Clear any existing rows in the table body
-                    tableBody.innerHTML = '';
+                    allNatureadmissions = data.natureadmission || [] ;
+                    const pagination = data.pagination || {};
 
-                    if (natureadmissions.length > 0) {
+                    const perPage = pagination.per_page || 10;
+                    const currentPage = pagination.current_page || 1;
 
-                        loaderDiv.style.display = 'none';
-                        messageDiv.style.display = 'none';
-                        tableDiv.style.display = 'block';
+                    if (allNatureadmissions.length > 0) {
 
-                        // Loop through each item in the chambre array
-                        natureadmissions.forEach((item, index) => {
-                            // Create a new row
-                            const row = document.createElement('tr');
-                            // Create and append cells to the row based on your table's structure
-                            row.innerHTML = `
-                                <td>${index + 1}</td>
-                                <td>${item.nom}</td>
-                                <td>${item.typeadmission}</td>
-                                <td>
-                                    <div class="d-inline-flex gap-1">
-                                        <a class="btn btn-outline-info btn-sm rounded-5" data-bs-toggle="modal" data-bs-target="#Mmodif" id="edit-${item.id}">
-                                            <i class="ri-edit-box-line"></i>
-                                        </a>
-                                        ${item.nbre == '0' ? 
-                                            `<a class="btn btn-outline-danger btn-sm rounded-5" data-bs-toggle="modal" data-bs-target="#Mdelete" id="delete-${item.id}">
-                                                <i class="ri-delete-bin-line"></i>
-                                            </a>` : `` }
-                                    </div>
-                                </td>
-                            `;
+                        function displayRows(filteredNatureadmissions) {
+                            loaderDiv.style.display = 'none';
+                            messageDiv.style.display = 'none';
+                            tableDiv.style.display = 'block';
 
-                            tableBody.appendChild(row);
+                            tableBody.innerHTML = '';
 
-                            document.getElementById(`edit-${item.id}`).addEventListener('click', () =>
-                            {
-                                // Set the values in the modal form
-                                document.getElementById('Id').value = item.id;
-                                document.getElementById('nomModif').value = item.nom;
+                            // Loop through each item in the chambre array
+                            filteredNatureadmissions.forEach((item, index) => {
+                                // Create a new row
+                                const row = document.createElement('tr');
+                                // Create and append cells to the row based on your table's structure
+                                row.innerHTML = `
+                                    <td>${((currentPage - 1) * perPage) + index + 1}</td>
+                                    <td>
+                                        <div class="d-flex align-items-center ">
+                                            <a class="d-flex align-items-center flex-column me-2">
+                                                <img src="{{asset('assets/images/type_admission.jpg')}}" class="img-2x rounded-circle border border-1">
+                                            </a>
+                                            ${item.nom}
+                                        </div>
+                                    </td>
+                                    <td>${item.typeadmission}</td>
+                                    <td>
+                                        <div class="d-inline-flex gap-1">
+                                            <a class="btn btn-outline-info btn-sm rounded-5" data-bs-toggle="modal" data-bs-target="#Mmodif" id="edit-${item.id}">
+                                                <i class="ri-edit-box-line"></i>
+                                            </a>
+                                            ${item.nbre == '0' ? 
+                                                `<a class="btn btn-outline-danger btn-sm rounded-5" data-bs-toggle="modal" data-bs-target="#Mdelete" id="delete-${item.id}">
+                                                    <i class="ri-delete-bin-line"></i>
+                                                </a>` : `` }
+                                        </div>
+                                    </td>
+                                `;
 
-                                const modifActeSelect = document.getElementById('type_id_modif');
-                                const typeeOptions = modifActeSelect.options;
+                                tableBody.appendChild(row);
 
-                                // Loop through the options to find the matching value
-                                for (let i = 0; i < typeeOptions.length; i++) {
-                                    if (String(typeeOptions[i].value) === String(item.acte_id)) {
-                                        typeeOptions[i].selected = true; // Set the matching option as selected
-                                        break; // Stop the loop once a match is found
-                                    }
-                                }
-                            });
-
-                            const deleteButton = document.getElementById(`delete-${item.id}`);
-                            if (deleteButton) {
-                                deleteButton.addEventListener('click', () => {
+                                document.getElementById(`edit-${item.id}`).addEventListener('click', () =>
+                                {
                                     // Set the values in the modal form
-                                    document.getElementById('Iddelete').value = item.id;
-                                });
-                            }
+                                    document.getElementById('Id').value = item.id;
+                                    document.getElementById('nomModif').value = item.nom;
 
-                        });
+                                    const modifActeSelect = document.getElementById('type_id_modif');
+                                    const typeeOptions = modifActeSelect.options;
+
+                                    // Loop through the options to find the matching value
+                                    for (let i = 0; i < typeeOptions.length; i++) {
+                                        if (String(typeeOptions[i].value) === String(item.acte_id)) {
+                                            typeeOptions[i].selected = true; // Set the matching option as selected
+                                            break; // Stop the loop once a match is found
+                                        }
+                                    }
+                                });
+
+                                const deleteButton = document.getElementById(`delete-${item.id}`);
+                                if (deleteButton) {
+                                    deleteButton.addEventListener('click', () => {
+                                        // Set the values in the modal form
+                                        document.getElementById('Iddelete').value = item.id;
+                                    });
+                                }
+
+                            });
+                        }
+
+                        // Update table with filtered factures
+                        function applySearchFilter() {
+                            const searchTerm = searchInput.value.toLowerCase();
+                            const filteredNatureadmissions = allNatureadmissions.filter(item =>
+                                item.nom.toLowerCase().includes(searchTerm)
+                            );
+                            displayRows(filteredNatureadmissions); // Display only filtered factures
+                        }
+
+                        searchInput.addEventListener('input', applySearchFilter);
+
+                        displayRows(allNatureadmissions);
+
+                        PaginationControls(pagination);
+
                     } else {
                         loaderDiv.style.display = 'none';
                         messageDiv.style.display = 'block';
@@ -411,6 +452,97 @@
                     messageDiv.style.display = 'block';
                     tableDiv.style.display = 'none';
                 });
+        }
+
+        function PaginationControls(pagination) {
+            const paginationDiv = document.getElementById('pagination-controls');
+            paginationDiv.innerHTML = '';
+
+            // Bootstrap pagination wrapper
+            const paginationWrapper = document.createElement('ul');
+            paginationWrapper.className = 'pagination justify-content-center';
+
+            // Previous button
+            if (pagination.current_page > 1) {
+                const prevButton = document.createElement('li');
+                prevButton.className = 'page-item';
+                prevButton.innerHTML = `<a class="page-link" href="#">Precédent</a>`;
+                prevButton.onclick = (event) => {
+                    event.preventDefault(); // Empêche le défilement en haut de la page
+                    list(pagination.current_page - 1);
+                };
+                paginationWrapper.appendChild(prevButton);
+            } else {
+                // Disable the previous button if on the first page
+                const prevButton = document.createElement('li');
+                prevButton.className = 'page-item disabled';
+                prevButton.innerHTML = `<a class="page-link" href="#">Precédent</a>`;
+                paginationWrapper.appendChild(prevButton);
+            }
+
+            // Page number links (show a few around the current page)
+            const totalPages = pagination.last_page;
+            const currentPage = pagination.current_page;
+            const maxVisiblePages = 5; // Max number of page links to display
+
+            let startPage = Math.max(1, currentPage - Math.floor(maxVisiblePages / 2));
+            let endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
+
+            // Adjust start page if end page exceeds the total pages
+            if (endPage - startPage < maxVisiblePages - 1) {
+                startPage = Math.max(1, endPage - maxVisiblePages + 1);
+            }
+
+            // Loop through pages and create page links
+            for (let i = startPage; i <= endPage; i++) {
+                const pageItem = document.createElement('li');
+                pageItem.className = `page-item ${i === currentPage ? 'active' : ''}`;
+                pageItem.innerHTML = `<a class="page-link" href="#">${i}</a>`;
+                pageItem.onclick = (event) => {
+                    event.preventDefault(); // Empêche le défilement en haut de la page
+                    list(i);
+                };
+                paginationWrapper.appendChild(pageItem);
+            }
+
+            // Ellipsis (...) if not all pages are shown
+            if (endPage < totalPages) {
+                const ellipsis = document.createElement('li');
+                ellipsis.className = 'page-item disabled';
+                ellipsis.innerHTML = `<a class="page-link" href="#">...</a>`;
+                paginationWrapper.appendChild(ellipsis);
+
+                // Add the last page link
+                const lastPageItem = document.createElement('li');
+                lastPageItem.className = `page-item`;
+                lastPageItem.innerHTML = `<a class="page-link" href="#">${totalPages}</a>`;
+                lastPageItem.onclick = (event) => {
+                    event.preventDefault(); // Empêche le défilement en haut de la page
+                    list(totalPages);
+                };
+                paginationWrapper.appendChild(lastPageItem);
+            }
+
+            // Next button
+            if (pagination.current_page < pagination.last_page) {
+                const nextButton = document.createElement('li');
+                nextButton.className = 'page-item';
+                nextButton.innerHTML = `<a class="page-link" href="#">Suivant</a>`;
+                nextButton.onclick = (event) => {
+                    event.preventDefault(); // Empêche le défilement en haut de la page
+                    list(pagination.current_page + 1);
+                };
+                paginationWrapper.appendChild(nextButton);
+            } else {
+                // Disable the next button if on the last page
+                const nextButton = document.createElement('li');
+                nextButton.className = 'page-item disabled';
+                nextButton.innerHTML = `<a class="page-link" href="#">Suivant</a>`;
+                paginationWrapper.appendChild(nextButton);
+            }
+
+            // Append pagination controls to the DOM
+            paginationDiv.appendChild(paginationWrapper);
         }
 
         function updatee() {

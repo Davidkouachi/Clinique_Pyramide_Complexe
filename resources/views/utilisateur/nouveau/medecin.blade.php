@@ -55,7 +55,14 @@
                         <div class="tab-content" id="customTabContent">
                             <div class="tab-pane active show fade" id="twoAAAN" role="tabpanel" aria-labelledby="tab-twoAAAN">
                                 <div class="card-header">
-                                    <h5 class="card-title">Formulaire Nouveau Médecin</h5>
+                                    <h5 class="card-title text-center">Formulaire Nouveau Médecin</h5>
+                                </div>
+                                <div class="card-header">
+                                    <div class="text-center">
+                                        <a class="d-flex align-items-center flex-column">
+                                            <img src="{{asset('assets/images/docteur.png')}}" class="img-7x rounded-circle">
+                                        </a>
+                                    </div>
                                 </div>
                                 <div class="card-body" >
                                     <!-- Row starts -->
@@ -108,7 +115,7 @@
                                             </div>
                                         </div>
                                         <div class="col-sm-12">
-                                            <div class="mb-3 d-flex gap-2 justify-content-start">
+                                            <div class="mb-3 d-flex gap-2 justify-content-center">
                                                 <button id="btn_eng" class="btn btn-success">
                                                     Enregistrer
                                                 </button>
@@ -466,13 +473,13 @@
                                 <td>
                                     <div class="d-flex align-items-center ">
                                         <a class="d-flex align-items-center flex-column me-2">
-                                            <img src="{{asset('assets/images/user8.png')}}" class="img-3x rounded-circle border border-1">
+                                            <img src="{{asset('assets/images/docteur.png')}}" class="img-3x rounded-circle border border-1">
                                         </a>
                                         Dr. ${item.name}
                                     </div>
                                 </td>
                                 <td>${item.email}</td>
-                                <td>M-${item.matricule}</td>
+                                <td>${item.matricule}</td>
                                 <td>${item.typeacte}</td>
                                 <td>+225 ${item.tel}</td>
                                 <td>${item.adresse}</td>

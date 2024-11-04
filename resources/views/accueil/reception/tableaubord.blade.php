@@ -171,7 +171,7 @@
                                                 </label>
                                                 <div class="input-group">
                                                     <input type="hidden" class="form-control" id="matricule_patient" autocomplete="off">
-                                                    <input type="text" class="form-control text-center" id="name_rech" placeholder="Saisie Obligatoire" autocomplete="off">
+                                                    <input type="text" class="form-control text-center" id="name_rech" placeholder="Selectionner un Patient" autocomplete="off">
                                                     <button hidden id="btn_rech_num_dossier" class="btn btn-outline-success">
                                                         <i class="ri-search-line"></i>
                                                     </button>

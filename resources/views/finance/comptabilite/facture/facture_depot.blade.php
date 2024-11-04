@@ -24,7 +24,14 @@
         <div class="col-xxl-4 col-lg-6 col-md-8 col-sm-8">
             <div class="card mb-3">
                 <div class="card-header">
-                    <h5 class="card-title">Formulaire Nouveau Dépôt de facture</h5>
+                    <h5 class="card-title text-center">Formulaire Nouveau Dépôt de facture</h5>
+                </div>
+                <div class="card-header">
+                    <div class="text-center">
+                        <a class="d-flex align-items-center flex-column">
+                            <img src="{{asset('assets/images/depot_fac.jpg')}}" class="img-7x rounded-circle">
+                        </a>
+                    </div>
                 </div>
                 <div class="card-body" >
                     <div class="row gx-3">

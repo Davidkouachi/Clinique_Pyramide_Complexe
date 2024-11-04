@@ -55,10 +55,17 @@
                         <div class="tab-content" id="customTabContent">
                             <div class="tab-pane active show fade" id="twoAAAN" role="tabpanel" aria-labelledby="tab-twoAAAN">
                                 <div class="card-header">
-                                    <h5 class="card-title">Formulaire Nouvelle Chambre</h5>
+                                    <h5 class="card-title text-center">Formulaire Nouvelle Chambre</h5>
+                                </div>
+                                <div class="card-header">
+                                    <div class="text-center">
+                                        <a class="d-flex align-items-center flex-column">
+                                            <img src="{{asset('assets/images/hospitalisation.jpg')}}" class="img-7x rounded-circle border border-1">
+                                        </a>
+                                    </div>
                                 </div>
                                 <div class="card-body" >
-                                    <div class="row gx-3">
+                                    <div class="row gx-3 align-items-center justify-content-center">
                                         <div class="col-xxl-3 col-lg-4 col-sm-6">
                                             <div class="mb-3">
                                                 <label class="form-label">
@@ -96,7 +103,7 @@
                                             </div>
                                         </div>
                                         <div class="col-sm-12">
-                                            <div class="mb-3 d-flex gap-2 justify-content-start">
+                                            <div class="mb-3 d-flex gap-2 justify-content-center">
                                                 <button id="btn_eng_chambre" class="btn btn-success">
                                                     Enregistrer
                                                 </button>
@@ -122,7 +129,7 @@
                                                 <thead>
                                                     <tr>
                                                         <th scope="col">N°</th>
-                                                        <th scope="col">Numéro</th>
+                                                        <th scope="col">Code Chambre</th>
                                                         <th scope="col">Nombre de lit</th>
                                                         <th scope="col">Prix</th>
                                                         <th scope="col">Statut</th>
@@ -382,7 +389,14 @@
                             // Create and append cells to the row based on your table's structure
                             row.innerHTML = `
                                 <td>${index + 1}</td>
-                                <td>CH-${item.code}</td>
+                                <td>
+                                    <div class="d-flex align-items-center ">
+                                        <a class="d-flex align-items-center flex-column me-2">
+                                            <img src="{{asset('assets/images/hospitalisation.jpg')}}" class="img-2x rounded-circle border border-1">
+                                        </a>
+                                        ${item.code}
+                                    </div>
+                                </td>
                                 <td>${item.nbre_lit}</td>
                                 <td>${item.prix} Fcfa</td>
                                 <td>

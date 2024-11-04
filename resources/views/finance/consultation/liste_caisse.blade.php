@@ -250,8 +250,26 @@
                             filteredFactures.forEach((item, index) => {
                                 const row = document.createElement('tr');
                                 row.innerHTML = `
-                                    <td>${((currentPage - 1) * perPage) + index + 1}</td> 
-                                    <td>Fac-${item.code_fac}</td>
+                                    <td>${((currentPage - 1) * perPage) + index + 1}</td>
+                                    ${item.statut === 'payer' ? 
+                                    `<td>
+                                        <div class="d-flex align-items-center ">
+                                            <a class="d-flex align-items-center flex-column me-2">
+                                                <img src="{{asset('assets/images/fac_payer.jpg')}}" class="img-2x rounded-circle border border-1">
+                                            </a>
+                                            ${item.code_fac}
+                                        </div>
+                                    </td>
+                                    ` : 
+                                    `<td>
+                                        <div class="d-flex align-items-center ">
+                                            <a class="d-flex align-items-center flex-column me-2">
+                                                <img src="{{asset('assets/images/fac_impayer.jpg')}}" class="img-2x rounded-circle border border-1">
+                                            </a>
+                                            ${item.code_fac}
+                                        </div>
+                                    </td>
+                                    `}
                                     <td>${item.name}</td>
                                     <td>+225 ${item.tel}</td>
                                     <td class="text-primary">${formatPrice(item.part_assurance ?? 0)} Fcfa</td>

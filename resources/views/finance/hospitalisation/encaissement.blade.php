@@ -558,7 +558,14 @@
                                 const row = document.createElement('tr');
                                 row.innerHTML = `
                                     <td>${((currentPage - 1) * perPage) + index + 1}</td>
-                                    <td>Fac-${item.code_fac}</td>
+                                    <td>
+                                        <div class="d-flex align-items-center ">
+                                            <a class="d-flex align-items-center flex-column me-2">
+                                                <img src="{{asset('assets/images/facture.webp')}}" class="img-2x rounded-circle border border-1">
+                                            </a>
+                                            ${item.code_fac}
+                                        </div>
+                                    </td>
                                     <td class="text-warning">
                                         ${item.montant ?? 0} Fcfa
                                     </td>

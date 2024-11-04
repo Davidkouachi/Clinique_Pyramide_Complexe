@@ -183,13 +183,23 @@ class ApilistController extends Controller
 
     public function list_natureadmission()
     {
-        $natureadmission = natureadmission::join('typeadmissions', 'typeadmissions.id', '=', 'natureadmissions.typeadmission_id')->select('natureadmissions.*','typeadmissions.nom as typeadmission')->orderBy('created_at', 'desc')->get();
+        $natureadmissionQuery = natureadmission::join('typeadmissions', 'typeadmissions.id', '=', 'natureadmissions.typeadmission_id')->select('natureadmissions.*','typeadmissions.nom as typeadmission')->orderBy('natureadmissions.created_at', 'desc');
 
-        foreach ($natureadmission as $value) {
+        $natureadmission = $natureadmissionQuery->paginate(15);
+
+        foreach ($natureadmission->items() as $value) {
             $value->nbre = detailhopital::where('natureadmission_id', '=', $value->id)->count() ?: 0;
         }
 
-        return response()->json(['natureadmission' => $natureadmission]);
+        return response()->json([
+            'natureadmission' => $natureadmission->items(), // Paginated data
+            'pagination' => [
+                'current_page' => $natureadmission->currentPage(),
+                'last_page' => $natureadmission->lastPage(),
+                'per_page' => $natureadmission->perPage(),
+                'total' => $natureadmission->total(),
+            ]
+        ]);
     }
 
     public function list_hopital($date1, $date2,$statut)
@@ -388,12 +398,22 @@ class ApilistController extends Controller
 
     public function list_soinsIn()
     {
-        $soinsin = soinsinfirmier::Join('typesoins', 'typesoins.id', '=', 'soinsinfirmiers.typesoins_id')
+        $soinsinQuery = soinsinfirmier::Join('typesoins', 'typesoins.id', '=', 'soinsinfirmiers.typesoins_id')
                         ->orderBy('soinsinfirmiers.created_at', 'desc')
                         ->select('soinsinfirmiers.*', 'typesoins.nom as nom_typesoins')
-                        ->get();
+                        ->orderBy('created_at', 'desc');
 
-        return response()->json(['soinsin' => $soinsin]);
+        $soinsin = $soinsinQuery->paginate(15);
+
+        return response()->json([
+            'soinsin' => $soinsin->items(), // Paginated data
+            'pagination' => [
+                'current_page' => $soinsin->currentPage(),
+                'last_page' => $soinsin->lastPage(),
+                'per_page' => $soinsin->perPage(),
+                'total' => $soinsin->total(),
+            ]
+        ]);
     }
 
     public function list_soinsam_all($date1, $date2,$statut)

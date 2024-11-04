@@ -55,11 +55,18 @@
                         <div class="tab-content" id="customTabContent">
                             <div class="tab-pane active show fade" id="twoAAAN" role="tabpanel" aria-labelledby="tab-twoAAAN">
                                 <div class="card-header">
-                                    <h5 class="card-title">Formulaire Nouveau Lit</h5>
+                                    <h5 class="card-title text-center">Formulaire Nouveau Lit</h5>
+                                </div>
+                                <div class="card-header">
+                                    <div class="text-center">
+                                        <a class="d-flex align-items-center flex-column">
+                                            <img src="{{asset('assets/images/lit.avif')}}" class="img-7x rounded-circle border border-1">
+                                        </a>
+                                    </div>
                                 </div>
                                 <div class="card-body" >
                                     <!-- Row starts -->
-                                    <div class="row gx-3">
+                                    <div class="row gx-3 align-items-center justify-content-center">
                                         <div class="col-xxl-3 col-lg-4 col-sm-6">
                                             <div class="mb-3">
                                                 <label class="form-label">
@@ -99,7 +106,7 @@
                                         </div>
                                         <div class="col-sm-12">
                                             <div class="mb-3">
-                                                <div class="d-flex gap-2 justify-content-start">
+                                                <div class="d-flex gap-2 justify-content-center">
                                                     <button id="btn_eng_lit" class="btn btn-success">
                                                         Enregistrer
                                                     </button>
@@ -117,7 +124,7 @@
                             <div class="tab-pane fade" id="twoAAA" role="tabpanel" aria-labelledby="tab-twoAAA">
                                 <div class="card-header d-flex align-items-center justify-content-between">
                                     <h5 class="card-title">
-                                        Lits enregistrées Aujourd'hui
+                                        Liste des lits
                                     </h5>
                                     <a id="btn_refresh_table_day" class="btn btn-outline-info ms-auto">
                                         <i class="ri-loop-left-line"></i>
@@ -130,11 +137,11 @@
                                                 <thead>
                                                     <tr>
                                                         <th scope="col">N°</th>
-                                                        <th scope="col">Numéro</th>
-                                                        <th scope="col">Catégorie</th>
-                                                        <th scope="col">Numéro chambre</th>
-                                                        <th scope="col">Prix</th>
+                                                        <th scope="col">Code Lit</th>
                                                         <th scope="col">Statut</th>
+                                                        <th scope="col">N° chambre</th>
+                                                        <th scope="col">Catégorie</th>
+                                                        <th scope="col">Prix</th>
                                                         <th scope="col">Actions</th>
                                                     </tr>
                                                 </thead>
@@ -402,15 +409,22 @@
                             // Create and append cells to the row based on your table's structure
                             row.innerHTML = `
                                 <td>${index + 1}</td>
-                                <td>Lit-${item.code}</td>
-                                <td>${item.type}</td>
-                                <td>CH-${item.code_ch}</td>
-                                <td>${item.prix} Fcfa</td>
+                                <td>
+                                    <div class="d-flex align-items-center ">
+                                        <a class="d-flex align-items-center flex-column me-2">
+                                            <img src="{{asset('assets/images/lit.avif')}}" class="img-2x rounded-circle border border-1">
+                                        </a>
+                                        ${item.code}
+                                    </div>
+                                </td>
                                 <td>
                                     ${item.statut === 'indisponible' ? 
                                         `<span class="badge bg-danger">${item.statut}</span>` : 
                                         `<span class="badge bg-success">${item.statut}</span>`}
                                 </td>
+                                <td>CH-${item.code_ch}</td>
+                                <td>${item.type}</td>
+                                <td>${item.prix} Fcfa</td>
                                 <td>
                                     <div class="d-inline-flex gap-1">
                                         <a class="btn btn-outline-info btn-sm rounded-5" data-bs-toggle="modal" data-bs-target="#Mmodif" id="edit-${item.id}">
