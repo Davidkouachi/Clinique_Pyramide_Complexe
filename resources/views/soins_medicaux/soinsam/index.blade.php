@@ -69,17 +69,24 @@
                         <div class="tab-content" id="customTabContent">
                             <div class="tab-pane active show fade" id="twoAAA" role="tabpanel" aria-labelledby="tab-twoAAA">
                                 <div class="card-header">
-                                    <h5 class="card-title text-left">
+                                    <h5 class="card-title text-center">
                                         Nouveau Soins Infirmier
                                     </h5>
                                 </div>
+                                <div class="card-header">
+                                    <div class="text-center">
+                                        <a class="d-flex align-items-center flex-column">
+                                            <img src="{{asset('assets/images/user8.png')}}" class="img-7x rounded-circle border border-1">
+                                        </a>
+                                    </div>
+                                </div>
                                 <div class="row gx-3 justify-content-center align-items-center mb-4">
                                     <div class="col-xxl-3 col-lg-4 col-sm-6">
-                                        <div class="mb-3">
+                                        <div class="mb-3 text-center">
                                             <label class="form-label">Patient</label>
                                             <div class="input-group">
                                                 <input type="hidden" class="form-control" id="matricule_patient" autocomplete="off">
-                                                <input type="text" class="form-control" id="patient" placeholder="saisie obligatoire" autocomplete="off">
+                                                <input type="text" class="form-control text-center" id="patient" placeholder="Selectionner un Patient" autocomplete="off">
                                             </div>
                                             <div class="input-group">
                                                 <div class="suggestions w-100" id="suggestions_patient" style="display: none;"></div>
@@ -87,11 +94,11 @@
                                         </div>
                                     </div>
                                     <div class="col-xxl-3 col-lg-4 col-sm-6" id="div_numcode" style="display: none;">
-                                        <div class="mb-3">
+                                        <div class="mb-3 text-center">
                                             <label class="form-label">N° prise en charge</label>
                                             <div class="input-group">
                                                 <span class="input-group-text">N°</span>
-                                                <input type="text" class="form-control" id="numcode">
+                                                <input type="text" class="form-control text-center" id="numcode">
                                             </div>
                                         </div>
                                     </div>
@@ -300,12 +307,12 @@
                                                             <thead>
                                                                 <tr>
                                                                     <th scope="col">N°</th>
-                                                                    <th scope="col">Statut</th>
                                                                     <th scope="col">Type de Soins</th>
-                                                                    <th scope="col">Nom et Prénoms</th>
-                                                                    <th scope="col">Soins Infirmiers</th>
-                                                                    <th scope="col">Produits</th>
+                                                                    <th scope="col">Patient</th>
+                                                                    <th scope="col">Nombre Soins</th>
+                                                                    <th scope="col">Nombre Produits</th>
                                                                     <th scope="col">Montant Total</th>
+                                                                    <th scope="col">Statut</th>
                                                                     <th scope="col">Date de création</th>
                                                                     <th scope="col"></th>
                                                                 </tr>
@@ -1382,15 +1389,22 @@
                             row.innerHTML = `
                                 <td>${((currentPage - 1) * perPage) + index + 1}</td>
                                 <td>
-                                    ${item.statut === 'en cours' ? 
-                                        `<span class="badge bg-danger">${item.statut}</span>` : 
-                                        `<span class="badge bg-success">${item.statut}</span>`}
+                                    <div class="d-flex align-items-center ">
+                                        <a class="d-flex align-items-center flex-column me-2">
+                                            <img src="{{asset('assets/images/soinsam.webp')}}" class="img-2x rounded-circle border border-1">
+                                        </a>
+                                        ${item.type}
+                                    </div>
                                 </td>
-                                <td>${item.type}</td>
                                 <td>${item.patient}</td>
                                 <td>${item.nbre_soins}</td>
                                 <td>${item.nbre_produit}</td>
                                 <td>${item.montant} Fcfa</td>
+                                <td>
+                                    ${item.statut === 'en cours' ? 
+                                        `<span class="badge bg-danger">${item.statut}</span>` : 
+                                        `<span class="badge bg-success">${item.statut}</span>`}
+                                </td>
                                 <td>${formatDateHeure(item.created_at)}</td>
                                 <td>
                                     <div class="d-inline-flex gap-1">

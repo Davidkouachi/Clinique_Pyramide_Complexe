@@ -33,17 +33,19 @@
             </div>
         </div>
         <div class="col-12">
-            <div class="card mb-3">
+            <div class="mb-3">
                 <div class="card-body ">
                     <ol class="breadcrumb justify-content-center align-items-center">
                         <li class="" style="display: block;" id="div_btn_affiche_stat">
                             <a class="btn btn-sm btn-warning" id="btn_affiche_stat">
                                 Afficher les Statstiques
+                                <i class="ri-eye-line" ></i>
                             </a>
                         </li>
                         <li class="" style="display: none;" id="div_btn_cache_stat">
                             <a class="btn btn-sm btn-danger" id="btn_cache_stat">
                                 Cacher les Statstiques
+                                <i class="ri-eye-off-line" ></i>
                             </a>
                         </li>
                     </ol>
@@ -434,8 +436,8 @@
                                 // Create and append cells to the row based on your table's structure
                                 row.innerHTML = `
                                     <td>${((currentPage - 1) * perPage) + index + 1}</td>
-                                    <td>C-${item.code}</td>
-                                    <td>P-${item.matricule}</td>
+                                    <td>${item.code}</td>
+                                    <td>${item.matricule}</td>
                                     <td>${item.name}</td>
                                     <td>+225 ${item.tel}</td>
                                     <td>${item.medecin}</td>  

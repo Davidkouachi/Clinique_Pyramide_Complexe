@@ -487,7 +487,7 @@
                                 <td>
                                     <div class="d-flex align-items-center ">
                                         <a class="d-flex align-items-center flex-column me-2">
-                                            <img src="{{asset('assets/images/user8.png')}}" class="img-3x rounded-circle border border-1">
+                                            <img src="{{asset('assets/images/user8.png')}}" class="img-2x rounded-circle border border-1">
                                         </a>
                                         ${item.sexe}. ${item.name}
                                     </div>

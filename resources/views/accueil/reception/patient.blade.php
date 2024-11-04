@@ -33,17 +33,19 @@
             </div>
         </div>
         <div class="col-12">
-            <div class="card mb-3">
+            <div class="mb-3">
                 <div class="card-body ">
                     <ol class="breadcrumb justify-content-center align-items-center">
                         <li class="" style="display: block;" id="div_btn_affiche_stat">
                             <a class="btn btn-sm btn-warning" id="btn_affiche_stat">
                                 Afficher les Statstiques
+                                <i class="ri-eye-line" ></i>
                             </a>
                         </li>
                         <li class="" style="display: none;" id="div_btn_cache_stat">
                             <a class="btn btn-sm btn-danger" id="btn_cache_stat">
                                 Cacher les Statstiques
+                                <i class="ri-eye-off-line" ></i>
                             </a>
                         </li>
                     </ol>
@@ -80,7 +82,14 @@
                         <div class="tab-content" id="customTabContent">
                             <div class="tab-pane active show fade" id="twoAAAN" role="tabpanel" aria-labelledby="tab-twoAAAN">
                                 <div class="card-header">
-                                    <h5 class="card-title">Formulaire Nouveau Patient</h5>
+                                    <h5 class="card-title text-center">Formulaire Nouveau Patient</h5>
+                                </div>
+                                <div class="card-header">
+                                    <div class="text-center">
+                                        <a class="d-flex align-items-center flex-column">
+                                            <img src="{{asset('assets/images/user8.png')}}" class="img-7x rounded-circle border border-3">
+                                        </a>
+                                    </div>
                                 </div>
                                 <div class="card-body" >
                                     <div class="row gx-3">
@@ -183,7 +192,7 @@
                                             </div>
                                         </div>
                                         <div class="col-sm-12 mb-3">
-                                            <div class="d-flex gap-2 justify-content-start">
+                                            <div class="d-flex gap-2 justify-content-center">
                                                 <button id="btn_eng_patient" class="btn btn-success">
                                                     Enregistrer
                                                 </button>
@@ -943,7 +952,7 @@
                                     <td>
                                         <div class="d-flex align-items-center ">
                                             <a class="d-flex align-items-center flex-column me-2">
-                                                <img src="{{asset('assets/images/user8.png')}}" class="img-3x rounded-circle border border-1">
+                                                <img src="{{asset('assets/images/user8.png')}}" class="img-2x rounded-circle border border-1">
                                             </a>
                                             ${item.sexe}. ${item.np}
                                         </div>

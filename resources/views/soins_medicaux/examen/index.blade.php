@@ -93,17 +93,24 @@
                         <div class="tab-content" id="customTabContent">
                             <div class="tab-pane active show fade" id="twoAAAN" role="tabpanel" aria-labelledby="tab-twoAAAN">
                                 <div class="card-header">
-                                    <h5 class="card-title text-left">
+                                    <h5 class="card-title text-center">
                                         Nouvelle Demande d'examen
                                     </h5>
                                 </div>
-                                <div class="row gx-3 justify-content-center align-items-center mb-4">
+                                <div class="card-header">
+                                    <div class="text-center">
+                                        <a class="d-flex align-items-center flex-column">
+                                            <img src="{{asset('assets/images/user8.png')}}" class="img-7x rounded-circle border border-1">
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="row gx-3 justify-content-center align-items-center mb-5">
                                     <div class="col-xxl-4 col-lg-4 col-sm-6">
-                                        <div class="mb-3">
+                                        <div class="mb-3 text-center">
                                             <label class="form-label">Patient</label>
                                             <div class="input-group">
                                                 <input type="hidden" class="form-control" id="matricule_patient" autocomplete="off">
-                                                <input type="text" class="form-control" id="patient" placeholder="saisie obligatoire" autocomplete="off">
+                                                <input type="text" class="form-control text-center" id="patient" placeholder="Selectionner un Patient" autocomplete="off">
                                             </div>
                                             <div class="input-group">
                                                 <div class="suggestions w-100" id="suggestions_patient" style="display: none;"></div>
@@ -214,9 +221,16 @@
                             </div>
                             <div class="tab-pane fade" id="twoAAA" role="tabpanel" aria-labelledby="tab-twoAAA">
                                 <div class="card-header">
-                                    <h5 class="card-title text-left">
+                                    <h5 class="card-title text-center">
                                         Nouvel Examen
                                     </h5>
+                                </div>
+                                <div class="card-header">
+                                    <div class="text-center">
+                                        <a class="d-flex align-items-center flex-column">
+                                            <img src="{{asset('assets/images/examen.jpg')}}" class="img-7x rounded-circle border border-1">
+                                        </a>
+                                    </div>
                                 </div>
                                 <div class="row gx-3 justify-content-center align-items-center">
                                     <div class="col-xxl-3 col-lg-4 col-sm-6">
@@ -313,8 +327,8 @@
                                                             <thead>
                                                                 <tr>
                                                                     <th scope="col">N°</th>
-                                                                    <th scope="col">Nom et Prénoms</th>
                                                                     <th scope="col">Type d'examen</th>
+                                                                    <th scope="col">Patient</th>
                                                                     <th scope="col">Médecin</th>
                                                                     <th scope="col">Nombre d'examen</th>
                                                                     <th scope="col">Prélevement</th>
@@ -401,8 +415,8 @@
                             </div>
                             <div class="tab-pane fade" id="oneAAAP" role="tabpanel" aria-labelledby="tab-oneAAAP">
                                 <div class="card-header">
-                                    <h5 class="card-title text-left">
-                                        Prélévment
+                                    <h5 class="card-title text-center">
+                                        Prélévement
                                     </h5>
                                 </div>
                                 <div class="row gx-3 justify-content-center align-items-center">
@@ -1049,7 +1063,14 @@
                                 const row = document.createElement('tr');
                                 row.innerHTML = `
                                     <td>${((currentPage - 1) * perPage) + index + 1}</td>
-                                    <td>${item.acte}</td>
+                                    <td>
+                                        <div class="d-flex align-items-center ">
+                                            <a class="d-flex align-items-center flex-column me-2">
+                                                <img src="{{asset('assets/images/examen.jpg')}}" class="img-2x rounded-circle border border-1">
+                                            </a>
+                                            ${item.acte}
+                                        </div>
+                                    </td>
                                     <td>${item.nom}</td>
                                     <td>${item.cotation}</td>
                                     <td>${item.valeur}</td>
@@ -1718,8 +1739,15 @@
                                 const row = document.createElement('tr');
                                 row.innerHTML = `
                                     <td>${((currentPage - 1) * perPage) + index + 1}</td>
+                                    <td>
+                                        <div class="d-flex align-items-center ">
+                                            <a class="d-flex align-items-center flex-column me-2">
+                                                <img src="{{asset('assets/images/examen.jpg')}}" class="img-2x rounded-circle border border-1">
+                                            </a>
+                                            ${item.acte}
+                                        </div>
+                                    </td>
                                     <td>${item.patient}</td>
-                                    <td>${item.acte}</td>
                                     <td>Dr. ${item.medecin}</td>
                                     <td>${item.nbre}</td>
                                     <td>${item.prelevement} Fcfa</td>

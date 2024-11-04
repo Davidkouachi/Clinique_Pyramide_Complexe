@@ -74,9 +74,15 @@
                         </ul>
                         <div class="tab-content" id="customTabContent">
                             <div class="tab-pane active show fade" id="twoAAA" role="tabpanel" aria-labelledby="tab-twoAAA">
-                                <div class="p-2" id="div_alert" ></div>
                                 <div class="card-header">
                                     <h5 class="card-title text-center">Nouvelle admission</h5>
+                                </div>
+                                <div class="card-header">
+                                    <div class="text-center">
+                                        <a class="d-flex align-items-center flex-column">
+                                            <img src="{{asset('assets/images/hospitalisation.jpg')}}" class="img-7x rounded-circle border border-1">
+                                        </a>
+                                    </div>
                                 </div>
                                 <div class="row gx-3 justify-content-center align-items-center mb-4">
                                     <div class="col-xxl-3 col-lg-4 col-sm-6">
@@ -84,7 +90,7 @@
                                             <label class="form-label">Patient</label>
                                             <div class="input-group">
                                                 <input type="hidden" class="form-control" id="matricule_patient" autocomplete="off">
-                                                <input type="text" class="form-control" id="patient" placeholder="Saisie Obligatoire" autocomplete="off">
+                                                <input type="text" class="form-control" id="patient" placeholder="Selectionner un Patient" autocomplete="off">
                                             </div>
                                             <div class="input-group">
                                                 <div class="suggestions w-100" id="suggestions_patient" style="display: none;"></div>
@@ -287,9 +293,9 @@
                                                                     <th scope="col">N°</th>
                                                                     <th scope="col">Type</th>
                                                                     <th scope="col">Nature</th>
-                                                                    <th scope="col">Nom et Prénoms</th>
-                                                                    <th scope="col">Date entrer</th>
-                                                                    <th scope="col">Date sorti</th>
+                                                                    <th scope="col">Patient</th>
+                                                                    <th scope="col">Du</th>
+                                                                    <th scope="col">Au</th>
                                                                     <th scope="col">Médecin</th>
                                                                     <th scope="col">Statut</th>
                                                                     <th scope="col">Montant Chambre</th>
@@ -322,7 +328,7 @@
                             </div>
                             <div class="tab-pane fade" id="threeAAA" role="tabpanel" aria-labelledby="tab-threeAAA">
                                 <div class="card-header">
-                                    <h5 class="card-title text-center">Disponibilité Chambre & Lit</h5>
+                                    <h5 class="card-title text-center">Disponibilité des Lits</h5>
                                 </div>
                                 <div class="row gx-3" >
                                     <div class="col-12">
@@ -339,11 +345,11 @@
                                                             <thead>
                                                                 <tr>
                                                                     <th scope="col">N°</th>
-                                                                    <th scope="col">Numéro</th>
-                                                                    <th scope="col">Catégorie</th>
-                                                                    <th scope="col">Numéro chambre</th>
-                                                                    <th scope="col">Prix</th>
+                                                                    <th scope="col">N° Lit</th>
                                                                     <th scope="col">Statut</th>
+                                                                    <th scope="col">N° Chambre</th>
+                                                                    <th scope="col">Catégorie</th>
+                                                                    <th scope="col">Prix</th>
                                                                 </tr>
                                                             </thead>
                                                             <tbody>
@@ -353,7 +359,7 @@
                                                 </div>
                                                 <div id="message_Table_lit" style="display: none;">
                                                     <p class="text-center" >
-                                                        Aucun Lit n'a été enregistrer aujourd'hui
+                                                        Aucune donnée n'a été trouvé
                                                     </p>
                                                 </div>
                                                 <div id="div_Table_loader" style="display: none;">
@@ -1010,15 +1016,22 @@
                             // Create and append cells to the row based on your table's structure
                             row.innerHTML = `
                                 <td>${index + 1}</td>
-                                <td>Lit-${item.code}</td>
-                                <td>${item.type}</td>
-                                <td>CH-${item.code_ch}</td>
-                                <td>${item.prix} Fcfa</td>
+                                <td>
+                                    <div class="d-flex align-items-center ">
+                                        <a class="d-flex align-items-center flex-column me-2">
+                                            <img src="{{asset('assets/images/lit.avif')}}" class="img-2x rounded-circle border border-1">
+                                        </a>
+                                        ${item.code}
+                                    </div>
+                                </td>
                                 <td>
                                     ${item.statut === 'indisponible' ? 
                                         `<span class="badge bg-danger">${item.statut}</span>` : 
                                         `<span class="badge bg-success">${item.statut}</span>`}
                                 </td>
+                                <td>CH-${item.code_ch}</td>
+                                <td>${item.type}</td>
+                                <td>${item.prix} Fcfa</td>
                             `;
                             // Append the row to the table body
                             tableBody.appendChild(row);
@@ -1282,7 +1295,14 @@
                             }
                             row.innerHTML = `
                                 <td>${((currentPage - 1) * perPage) + index + 1}</td>
-                                <td>${item.type}</td>
+                                <td>
+                                    <div class="d-flex align-items-center ">
+                                        <a class="d-flex align-items-center flex-column me-2">
+                                            <img src="{{asset('assets/images/hospitalisation.jpg')}}" class="img-2x rounded-circle border border-1">
+                                        </a>
+                                        ${item.type}
+                                    </div>
+                                </td>
                                 <td>${item.nature}</td>
                                 <td>${item.patient}</td>
                                 <td>${formatDate(item.date_debut)}</td>

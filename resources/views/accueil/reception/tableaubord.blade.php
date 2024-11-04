@@ -86,17 +86,19 @@
             </div>
         </div>
         <div class="col-12">
-            <div class="card mb-3">
+            <div class="mb-3">
                 <div class="card-body ">
                     <ol class="breadcrumb justify-content-center align-items-center">
                         <li class="" style="display: block;" id="div_btn_affiche_stat">
                             <a class="btn btn-sm btn-warning" id="btn_affiche_stat">
                                 Afficher les Statstiques
+                                <i class="ri-eye-line" ></i>
                             </a>
                         </li>
                         <li class="" style="display: none;" id="div_btn_cache_stat">
                             <a class="btn btn-sm btn-danger" id="btn_cache_stat">
                                 Cacher les Statstiques
+                                <i class="ri-eye-off-line" ></i>
                             </a>
                         </li>
                     </ol>
@@ -302,7 +304,7 @@
                                                 </div>
                                             </div>
                                             <div class="col-sm-12 mb-3">
-                                                <div class="d-flex gap-2 justify-content-start">
+                                                <div class="d-flex gap-2 justify-content-center">
                                                     <a href="javascript:location.reload();" class="btn btn-outline-danger">
                                                         Rémise à zéro
                                                     </a>
@@ -318,9 +320,20 @@
                             </div>
                             <div class="tab-pane fade" id="twoAAA" role="tabpanel" aria-labelledby="tab-twoAAA">
                                 <div class="card-header">
-                                    <h5 class="card-title">Formulaire Nouveau Patient</h5>
+                                    <h5 class="card-title text-center">Formulaire Nouveau Patient</h5>
                                 </div>
                                 <div class="row gx-3">
+                                    <div class="col-12">
+                                            <div class=" mb-0">
+                                                <div class="card-body">
+                                                    <div class="text-center">
+                                                        <a class="d-flex align-items-center flex-column">
+                                                            <img src="{{asset('assets/images/user8.png')}}" class="img-7x rounded-circle border border-3">
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
                                     <div class="col-xxl-3 col-lg-4 col-sm-6">
                                         <div class="mb-3">
                                             <label class="form-label">Nom et Prénoms</label>
@@ -420,7 +433,7 @@
                                         </div>
                                     </div>
                                     <div class="col-sm-12">
-                                        <div class="d-flex gap-2 justify-content-start">
+                                        <div class="d-flex gap-2 justify-content-center">
                                             <button id="btn_eng_patient" class="btn btn-success">
                                                 Enregistrer
                                             </button>
@@ -475,7 +488,14 @@
                             </div>
                             <div class="tab-pane fade" id="threeAAA" role="tabpanel" aria-labelledby="tab-threeAAA">
                                 <div class="card-header">
-                                    <h5 class="card-title">Formulaire Nouvelle Scoiété</h5>
+                                    <h5 class="card-title text-center">Formulaire Nouvelle Scoiété</h5>
+                                </div>
+                                <div class="card-header">
+                                    <div class="text-center">
+                                        <a class="d-flex align-items-center flex-column">
+                                            <img src="{{asset('assets/images/batiment.avif')}}" class="img-7x rounded-circle border border-3">
+                                        </a>
+                                    </div>
                                 </div>
                                 <div class="row gx-3 ">
                                     <div class="col-xxl-3 col-lg-4 col-sm-6">
@@ -521,7 +541,7 @@
                                         </div>
                                     </div>
                                     <div class="col-sm-12 mb-3">
-                                        <div class="d-flex gap-2 justify-content-start">
+                                        <div class="d-flex gap-2 justify-content-center">
                                             <button id="btn_eng_societe" class="btn btn-outline-success">
                                                 Enregistrer
                                             </button>
@@ -531,9 +551,20 @@
                             </div>
                             <div class="tab-pane fade" id="frewAAA" role="tabpanel" aria-labelledby="tab-frewAAA">
                                 <div class="card-header">
-                                    <h5 class="card-title">Formulaire Nouvelle Assurance</h5>
+                                    <h5 class="card-title text-center">Formulaire Nouvelle Assurance</h5>
                                 </div>
                                 <div class="row gx-3">
+                                    <div class="col-12">
+                                        <div class=" mb-0">
+                                            <div class="card-body">
+                                                <div class="text-center">
+                                                    <a class="d-flex align-items-center flex-column">
+                                                        <img src="{{asset('assets/images/assurance3.jpg')}}" class="img-7x rounded-circle border border-3">
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                     <div class="col-xxl-3 col-lg-4 col-sm-6">
                                         <div class="mb-3">
                                             <label class="form-label">Nom</label>
@@ -571,7 +602,7 @@
                                         </div>
                                     </div>
                                     <div class="col-sm-12">
-                                        <div class="d-flex gap-2 justify-content-start">
+                                        <div class="d-flex gap-2 justify-content-center">
                                             <button id="btn_eng_assurance" class="btn btn-success">
                                                 Enregistrer
                                             </button>
@@ -590,7 +621,7 @@
         <div class="col-12">
             <div class="card mb-3">
                 <div class="card-header d-flex align-items-center justify-content-between">
-                    <h5 class="card-title">
+                    <h5 class="card-title text-center">
                         Patient recu Aujourd'hui
                     </h5>
                     <div class="d-flex" >
@@ -606,7 +637,7 @@
                                 <thead>
                                     <tr>
                                         <th scope="col">N°</th>
-                                        <th scope="col">Code</th>
+                                        <th scope="col">N° Consultation</th>
                                         <th scope="col">N° dossier</th>
                                         <th scope="col">Nom et Prénoms</th>
                                         <th scope="col">Contact</th>
@@ -1939,8 +1970,8 @@
                             // Create and append cells to the row based on your table's structure
                             row.innerHTML = `
                                 <td>${((currentPage - 1) * perPage) + index + 1}</td>
-                                <td>C-${item.code}</td>
-                                <td>P-${item.matricule}</td>
+                                <td>${item.code}</td>
+                                <td>${item.matricule}</td>
                                 <td>${item.name}</td>
                                 <td>+225 ${item.tel}</td>
                                 <td>${item.motif}</td>

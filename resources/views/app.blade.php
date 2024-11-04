@@ -75,7 +75,9 @@
                 Liste des Rendez-Vous : 
             </marquee> --}}
             <div class="d-flex justify-content-center align-items-center text-center w-100" >
-                <h4 class="text-white" >ESPACE MEDICO-SOCIAL LA PYRAMIDE</h4>
+                <marquee>
+                    <h4 class="text-white" >ESPACE MEDICO - SOCIAL LA PYRAMIDE</h4>
+                </marquee>
             </div>
             <div class="header-actions">
                 <div class="dropdown ms-2">

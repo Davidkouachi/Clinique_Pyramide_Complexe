@@ -55,7 +55,14 @@
                         <div class="tab-content" id="customTabContent">
                             <div class="tab-pane active show fade" id="twoAAAN" role="tabpanel" aria-labelledby="tab-twoAAAN">
                                 <div class="card-header">
-                                    <h5 class="card-title">Formulaire Nouvelle Societe</h5>
+                                    <h5 class="card-title text-center">Formulaire Nouvelle Societe</h5>
+                                </div>
+                                <div class="card-header">
+                                    <div class="text-center">
+                                        <a class="d-flex align-items-center flex-column">
+                                            <img src="{{asset('assets/images/batiment.avif')}}" class="img-7x rounded-circle border border-3">
+                                        </a>
+                                    </div>
                                 </div>
                                 <div class="card-body" >
                                     <div class="row gx-3">
@@ -101,8 +108,8 @@
                                                 <input type="text" class="form-control" id="sgeo" placeholder="Saisie Obligatoire">
                                             </div>
                                         </div>
-                                        <div class="col-sm-12 mb-3">
-                                            <div class="d-flex gap-2 justify-content-start">
+                                        <div class="col-sm-12 mb-3 ">
+                                            <div class="d-flex gap-2 justify-content-center">
                                                 <button id="btn_eng" class="btn btn-outline-success">
                                                     Enregistrer
                                                 </button>
@@ -411,7 +418,14 @@
                                 const row = document.createElement('tr');
                                 row.innerHTML = `
                                     <td>${((currentPage - 1) * perPage) + index + 1}</td>
-                                    <td>${item.nom}</td>
+                                    <td>
+                                        <div class="d-flex align-items-center ">
+                                            <a class="d-flex align-items-center flex-column me-2">
+                                                <img src="{{asset('assets/images/batiment.avif')}}" class="img-2x rounded-circle border border-1">
+                                            </a>
+                                            ${item.nom}
+                                        </div>
+                                    </td>
                                     <td>${item.email}</td>
                                     <td>${item.tel}</td>
                                     <td>${item.tel2 || 'Néant'}</td>

@@ -54,11 +54,25 @@
                         </ul>
                         <div class="tab-content" id="customTabContent">
                             <div class="tab-pane active show fade" id="twoAAAN" role="tabpanel" aria-labelledby="tab-twoAAAN">
+                                <div class="card-header">
+                                    <h5 class="card-title text-center">Nouvel Horaire</h5>
+                                </div>
                                 <div class="row gx-3 justify-content-center align-items-center mb-4">
+                                    <div class="col-12">
+                                        <div class=" mb-0">
+                                            <div class="card-body">
+                                                <div class="text-center">
+                                                    <a class="d-flex align-items-center flex-column">
+                                                        <img src="{{asset('assets/images/docteur.png')}}" class="img-7x rounded-circle">
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                     <div class="col-xxl-3 col-lg-4 col-sm-6" id="div_medecin" >
-                                        <div class="mb-3">
+                                        <div class="mb-3 text-center">
                                             <label class="form-label">Medecin</label>
-                                            <select class="form-select" id="medecin_id"></select>
+                                            <select class="form-select text-center" id="medecin_id"></select>
                                         </div>
                                     </div>
                                 </div>
