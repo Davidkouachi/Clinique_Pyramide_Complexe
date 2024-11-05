@@ -603,12 +603,14 @@ class ApilistController extends Controller
         $total_amount = intval(str_replace('.', '', $facture->montant_verser));
         $paid_amount = intval(str_replace('.', '', $examen->part_patient));
         $remis_amount = intval(str_replace('.', '', $facture->montant_remis));
+        $pre_amount = intval(str_replace('.', '', $examen->prelevement));
 
-        $remaining_amount = $total_amount - ($paid_amount + $remis_amount);
+        $remaining_amount = max(0, $total_amount - ($paid_amount + $remis_amount + $pre_amount));
 
         function formatWithPeriods($number) {
         return number_format($number, 0, '', '.');
         }
+
         $facture->montant_restant = formatWithPeriods($remaining_amount);
 
         $patient = patient::leftjoin('assurances', 'assurances.id', '=', 'patients.assurance_id')

@@ -713,21 +713,8 @@ class ApipdfController extends Controller
     public function etat_fac_assurance(Request $request)
     {
 
-        // Créer des dates basées sur le type de requête
         $date1 = Carbon::createFromFormat('Y-m-d', $request->date1)->startOfDay();
         $date2 = Carbon::createFromFormat('Y-m-d', $request->date2)->endOfDay();
-
-        $datee1 = null;
-        $datee2 = null;
-
-        // Si le type est 'tous', on utilise les dates initiales
-        if ($request->type === 'tous') {
-            $datee1 = $date1;
-            $datee2 = $date2;
-        } else {
-            $datee1 = $date1;
-            $datee2 = $date2;
-        }
 
         // Fonction pour récupérer les dépôts
         function getDepotResults($assurance_id, $type) {
@@ -746,10 +733,6 @@ class ApipdfController extends Controller
                 $query->where('statut', '=', 'oui'); 
             } else if ($type === 'fac_deposer_non_regler') {
                 $query->where('statut', '=', 'non');
-            } else if ($type === 'fac_regler_non_regler') {
-                $query->where(function($query) {
-                    $query->where('statut', '=', 'non')->orWhere('statut', '=', 'oui');
-                });
             }
 
             return $query->first();
@@ -759,35 +742,46 @@ class ApipdfController extends Controller
 
         if ($depotResult) {
 
-            $minDate = $depotResult->min_date;
-            $maxDate = $depotResult->max_date;
-
-            if ($minDate === null && $maxDate === null) {
+            if ($depotResult->min_date === null && $depotResult->max_date === null) {
                 return response()->json([
                     'facture_non_trouve' => true,
                 ]);
             }
 
-            // Vérification des conditions de chevauchement
-            $condition1 = ($datee1 >= $minDate && $datee1 <= $maxDate) && ($datee2 >= $maxDate);
-            $condition2 = ($datee2 <= $maxDate && $datee2 >= $minDate) && ($datee1 <= $minDate);
-            $condition3 = ($datee1 >= $minDate && $datee2 <= $maxDate);
+            $minDate = Carbon::createFromFormat('Y-m-d', $depotResult->min_date)->startOfDay();
+            $maxDate = Carbon::createFromFormat('Y-m-d', $depotResult->max_date)->endOfDay();
 
-            // Définir les nouvelles dates basées sur les conditions
+            $condition1 = ($date1 >= $minDate && $date1 <= $maxDate) && ($date2 >= $maxDate);
+            $condition2 = ($date2 <= $maxDate && $date2 >= $minDate) && ($date1 <= $minDate);
+            $condition3 = ($date1 >= $minDate && $date2 <= $maxDate);
+            $condition4 = ($date1 <= $minDate && $date2 >= $maxDate);
+            $condition5 = ($date1 < $minDate && $date2 > $minDate && $date2 < $maxDate);
+            $condition6 = ($date1 > $minDate && $date1 < $maxDate && $date2 > $maxDate);
+
             if ($condition1) {
-                $date1 = $date1; // Reste le même
+                $date1 = $date1;
                 $date2 = $maxDate;
             } else if ($condition2) {
-                $date1 = $datee2; // Change pour la deuxième date
+                $date1 = $date2;
                 $date2 = $minDate;
             } else if ($condition3) {
-                $date1 = $date1; // Reste le même
-                $date2 = $date2; // Reste le même
-            } else{
+                $date1 = $date1;
+                $date2 = $date2;
+            } else if ($condition4) {
+                $date1 = $minDate;
+                $date2 = $maxDate;
+            } else if ($condition5) {
+                $date1 = $date1;
+                $date2 = $minDate;
+            } else if ($condition6) {
+                $date1 = $minDate;
+                $date2 = $date2;
+            } else {
                 return response()->json([
                     'facture_non_trouve' => true,
                 ]);
             }
+
         }else{
            return response()->json([
                 'facture_non_trouve' => true,
@@ -1255,7 +1249,7 @@ class ApipdfController extends Controller
 
         } else if ($request->acte == 'hos') {
 
-            if ($acte_hos->count() == 0 ) {
+            if ($acte_hop->count() == 0 ) {
                 return response()->json(['donnee_0' => true]);
             }
 

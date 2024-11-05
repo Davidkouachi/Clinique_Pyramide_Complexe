@@ -1071,7 +1071,7 @@
                 const numDossierWidth = doc.getTextWidth(numDossier);
                 doc.text(numDossier, pdfWidth - rightMargin - numDossierWidth, yPos + 28);
 
-                yPoss = (yPos + 40);
+                yPoss = (yPos + 50);
 
                 const patientInfo = [
                     { label: "Nom et Prénoms", value: patient.np },
@@ -1097,13 +1097,24 @@
                     yPoss += 7;
                 });
 
-                yPoss = (yPos + 40);
+                yPoss = (yPos + 50);
 
                 const typeInfo = [
                     { label: "Type de Soins", value: typesoins.nom },
                     { label: "Soins Infirmiers", value: soins.length },
                     { label: "Produits Utilisés", value: produit.length },
+                    { label: "Total", value: soinspatient.montant ? soinspatient.montant + " Fcfa" : "0 Fcfa" },
+                    ...(soinspatient.part_assurance.replace(/[^0-9]/g, '') > 0 ? 
+                        [{ label: "Part assurance", value: soinspatient.part_assurance + " Fcfa" }] 
+                        : []),
+                    { label: "Remise", value: soinspatient.remise ? soinspatient.remise + " Fcfa" : "0 Fcfa" }
                 ];
+
+                if (patient.taux !== null) {
+                    typeInfo.push({ label: "Taux", value: patient.taux + "%" });
+                }
+
+                typeInfo.push({ label: "Montant à payer", value: soinspatient.part_patient +" Fcfa" });
 
                 typeInfo.forEach(info => {
                     doc.setFontSize(8);
@@ -1114,10 +1125,10 @@
                     yPoss += 7;
                 });
 
-                yPoss += 15;
-
                 const donneeTables = soins;
-                let yPossT = yPoss + 10; // Initialisation de la position Y pour le tableau des soins
+                let yPossT = yPoss + 5; // Initialisation de la position Y pour le tableau des soins
+
+                const totalsi = donneeTables.reduce((sum, item) => sum + parseInt(item.prix_si.replace(/[^0-9]/g, '') || 0), 0);
 
                 // Tableau dynamique pour les détails des soins infirmiers
                 doc.autoTable({
@@ -1129,28 +1140,22 @@
                         item.prix_si + " Fcfa",
                     ]),
                     theme: 'striped',
+                    foot: [[
+                        { content: 'Totals', colSpan: 2, styles: { halign: 'center', fontStyle: 'bold' } },
+                        { content: formatPrice(totalsi) + " Fcfa", styles: { fontStyle: 'bold' } },
+                    ]]
                 });
 
                 // Récupérer la position Y de la dernière ligne du tableau
                 yPoss = doc.autoTable.previous.finalY || yPossT + 10;
-                yPoss = yPoss + 5;
-                // Ajout des totaux
-                const finalInfos = [];
-                if (soins.length > 0) {
-                    finalInfos.push({ label: "Total Soins", value: formatPriceT(soinspatient.stotal) });
-                }
-                finalInfos.forEach(info => {
-                    doc.setFontSize(11);
-                    doc.setFont("Helvetica", "bold");
-                    doc.text(info.label, leftMargin + 95, yPoss);
-                    doc.setFont("Helvetica", "normal");
-                    doc.text(": " + info.value + " Fcfa", leftMargin + 125, yPoss);
-                    yPoss += 7; // Espacement pour la prochaine ligne
-                });
+                yPoss = yPoss + 10;
 
                 // Répéter le processus pour les produits
                 const donneeTable = produit;
-                yPossT = yPoss + 10; // Ajuster la position Y pour le tableau des produits
+                yPossT = yPoss; // Ajuster la position Y pour le tableau des produits
+
+                const totalsoins = donneeTable.reduce((sum, item) => sum + parseInt(item.montant.replace(/[^0-9]/g, '') || 0), 0);
+
                 doc.autoTable({
                     startY: yPossT,
                     head: [['N°', 'Nom du produit utilisé', 'Quantité', 'Prix Unitaire', 'Montant']],
@@ -1162,56 +1167,20 @@
                         item.montant + " Fcfa",
                     ]),
                     theme: 'striped',
+                    foot: [[
+                        { content: 'Totals', colSpan: 4, styles: { halign: 'center', fontStyle: 'bold' } },
+                        { content: formatPrice(totalsoins) + " Fcfa", styles: { fontStyle: 'bold' } },
+                    ]]
                 });
-
-                // Position Y après le tableau des produits
-                yPoss = doc.autoTable.previous.finalY || yPossT + 10;
-                yPoss = yPoss + 5;
-                // Ajout des totaux pour les produits
-                const finalInfo = [];
-                if (produit.length > 0) {
-                    finalInfo.push({ label: "Total Produit", value: formatPriceT(soinspatient.prototal) });
-                }
-                finalInfo.forEach(info => {
-                    doc.setFontSize(11);
-                    doc.setFont("Helvetica", "bold");
-                    doc.text(info.label, leftMargin + 120, yPoss);
-                    doc.setFont("Helvetica", "normal");
-                    doc.text(": " + info.value + " Fcfa", leftMargin + 150, yPoss);
-                    yPoss += 7; // Espacement pour la prochaine ligne
-                });
-
-                yPoss = yPoss + 10;
-
-                const compteInfo = [
-                    { label: "Total", value: soinspatient.montant ? soinspatient.montant + " Fcfa" : "0 Fcfa" },
-                    ...(soinspatient.part_assurance.replace(/[^0-9]/g, '') > 0 ? 
-                        [{ label: "Part assurance", value: soinspatient.part_assurance + " Fcfa" }] 
-                        : []),
-                    { label: "Remise", value: soinspatient.remise ? soinspatient.remise + " Fcfa" : "0 Fcfa" }
-                ];
-
-
-                if (patient.taux !== null) {
-                    compteInfo.push({ label: "Taux", value: patient.taux + "%" });
-                }
-
-                compteInfo.forEach(info => {
-                    doc.setFontSize(9);
-                    doc.setFont("Helvetica", "bold");
-                    doc.text(info.label, leftMargin + 110, yPoss);
-                    doc.setFont("Helvetica", "normal");
-                    doc.text(": " + info.value, leftMargin + 150, yPoss);
-                    yPoss += 7;
-                });
-                doc.setFontSize(11);
-                doc.setFont("Helvetica", "bold");
-                doc.text('Montant à payer', leftMargin + 110, yPoss);
-                doc.setFont("Helvetica", "bold");
-                doc.text(": "+soinspatient.part_patient+" Fcfa", leftMargin + 150, yPoss);
 
                 if (facture.statut == 'payer') {
-                    yPoss += 7;
+                    yPoss = doc.autoTable.previous.finalY || yPossT + 10;
+                    yPoss = yPoss + 10;
+
+                    if (yPoss + 30 > doc.internal.pageSize.height) {
+                        doc.addPage();
+                        yPoss = 20;
+                    }
                     
                     const totalMontant = parseInt(soinspatient.part_patient.replace(/[^0-9]/g, ''));
                     const montantVerser = parseInt(facture.montant_verser.replace(/[^0-9]/g, ''));

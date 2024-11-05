@@ -1603,20 +1603,26 @@ class ApiinsertController extends Controller
                 throw new \Exception('Erreur');
             }
 
-            $mail = new PHPMailer(true);
-            $mail->isHTML(true);
-            $mail->isSMTP();
-            $mail->Host = 'smtp.gmail.com';
-            $mail->SMTPAuth = true;
-            $mail->Username = env('MAIL_USERNAME');
-            $mail->Password = env('MAIL_PASSWORD');
-            $mail->SMTPSecure = 'tls';
-            $mail->Port = 587;
-            $mail->setFrom('emslp24@gmail.com', 'ESPACE MEDICO-SOCIAL LA PYRAMIDE');
-            $mail->addAddress('davidkouachi01@gmail.com');
-            $mail->Subject = 'ALERT !';
-            $mail->Body = 'OUVERTURE DE LA CAISSE, Solde de la caisse : '. $caisse->solde .' Fcfa';
-            $mail->send();
+            try {
+               
+                $mail = new PHPMailer(true);
+                $mail->isHTML(true);
+                $mail->isSMTP();
+                $mail->Host = 'smtp.gmail.com';
+                $mail->SMTPAuth = true;
+                $mail->Username = env('MAIL_USERNAME');
+                $mail->Password = env('MAIL_PASSWORD');
+                $mail->SMTPSecure = 'tls';
+                $mail->Port = 587;
+                $mail->setFrom('emslp24@gmail.com', 'ESPACE MEDICO-SOCIAL LA PYRAMIDE');
+                $mail->addAddress('davidkouachi01@gmail.com');
+                $mail->Subject = 'ALERT !';
+                $mail->Body = 'OUVERTURE DE LA CAISSE, Solde de la caisse : '. $caisse->solde .' Fcfa';
+                $mail->send();
+
+            } catch (Exception $e) {
+                
+            }
 
             DB::commit();
             return response()->json(['success' => true]);
@@ -1666,75 +1672,81 @@ class ApiinsertController extends Controller
                 throw new \Exception('Erreur');
             }
 
-            $mail = new PHPMailer(true);
-            $mail->isHTML(true);
-            $mail->isSMTP();
-            $mail->Host = 'smtp.gmail.com';
-            $mail->SMTPAuth = true;
-            $mail->Username = env('MAIL_USERNAME');
-            $mail->Password = env('MAIL_PASSWORD');
-            $mail->SMTPSecure = 'tls';
-            $mail->Port = 587;
-            $mail->setFrom('emslp24@gmail.com', 'ESPACE MEDICO-SOCIAL LA PYRAMIDE');
-            $mail->addAddress('davidkouachi01@gmail.com');
-            $mail->Subject = 'ALERT !';
+            try {
 
-            $currentDateTime = Carbon::now()->format('d/m/Y');
-            $totalFormatted = number_format($total, 0, ',', '.');
-            $entriesFormatted = number_format($entries, 0, ',', '.');
-            $exitsFormatted = number_format($exits, 0, ',', '.');
+                $mail = new PHPMailer(true);
+                $mail->isHTML(true);
+                $mail->isSMTP();
+                $mail->Host = 'smtp.gmail.com';
+                $mail->SMTPAuth = true;
+                $mail->Username = env('MAIL_USERNAME');
+                $mail->Password = env('MAIL_PASSWORD');
+                $mail->SMTPSecure = 'tls';
+                $mail->Port = 587;
+                $mail->setFrom('emslp24@gmail.com', 'ESPACE MEDICO-SOCIAL LA PYRAMIDE');
+                $mail->addAddress('davidkouachi01@gmail.com');
+                $mail->Subject = 'ALERT !';
 
-            $tableRows ="";
+                $currentDateTime = Carbon::now()->format('d/m/Y');
+                $totalFormatted = number_format($total, 0, ',', '.');
+                $entriesFormatted = number_format($entries, 0, ',', '.');
+                $exitsFormatted = number_format($exits, 0, ',', '.');
 
-            foreach ($transactions as $transaction) {
-                $color = ($transaction['typemvt'] === 'Entrer de Caisse') ? 'green' : 'red';
-                $montantFormatted = $transaction['typemvt'] === 'Entrer de Caisse' ? "+ {$transaction['montant']} Fcfa" : "- {$transaction['montant']} Fcfa";
+                $tableRows ="";
 
-                $entryCell = $transaction['typemvt'] === 'Entrer de Caisse' ? "<td style='color: {$color};'>{$montantFormatted}</td><td></td>" : "<td></td><td style='color: {$color};'>{$montantFormatted}</td>";
+                foreach ($transactions as $transaction) {
+                    $color = ($transaction['typemvt'] === 'Entrer de Caisse') ? 'green' : 'red';
+                    $montantFormatted = $transaction['typemvt'] === 'Entrer de Caisse' ? "+ {$transaction['montant']} Fcfa" : "- {$transaction['montant']} Fcfa";
 
-                $tableRows .= "<tr>
-                    <td>{$transaction['motif']}</td>
-                    {$entryCell}
-                </tr>";
+                    $entryCell = $transaction['typemvt'] === 'Entrer de Caisse' ? "<td style='color: {$color};'>{$montantFormatted}</td><td></td>" : "<td></td><td style='color: {$color};'>{$montantFormatted}</td>";
+
+                    $tableRows .= "<tr>
+                        <td>{$transaction['motif']}</td>
+                        {$entryCell}
+                    </tr>";
+                }
+
+                $totaux ="
+                    <tr>
+                        <th>TOTAUX</th>
+                        <th style='color:green;' >+ {$entriesFormatted} Fcfa</th>
+                        <th style='color:red;' >- {$exitsFormatted} Fcfa</th>
+                    </tr>
+                ";
+
+                $bilan = '
+                    <th style="padding: 10px; text-align: center;">BILAN DES OPERATIONS</th>
+                    <th colspan="2" style="padding: 10px; text-align: center;">' . $totalFormatted . ' Fcfa</th>
+                ';
+
+                $mail->Body = "
+                    <h2>Fermeture de la caisse du {$currentDateTime} : {$totalFormatted} Fcfa</h2>
+                    <h3>Ci-dessous toutes les opérations de la journée</h3>
+                    <table border='1' cellpadding='5' cellspacing='0' style='border-collapse: collapse; width: 100%;'>
+                        <thead style='background-color: #116aef; color: white;'>
+                            <tr>
+                                <th style='padding: 10px; text-align: center;'>OPERATION</th>
+                                <th style='padding: 10px; text-align: center;'>ENTREES</th>
+                                <th style='padding: 10px; text-align: center;'>SORTIES</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {$tableRows}
+                        </tbody>
+                        <tfoot>
+                            {$totaux}
+                            <tr style='background-color: #116aef; color: white;'>
+                                {$bilan}
+                            </tr>
+                        </tfoot>
+                    </table>
+                ";
+
+                $mail->send();
+
+            } catch (Exception $e) {
+                
             }
-
-            $totaux ="
-                <tr>
-                    <th>TOTAUX</th>
-                    <th style='color:green;' >+ {$entriesFormatted} Fcfa</th>
-                    <th style='color:red;' >- {$exitsFormatted} Fcfa</th>
-                </tr>
-            ";
-
-            $bilan = '
-                <th style="padding: 10px; text-align: center;">BILAN DES OPERATIONS</th>
-                <th colspan="2" style="padding: 10px; text-align: center;">' . $totalFormatted . ' Fcfa</th>
-            ';
-
-            $mail->Body = "
-                <h2>Fermeture de la caisse du {$currentDateTime} : {$totalFormatted} Fcfa</h2>
-                <h3>Ci-dessous toutes les opérations de la journée</h3>
-                <table border='1' cellpadding='5' cellspacing='0' style='border-collapse: collapse; width: 100%;'>
-                    <thead style='background-color: #116aef; color: white;'>
-                        <tr>
-                            <th style='padding: 10px; text-align: center;'>OPERATION</th>
-                            <th style='padding: 10px; text-align: center;'>ENTREES</th>
-                            <th style='padding: 10px; text-align: center;'>SORTIES</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {$tableRows}
-                    </tbody>
-                    <tfoot>
-                        {$totaux}
-                        <tr style='background-color: #116aef; color: white;'>
-                            {$bilan}
-                        </tr>
-                    </tfoot>
-                </table>
-            ";
-
-            $mail->send();
 
             DB::commit();
             return response()->json(['success' => true]);

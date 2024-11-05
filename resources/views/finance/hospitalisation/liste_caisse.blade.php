@@ -263,7 +263,7 @@
                                 const row = document.createElement('tr');
                                 row.innerHTML = `
                                     <td>${((currentPage - 1) * perPage) + index + 1}</td>
-                                    ${item.statut === 'payer' ? 
+                                    ${item.statut_fac === 'payer' ? 
                                     `<td>
                                         <div class="d-flex align-items-center ">
                                             <a class="d-flex align-items-center flex-column me-2">
@@ -774,7 +774,7 @@
                 const numDossierWidth = doc.getTextWidth(numDossier);
                 doc.text(numDossier, pdfWidth - rightMargin - numDossierWidth, yPos + 28);
 
-                yPoss = (yPos + 40);
+                yPoss = (yPos + 50);
 
                 const patientInfo = [
                     { label: "Nom et Prénoms", value: patient.np },
@@ -791,6 +791,12 @@
                     );
                 }
 
+                patientInfo.push(
+                    { label: "Lit Occupée", value: "LIT-"+lit.code+"/"+lit.type },
+                    { label: "Type d'admission", value: type.nom },
+                    { label: "Nature d'admission", value: nature.nom },
+                );
+
                 patientInfo.forEach(info => {
                     doc.setFontSize(8);
                     doc.setFont("Helvetica", "bold");
@@ -800,7 +806,7 @@
                     yPoss += 7;
                 });
 
-                yPoss = (yPos + 40);
+                yPoss = (yPos + 50);
 
                 const medecinInfo = [];
 
@@ -815,6 +821,8 @@
                     { label: "Date de sortie prévu le ", value: formatDate(hopital.date_fin) },
                     { label: "Nombre de jours ", value: calculateDaysBetween(hopital.date_debut, hopital.date_fin)+" Jour(s)" },
                     { label: "Prix Chambre ", value: chambre.prix+" Fcfa" },
+                    { label: "Montant Total Chambre ", value: hopital.montant_chambre+" Fcfa" },
+                    { label: "Montant Total ", value: hopital.montant+" Fcfa" },
                 );
 
                 medecinInfo.forEach(info => {
@@ -826,31 +834,16 @@
                     yPoss += 7;
                 });
 
-                yPoss = (yPos + 90);
-
-                const typeInfo = [
-                    { label: "Type d'admission", value: type.nom },
-                    { label: "Nature d'admission", value: nature.nom },
-                    { label: "Chambre Occupée", value: "CH-"+chambre.code },
-                    { label: "Lit Occupée", value: "LIT-"+lit.code+"/"+lit.type },
-                    { label: "Prix", value: chambre.prix+" Fcfa" },
-                ];
-
-                typeInfo.forEach(info => {
-                    doc.setFontSize(8);
-                    doc.setFont("Helvetica", "bold");
-                    doc.text(info.label, leftMargin, yPoss);
-                    doc.setFont("Helvetica", "normal");
-                    doc.text(": " + info.value, leftMargin + 35, yPoss);
-                    yPoss += 7;
-                });
-
-                yPoss = (yPos + 98);
+                yPoss = yPoss + 10;
 
                 const donneeTable = produit;
-                // Using autoTable to add a dynamic table for hospital stay details
+
                 if ( donneeTable.length > 0) {
-                    yPossT = yPoss + 10;
+
+                    yPossT = yPoss;
+
+                    const totalProduit = donneeTable.reduce((sum, item) => sum + parseInt(item.montant.replace(/[^0-9]/g, '') || 0), 0);
+
                     doc.autoTable({
                         startY: yPossT, // Ajustez cette valeur pour le placer correctement sur la page
                         head: [['N°','Nom du produit utilisé', 'Quantité', 'Prix Unitaire', 'Montant']], // En-têtes du tableau
@@ -862,20 +855,24 @@
                             item.montant+" Fcfa", // Montant (quantité * prix unitaire)
                         ]), // Remplace les lignes par les données dynamiques
                         theme: 'striped', // Vous pouvez changer le thème en plain, grid, etc.
-                        // headStyles: { fillColor: [255, 0, 0] }, // En-tête en rouge si nécessaire
+                        foot: [[
+                            { content: 'Totals', colSpan: 4, styles: { halign: 'center', fontStyle: 'bold' } },
+                            { content: formatPrice(totalProduit) + " Fcfa", styles: { fontStyle: 'bold' } },
+                        ]]
                     });
 
-                    // Utiliser la position Y de la dernière ligne du tableau
                     const finalY = doc.autoTable.previous.finalY || yPossT + 10;
-
                     yPoss = finalY + 10;
+
+                    if (yPoss + 60 > doc.internal.pageSize.height) {
+                        doc.addPage();
+                        yPoss = 20;
+                    }
 
                     const finalInfo = [];    
 
                     finalInfo.push(
                         { label: "Montant Total", value: hopital.montant +" Fcfa" },
-                        { label: "Total Produit", value: hopital.montant_soins +" Fcfa" },
-                        { label: "Total Chambre", value: hopital.montant_chambre +" Fcfa" },
                         ...(hopital.part_assurance.replace(/[^0-9]/g, '') > 0 ? 
                             [{ label: "Part assurance", value: hopital.part_assurance + " Fcfa" }] 
                             : []),

@@ -906,7 +906,7 @@
                 doc.setFontSize(15);
                 doc.setFont("Helvetica", "bold");
                 doc.setLineWidth(0.5);
-                doc.setTextColor(255, 0, 0);
+                doc.setTextColor(0, 0, 0);
                 // doc.line(10, 35, 200, 35); 
                 const titleR = "FACTURE EXAMEN";
                 const titleRWidth = doc.getTextWidth(titleR);
@@ -937,7 +937,23 @@
                 const numDossierWidth = doc.getTextWidth(numDossier);
                 doc.text(numDossier, pdfWidth - rightMargin - numDossierWidth, yPos + 28);
 
-                yPoss = (yPos + 40);
+                yPoss = (yPos + 50);
+
+                const typeInfo = [
+                    { label: "Type d'examen", value: acte.nom },
+                    { label: "Prélevement", value: examen.prelevement +" Fcfa" },
+                ];
+
+                typeInfo.forEach(info => {
+                    doc.setFontSize(8);
+                    doc.setFont("Helvetica", "bold");
+                    doc.text(info.label, leftMargin + 100, yPoss);
+                    doc.setFont("Helvetica", "normal");
+                    doc.text(": " + info.value, leftMargin + 135, yPoss);
+                    yPoss += 7;
+                });
+
+                yPoss = (yPos + 50);
 
                 const patientInfo = [
                     { label: "Nom et Prénoms", value: patient.np },
@@ -963,25 +979,10 @@
                     yPoss += 7;
                 });
 
-                yPoss = (yPos + 40);
-
-                const typeInfo = [
-                    { label: "Type d'examen", value: acte.nom },
-                ];
-
-                typeInfo.forEach(info => {
-                    doc.setFontSize(8);
-                    doc.setFont("Helvetica", "bold");
-                    doc.text(info.label, leftMargin + 100, yPoss);
-                    doc.setFont("Helvetica", "normal");
-                    doc.text(": " + info.value, leftMargin + 135, yPoss);
-                    yPoss += 7;
-                });
-
-                yPoss += 30;
-
                 const donneeTables = examenpatient;
-                let yPossT = yPoss + 10; // Initialisation de la position Y pour le tableau des soins
+                let yPossT = yPoss + 5; // Initialisation de la position Y pour le tableau des soins
+
+                const totalProduit = donneeTables.reduce((sum, item) => sum + parseInt(item.montant_ex.replace(/[^0-9]/g, '') || 0), 0);
 
                 // Tableau dynamique pour les détails des soins infirmiers
                 doc.autoTable({
@@ -996,15 +997,23 @@
                         item.montant_ex + " Fcfa",
                     ]),
                     theme: 'striped',
+                    foot: [[
+                        { content: 'Totals', colSpan: 5, styles: { halign: 'center', fontStyle: 'bold' } },
+                        { content: formatPrice(totalProduit) + " Fcfa", styles: { fontStyle: 'bold' } },
+                    ]]
                 });
 
-                yPoss = doc.autoTable.previous.finalY || yPossT + 10;
-                yPoss = yPoss + 5;
+                yPoss = doc.autoTable.previous.finalY || yPossT + 15;
+                yPoss = yPoss + 15;
+
+                if (yPoss + 35 > doc.internal.pageSize.height) {
+                    doc.addPage();
+                    yPoss = 20;
+                }
 
                 const compteInfo = [
-                    { label: "Montant total", value: examen.montant+" Fcfa"},
+                    { label: "Total", value: examen.montant+" Fcfa"},
                     { label: "Part assurance", value: examen.part_assurance+" Fcfa"},
-                    { label: "Prélevement", value: examen.prelevement+ " Fcfa" }
                 ];
 
                 if (patient.taux !== null) {
@@ -1019,13 +1028,14 @@
                     doc.text(": " + info.value, leftMargin + 142, yPoss);
                     yPoss += 7;
                 });
+
                 doc.setFontSize(11);
                 doc.setFont("Helvetica", "bold");
                 doc.text('Montant à payer', leftMargin + 110, yPoss);
                 doc.setFont("Helvetica", "bold");
                 doc.text(": "+examen.part_patient+" Fcfa", leftMargin + 142, yPoss);
 
-                if (facture.statut == 'payer') {
+                    if (facture.statut == 'payer') {
                         const finalY = doc.autoTable.previous.finalY || yPossT + 10;
 
                         // Ajuster yPoss à la fin du tableau pour le placement des totaux

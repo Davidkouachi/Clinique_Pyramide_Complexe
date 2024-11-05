@@ -981,42 +981,10 @@
                         if (fac_global.length > 0) {
                             // Titre de la société
                             yPoss += 20;
-                            
                             doc.setFontSize(14);
                             doc.setFont("Helvetica", "bold");
-                            doc.setTextColor(0, 0, 0);
-                            const text = "Société " + societe.nom;
-                            const textWidth = doc.getTextWidth(text);
-                            const pageWidth = doc.internal.pageSize.getWidth();
-                            const centerX = (pageWidth - textWidth) / 2;
-                            doc.text(text, centerX, yPoss);
-                            const underlineY = yPoss + 2;
-                            doc.setLineWidth(0.5);
-                            doc.setDrawColor(0, 0, 0);
-                            doc.line(centerX, underlineY, centerX + textWidth, underlineY);
-                            
-                            yPoss += 10;
-
-                            // Générer le tableau unique pour consultations, examens et soins ambulatoires
-                            const sortedFacGlobal = fac_global.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
-                            doc.autoTable({
-                                startY: yPoss,
-                                head: [['N°', 'Date', 'Numéro de Bon', 'Patient', 'Acte effectué', 'Montant Total', 'Part Assurance', 'Part assuré']],
-                                body: sortedFacGlobal.map((item, index) => [
-                                    index + 1,
-                                    formatDate(item.created_at) || '',
-                                    item.num_bon || '',
-                                    item.patient || '',
-                                    item.acte,
-                                    (item.montant || '') + " Fcfa",
-                                    (item.part_assurance || '') + " Fcfa",
-                                    (item.part_patient || '') + " Fcfa",
-                                ]),
-                                theme: 'striped',
-                            });
-
-                            const finalY = doc.autoTable.previous.finalY || yPoss + 10;
-                            yPoss = finalY + 10;
+                            doc.text("Société : " + societe.nom, 15, yPoss);
+                            yPoss += 5;
 
                             // Calculer les totaux pour la société
                             const totalAssurance = fac_global.reduce((sum, item) => sum + parseInt(item.part_assurance.replace(/[^0-9]/g, '') || 0), 0);
@@ -1028,33 +996,52 @@
                             grandTotalPatient += totalPatient;
                             grandTotalMontant += totalMontant;
 
-                            const finalInfo = [
-                                { label: "Total Assurance", value: formatPrice(totalAssurance) + " Fcfa" },
-                                { label: "Total Patient", value: formatPrice(totalPatient) + " Fcfa" },
-                                { label: "Montant Total", value: formatPrice(totalMontant) + " Fcfa" },
-                            ];
-
-                            // Afficher les totaux après le tableau pour chaque société
-                            finalInfo.forEach(info => {
-                                doc.setFontSize(11);
-                                doc.setFont("Helvetica", "bold");
-                                doc.text(info.label, leftMargin, yPoss);
-                                doc.setFont("Helvetica", "normal");
-                                doc.text(": " + info.value, leftMargin + 50, yPoss);
-                                yPoss += 7;
+                            // Générer le tableau unique pour consultations, examens et soins ambulatoires avec une ligne de pied
+                            doc.autoTable({
+                                startY: yPoss,
+                                head: [['N°', 'Date', 'Numéro de Bon', 'Patient', 'Acte effectué', 'Montant Total', 'Part Assurance', 'Part assuré']],
+                                body: fac_global.map((item, index) => [
+                                    index + 1,
+                                    formatDate(item.created_at) || '',
+                                    item.num_bon || '',
+                                    item.patient || '',
+                                    item.acte,
+                                    (item.montant || '') + " Fcfa",
+                                    (item.part_assurance || '') + " Fcfa",
+                                    (item.part_patient || '') + " Fcfa",
+                                ]),
+                                theme: 'striped',
+                                // Footer row with the total values
+                                foot: [[
+                                    { content: 'Totals', colSpan: 5, styles: { halign: 'center', fontStyle: 'bold' } },
+                                    { content: formatPrice(totalMontant) + " Fcfa", styles: { fontStyle: 'bold' } },
+                                    { content: formatPrice(totalAssurance) + " Fcfa", styles: { fontStyle: 'bold' } },
+                                    { content: formatPrice(totalPatient) + " Fcfa", styles: { fontStyle: 'bold' } },
+                                    
+                                ]]
                             });
 
-                            // Sauter une page si nécessaire après chaque société
+                            const finalY = doc.autoTable.previous.finalY || yPoss + 10;
+                            yPoss = finalY + 10;
+
                             if (indexSociete < societes.length - 1) {
-                                doc.addPage();
-                                yPoss = 20; // Réinitialiser la position pour la nouvelle page
+
+                                if (yPoss + 30 > doc.internal.pageSize.height) {
+                                    doc.addPage();
+                                    yPoss = 20;
+                                }
                             }
+                            
                         }
                     });
 
-                    // Ajouter une nouvelle page pour les grands totaux
-                    doc.addPage();
-                    yPoss = 20;
+                    const finalY = doc.autoTable.previous.finalY || yPoss + 20;
+                    yPoss = finalY + 20;
+
+                    if (yPoss + 40 > doc.internal.pageSize.height) {
+                        doc.addPage();
+                        yPoss = 20;
+                    }
 
                     // Afficher les grands totaux sur cette page
                     doc.setFontSize(14);
@@ -1063,7 +1050,7 @@
                     yPoss += 10;
 
                     const grandTotalInfo = [
-                        { label: "Total Assurance", value: formatPrice(grandTotalAssurance) + " Fcfa" },
+                        { label: "Total Assurance", value: formatPrice(grandTotalAssurance) +" Fcfa" },
                         { label: "Total Patient", value: formatPrice(grandTotalPatient) + " Fcfa" },
                         { label: "Montant Total", value: formatPrice(grandTotalMontant) + " Fcfa" },
                     ];
@@ -1209,6 +1196,11 @@
 
                 if (societes.length > 0) {
 
+                    // Totals
+                    const totalAssurance = societes.reduce((sum, item) => sum + parseInt(item.total_assurance.replace(/[^0-9]/g, '') || 0), 0);
+                    const totalPatient = societes.reduce((sum, item) => sum + parseInt(item.total_patient.replace(/[^0-9]/g, '') || 0), 0);
+                    const totalMontant = societes.reduce((sum, item) => sum + parseInt(item.total_montant.replace(/[^0-9]/g, '') || 0), 0);
+
                     doc.autoTable({
                         startY: yPoss,
                         head: [['N°', 'Société', 'Montant Total', 'Part Assurance', 'Part assuré']],
@@ -1220,36 +1212,13 @@
                             (item.total_patient || '') + " Fcfa",
                         ]),
                         theme: 'striped',
-                    });
-
-                    const finalY = doc.autoTable.previous.finalY || yPoss + 10;
-                    yPoss = finalY + 10;
-
-                    // Totals
-                    const totalAssurance = societes.reduce((sum, item) => sum + parseInt(item.total_assurance.replace(/[^0-9]/g, '') || 0), 0);
-                    const totalPatient = societes.reduce((sum, item) => sum + parseInt(item.total_patient.replace(/[^0-9]/g, '') || 0), 0);
-                    const totalMontant = societes.reduce((sum, item) => sum + parseInt(item.total_montant.replace(/[^0-9]/g, '') || 0), 0);
-
-                    doc.setFontSize(14);
-                    doc.setFont("Helvetica", "bold");
-                    doc.setTextColor(0, 0, 0);
-                    doc.text("TOTAL DES FACTURES", 15, yPoss);
-                    yPoss += 10;
-
-                    const finalInfo = [
-                        { label: "Total Assurance", value: formatPrice(totalAssurance) + " Fcfa" },
-                        { label: "Total Patient", value: formatPrice(totalPatient) + " Fcfa" },
-                        { label: "Montant Total", value: formatPrice(totalMontant) + " Fcfa" },
-                    ];
-
-                    finalInfo.forEach(info => {
-                        doc.setFontSize(11);
-                        doc.setTextColor(0, 0, 0);
-                        doc.setFont("Helvetica", "bold");
-                        doc.text(info.label, leftMargin, yPoss);
-                        doc.setFont("Helvetica", "normal");
-                        doc.text(": " + info.value, leftMargin + 50, yPoss);
-                        yPoss += 7;
+                        foot: [[
+                            { content: 'Totals', colSpan: 2, styles: { halign: 'center', fontStyle: 'bold' } },
+                            { content: formatPrice(totalMontant) + " Fcfa", styles: { fontStyle: 'bold' } },
+                            { content: formatPrice(totalAssurance) + " Fcfa", styles: { fontStyle: 'bold' } },
+                            { content: formatPrice(totalPatient) + " Fcfa", styles: { fontStyle: 'bold' } },
+                                    
+                        ]]
                     });
                 }
 

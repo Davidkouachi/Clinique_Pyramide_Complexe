@@ -323,7 +323,7 @@
                                 const row = document.createElement('tr');
                                 row.innerHTML = `
                                     <td>${((currentPage - 1) * perPage) + index + 1}</td>
-                                    ${item.statut === 'payer' ? 
+                                    ${item.statut_fac === 'payer' ? 
                                     `<td>
                                         <div class="d-flex align-items-center ">
                                             <a class="d-flex align-items-center flex-column me-2">
@@ -740,6 +740,7 @@
 
                 const typeInfo = [
                     { label: "Type d'examen", value: acte.nom },
+                    { label: "Prélevement", value: examen.prelevement +" Fcfa" },
                 ];
 
                 typeInfo.forEach(info => {
@@ -756,6 +757,8 @@
                 const donneeTables = examenpatient;
                 let yPossT = yPoss + 10; // Initialisation de la position Y pour le tableau des soins
 
+                const totalProduit = donneeTables.reduce((sum, item) => sum + parseInt(item.montant_ex.replace(/[^0-9]/g, '') || 0), 0);
+
                 // Tableau dynamique pour les détails des soins infirmiers
                 doc.autoTable({
                     startY: yPossT,
@@ -769,15 +772,23 @@
                         item.montant_ex + " Fcfa",
                     ]),
                     theme: 'striped',
+                    foot: [[
+                        { content: 'Totals', colSpan: 5, styles: { halign: 'center', fontStyle: 'bold' } },
+                        { content: formatPrice(totalProduit) + " Fcfa", styles: { fontStyle: 'bold' } },
+                    ]]
                 });
 
-                yPoss = doc.autoTable.previous.finalY || yPossT + 10;
+                yPoss = doc.autoTable.previous.finalY || yPossT + 15;
                 yPoss = yPoss + 15;
+
+                if (yPoss + 35 > doc.internal.pageSize.height) {
+                    doc.addPage();
+                    yPoss = 20;
+                }
 
                 const compteInfo = [
                     { label: "Total", value: examen.montant+" Fcfa"},
                     { label: "Part assurance", value: examen.part_assurance+" Fcfa"},
-                    { label: "Prélevement", value: examen.prelevement+ " Fcfa" }
                 ];
 
                 if (patient.taux !== null) {

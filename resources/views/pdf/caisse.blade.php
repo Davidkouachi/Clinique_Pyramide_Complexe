@@ -667,7 +667,13 @@
             const { jsPDF } = window.jspdf;
             const doc = new jsPDF({ orientation: 'l', unit: 'mm', format: 'a4' });
 
-            const pdfFilename = "POINT DE OPERATION DE CAISSE du" + formatDate(date1) + " au " + formatDate(date2);
+            let pdfFilename;
+
+            if (formatDate(date1) === formatDate(date2)) {
+                pdfFilename = "POINT DE OPERATION DE CAISSE du " + formatDate(date1);
+            }else{
+               pdfFilename = "POINT DE OPERATION DE CAISSE du " + formatDate(date1) + " au " + formatDate(date2); 
+            }
 
             doc.setProperties({
                 title: pdfFilename,
@@ -740,50 +746,46 @@
 
                 yPoss = (yPos + 40);
                                 
-                    doc.autoTable({
-                        startY: yPoss,
-                        head: [['N°', 'Type de mouvement', 'Motifs', 'Montant', 'Créer par', 'Date d\'opération', 'Date de création']],
-                        body: trace.map((item, index) => [
-                            index + 1,
-                            item.typemvt.toUpperCase(),
-                            item.motif,
-                            item.typemvt == 'Entrer de Caisse' ? '+ '+item.montant + " Fcfa" : '- '+item.montant + " Fcfa" ,
-                            item.user_sexe + ". "+item.user ,
-                            item.date_ope == '' ? formatDate(item.created_at) : formatDate(item.date_ope) ,
-                            formatDateHeure(item.created_at) || '',
-                        ]),
-                        theme: 'striped',
-                        didParseCell: function (data) {
-                            // Check if the section is 'body'
-                            if (data.section === 'body') {
-                                // Apply color based on the value in column index 1
-                                if (data.column.index === 3) { // Apply color to index 3
-                                    if (data.row.cells[1].raw.toLowerCase() === 'entrer de caisse') {
-                                        data.cell.styles.textColor = [0, 128, 0]; // Green color
-                                    } else {
-                                        data.cell.styles.textColor = [255, 0, 0]; // Red color
-                                    }
+                // Calculate the total based on the transaction type
+                const total = trace.reduce((sum, item) => {
+                    const montant = parseInt(item.montant.replace(/[^0-9]/g, '') || 0);
+                    return item.typemvt.toLowerCase() === 'entrer de caisse' ? sum + montant : sum - montant;
+                }, 0);
+
+                // Table with a footer row for total
+                doc.autoTable({
+                    startY: yPoss,
+                    head: [['N°', 'Type de mouvement', 'Motifs', 'Montant', 'Créer par', 'Date d\'opération', 'Date de création']],
+                    body: trace.map((item, index) => [
+                        index + 1,
+                        item.typemvt.toUpperCase(),
+                        item.motif,
+                        item.typemvt == 'Entrer de Caisse' ? '+ ' + item.montant + " Fcfa" : '- ' + item.montant + " Fcfa",
+                        item.user_sexe + ". " + item.user,
+                        item.date_ope == '' ? formatDate(item.created_at) : formatDate(item.date_ope),
+                        formatDateHeure(item.created_at) || '',
+                    ]),
+                    theme: 'striped',
+                    didParseCell: function (data) {
+                        // Check if the section is 'body'
+                        if (data.section === 'body') {
+                            // Apply color based on the value in column index 1
+                            if (data.column.index === 3) { // Apply color to index 3
+                                if (data.row.cells[1].raw.toLowerCase() === 'entrer de caisse') {
+                                    data.cell.styles.textColor = [0, 128, 0]; // Green color
+                                } else {
+                                    data.cell.styles.textColor = [255, 0, 0]; // Red color
                                 }
                             }
                         }
-                    });
-
-                    const finalY = doc.autoTable.previous.finalY || yPoss + 10;
-                    yPoss = finalY + 10;
-
-                    const finalInfo = [
-                        { label: "Montant Total", value: formatPrice(total) + " Fcfa" },
-                        
-                    ];
-
-                    finalInfo.forEach(info => {
-                        doc.setFontSize(11);
-                        doc.setFont("Helvetica", "bold");
-                        doc.text(info.label, leftMargin + 200, yPoss);
-                        doc.setFont("Helvetica", "normal");
-                        doc.text(": " + info.value, leftMargin + 235, yPoss);
-                        yPoss += 7;
-                    });
+                    },
+                    // Footer row with the total
+                    foot: [[
+                        { content: 'Montant Total', colSpan: 3, styles: { halign: 'center', fontStyle: 'bold' } },
+                        { content: formatPrice(total) + " Fcfa", styles: { fontStyle: 'bold' } },
+                        '', '', ''
+                    ]]
+                });
 
             }
 

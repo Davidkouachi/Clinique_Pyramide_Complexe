@@ -50,9 +50,6 @@
                                     <option value="fac_deposer_non_regler">
                                         Déposer & non-régler
                                     </option>
-                                    <option value="fac_regler_non_regler">
-                                        Régler & non-régler
-                                    </option>
                                 </select>
                             </div>
                         </div>
@@ -308,8 +305,6 @@
                     pdfFilename = "Facture_Deposer_Regler_" + formatDate(date1) + "_au_" + formatDate(date2);
                 } else if (type == 'fac_deposer_non_regler') {
                     pdfFilename = "Facture_Deposer_Non_Regler_" + formatDate(date1) + "_au_" + formatDate(date2);
-                } else if (type == 'fac_regler_non_regler') {
-                    pdfFilename = "Facture_" + formatDate(date1) + "_au_" + formatDate(date2);
                 }
             } else {
                 pdfFilename = assurance.nom + "_facture_" + formatDate(date1) + "_au_" + formatDate(date2);
@@ -321,8 +316,6 @@
                     pdfFilename = assurance.nom +  "_facture_Deposer_Regler_" + formatDate(date1) + "_au_" + formatDate(date2);
                 } else if (type == 'fac_deposer_non_regler') {
                     pdfFilename = assurance.nom +  "_facture_Deposer_Non_Regler_" + formatDate(date1) + "_au_" + formatDate(date2);
-                } else if (type == 'fac_regler_non_regler') {
-                    pdfFilename = assurance.nom +  "_facture_" + formatDate(date1) + "_au_" + formatDate(date2);
                 }
             }
 
@@ -463,9 +456,19 @@
                             doc.setFontSize(14);
                             doc.setFont("Helvetica", "bold");
                             doc.text("Société : " + societe.nom, 15, yPoss);
-                            yPoss += 10;
+                            yPoss += 5;
 
-                            // Générer le tableau unique pour consultations, examens et soins ambulatoires
+                            // Calculer les totaux pour la société
+                            const totalAssurance = fac_global.reduce((sum, item) => sum + parseInt(item.part_assurance.replace(/[^0-9]/g, '') || 0), 0);
+                            const totalPatient = fac_global.reduce((sum, item) => sum + parseInt(item.part_patient.replace(/[^0-9]/g, '') || 0), 0);
+                            const totalMontant = fac_global.reduce((sum, item) => sum + parseInt(item.montant.replace(/[^0-9]/g, '') || 0), 0);
+
+                            // Ajouter les totaux de cette société aux grands totaux
+                            grandTotalAssurance += totalAssurance;
+                            grandTotalPatient += totalPatient;
+                            grandTotalMontant += totalMontant;
+
+                            // Générer le tableau unique pour consultations, examens et soins ambulatoires avec une ligne de pied
                             doc.autoTable({
                                 startY: yPoss,
                                 head: [['N°', 'Date', 'Numéro de Bon', 'Patient', 'Acte effectué', 'Assurance', 'Montant Total', 'Part Assurance', 'Part assuré']],
@@ -481,48 +484,37 @@
                                     (item.part_patient || '') + " Fcfa",
                                 ]),
                                 theme: 'striped',
+                                // Footer row with the total values
+                                foot: [[
+                                    { content: 'Totals', colSpan: 6, styles: { halign: 'center', fontStyle: 'bold' } },
+                                    { content: formatPrice(totalMontant) + " Fcfa", styles: { fontStyle: 'bold' } },
+                                    { content: formatPrice(totalAssurance) + " Fcfa", styles: { fontStyle: 'bold' } },
+                                    { content: formatPrice(totalPatient) + " Fcfa", styles: { fontStyle: 'bold' } },
+                                    
+                                ]]
                             });
 
                             const finalY = doc.autoTable.previous.finalY || yPoss + 10;
                             yPoss = finalY + 10;
 
-                            // Calculer les totaux pour la société
-                            const totalAssurance = fac_global.reduce((sum, item) => sum + parseInt(item.part_assurance.replace(/[^0-9]/g, '') || 0), 0);
-                            const totalPatient = fac_global.reduce((sum, item) => sum + parseInt(item.part_patient.replace(/[^0-9]/g, '') || 0), 0);
-                            const totalMontant = fac_global.reduce((sum, item) => sum + parseInt(item.montant.replace(/[^0-9]/g, '') || 0), 0);
-
-                            // Ajouter les totaux de cette société aux grands totaux
-                            grandTotalAssurance += totalAssurance;
-                            grandTotalPatient += totalPatient;
-                            grandTotalMontant += totalMontant;
-
-                            const finalInfo = [
-                                { label: "Total Assurance", value: formatPrice(totalAssurance) + " Fcfa" },
-                                { label: "Total Patient", value: formatPrice(totalPatient) + " Fcfa" },
-                                { label: "Montant Total", value: formatPrice(totalMontant) + " Fcfa" },
-                            ];
-
-                            // Afficher les totaux après le tableau pour chaque société
-                            finalInfo.forEach(info => {
-                                doc.setFontSize(11);
-                                doc.setFont("Helvetica", "bold");
-                                doc.text(info.label, leftMargin, yPoss);
-                                doc.setFont("Helvetica", "normal");
-                                doc.text(": " + info.value, leftMargin + 50, yPoss);
-                                yPoss += 7;
-                            });
-
-                            // Sauter une page si nécessaire après chaque société
                             if (indexSociete < societes.length - 1) {
-                                doc.addPage();
-                                yPoss = 0; // Réinitialiser la position pour la nouvelle page
+
+                                if (yPoss + 30 > doc.internal.pageSize.height) {
+                                    doc.addPage();
+                                    yPoss = 20;
+                                }
                             }
+                            
                         }
                     });
 
-                    // Ajouter une nouvelle page pour les grands totaux
-                    doc.addPage();
-                    yPoss = 20;
+                    const finalY = doc.autoTable.previous.finalY || yPoss + 20;
+                    yPoss = finalY + 20;
+
+                    if (yPoss + 40 > doc.internal.pageSize.height) {
+                        doc.addPage();
+                        yPoss = 20;
+                    }
 
                     // Afficher les grands totaux sur cette page
                     doc.setFontSize(14);
@@ -531,7 +523,7 @@
                     yPoss += 10;
 
                     const grandTotalInfo = [
-                        { label: "Total Assurance", value: formatPrice(grandTotalAssurance) + " Fcfa" },
+                        { label: "Total Assurance", value: formatPrice(grandTotalAssurance) +" Fcfa" },
                         { label: "Total Patient", value: formatPrice(grandTotalPatient) + " Fcfa" },
                         { label: "Montant Total", value: formatPrice(grandTotalMontant) + " Fcfa" },
                     ];
