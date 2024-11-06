@@ -412,7 +412,7 @@
             defaultOption.textContent = 'Sélectionner un medecin';
             selectElement.appendChild(defaultOption);
 
-            fetch('/api/list_medecin')
+            fetch('/api/select_list_medecin')
                 .then(response => response.json())
                 .then(data => {
                     const medecins = data.medecin;
@@ -464,7 +464,7 @@
             defaultOption2.textContent = 'Tout';
             selectElementRech.appendChild(defaultOption2);
 
-            fetch('/api/list_medecin')
+            fetch('/api/select_list_medecin')
                 .then(response => response.json())
                 .then(data => {
                     const medecins = data.medecin;

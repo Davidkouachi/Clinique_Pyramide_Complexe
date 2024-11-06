@@ -49,7 +49,7 @@ class ApisearchController extends Controller
         $patient = patient::leftJoin('assurances', 'assurances.id', '=', 'patients.assurance_id')
                        ->leftJoin('tauxes', 'tauxes.id', '=', 'patients.taux_id')
                        ->leftJoin('societes', 'societes.id', '=', 'patients.societe_id')
-                       ->where('patients.matricule', '=', $request->matricule)
+                       ->where('patients.id', '=', $request->id)
                        ->select(
                             'patients.*', 
                             'assurances.nom as assurance', 
@@ -155,7 +155,7 @@ class ApisearchController extends Controller
     {
         $acte = acte::where('nom', '=', 'CONSULTATION')->first();
 
-        $typeacte = typeacte::where('acte_id', '=', $acte->id )->get();
+        $typeacte = typeacte::where('acte_id', '=', $acte->id )->select('id','nom')->get();
 
         return response()->json(['typeacte' => $typeacte]); 
     }
@@ -182,16 +182,28 @@ class ApisearchController extends Controller
         return response()->json(['name' => $name]);
     }
 
+    public function name_patient_reception()
+    {
+        $name = Patient::select('id', 'np')->get();
+                       
+        return response()->json(['name' => $name]);
+    }
+
     public function lit_select($id)
     {
-        $lit = lit::join('chambres', 'chambres.id', '=', 'lits.chambre_id')->where('lits.chambre_id', '=', $id)->where('lits.statut', '=', 'disponible')->select('lits.*', 'chambres.prix as prix')->get();
+        $lit = lit::join('chambres', 'chambres.id', '=', 'lits.chambre_id')
+                ->where('lits.chambre_id', '=', $id)
+                ->where('lits.statut', '=', 'disponible')
+                ->select('lits.id as id','lits.code as code','lits.type as type', 'chambres.prix as prix')
+                ->get();
 
         return response()->json(['lit' => $lit]); 
     }
 
     public function natureadmission_select($id)
     {
-        $natureadmission = natureadmission::where('typeadmission_id', '=', $id)->get();
+        $natureadmission = natureadmission::where('typeadmission_id', '=', $id)
+                                            ->select('id','nom')->get();
 
         return response()->json(['natureadmission' => $natureadmission]); 
     }
@@ -226,7 +238,7 @@ class ApisearchController extends Controller
 
     public function select_jour()
     {
-        $rech = joursemaine::all();
+        $rech = joursemaine::select('id','jour')->get();
 
         return response()->json(['rech' => $rech]); 
     }
@@ -240,7 +252,7 @@ class ApisearchController extends Controller
 
     public function list_caissier()
     {
-        $caissier = user::all();
+        $caissier = user::select('id','name','sexe')->get();
 
         return response()->json(['caissier' => $caissier]); 
     }
@@ -266,6 +278,28 @@ class ApisearchController extends Controller
         $caisse = caisse::find(1);
 
         return response()->json(['caisse' => $caisse]);
+    }
+
+    public function select_list_medecin()
+    {
+
+        $medecin = user::where('role', '=', 'MEDECIN')->select('name','id')->get();
+
+        return response()->json(['medecin' => $medecin]);
+    }
+
+    public function select_typeadmission()
+    {
+        $typeadmission = typeadmission::select('nom','id')->get();
+
+        return response()->json(['typeadmission' => $typeadmission]);
+    }
+
+    public function select_chambre()
+    {
+        $chambre = chambre::select('code','id')->get();
+
+        return response()->json(['chambre' => $chambre]);
     }
 
 }

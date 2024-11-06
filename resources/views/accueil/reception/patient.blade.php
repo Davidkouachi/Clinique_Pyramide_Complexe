@@ -293,7 +293,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-sm-12 mt-5" id="div_info_patient">
+                                    <div class="col-sm-12 mt-5" id="div_info_patient" style="margin-bottom: 120px;">
                                     </div>
                                 </div>
                             </div>
@@ -1360,7 +1360,7 @@
 
         function Name_atient() {
             $.ajax({
-                url: '/api/name_patient',
+                url: '/api/name_patient_reception',
                 method: 'GET',
                 success: function(response) {
                     // Récupérer les données de l'API
@@ -1387,7 +1387,7 @@
                                 suggestionsDiv.innerHTML = '';
                                 suggestionsDiv.style.display = 'none';
 
-                                addGroup(item);
+                                rech_dosier(item.id);
 
                             });
                             suggestionsDiv.appendChild(suggestion);
@@ -1412,6 +1412,46 @@
                 },
                 error: function() {
                     console.error('Erreur lors du chargement des patients');
+                }
+            });
+        }
+
+        function rech_dosier(id)
+        {
+            // Créer l'élément de préchargement
+            var preloader_ch = `
+                <div id="preloader_ch">
+                    <div class="spinner_preloader_ch"></div>
+                </div>
+            `;
+
+            // Ajouter le préchargeur au body
+            document.body.insertAdjacentHTML('beforeend', preloader_ch);
+
+            $.ajax({
+                url: '/api/rech_patient',
+                method: 'GET',  // Use 'POST' for data creation
+                data: { id: id },
+                success: function(response) {
+                    var preloader = document.getElementById('preloader_ch');
+                    if (preloader) {
+                        preloader.remove();
+                    }
+
+                    if(response.existep) {
+                        showAlert('Alert', 'Ce patient n\'existe pas.', 'error');
+                    } else if (response.success) {
+
+                        addGroup(response.patient);
+
+                    }
+                },
+                error: function() {
+                    var preloader = document.getElementById('preloader_ch');
+                    if (preloader) {
+                        preloader.remove();
+                    }
+                    showAlert('Alert', 'Une erreur est survenue lors de la recherche.', 'error');
                 }
             });
         }
@@ -1864,7 +1904,6 @@
                 .catch(error => {
                     console.error('Erreur lors du chargement des données:', error);
                 });
-
         }
 
         function list_cons_patient(id,page = 1) {

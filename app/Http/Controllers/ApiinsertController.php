@@ -218,7 +218,7 @@ class ApiinsertController extends Controller
         }
 
         if($add->save()){
-            return response()->json(['success' => true, 'matricule' => $matricule, 'name' => $request->nom]);
+            return response()->json(['success' => true, 'id' => $add->id, 'name' => $add->np]);
         } else {
             return response()->json(['error' => true]);
         }
@@ -423,7 +423,7 @@ class ApiinsertController extends Controller
     {
 
         $patient = patient::leftjoin('assurances', 'assurances.id', '=', 'patients.assurance_id')
-        ->where('matricule', '=', $request->num_patient)
+        ->where('patients.id', '=', $request->id_patient)
         ->select('patients.*', 'assurances.nom as assurance')
         ->first();
 
@@ -509,7 +509,7 @@ class ApiinsertController extends Controller
             }
 
             DB::commit();
-            return response()->json(['success' => true]);
+            return response()->json(['success' => true,'patient' => $patient,'typeacte' => $typeacte,'user' => $user,'consultation' => $add]);
             
         } catch (Exception $e) {
             DB::rollback();
@@ -1754,6 +1754,28 @@ class ApiinsertController extends Controller
         } catch (Exception $e) {
             DB::rollback();
             return response()->json(['error' => true,'message' => $e->getMessage()]);
+        }
+    }
+
+    public function update_date_hos(Request $request, $id)
+    {
+        $add = detailhopital::find($id);
+
+        $nbre_j_ancien = floor(Carbon::parse($add->date_debut)->diffInRealDays($add->date_fin));
+        $montant_chambre = str_replace('.', '', $add->montant_chambre);
+        $prix_chambre = ((int)$montant_chambre / (int)$nbre_j_ancien);
+
+        $nbre_j_new = floor(Carbon::parse($request->date1)->diffInRealDays($request->date2));
+        $montant_chambre_new = ((int)$prix_chambre * (int)$nbre_j_new);
+
+        $add->date_debut = $request->date1;
+        $add->date_fin = $request->date2;
+        $add->montant_chambre = $this->formatWithPeriods($montant_chambre_new);
+
+        if($add->save()){
+            return response()->json(['success' => true]);
+        } else {
+            return response()->json(['error' => true]);
         }
     }
 

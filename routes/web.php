@@ -18,7 +18,11 @@ use App\Http\Controllers\receptionController;
 
 Route::get('/Login', [authController::class, 'login'])->name('login');
 Route::post('/trait_login', [authController::class, 'trait_login'])->name('trait_login');
-Route::get('/refresh_csrf', [authController::class, 'refresh_csrf'])->name('refresh_csrf');
+// Route::get('/refresh_csrf', [authController::class, 'refresh_csrf'])->name('refresh_csrf');
+
+Route::get('/refresh-csrf', function () {
+    return response()->json(['csrf_token' => csrf_token()]);
+});
 
 Route::middleware(['auth','statutchambre','dateRdv'])->group(function () {
 

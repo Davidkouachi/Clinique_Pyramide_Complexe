@@ -381,7 +381,6 @@
     </div>
 </div>
 
-
 <div class="modal fade" id="Detail" tabindex="-1" aria-labelledby="exampleModalCenteredScrollableTitle" aria-modal="true" role="dialog">
     <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
         <div class="modal-content">
@@ -485,6 +484,38 @@
     </div>
 </div>
 
+<div class="modal fade" id="Mmodif" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Mise à jour</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div id="updateChambreForm">
+                    <input type="hidden" id="IdModif">
+                    <div class="col-12">
+                        <div class="mb-3">
+                            <label class="form-label">Du</label>
+                            <input readonly type="date" class="form-control" id="date1M" min="{{ date('Y-m-d') }}">
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <div class="mb-3">
+                            <label class="form-label">Au</label>
+                            <input type="date" class="form-control" id="date2M" min="{{ date('Y-m-d') }}">
+                        </div>
+                    </div>                  
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+                <button type="button" class="btn btn-primary" id="updateBtn">Mettre à jour</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script src="{{asset('jsPDF-master/dist/jspdf.umd.js')}}"></script>
 <script src="{{asset('jsPDF-AutoTable/dist/jspdf.plugin.autotable.min.js')}}"></script>
 
@@ -507,10 +538,11 @@
         document.getElementById('btn_calcul').addEventListener('click', calculAmounts);
         document.getElementById('btn_eng_hosp').addEventListener('click', eng_hosp);
         document.getElementById("btn_search_table").addEventListener("click", list_hos);
+        document.getElementById("updateBtn").addEventListener("click", updatee);
 
         function Name_atient() {
             $.ajax({
-                url: '/api/name_patient',
+                url: '/api/name_patient_reception',
                 method: 'GET',
                 success: function(response) {
                     const data = response.name;
@@ -538,52 +570,8 @@
                             const suggestion = document.createElement('div');
                             suggestion.innerText = item.np;
                             suggestion.addEventListener('click', function() {
-                                // Set selected data in the input field
 
-                                const url = '/api/rech_hos_patient/' + item.id;
-                                fetch(url)
-                                    .then(response => response.json())
-                                    .then(data => {
-
-                                        if (data.hos >= 1) {
-
-                                            showAlert('Alert', 'Ce patient est déjà hospitalisation.','info');
-                                            document.getElementById('btn_eng_hosp').style.display='none';
-
-                                            return false;
-                                        }
-
-                                        input.value = item.np;
-                                        matricule_patient.value = item.matricule;
-                                        suggestionsDiv.innerHTML = ''; // Clear suggestions
-                                        suggestionsDiv.style.display = 'none';
-
-                                        patient_taux.value = item.taux ? item.taux : 0;
-
-                                        document.getElementById('numcode').value = '';
-                                        if (item.assurer == 'oui') {
-                                            document.getElementById('div_numcode').style.display = 'block';
-                                        }else{
-                                            document.getElementById('div_numcode').style.display = 'none';
-                                        }
-
-                                        if (patient_taux.value == 0) {
-                                            for (let i = 0; i < appliq_remise.options.length; i++) {
-                                                if (appliq_remise.options[i].value === 'assurance') {
-                                                    appliq_remise.options[i].style.display = 'none';
-                                                }
-                                            }
-                                        } else {
-                                            for (let i = 0; i < appliq_remise.options.length; i++) {
-                                                if (appliq_remise.options[i].value === 'assurance') {
-                                                    appliq_remise.options[i].style.display = 'block';
-                                                }
-                                            }
-                                        }
-                                        
-
-                                    })
-                                    .catch(error => console.error('Erreur Recherche Patient:', error));
+                                rech_dosier(item.id);
                             });
                             suggestionsDiv.appendChild(suggestion);
                         });
@@ -608,6 +596,79 @@
                 },
                 error: function() {
                     // Gérer l'erreur
+                }
+            });
+        }
+
+        function rech_dosier(id)
+        {
+            $.ajax({
+                url: '/api/rech_patient',
+                method: 'GET',  // Use 'POST' for data creation
+                data: { id: id },
+                success: function(response) {
+
+                    if(response.existep) {
+                        showAlert('Alert', 'Ce patient n\'existe pas.', 'error');
+                    } else if (response.success) {
+
+                        const item = response.patient;
+
+                        const input = document.getElementById('patient');
+                        const matricule_patient = document.getElementById('matricule_patient');
+                        const suggestionsDiv = document.getElementById('suggestions_patient');
+                        const patient_taux = document.getElementById('patient_taux');
+                        const appliq_remise = document.getElementById('appliq_remise');
+
+                        const url = '/api/rech_hos_patient/' + item.id;
+                        fetch(url)
+                            .then(response => response.json())
+                            .then(data => {
+
+                                if (data.hos >= 1) {
+
+                                    showAlert('Alert', 'Ce patient est déjà hospitalisation.','info');
+                                    document.getElementById('btn_eng_hosp').style.display='none';
+
+                                    return false;
+                                }
+
+                                input.value = item.np;
+                                matricule_patient.value = item.matricule;
+                                suggestionsDiv.innerHTML = ''; // Clear suggestions
+                                suggestionsDiv.style.display = 'none';
+
+                                patient_taux.value = item.taux ? item.taux : 0;
+
+                                document.getElementById('numcode').value = '';
+                                if (item.assurer == 'oui') {
+                                    document.getElementById('div_numcode').style.display = 'block';
+                                }else{
+                                    document.getElementById('div_numcode').style.display = 'none';
+                                }
+
+                                if (patient_taux.value == 0) {
+                                    for (let i = 0; i < appliq_remise.options.length; i++) {
+                                        if (appliq_remise.options[i].value === 'assurance') {
+                                            appliq_remise.options[i].style.display = 'none';
+                                        }
+                                    }
+                                } else {
+                                    for (let i = 0; i < appliq_remise.options.length; i++) {
+                                        if (appliq_remise.options[i].value === 'assurance') {
+                                            appliq_remise.options[i].style.display = 'block';
+                                        }
+                                    }
+                                }
+                                
+
+                            })
+                            .catch(error => console.error('Erreur Recherche Patient:', error));
+
+                    }
+                },
+                error: function() {
+                    showAlert('Alert', 'Une erreur est survenue lors de la recherche.', 'error');
                 }
             });
         }
@@ -656,7 +717,7 @@
             // Vérifie que l'élément select existe
             if (selectElement) {
                 // Effectuer une requête pour récupérer les taux
-                fetch('/api/list_typeadmission')
+                fetch('/api/select_typeadmission')
                     .then(response => response.json())
                     .then(data => {
                         const typeadmissions = data.typeadmission;
@@ -684,7 +745,7 @@
 
             if (selectElement) {
                 // Effectuer une requête pour récupérer les taux
-                fetch('/api/list_chambre')
+                fetch('/api/select_chambre')
                     .then(response => response.json())
                     .then(data => {
                         const chambres = data.chambre;
@@ -1291,6 +1352,9 @@
                                     <a class="btn btn-outline-success btn-sm" id="add-${item.id}" data-bs-toggle="modal" data-bs-target="#Add">
                                         <i class="ri-dossier-line"></i>
                                     </a>
+                                    <a class="btn btn-outline-info btn-sm" id="modif-${item.id}" data-bs-toggle="modal" data-bs-target="#Mmodif">
+                                        <i class="ri-edit-line"></i>
+                                    </a>
                                 `;
                             }
                             row.innerHTML = `
@@ -1481,6 +1545,17 @@
                                 });
                             }
 
+                            const updateButton = document.getElementById(`modif-${item.id}`);
+                            if (updateButton) {
+                                updateButton.addEventListener('click', () => {
+
+                                    document.getElementById('IdModif').value = `${item.id}`;
+                                    document.getElementById('date1M').value = `${item.date_debut}`;
+                                    document.getElementById('date2M').value = `${item.date_fin}`;
+
+                                });
+                            }
+
                             document.getElementById(`detail_produit-${item.id}`).addEventListener('click',()=>
                                 {
                                     const tableBodyP = document.querySelector('#TableP tbody');
@@ -1588,6 +1663,75 @@
                     messageDiv.style.display = 'block';
                     tableDiv.style.display = 'none';
                 });
+        }
+
+        function updatee()
+        {
+            const id = document.getElementById('IdModif').value;
+            const date1 = document.getElementById('date1M');
+            const date2 = document.getElementById('date2M');
+
+            if (!date1.value.trim() || !date2.value.trim()) {
+                showAlert('Alert', 'Tous les champs sont obligatoires.','warning');
+                return false; 
+            }
+
+            const startDate = new Date(date1.value);
+            const endDate = new Date(date2.value);
+
+            if (startDate > endDate) {
+                showAlert('Erreur', 'La date de début ne peut pas être supérieur à la date de fin.', 'error');
+                return false;
+            }
+
+            var modal = bootstrap.Modal.getInstance(document.getElementById('Mmodif'));
+            modal.hide();
+
+            var preloader_ch = `
+                <div id="preloader_ch">
+                    <div class="spinner_preloader_ch"></div>
+                </div>
+            `;
+            // Add the preloader to the body
+            document.body.insertAdjacentHTML('beforeend', preloader_ch);
+
+            $.ajax({
+                url: '/api/update_date_hos/'+id,
+                method: 'GET',
+                data: {
+                    date1: date1.value, 
+                    date2: date2.value,
+                },
+                success: function(response) {
+
+                    var preloader = document.getElementById('preloader_ch');
+                    if (preloader) {
+                        preloader.remove();
+                    }
+
+                    if (response.success) {
+
+                        list_hos();
+
+                        showAlert('Succès', 'Opération éffectuée','success');
+
+                    } else if (response.error) {
+
+                        showAlert('Informations', 'Echec de l\'opération','info');
+
+                    }
+
+                },
+                error: function() {
+
+                    var preloader = document.getElementById('preloader_ch');
+                    if (preloader) {
+                        preloader.remove();
+                    }
+
+                    showAlert('Alert', ' Une erreur est survenue.','error');
+                }
+            });
         }
 
         function addSelect(parentDiv, produits) {

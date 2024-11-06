@@ -148,7 +148,6 @@ class ApiinsertfactureController extends Controller
             DB::rollback();
             return response()->json(['error' => true]);
         }
-
     }
 
     public function facture_payer_hos(Request $request,$code_fac)
@@ -299,7 +298,6 @@ class ApiinsertfactureController extends Controller
             DB::rollback();
             return response()->json(['error' => true]);
         }
-
     }
 
     public function facture_payer_soinsam(Request $request,$code_fac)
@@ -434,7 +432,6 @@ class ApiinsertfactureController extends Controller
             DB::rollback();
             return response()->json(['error' => true]);
         }
-
     }
 
     public function facture_payer_examen(Request $request,$code_fac)
@@ -575,6 +572,5 @@ class ApiinsertfactureController extends Controller
             DB::rollback();
             return response()->json(['error' => true]);
         }
-
     }
 }

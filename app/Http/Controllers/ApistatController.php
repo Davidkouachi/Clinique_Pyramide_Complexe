@@ -415,10 +415,10 @@ class ApistatController extends Controller
 
         // -------------------------------------------------
 
-        $typeacte = typeacte::join('actes', 'actes.id', '=', 'typeactes.acte_id')
-                            ->where('actes.nom', '=', 'CONSULTATION')
-                            ->select('typeactes.*')
-                            ->get();
+
+        $acte = acte::where('nom', '=', 'CONSULTATION')->first();
+
+        $typeacte = typeacte::where('acte_id', '=', $acte->id)->select('typeactes.*')->get();
 
         foreach ($typeacte as $value) {
 
@@ -823,16 +823,18 @@ class ApistatController extends Controller
             ],
         ];
 
-        $consultation = consultation::join('detailconsultations', 'detailconsultations.consultation_id', '=', 'consultations.id')
+        $consultation = DB::table('consultations')
+        ->join('detailconsultations', 'detailconsultations.consultation_id', '=', 'consultations.id')
         ->join('factures', 'factures.id', '=', 'consultations.facture_id')
-        ->where('factures.statut', '=', 'payer')
-        ->groupBy(DB::raw('MONTH(consultations.created_at)'))
+        ->where('factures.statut', 'payer')
         ->whereYear('consultations.created_at', $yearSelect)
         ->select(
             DB::raw('MONTH(consultations.created_at) as month'),
             DB::raw('COALESCE(SUM(REPLACE(detailconsultations.montant, ".", "") + 0), 0) as montant')
         )
+        ->groupBy(DB::raw('MONTH(consultations.created_at)'))
         ->get();
+
 
         foreach ($consultation as $value) {
             $monthIndex = intval($value->month);

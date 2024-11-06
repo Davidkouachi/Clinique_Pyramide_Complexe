@@ -497,7 +497,7 @@
 
         function Name_atient() {
             $.ajax({
-                url: '/api/name_patient',
+                url: '/api/name_patient_reception',
                 method: 'GET',
                 success: function(response) {
                     const data = response.name;
@@ -508,8 +508,6 @@
                     const suggestionsDiv = document.getElementById('suggestions_patient');
                     const patient_taux = document.getElementById('patient_taux');
                     const appliq_remise = document.getElementById('appliq_remise');
-                    
-                    let patientSelected = false;  // Variable to track if a patient was selected
 
                     // Event listener for input typing
                     function displaySuggestions() {
@@ -529,43 +527,13 @@
                             suggestion.innerText = item.np;
                             suggestion.addEventListener('click', function() {
                                 // Set selected data in the input field
-                                input.value = item.np;
-                                matricule_patient.value = item.matricule;
-                                suggestionsDiv.innerHTML = ''; // Clear suggestions
-                                suggestionsDiv.style.display = 'none';
-
-                                // Assign patient rate (taux)
-                                patient_taux.value = item.taux ? item.taux : 0;
-
-                                document.getElementById('numcode').value = '';
-                                if (item.assurer == 'oui') {
-                                    document.getElementById('div_numcode').style.display = 'block';
-                                }else{
-                                    document.getElementById('div_numcode').style.display = 'none';
-                                }
-
-                                if (patient_taux.value == 0) {
-                                    document.getElementById('div_assurance_utiliser').style.display = 'none';
-                                }else{
-                                   document.getElementById('div_assurance_utiliser').style.display = 'block'; 
-                                }
-
-                                patientSelected = true; // Mark patient as selected
-                                document.getElementById('div_calcul').style.display = 'none';
+                                rech_dosier(item.id);
                             });
                             suggestionsDiv.appendChild(suggestion);
                         });
 
                         // Show/hide suggestions based on results
                         suggestionsDiv.style.display = filteredData.length > 0 ? 'block' : 'none';
-
-                        // If the input is modified, reset matricule_patient and taux
-                        if (patientSelected) {
-                            matricule_patient.value = '';  // Clear matricule
-                            patient_taux.value = '';  // Clear taux
-                            patientSelected = false; // Reset patient selection flag
-                            document.getElementById('div_calcul').style.display = 'none';
-                        }
                     }
 
                     input.addEventListener('focus', function() {
@@ -584,6 +552,57 @@
                 },
                 error: function() {
                     // Handle error
+                }
+            });
+        }
+
+        function rech_dosier(id)
+        {
+            $.ajax({
+                url: '/api/rech_patient',
+                method: 'GET',  // Use 'POST' for data creation
+                data: { id: id },
+                success: function(response) {
+
+                    if(response.existep) {
+                        showAlert('Alert', 'Ce patient n\'existe pas.', 'error');
+                    } else if (response.success) {
+
+                        const item = response.patient;
+
+                        const input = document.getElementById('patient');
+                        const matricule_patient = document.getElementById('matricule_patient');
+                        const suggestionsDiv = document.getElementById('suggestions_patient');
+                        const patient_taux = document.getElementById('patient_taux');
+                        const appliq_remise = document.getElementById('appliq_remise');
+
+                        input.value = item.np;
+                        matricule_patient.value = item.matricule;
+                        suggestionsDiv.innerHTML = ''; // Clear suggestions
+                        suggestionsDiv.style.display = 'none';
+
+                        // Assign patient rate (taux)
+                        patient_taux.value = item.taux ? item.taux : 0;
+
+                        document.getElementById('numcode').value = '';
+                        if (item.assurer == 'oui') {
+                            document.getElementById('div_numcode').style.display = 'block';
+                        }else{
+                            document.getElementById('div_numcode').style.display = 'none';
+                        }
+
+                        if (patient_taux.value == 0) {
+                            document.getElementById('div_assurance_utiliser').style.display = 'none';
+                        }else{
+                           document.getElementById('div_assurance_utiliser').style.display = 'block'; 
+                        }
+
+                        document.getElementById('div_calcul').style.display = 'none';
+
+                    }
+                },
+                error: function() {
+                    showAlert('Alert', 'Une erreur est survenue lors de la recherche.', 'error');
                 }
             });
         }
@@ -1323,7 +1342,6 @@
 
                         var newConsultationTab = new bootstrap.Tab(document.getElementById('tab-oneAAA'));
                         newConsultationTab.show();
-                        newConsultationTab.active();
 
                     } else if (response.error) {
                         showAlert("ERREUR", 'Une erreur est survenue', "error");

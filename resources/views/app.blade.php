@@ -2,6 +2,7 @@
 <html lang="fr">
 
 <head>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Espace Santé</title>
@@ -552,6 +553,11 @@
     <script src="{{asset('assets/vendor/apex/apexcharts.min.js')}}"></script>
     <script src="{{asset('assets/js/custom.js')}}"></script>
 
+    {{-- <script>
+        const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+        console.log("Token CSRF:", csrfToken);
+    </script> --}}
+
     <script>
         document.addEventListener("DOMContentLoaded", function() {
 
@@ -846,6 +852,8 @@
                 const adresse = document.getElementById("adresse_para");
                 const role_id = {{Auth::user()->role_id}};
 
+                const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
                 // Field validation
                 if (!nom.value.trim() || !email.value.trim() || !tel.value.trim() || !sexe.value.trim() || !adresse.value.trim()) {
                     showAlert('Alert', 'Veuillez remplir tous les champs SVP.','warning');
@@ -876,63 +884,83 @@
                 document.body.insertAdjacentHTML('beforeend', preloader_ch);
 
                 $.ajax({
-                    url: '/api/update_user/' + id,
+                    url: '/refresh-csrf',
                     method: 'GET',
-                    data: {
-                        nom: nom.value, 
-                        email: email.value, 
-                        tel: tel.value, 
-                        tel2: tel2.value || null, 
-                        adresse: adresse.value, 
-                        sexe: sexe.value, 
-                        role_id: role_id,
-                    },
-                    success: function(response) {
+                    success: function(response_crsf) {
+                        // Met à jour la balise <meta> avec le nouveau token
+                        document.querySelector('meta[name="csrf-token"]').setAttribute('content', response_crsf.csrf_token);
+                        
+                        // console.log("Nouveau token CSRF:", response_crsf.csrf_token);
 
-                        document.getElementById('preloader_ch').remove();
+                        $.ajax({
+                            url: '/api/update_user/' + id,
+                            method: 'PUT',
+                            headers: {
+                                'X-CSRF-TOKEN': csrfToken,
+                            },
+                            data: {
+                                nom: nom.value, 
+                                email: email.value, 
+                                tel: tel.value, 
+                                tel2: tel2.value || null, 
+                                adresse: adresse.value || null, 
+                                sexe: sexe.value, 
+                                role_id: role_id,
+                            },
+                            success: function(response) {
 
-                        if (response.tel_existe) {
+                                document.getElementById('preloader_ch').remove();
 
-                            showAlert('Alert', 'Veuillez saisir autre numéro de téléphone s\'il vous plaît','warning');
+                                if (response.tel_existe) {
 
-                        }else if (response.email_existe) {
+                                    showAlert('Alert', 'Veuillez saisir autre numéro de téléphone s\'il vous plaît','warning');
 
-                            showAlert('Alert', 'Veuillez saisir autre email s\'il vous plaît','warning');
+                                }else if (response.email_existe) {
 
-                        }else if (response.nom_existe) {
+                                    showAlert('Alert', 'Veuillez saisir autre email s\'il vous plaît','warning');
 
-                            showAlert('Alert', 'Cet Utilisateur existe déjà.','warning');
+                                }else if (response.nom_existe) {
 
-                        } else if (response.success) {
+                                    showAlert('Alert', 'Cet Utilisateur existe déjà.','warning');
 
-                            let timerInterval;
-                            Swal.fire({
-                                title: "Opération éffectuée, Veuillez patienter un instant s'il vous plaît",
-                                timer: 2000,
-                                timerProgressBar: true,
-                                didOpen: () => {
-                                    Swal.showLoading();
-                                    const timer = Swal.getPopup().querySelector("b");
-                                    timerInterval = setInterval(() => {
-                                        timer.textContent = `${Swal.getTimerLeft()}`;
-                                    }, 100);
-                                },
-                                willClose: () => {
-                                    clearInterval(timerInterval);
+                                } else if (response.success) {
+
+                                    let timerInterval;
+                                    Swal.fire({
+                                        title: "Opération éffectuée, Veuillez patienter un instant s'il vous plaît",
+                                        timer: 2000,
+                                        timerProgressBar: true,
+                                        didOpen: () => {
+                                            Swal.showLoading();
+                                            const timer = Swal.getPopup().querySelector("b");
+                                            timerInterval = setInterval(() => {
+                                                timer.textContent = `${Swal.getTimerLeft()}`;
+                                            }, 100);
+                                        },
+                                        willClose: () => {
+                                            clearInterval(timerInterval);
+                                        }
+                                    }).then((result) => {
+                                        if (result.dismiss === Swal.DismissReason.timer) {
+                                            location.reload(); // Rafraîchir la page après le timer
+                                        }
+                                    });
+
+                                } else if (response.error) {
+
+                                    showAlert('Erreur', 'Une erreur est survenue lors de l\'enregistrement.','error');
+
                                 }
-                            }).then((result) => {
-                                if (result.dismiss === Swal.DismissReason.timer) {
-                                    location.reload(); // Rafraîchir la page après le timer
-                                }
-                            });
+                            },
+                            error: function() {
+                                document.getElementById('preloader_ch').remove();
+                                showAlert('Erreur', 'Erreur lors de la mise à jour.','error');
+                            }
+                        });
 
-                        } else if (response.error) {
-
-                            showAlert('Erreur', 'Une erreur est survenue lors de l\'enregistrement.','error');
-
-                        }
                     },
                     error: function() {
+                        console.log("Erreur lors du rafraîchissement du token CSRF");
                         document.getElementById('preloader_ch').remove();
                         showAlert('Erreur', 'Erreur lors de la mise à jour.','error');
                     }

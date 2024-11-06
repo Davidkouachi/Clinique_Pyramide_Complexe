@@ -91,7 +91,7 @@
                             </li>
                         </ul>
                         <div class="tab-content" id="customTabContent">
-                            <div class="tab-pane active show fade" id="twoAAAN" role="tabpanel" aria-labelledby="tab-twoAAAN">
+                            <div class="tab-pane active show fade" id="twoAAAN" role="tabpanel" aria-labelledby="tab-twoAAAN" style="padding-bottom: 120px;" >
                                 <div class="card-header">
                                     <h5 class="card-title text-center">
                                         Nouvelle Demande d'examen
@@ -1222,7 +1222,7 @@
 
         function Name_atient() {
             $.ajax({
-                url: '/api/name_patient',
+                url: '/api/name_patient_reception',
                 method: 'GET',
                 success: function(response) {
                     const data = response.name;
@@ -1232,8 +1232,6 @@
                     const matricule_patient = document.getElementById('matricule_patient');
                     const suggestionsDiv = document.getElementById('suggestions_patient');
                     const patient_taux = document.getElementById('patient_taux');
-                    
-                    let patientSelected = false;  // Variable to track if a patient was selected
 
                     // Event listener for input typing
                     function displaySuggestions() {
@@ -1255,28 +1253,11 @@
                                 document.getElementById('select_examen_div').style.display = "block";
                                 // Set selected data in the input field
                                 input.value = item.np;
-                                matricule_patient.value = item.matricule;
                                 suggestionsDiv.innerHTML = ''; // Clear suggestions
                                 suggestionsDiv.style.display = 'none';
 
-                                // Assign patient rate (taux)
-                                patient_taux.value = item.taux ? item.taux : 0;
+                                rech_dosier(item.id);
 
-                                document.getElementById('numcode').value = '';
-                                if (item.assurer == 'oui') {
-                                    document.getElementById('div_numcode').style.display = 'block';
-                                }else{
-                                    document.getElementById('div_numcode').style.display = 'none';
-                                }
-
-                                document.getElementById('contenu_examen').innerHTML = "";
-                                document.getElementById('div_btn_examen').style.display = "none";
-                                document.getElementById('div_Examen').style.display = "none";
-                                document.getElementById('typeacte_id_exd').value = "";
-
-                                updateMontantTotalExamen();
-
-                                patientSelected = true;
                             });
                             suggestionsDiv.appendChild(suggestion);
                         });
@@ -1284,19 +1265,6 @@
                         // Show/hide suggestions based on results
                         suggestionsDiv.style.display = filteredData.length > 0 ? 'block' : 'none';
 
-                        // If the input is modified, reset matricule_patient and taux
-                        if (patientSelected) {
-                            matricule_patient.value = '';  // Clear matricule
-                            patient_taux.value = '';  // Clear taux
-                            patientSelected = false; // Reset patient selection flag
-                            document.getElementById('select_examen_div').style.display = "none";
-                            document.getElementById('div_calcul').style.display = 'none';
-                            document.getElementById('contenu_examen').innerHTML = "";
-                            document.getElementById('div_btn_examen').style.display = "none";
-                            document.getElementById('div_Examen').style.display = "none";
-                            document.getElementById('typeacte_id_exd').value = "";
-                            updateMontantTotalExamen();
-                        }
                     }
 
                     input.addEventListener('focus', function() {
@@ -1315,6 +1283,67 @@
                 },
                 error: function() {
                     // Handle error
+                }
+            });
+        }
+
+        function rech_dosier(id)
+        {
+            // Créer l'élément de préchargement
+            var preloader_ch = `
+                <div id="preloader_ch">
+                    <div class="spinner_preloader_ch"></div>
+                </div>
+            `;
+
+            // Ajouter le préchargeur au body
+            document.body.insertAdjacentHTML('beforeend', preloader_ch);
+
+            $.ajax({
+                url: '/api/rech_patient',
+                method: 'GET',  // Use 'POST' for data creation
+                data: { id: id },
+                success: function(response) {
+                    var preloader = document.getElementById('preloader_ch');
+                    if (preloader) {
+                        preloader.remove();
+                    }
+
+                    if(response.existep) {
+                        showAlert('Alert', 'Ce patient n\'existe pas.', 'error');
+                    } else if (response.success) {
+
+                        const item = response.patient;
+
+                        const matricule_patient = document.getElementById('matricule_patient');
+                        const patient_taux = document.getElementById('patient_taux');
+
+                        // Assign patient rate (taux)
+                        matricule_patient.value = item.matricule;
+                        patient_taux.value = item.taux ? item.taux : 0;
+
+                        document.getElementById('numcode').value = '';
+                        if (item.assurer == 'oui') {
+                            document.getElementById('div_numcode').style.display = 'block';
+                        }else{
+                            document.getElementById('div_numcode').style.display = 'none';
+                        }
+
+                        document.getElementById('contenu_examen').innerHTML = "";
+                        document.getElementById('div_btn_examen').style.display = "none";
+                        document.getElementById('div_Examen').style.display = "none";
+                        document.getElementById('typeacte_id_exd').value = "";
+
+                        updateMontantTotalExamen();
+
+                    }
+                },
+                error: function() {
+                    var preloader = document.getElementById('preloader_ch');
+                    if (preloader) {
+                        preloader.remove();
+                    }
+                    showAlert('Alert', 'Une erreur est survenue lors de la recherche.', 'error');
                 }
             });
         }

@@ -77,8 +77,7 @@
                 <div class="card-body">
                     <div class="mh-230 text-white">
                         <h5>Activités de la semaine</h5>
-                        <div class="text-body chart-height-md" style="margin-top: -30px;">
-                            <div id="docActivity"></div>
+                        <div class="text-body chart-height-md" id="docActivity" style="margin-top: -30px;">
                         </div>
                         <div id="consultationComparison" style="margin-top: -10px;" ></div>
                     </div>
@@ -170,7 +169,7 @@
                                                     Nom du patient
                                                 </label>
                                                 <div class="input-group">
-                                                    <input type="hidden" class="form-control" id="matricule_patient" autocomplete="off">
+                                                    <input type="hidden" class="form-control" id="id_patient" autocomplete="off">
                                                     <input type="text" class="form-control text-center" id="name_rech" placeholder="Selectionner un Patient" autocomplete="off">
                                                     <button hidden id="btn_rech_num_dossier" class="btn btn-outline-success">
                                                         <i class="ri-search-line"></i>
@@ -963,7 +962,7 @@
 
         function Name_atient() {
             $.ajax({
-                url: '/api/name_patient',
+                url: '/api/name_patient_reception',
                 method: 'GET',
                 success: function(response) {
                     // Récupérer les données de l'API
@@ -971,7 +970,7 @@
 
                     // Élément de l'input et autres éléments HTML
                     const input = document.getElementById('name_rech');
-                    const matricule_patient = document.getElementById('matricule_patient');
+                    const id_patient = document.getElementById('id_patient');
                     const suggestionsDiv = document.getElementById('suggestions');
 
                     // Fonction pour afficher les suggestions
@@ -992,7 +991,7 @@
                             suggestion.addEventListener('click', function() {
                                 // Remplir l'input avec la suggestion sélectionnée
                                 input.value = `${item.np}`;
-                                matricule_patient.value = `${item.matricule}`;
+                                id_patient.value = `${item.id}`;
                                 suggestionsDiv.innerHTML = ''; // Vider les suggestions
                                 suggestionsDiv.style.display = 'none'; // Masquer les suggestions
                                 rech_dosier(); // Appeler la fonction de recherche de dossier
@@ -1038,9 +1037,9 @@
             document.getElementById('montant_total').value = '0';
             document.getElementById('montant_patient').value = '0';
 
-            const matricule_patient = document.getElementById("matricule_patient");
+            const id_patient = document.getElementById("id_patient");
 
-            if(!matricule_patient.value.trim()){
+            if(!id_patient.value.trim()){
                 showAlert('Alert', 'Veuillez saisie le nom d\'un du patient.', 'warning');
                 return false;
             }
@@ -1058,7 +1057,7 @@
             $.ajax({
                 url: '/api/rech_patient',
                 method: 'GET',  // Use 'POST' for data creation
-                data: { matricule: matricule_patient.value },
+                data: { id: id_patient.value },
                 success: function(response) {
                     var preloader = document.getElementById('preloader_ch');
                     if (preloader) {
@@ -1226,7 +1225,7 @@
             }
 
             document.getElementById("div_info_consul").style.display = 'none';
-            document.getElementById("matricule_patient").value='';
+            document.getElementById("id_patient").value = '';
         }
 
         // ------------------------------------------------------------------
@@ -1315,7 +1314,7 @@
             defaultOption.textContent = 'Sélectionner un medecin';
             selectElement.appendChild(defaultOption);
 
-            fetch('/api/list_medecin')
+            fetch('/api/select_list_medecin')
                 .then(response => response.json())
                 .then(data => {
                     const medecins = data.medecin;
@@ -1750,7 +1749,21 @@
             $.ajax({
                 url: '/api/patient_new',
                 method: 'GET',  // Use 'POST' for data creation
-                data: { nom: nom.value, email: email.value || null , tel: phone.value, tel2: phone2.value || null, adresse: adresse.value || null, assurer: assurer.value, assurance_id: assurance_id.value || null, taux_id: taux_id.value || null, societe_id: societe_id.value || null, datenais: datenais.value, sexe: sexe.value, filiation: filiation.value || null, matricule_assurance: matricule_assurance.value || null},
+                data: { 
+                    nom: nom.value,
+                    email: email.value || null ,
+                    tel: phone.value,
+                    tel2: phone2.value || null,
+                    adresse: adresse.value || null,
+                    assurer: assurer.value,
+                    assurance_id: assurance_id.value || null,
+                    taux_id: taux_id.value || null,
+                    societe_id: societe_id.value || null,
+                    datenais: datenais.value,
+                    sexe: sexe.value,
+                    filiation: filiation.value || null,
+                    matricule_assurance: matricule_assurance.value || null,
+                },
                 success: function(response) {
                     var preloader = document.getElementById('preloader_ch');
                     if (preloader) {
@@ -1764,36 +1777,36 @@
                     }else if (response.nom_existe) {
                         showAlert('Alert', 'Cet patient existe déjà.','warning');
                     } else if (response.success) {
-                        showAlert('Succès', 'Patient Enregistrée.','success');
+
+                        nom.value = '';
+                        email.value = '';
+                        phone.value = '';
+                        phone2.value = '';
+                        adresse.value = '';
+                        datenais.value = '';
+                        sexe.value = '';
+                        filiation.value = '';
+                        matricule_assurance.value = '';
+                        assurance_id.value = "";
+                        taux_id.value = "";
+                        societe_id.value = "";
+
+                        assurer.value = 'non';
+
+                        divAssurer.style.display = "none";
+
+                        document.getElementById('name_rech').value = `${response.name}`;
+                        document.getElementById('id_patient').value = `${response.id}`;
+
+                        rech_dosier();
+                        Name_atient();
+
+                        var newConsultationTab = new bootstrap.Tab(document.getElementById('tab-oneAAA'));
+                        newConsultationTab.show();
+
                     } else if (response.error) {
                         showAlert('Alert', 'Une erreur est survenue lors de l\'enregistrement.','error');
                     }
-
-                    nom.value = '';
-                    email.value = '';
-                    phone.value = '';
-                    phone2.value = '';
-                    adresse.value = '';
-                    datenais.value = '';
-                    sexe.value = '';
-                    filiation.value = '';
-                    matricule_assurance.value = '';
-                    assurance_id.value = "";
-                    taux_id.value = "";
-                    societe_id.value = "";
-
-                    assurer.value = 'non';
-
-                    divAssurer.style.display = "none";
-
-                    document.getElementById('name_rech').value = `${response.name}`;
-                    document.getElementById('matricule_patient').value = `${response.matricule}`;
-
-                    rech_dosier();
-
-                    var newConsultationTab = new bootstrap.Tab(document.getElementById('tab-oneAAA'));
-                    newConsultationTab.show();
-                    newConsultationTab.active();
 
                 },
                 error: function() {
@@ -1813,7 +1826,7 @@
         function eng_consultation()
         {
             const auth_id = {{ Auth::user()->id }};
-            var num_patient = document.getElementById("matricule_patient");
+            var id_patient = document.getElementById("id_patient");
             var assurance_utiliser = document.getElementById("assurance_utiliser");
             var acte_id = '1';
             var typeacte_idS = document.getElementById("typeacte_idS");
@@ -1834,7 +1847,7 @@
                 taux_remise.value = '0';
             }
 
-            if (!num_patient.value.trim() || acte_id =='' || typeacte_idS.value =='' || medecin_id.value =='' || !taux_remise.value.trim()) {
+            if (typeacte_idS.value =='' || medecin_id.value =='' || !taux_remise.value.trim()) {
                 showAlert('Alert', 'Tous les champs sont obligatoires.','warning');
                 return false; 
             }
@@ -1856,7 +1869,7 @@
                 url: '/api/new_consultation',
                 method: 'GET',  // Use 'POST' for data creation
                 data: {
-                    num_patient: num_patient.value, 
+                    id_patient: id_patient.value, 
                     acte_id: acte_id, 
                     typeacte_id: typeacte_idS.value, 
                     user_id: medecin_id.value, 
@@ -1909,6 +1922,8 @@
                         list_cons();
                         Statistique();
                         Reset();
+                        Activity_cons();
+                        Activity_cons_count();
 
                         generatePDFficheCons(patient, user, typeacte, consultation);
 
@@ -2345,7 +2360,16 @@
             fetch('/api/getWeeklyConsultations')
                 .then(response => response.json())
                 .then(data => {
-                    // Now use the data to update the chart
+
+                    const page = document.getElementById('docActivity');
+                    page.innerHTML = "";
+
+                    var contenu = `
+                        <div id="docActivity2"></div>
+                    `;
+
+                    page.innerHTML = contenu;
+                    
                     var options = {
                         chart: {
                             height: 150,
@@ -2417,7 +2441,7 @@
                         ],
                     };
 
-                    var chart = new ApexCharts(document.querySelector("#docActivity"), options);
+                    var chart = new ApexCharts(document.querySelector("#docActivity2"), options);
                     chart.render();
                 })
                 .catch(error => console.error('Error fetching data:', error));

@@ -23,6 +23,10 @@ use App\Http\Controllers\ApihistoriqueController;
 //     return response()->json(['csrf_token' => csrf_token()]);
 // });
 
+Route::middleware(['web'])->group(function () {
+	Route::put('/update_user/{id}', [ApiupdateController::class, 'update_user']);
+});
+
 Route::middleware(['statutchambre','dateRdv'])->group(function () {
 
 	// recherche debut
@@ -60,6 +64,7 @@ Route::middleware(['statutchambre','dateRdv'])->group(function () {
 	Route::get('/new_user', [ApiinsertController::class, 'new_user']);
 	Route::get('/caisse_ouvert', [ApiinsertController::class, 'caisse_ouvert']);
 	Route::get('/caisse_fermer', [ApiinsertController::class, 'caisse_fermer']);
+	Route::get('/update_date_hos/{id}', [ApiinsertController::class, 'update_date_hos']);
 	// insert debut
 
 	// search debut
@@ -70,6 +75,7 @@ Route::middleware(['statutchambre','dateRdv'])->group(function () {
 	Route::get('/list_chambre_select', [ApisearchController::class, 'list_chambre_select']);
 	Route::get('/select_specialite', [ApisearchController::class, 'select_specialite']);
 	Route::get('/select_typeacte/{id}', [ApisearchController::class, 'select_typeacte']);
+	Route::get('/name_patient_reception', [ApisearchController::class, 'name_patient_reception']);
 	Route::get('/name_patient', [ApisearchController::class, 'name_patient']);
 	Route::get('/lit_select/{id}', [ApisearchController::class, 'lit_select']);
 	Route::get('/natureadmission_select/{id}', [ApisearchController::class, 'natureadmission_select']);
@@ -84,6 +90,9 @@ Route::middleware(['statutchambre','dateRdv'])->group(function () {
 	Route::get('/select_role', [ApisearchController::class, 'select_role']);
 	Route::get('/rech_hos_patient/{id}', [ApisearchController::class, 'rech_hos_patient']);
 	Route::get('/verf_caisse', [ApisearchController::class, 'verf_caisse']);
+	Route::get('/select_list_medecin', [ApisearchController::class, 'select_list_medecin']);
+	Route::get('/select_typeadmission', [ApisearchController::class, 'select_typeadmission']);
+	Route::get('/select_chambre', [ApisearchController::class, 'select_chambre']);
 	// search debut
 
 	// liste day debut
@@ -112,7 +121,7 @@ Route::middleware(['statutchambre','dateRdv'])->group(function () {
 	Route::get('/update_specialite/{id}', [ApiupdateController::class, 'update_specialite']);
 	Route::get('/update_depot_fac/{id}', [ApiupdateController::class, 'update_depot_fac']);
 	Route::get('/update_assurance/{id}', [ApiupdateController::class, 'update_assurance']);
-	Route::get('/update_user/{id}', [ApiupdateController::class, 'update_user']);
+	
 	Route::get('/update_mdp/{id}', [ApiupdateController::class, 'update_mdp']);
 	// update debut
 

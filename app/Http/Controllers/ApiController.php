@@ -24,19 +24,19 @@ class ApiController extends Controller
 {
     public function taux_select_patient_new()
     {
-        $taux = taux::all(); // Récupère toutes les assurances
+        $taux = taux::select('id','taux')->get(); // Récupère toutes les assurances
         return response()->json($taux);
     }
 
     public function societe_select_patient_new()
     {
-        $societe = societe::all(); // Récupère toutes les assurances
+        $societe = societe::select('id','nom')->get(); // Récupère toutes les assurances
         return response()->json($societe);
     }
 
     public function assurance_select_patient_new()
     {
-       $assurance = assurance::all(); // Récupère toutes les assurances
+       $assurance = assurance::select('id','nom')->get(); // Récupère toutes les assurances
         return response()->json($assurance); 
     }
 }

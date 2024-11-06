@@ -52,7 +52,6 @@ use App\Models\caisse;
 use App\Models\historiquecaisse;
 use App\Models\portecaisse;
 
-
 class ApilistController extends Controller
 {
     public function list_chambre()

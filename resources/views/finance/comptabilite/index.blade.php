@@ -24,6 +24,19 @@
         <div class="col-12">
             <div class="card mb-3">
                 <div class="card-header d-flex align-items-center justify-content-between">
+                    <h5 class="card-title">Solde Caisse</h5>
+                    <div class="d-flex">
+                        <a id="btn_refresh_soldCaisse" class="btn btn-outline-info ms-auto">
+                            <i class="ri-loop-left-line"></i>
+                        </a>
+                    </div>
+                </div>
+                <div id="contenu_caisse" ></div>
+            </div>
+        </div>
+        <div class="col-12">
+            <div class="card mb-3">
+                <div class="card-header d-flex align-items-center justify-content-between">
                     <h5 class="card-title">Tendances des Opérations de caisse</h5>
                     <div class="d-flex">
                         <select class="form-select me-1" id="yearSelect2"></select>
@@ -109,6 +122,7 @@
 <script>
     document.addEventListener("DOMContentLoaded", function() {
 
+        caisse_verf();
         yearSelect();
         stat_acte();
         stat_acte2();
@@ -124,6 +138,200 @@
         document.getElementById("yearSelect").addEventListener("change", stat_acte);
         document.getElementById("yearSelect2").addEventListener("change", stat_acte2);
         document.getElementById("yearSelect3").addEventListener("change", stat_chiff_acte);
+
+        document.getElementById("btn_refresh_soldCaisse").addEventListener("click", caisse_verf);
+
+        function caisse_verf()
+        {
+            const contenu = document.getElementById("contenu_caisse");
+            contenu.innerHTML = '';
+
+            var contenu0 = `
+                <div class="row justify-content-center">
+                    <div class="col-12">
+                        <div class="mb-3">
+                            <div class="card-body row gx-3 d-flex align-items-center justify-content-between">
+                                <div class="col-12">
+                                    <div class="mb-1 text-center">
+                                        <a class="d-flex align-items-center flex-column">
+                                            <img src="{{asset('assets/images/caisse.jpg')}}" class="img-7x rounded-circle border border-3 border-primary">
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="col-12 mt-2">
+                                    <div class="mb-1 text-center">
+                                        <h2 class="card-title">
+                                            <span class="badge bg-primary" id="h_solde"></span>
+                                        </h2>
+                                    </div>
+                                </div>
+                                <div class="col-12" id="btn_ouvert" style="display: none;">
+                                    <div class="mb-1 text-center">
+                                        <button id="btn_ouvert_C" type="button" class="btn btn-success">
+                                            Ouverture de Caisse
+                                            <i class="ri-door-open-line"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="col-12" id="btn_fermer" style="display: none;">
+                                    <div class="mb-1 text-center">
+                                        <button id="btn_fermer_C" type="button" class="btn btn-danger">
+                                            Fermeture de Caisse
+                                            <i class="ri-door-close-line"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            var message = `
+                <div id="message_stat_acte">
+                    <p class="text-center">
+                        Aucune donnée n'a été trouvée
+                    </p>
+                </div>
+            `;
+
+            var loader = `
+                <div id="div_Table_loader_stat_acte">
+                    <div class="d-flex justify-content-center align-items-center">
+                        <div class="spinner-border text-warning me-2" role="status" aria-hidden="true"></div>
+                        <strong>Chargement des données...</strong>
+                    </div>
+                </div>
+            `;
+
+            contenu.innerHTML = loader;
+
+            fetch('/api/verf_caisse')
+                .then(response => response.json())
+                .then(data => {
+
+                    contenu.innerHTML = "";
+                    contenu.innerHTML = contenu0;
+
+                    document.getElementById('h_solde').innerHTML = data.caisse.solde + " Fcfa";
+                    
+                    if (data.caisse.statut == 'ouvert') {
+                        document.getElementById('btn_ouvert').style.display = 'none';
+                        document.getElementById('btn_fermer').style.display = 'block';
+                    }else{
+                        document.getElementById('btn_ouvert').style.display = 'block';
+                        document.getElementById('btn_fermer').style.display = 'none';
+                    }
+
+                    document.getElementById("btn_ouvert_C").addEventListener("click", caisse_ouvert);
+                    document.getElementById("btn_fermer_C").addEventListener("click", caisse_fermer);
+
+                })
+                .catch(error => {
+                    console.error('Erreur lors du chargement des donnée caisse:', error);
+
+                    contenu.innerHTML = "";
+                    contenu.innerHTML = message;
+                });
+        }
+
+        function caisse_ouvert()
+        {
+            const auth_id = {{ Auth::user()->id }};
+
+            var preloader_ch = `
+                <div id="preloader_ch">
+                    <div class="spinner_preloader_ch"></div>
+                </div>
+            `;
+            // Add the preloader to the body
+            document.body.insertAdjacentHTML('beforeend', preloader_ch);
+
+            $.ajax({
+                url: '/api/caisse_ouvert',
+                method: 'GET',
+                data: { 
+                    auth_id: auth_id,
+                },
+                success: function(response) {
+
+                    var preloader = document.getElementById('preloader_ch');
+                    if (preloader) {
+                        preloader.remove();
+                    }
+
+                    if (response.success) {
+
+                        document.getElementById('btn_ouvert').style.display = 'none';
+                        document.getElementById('btn_fermer').style.display = 'block';
+                        caisse_verf();
+
+                    } else if (response.error) {
+                        showAlert('Alert', 'Une erreur est survenue lors de l\'ouverture de la caisse.', 'error');
+                        console.log('message erreur controlleur : '+response.message);
+                    }
+
+                },
+                error: function(xhr, status, error) {
+                    var preloader = document.getElementById('preloader_ch');
+                    if (preloader) {
+                        preloader.remove();
+                    }
+                    showAlert('Alert', 'Une erreur est survenue.','error');
+                    let errorMessage = xhr.responseJSON && xhr.responseJSON.message ? xhr.responseJSON.message : 'Une erreur est survenue.';
+                    console.log('message erreur controlleur : '+ errorMessage);
+                }
+            });
+        }
+
+        function caisse_fermer()
+        {
+            const auth_id = {{ Auth::user()->id }};
+
+            var preloader_ch = `
+                <div id="preloader_ch">
+                    <div class="spinner_preloader_ch"></div>
+                </div>
+            `;
+            // Add the preloader to the body
+            document.body.insertAdjacentHTML('beforeend', preloader_ch);
+
+            $.ajax({
+                url: '/api/caisse_fermer',
+                method: 'GET',
+                data: { 
+                    auth_id: auth_id,
+                },
+                success: function(response) {
+
+                    var preloader = document.getElementById('preloader_ch');
+                    if (preloader) {
+                        preloader.remove();
+                    }
+
+                    if (response.success) {
+
+                        document.getElementById('btn_ouvert').style.display = 'block';
+                        document.getElementById('btn_fermer').style.display = 'none';
+                        caisse_verf();
+
+                    } else if (response.error) {
+                        showAlert('Alert','Une erreur est survenue lors de la fermeture de la caisse.','error');
+                        console.log('message erreur controlleur : '+ response.message);
+                    }
+
+                },
+                error: function(xhr, status, error) {
+                    var preloader = document.getElementById('preloader_ch');
+                    if (preloader) {
+                        preloader.remove();
+                    }
+                    showAlert('Alert', 'Une erreur est survenue.','error');
+                    let errorMessage = xhr.responseJSON && xhr.responseJSON.message ? xhr.responseJSON.message : 'Une erreur est survenue.';
+                    console.log('message erreur controlleur : '+ errorMessage);
+                }
+            });
+        }
 
         function datechange()
         {
