@@ -14,6 +14,7 @@ use App\Http\Controllers\ApilistfacturedetailController;
 use App\Http\Controllers\ApiinsertfactureController;
 use App\Http\Controllers\ApipdfController;
 use App\Http\Controllers\ApihistoriqueController;
+use App\Http\Controllers\authController;
 
 // Route::get('/user', function (Request $request) {
 //     return $request->user();
@@ -24,7 +25,15 @@ use App\Http\Controllers\ApihistoriqueController;
 // });
 
 Route::middleware(['web'])->group(function () {
+
+	// Login debut
+	Route::post('/trait_login', [authController::class, 'trait_login']);
+	// Login debut
+
+	// update debut
 	Route::put('/update_user/{id}', [ApiupdateController::class, 'update_user']);
+	Route::put('/update_mdp/{id}', [ApiupdateController::class, 'update_mdp']);
+	// update fin
 });
 
 Route::middleware(['statutchambre','dateRdv'])->group(function () {
@@ -121,8 +130,6 @@ Route::middleware(['statutchambre','dateRdv'])->group(function () {
 	Route::get('/update_specialite/{id}', [ApiupdateController::class, 'update_specialite']);
 	Route::get('/update_depot_fac/{id}', [ApiupdateController::class, 'update_depot_fac']);
 	Route::get('/update_assurance/{id}', [ApiupdateController::class, 'update_assurance']);
-	
-	Route::get('/update_mdp/{id}', [ApiupdateController::class, 'update_mdp']);
 	// update debut
 
 	// delete debut

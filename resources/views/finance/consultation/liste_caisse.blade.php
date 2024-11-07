@@ -61,6 +61,7 @@
                                     <tr>
                                         <th scope="col">N°</th>
                                         <th scope="col">Id facture</th>
+                                        <th scope="col">Statut</th>
                                         <th scope="col">Nom et Prénoms</th>
                                         <th scope="col">Contact</th>
                                         <th scope="col">Part Assurance</th>
@@ -68,7 +69,6 @@
                                         <th scope="col">Remise</th>
                                         <th scope="col">Total</th>
                                         <th scope="col">Date de création</th>
-                                        <th scope="col">Statut</th>
                                         <th scope="col">Actions</th>
                                     </tr>
                                 </thead>
@@ -270,6 +270,11 @@
                                         </div>
                                     </td>
                                     `}
+                                    <td>
+                                        <span class="badge ${item.statut === 'payer' ? 'bg-success' : 'bg-danger'}">
+                                            ${item.statut === 'payer' ? 'Réglé' : 'Non Réglé'}
+                                        </span>
+                                    </td>
                                     <td>${item.name}</td>
                                     <td>+225 ${item.tel}</td>
                                     <td class="text-primary">${formatPrice(item.part_assurance ?? 0)} Fcfa</td>
@@ -277,11 +282,6 @@
                                     <td class="text-warning">${formatPrice(item.remise ?? 0)} Fcfa</td>
                                     <td class="text-primary">${formatPrice(item.montant ?? 0)} Fcfa</td>
                                     <td>${formatDateHeure(item.created_at)}</td>
-                                    <td>
-                                        <span class="badge ${item.statut === 'payer' ? 'bg-success' : 'bg-danger'}">
-                                            ${item.statut === 'payer' ? 'Réglé' : 'Non Réglé'}
-                                        </span>
-                                    </td>
                                     <td>
                                         <div class="d-inline-flex gap-1">
                                             <a class="btn btn-outline-warning btn-sm rounded-5" data-bs-toggle="modal" data-bs-target="#Detail" id="detail-${item.id}">

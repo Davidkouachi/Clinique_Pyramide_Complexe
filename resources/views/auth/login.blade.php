@@ -1,33 +1,25 @@
 <!DOCTYPE html>
-<html lang="en">
-<!-- Mirrored from buybootstrap.com/demos/medflex/medflex-admin-dashboard/login.html by HTTrack Website Copier/3.x [XR&CO'2014], Mon, 09 Sep 2024 12:22:12 GMT -->
+<html lang="{{ config('app.locale') }}">
 
 <head>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Se Connecter</title>
-    <!-- Meta -->
     <meta name="description" content="Marketplace for Bootstrap Admin Dashboards">
     <meta property="og:title" content="Admin Templates - Dashboard Templates">
     <meta property="og:description" content="Marketplace for Bootstrap Admin Dashboards">
     <meta property="og:type" content="Website">
     <link rel="shortcut icon" href="{{asset('assets/images/logo.png')}}">
-    <!-- *************
-            ************ CSS Files *************
-        ************* -->
     <link rel="stylesheet" href="{{asset('assets/fonts/remix/remixicon.css')}}">
     <link rel="stylesheet" href="{{asset('assets/css/main.min.css')}}">
     <link rel="stylesheet" href="{{asset('assets/css/style.css')}}">
+    <script src="{{asset('sweetalert.js')}}"></script>
 </head>
 
 <body class="login-bg" style="font-family: sans-serif; font-weight: bold;">
-    <!-- Container starts -->
     <div class="container ">
-        <!-- Auth wrapper starts -->
         <div class="auth-wrapper">
-            <!-- Form starts -->
-            <form id="formulaire" action="{{route('trait_login')}}" method="post" >
-                @csrf
+            <form id="formulaire">
                 <div class="auth-box" style="max-width: 600px;" >
                     <div class="text-center" >
                         <a class="mb-4" >
@@ -36,25 +28,23 @@
                         <h4 class="mt-4 mb-4 text-primary ">Se connecter</h4>
                     </div>
                     <div class="mb-3">
-                        <label class="form-label" for="email">login</label>
-                        <input type="text" id="login" name="login" class="form-control" placeholder="Entrer votre email" value="{{ old('login') }}">
+                        <label class="form-label">login</label>
+                        <input type="text" id="login" class="form-control" placeholder="Entrer votre email">
                     </div>
                     <div class="mb-4">
                         <label class="form-label" for="pwd">Mot de passe</label>
                         <div class="input-group">
-                            <input type="password" name="password" id="pwd" class="form-control" placeholder="Entrer votre mot de passe" value="{{ old('password') }}">
+                            <input type="password" id="pwd" class="form-control" placeholder="Entrer votre mot de passe">
                             <a class="btn btn-white" id="btn_hidden_mpd">
                                 <i id="toggleIcon" class="ri-eye-line text-primary"></i>
                             </a>
                         </div>
                     </div>
                     <p id="alert" class="text-danger" style="width: 300px;" ></p>
-                    <!-- <div class="d-flex justify-content-end mb-3">
-              <a href="forgot-password.html" class="text-decoration-underline">Forgot password?</a>
-            </div> -->
                     <div class="mb-3 d-grid gap-2">
-                        <button type="submit" class="btn btn-success">Connexion</button>
-                        <!-- <a href="signup.html" class="btn btn-secondary">Not registered? Signup</a> -->
+                        <button type="submit" class="btn btn-success">
+                            <span id="buttonText">Connexion</span>
+                        </button>
                     </div>
                 </div>
             </form>
@@ -65,35 +55,21 @@
     <script src="{{asset('assets/js/bootstrap.bundle.min.js')}}"></script>
     <script src="{{asset('assets/js/moment.min.js')}}"></script>
 
-    @if (session('error'))
-        <div class="modal fade" id="error" tabindex="-1" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered" role="document">
-                <div class="modal-content">
-                    <div class="modal-body p-5 text-center">
-                        <h1 class="display-4">
-                            <i class="ri-close-circle-line text-danger"></i>
-                        </h1>
-                        <h4 class="text-danger">Erreur</h4>
-                        <p>{{session('error')}}</p>
-                        <a data-bs-dismiss="modal" class="btn btn-lg btn-danger w-25">
-                            ok
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <script>
-            document.addEventListener('DOMContentLoaded', function() {
-                var myModal = new bootstrap.Modal(document.getElementById('error'));
-                myModal.show();
-            });
-        </script>
-        @php session()->forget('error'); @endphp
-    @endif
+    {{-- <script>
+        const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+        console.log("Token CSRF:", csrfToken);
+    </script> --}}
 
     <script>
         document.addEventListener("DOMContentLoaded", function() {
+
+            function showAlert(title, message, type) {
+                Swal.fire({
+                    title: title,
+                    text: message,
+                    icon: type,
+                });
+            }
 
             document.getElementById("btn_hidden_mpd").addEventListener("click", function(event) {
                 event.preventDefault();
@@ -113,11 +89,11 @@
             });
 
             document.getElementById("formulaire").addEventListener("submit", function(event) {
+
                 event.preventDefault();
 
                 var login = document.getElementById("login");
                 var password = document.getElementById("pwd");
-
                 const alert = document.getElementById("alert");
 
                 if (!login.value.trim() || !password.value.trim()) {
@@ -140,39 +116,56 @@
 
                 document.body.insertAdjacentHTML('beforeend', preloader_ch);
 
-                this.submit();
+                $.ajax({
+                    url: '/refresh-csrf',
+                    method: 'GET',
+                    success: function(response_crsf) {
+                        document.querySelector('meta[name="csrf-token"]').setAttribute('content', response_crsf.csrf_token);
+                        
+                        // console.log("Nouveau token CSRF:", response_crsf.csrf_token);
 
-                // $.get('/refresh_csrf').done(function(data) {
-                //     document.querySelector('input[name="_token"]').value = data.token;
-                //     this.submit();
-                // }.bind(this));
+                        $.ajax({
+                            url: '/api/trait_login',
+                            method: 'POST',
+                            headers: {
+                                'X-CSRF-TOKEN': response_crsf.csrf_token,
+                            },
+                            data: {
+                                login: login.value, 
+                                password: password.value,
+                            },
+                            success: function(response) {
 
-                // function verifierMotDePasse(motDePasse) {
+                                document.getElementById('preloader_ch').remove();
 
-                //     if (motDePasse.length < 8) {
-                //         return false;
-                //     }
+                                if (response.success) {
 
-                //     if (!/[A-Z]/.test(motDePasse)) {
-                //         return false;
-                //     }
+                                    window.location.href = '/';
 
-                //     if (!/[a-z]/.test(motDePasse)) {
-                //         return false;
-                //     }
+                                }else if (response.error) {
 
-                //     if (!/\d/.test(motDePasse)) {
-                //         return false;
-                //     }
+                                    showAlert('Erreur', 'L\'authentification a échoué. Veuillez vérifier vos informations d\'identification et réessayer.','error');
 
-                //     return true;
-                // }
+                                }
+                            },
+                            error: function() {
+                                document.getElementById('preloader_ch').remove();
+                                showAlert('Erreur', 'Erreur lors de l\' authentification.','error');
+                            }
+                        });
+
+                    },
+                    error: function() {
+                        // console.log("Erreur lors du rafraîchissement du token CSRF");
+                        document.getElementById('preloader_ch').remove();
+                        showAlert('Erreur', 'Erreur est survenue.','error');
+                    }
+                });
             });
 
         });
     </script>   
 
 </body>
-<!-- Mirrored from buybootstrap.com/demos/medflex/medflex-admin-dashboard/login.html by HTTrack Website Copier/3.x [XR&CO'2014], Mon, 09 Sep 2024 12:22:12 GMT -->
 
 </html>

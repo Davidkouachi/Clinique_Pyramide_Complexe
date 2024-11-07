@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="{{ config('app.locale') }}">
 
 <head>
     <meta name="csrf-token" content="{{ csrf_token() }}">
@@ -10,7 +10,6 @@
     <meta property="og:title" content="Admin Templates - Dashboard Templates">
     <meta property="og:description" content="Marketplace for Bootstrap Admin Dashboards">
     <meta property="og:type" content="Website">
-    <meta name="csrf-token" content="{{ csrf_token() }}">
     <link rel="shortcut icon" href="{{asset('assets/images/logo.png')}}">
     <link rel="stylesheet" href="{{asset('assets/fonts/remix/remixicon.css')}}">
     <link rel="stylesheet" href="{{asset('assets/css/main.min.css')}}">
@@ -553,10 +552,10 @@
     <script src="{{asset('assets/vendor/apex/apexcharts.min.js')}}"></script>
     <script src="{{asset('assets/js/custom.js')}}"></script>
 
-    {{-- <script>
+    <script>
         const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
         console.log("Token CSRF:", csrfToken);
-    </script> --}}
+    </script>
 
     <script>
         document.addEventListener("DOMContentLoaded", function() {
@@ -896,7 +895,7 @@
                             url: '/api/update_user/' + id,
                             method: 'PUT',
                             headers: {
-                                'X-CSRF-TOKEN': csrfToken,
+                                'X-CSRF-TOKEN': response_crsf.csrf_token,
                             },
                             data: {
                                 nom: nom.value, 
@@ -996,46 +995,63 @@
                 document.body.insertAdjacentHTML('beforeend', preloader_ch);
 
                 $.ajax({
-                    url: '/api/update_mdp/' + id,
+                    url: '/refresh-csrf',
                     method: 'GET',
-                    data: {
-                        mdp1: mdp1.value,
-                    },
-                    success: function(response) {
+                    success: function(response_crsf) {
+                        // Met à jour la balise <meta> avec le nouveau token
+                        document.querySelector('meta[name="csrf-token"]').setAttribute('content', response_crsf.csrf_token);
 
-                        document.getElementById('preloader_ch').remove();
+                        $.ajax({
+                            url: '/api/update_mdp/' + id,
+                            method: 'PUT',
+                            headers: {
+                                'X-CSRF-TOKEN': response_crsf.csrf_token,
+                            },
+                            data: {
+                                mdp1: mdp1.value,
+                            },
+                            success: function(response) {
 
-                        if (response.success) {
+                                document.getElementById('preloader_ch').remove();
 
-                            let timerInterval;
-                            Swal.fire({
-                                title: "Opération éffectuée, Veuillez patienter un instant s'il vous plaît",
-                                timer: 2000,
-                                timerProgressBar: true,
-                                didOpen: () => {
-                                    Swal.showLoading();
-                                    const timer = Swal.getPopup().querySelector("b");
-                                    timerInterval = setInterval(() => {
-                                        timer.textContent = `${Swal.getTimerLeft()}`;
-                                    }, 100);
-                                },
-                                willClose: () => {
-                                    clearInterval(timerInterval);
+                                if (response.success) {
+
+                                    let timerInterval;
+                                    Swal.fire({
+                                        title: "Opération éffectuée, Veuillez patienter un instant s'il vous plaît",
+                                        timer: 2000,
+                                        timerProgressBar: true,
+                                        didOpen: () => {
+                                            Swal.showLoading();
+                                            const timer = Swal.getPopup().querySelector("b");
+                                            timerInterval = setInterval(() => {
+                                                timer.textContent = `${Swal.getTimerLeft()}`;
+                                            }, 100);
+                                        },
+                                        willClose: () => {
+                                            clearInterval(timerInterval);
+                                        }
+                                    }).then((result) => {
+                                        if (result.dismiss === Swal.DismissReason.timer) {
+                                            location.reload(); // Rafraîchir la page après le timer
+                                        }
+                                    });
+
+
+                                } else if (response.error) {
+
+                                    showAlert('Erreur', 'Echec de l\'opération.','error');
+
                                 }
-                            }).then((result) => {
-                                if (result.dismiss === Swal.DismissReason.timer) {
-                                    location.reload(); // Rafraîchir la page après le timer
-                                }
-                            });
-
-
-                        } else if (response.error) {
-
-                            showAlert('Erreur', 'Echec de l\'opération.','error');
-
-                        }
+                            },
+                            error: function() {
+                                document.getElementById('preloader_ch').remove();
+                                showAlert('Erreur', 'Erreur lors de la mise à jour.','error');
+                            }
+                        });
                     },
                     error: function() {
+                        console.log("Erreur lors du rafraîchissement du token CSRF");
                         document.getElementById('preloader_ch').remove();
                         showAlert('Erreur', 'Erreur lors de la mise à jour.','error');
                     }

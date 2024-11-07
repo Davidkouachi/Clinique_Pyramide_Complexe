@@ -27,15 +27,27 @@ class authController extends Controller
             return redirect()->route('index_accueil');
         }
 
+        // Réinitialiser les api_tokens des utilisateurs qui n'ont pas de session active
+        User::whereNotNull('api_token')->each(function ($user) {
+            if (!session()->has('user_' . $user->id)) {
+                $user->update(['api_token' => null]);
+            }
+        });
+
         return view('auth.login');
     }
 
     public function deconnecter(Request $request)
     {
+        $user = Auth::user();
+
+        if ($user) {
+            $user->update(['api_token' => null]); // Réinitialiser le token
+        }
+
         Auth::logout();
 
         $request->session()->invalidate();
-
         $request->session()->regenerateToken();
 
         return redirect()->route('login');
@@ -57,11 +69,17 @@ class authController extends Controller
 
         if (Auth::attempt([$fieldType => $login, 'password' => $password])) {
 
-            return redirect()->route('index_accueil');
+            $token = Str::random(60);
+            $user->api_token = hash('sha256', $token);
+            $user->save();
+
+            return response()->json([
+                'success' => true,
+                'token' => $token,
+            ]);
         }
 
-        return redirect()->back()->withInput($request->only('login','password'))
-            ->with('error', 'L\'authentification a échoué. Veuillez vérifier vos informations d\'identification et réessayer.');
+        return response()->json(['error' => true, 'login' => $login,'password' => $password]);
     }
 
     public function refresh_csrf()
