@@ -36,28 +36,11 @@
                 </div>
                 <div class="card-body" >
                     <div class="row gx-3">
-                        <div class="col-12" >
-                            <div class="mb-3" >
-                                <select class="form-select" id="select2">
-                                    <option value=""></option>
-                                    <option value="tous">Tout</option>
-                                    <option value="fac_deposer">
-                                        Déposer
-                                    </option>
-                                    <option value="fac_deposer_regler">
-                                        Déposer & régler
-                                    </option>
-                                    <option value="fac_deposer_non_regler">
-                                        Déposer & non-régler
-                                    </option>
-                                </select>
-                            </div>
-                        </div>
                         <div class="col-12">
                             <div class="mb-3">
                                 <label class="form-label">Type</label>
-                                <select class="form-select" id="type">
-                                    <option value="tous">Tout</option>
+                                <select class="form-control select2" id="type">
+                                    <option selected="selected" value="tous">Tout</option>
                                     <option value="fac_deposer">
                                         Déposer
                                     </option>
@@ -75,7 +58,7 @@
                                 <label class="form-label">
                                     Assurance
                                 </label>
-                                <select class="form-select" id="assurance_id"></select>
+                                <select class="form-select select2" id="assurance_id"></select>
                             </div>
                         </div>
                         <div class="col-12">
@@ -129,15 +112,16 @@
             console.log("Select2 version:", $.fn.select2.defaults.version);
             console.log($.fn.tooltip.Constructor.VERSION);
 
-            $('.form-select').select2({
-                width: 'resolve',
+            $('.select2').select2({
+                tags: true,
+                theme: 'bootstrap',
                 placeholder: 'Selectionner',
                 language: {
                     noResults: function() {
                         return "Aucun résultat trouvé";  // Modifier le message ici
                     }
                 },
-                
+                width: 'resolve',
             });
 
         } else {
