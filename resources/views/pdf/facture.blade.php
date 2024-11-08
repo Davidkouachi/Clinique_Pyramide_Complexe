@@ -36,6 +36,23 @@
                 </div>
                 <div class="card-body" >
                     <div class="row gx-3">
+                        <div class="col-12" >
+                            <div class="mb-3" >
+                                <select class="form-select" id="select2">
+                                    <option value=""></option>
+                                    <option value="tous">Tout</option>
+                                    <option value="fac_deposer">
+                                        Déposer
+                                    </option>
+                                    <option value="fac_deposer_regler">
+                                        Déposer & régler
+                                    </option>
+                                    <option value="fac_deposer_non_regler">
+                                        Déposer & non-régler
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
                         <div class="col-12">
                             <div class="mb-3">
                                 <label class="form-label">Type</label>
@@ -97,6 +114,37 @@
 <script src="{{asset('assets/js/app/js/jspdfinvoicetemplate/dist/index.js')}}" ></script>
 <script src="{{asset('jsPDF-master/dist/jspdf.umd.js')}}"></script>
 <script src="{{asset('jsPDF-AutoTable/dist/jspdf.plugin.autotable.min.js')}}"></script>
+
+<script>
+    $(document).ready(function() {
+        // Vérifiez la version de jQuery
+        if (typeof jQuery !== 'undefined') {
+            console.log("jQuery version:", jQuery.fn.jquery);
+        } else {
+            console.error("jQuery n'est pas chargé.");
+        }
+
+        // Vérifiez la version de Select2
+        if ($.fn.select2) {
+            console.log("Select2 version:", $.fn.select2.defaults.version);
+            console.log($.fn.tooltip.Constructor.VERSION);
+
+            $('.form-select').select2({
+                width: 'resolve',
+                placeholder: 'Selectionner',
+                language: {
+                    noResults: function() {
+                        return "Aucun résultat trouvé";  // Modifier le message ici
+                    }
+                },
+                
+            });
+
+        } else {
+            console.error("Select2 n'est pas chargé correctement.");
+        }
+    });
+</script>
 
 <script>
     document.addEventListener("DOMContentLoaded", function() {

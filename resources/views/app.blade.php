@@ -6,19 +6,17 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Espace Santé</title>
-    <meta name="description" content="Marketplace for Bootstrap Admin Dashboards">
-    <meta property="og:title" content="Admin Templates - Dashboard Templates">
-    <meta property="og:description" content="Marketplace for Bootstrap Admin Dashboards">
-    <meta property="og:type" content="Website">
     <link rel="shortcut icon" href="{{asset('assets/images/logo.png')}}">
     <link rel="stylesheet" href="{{asset('assets/fonts/remix/remixicon.css')}}">
     <link rel="stylesheet" href="{{asset('assets/css/main.min.css')}}">
     <link rel="stylesheet" href="{{asset('assets/css/style.css')}}">
     <link rel="stylesheet" href="{{asset('assets/vendor/overlay-scroll/OverlayScrollbars.min.css')}}">
-    <link rel="stylesheet" href="{{asset('assets/vendor/datatables/dataTables.bs5.css')}}">
-    <link rel="stylesheet" href="{{asset('assets/vendor/datatables/dataTables.bs5-custom.css')}}">
-    <link rel="stylesheet" href="{{asset('assets/vendor/datatables/buttons/dataTables.bs5-custom.css')}}">
     <script src="{{asset('sweetalert.js')}}"></script>
+
+    <script src="{{asset('jquery.min.js')}}"></script>
+    <link href="{{asset('assets/vendor/select2/dist/css/select2.min.css')}}" rel="stylesheet" />
+    <script src="{{asset('assets/vendor/select2/dist/js/select2.min.js')}}"></script>
+
 </head>
 
 <body>
@@ -544,7 +542,6 @@
         </div>
     </div>
 
-    <script src="{{asset('assets/js/jquery.min.js')}}"></script>
     <script src="{{asset('assets/js/bootstrap.bundle.min.js')}}"></script>
     <script src="{{asset('assets/js/moment.min.js')}}"></script>
     <script src="{{asset('assets/vendor/overlay-scroll/jquery.overlayScrollbars.min.js')}}"></script>
@@ -552,10 +549,10 @@
     <script src="{{asset('assets/vendor/apex/apexcharts.min.js')}}"></script>
     <script src="{{asset('assets/js/custom.js')}}"></script>
 
-    <script>
+    {{-- <script>
         const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
         console.log("Token CSRF:", csrfToken);
-    </script>
+    </script> --}}
 
     <script>
         document.addEventListener("DOMContentLoaded", function() {
