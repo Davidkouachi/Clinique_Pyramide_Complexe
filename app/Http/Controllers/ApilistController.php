@@ -290,22 +290,33 @@ class ApilistController extends Controller
 
     }
 
-    public function list_produit()
+    public function list_produit(Request $request)
     {
-        $produitQuery = produit::orderBy('created_at', 'desc');
+        $search = $request->input('search.value');
+        $start = $request->input('start');
+        $length = $request->input('length');
+        $draw = $request->input('draw');
 
-        $produit = $produitQuery->paginate(15);
+        // Initial query for produits, ordered by created_at in descending order
+        $produits = Produit::orderBy('created_at', 'desc');
 
+        // Apply search filter if search term is provided
+        if ($search) {
+            $produits->where('nom', 'like', "%{$search}%");
+        }
+
+        $produits = $produits->paginate($length);
+
+        // Return the data as JSON response for DataTables
         return response()->json([
-            'produit' => $produit->items(), // Paginated data
-            'pagination' => [
-                'current_page' => $produit->currentPage(),
-                'last_page' => $produit->lastPage(),
-                'per_page' => $produit->perPage(),
-                'total' => $produit->total(),
-            ]
+            'draw' => intval($draw),
+            'recordsTotal' => $produits->total(),
+            'recordsFiltered' => $produits->total(),
+            'data' => $produits->items(),
         ]);
     }
+
+
 
     public function list_produit_all()
     {
@@ -797,30 +808,33 @@ class ApilistController extends Controller
         return number_format($number, 0, '', '.');
     }
 
-    public function list_depotfacture($date1, $date2,$statut)
+    public function list_depotfacture(Request $request)
     {
-        $date1 = Carbon::parse($date1)->startOfDay();
-        $date2 = Carbon::parse($date2)->endOfDay();
+        $search = $request->input('search.value');
+        $start = $request->input('start');
+        $length = $request->input('length');
+        $draw = $request->input('draw');
+
+        $total_patient = 0;
+        $total_assurance = 0;
+        $total_montant = 0;
 
         $depotQuery = depotfacture::join('assurances', 'assurances.id', '=', 'depotfactures.assurance_id')
-                                ->whereBetween('depotfactures.created_at', [$date1, $date2])
                                 ->select(
                                     'depotfactures.*',
                                     'assurances.nom as assurance',
                                 )
                                 ->orderBy('depotfactures.created_at', 'desc');
 
-        if ($statut !== 'tous') {
-            $depotQuery->where('depotfactures.statut', '=', $statut);
+        // Appliquer le filtre de recherche, si nécessaire
+        if ($search) {
+            $depotQuery->where('assurances.nom', 'like', "%{$search}%"); // Exemple de filtrage sur le nom de l'assurance
         }
 
-        $depot = $depotQuery->paginate(15);
+        // Utilisation de paginate pour gérer la pagination proprement
+        $depotQuery = $depotQuery->paginate($length);
 
-        $total_patient = 0;
-        $total_assurance = 0;
-        $total_montant = 0;
-
-        foreach ($depot->items() as $depo) {
+        foreach ($depotQuery->items() as $depo) {
 
             $date1 = Carbon::parse($depo->date1)->startOfDay();
             $date2 = Carbon::parse($depo->date2)->endOfDay();
@@ -959,18 +973,14 @@ class ApilistController extends Controller
 
             $depo->part_patient = $this->formatWithPeriods($total_patient);
             $depo->part_assurance = $this->formatWithPeriods($total_assurance);
-            $depo->total = $this->formatWithPeriods($total_montant);
-            
+            $depo->total = $this->formatWithPeriods($total_montant); 
         }
 
         return response()->json([
-            'depot' => $depot->items(), // Paginated data
-            'pagination' => [
-                'current_page' => $depot->currentPage(),
-                'last_page' => $depot->lastPage(),
-                'per_page' => $depot->perPage(),
-                'total' => $depot->total(),
-            ]
+            'draw' => intval($draw),
+            'recordsTotal' => $depotQuery->total(),
+            'recordsFiltered' => $depotQuery->total(),
+            'data' => $depotQuery->items(),
         ]);
     }
 

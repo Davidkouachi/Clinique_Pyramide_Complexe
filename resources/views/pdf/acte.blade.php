@@ -41,7 +41,7 @@
                                 <label class="form-label">
                                 Actes
                                 </label>
-                                <select class="form-select" id="acte">
+                                <select class="form-select select2" id="acte">
                                     <option value="tous">Tout</option>
                                     <option value="cons">Consultation</option>
                                     <option value="hos">Hospitalisation</option>
@@ -55,7 +55,7 @@
                                 <label class="form-label">
                                 Filtre Consultation
                                 </label>
-                                <select class="form-select" id="pres">
+                                <select class="form-select select2" id="pres">
                                     <option value="tous">Tout</option>
                                     <option value="medecin">Medecin</option>
                                     <option value="specialite">Spécialité</option>
@@ -67,7 +67,7 @@
                                 <label class="form-label">
                                 Médecin
                                 </label>
-                                <select class="form-select" id="medecin_id"></select>
+                                <select class="form-select select2" id="medecin_id"></select>
                             </div>
                         </div>
                         <div class="col-12" style="display: none;" id="div_specialite">
@@ -75,7 +75,7 @@
                                 <label class="form-label">
                                 Spécialité
                                 </label>
-                                <select class="form-select" id="specialite_id"></select>
+                                <select class="form-select select2" id="specialite_id"></select>
                             </div>
                         </div>
                         <div class="col-12">
@@ -83,7 +83,7 @@
                                 <label class="form-label">
                                 Assurance
                                 </label>
-                                <select class="form-select" id="assurance_id"></select>
+                                <select class="form-select select2" id="assurance_id"></select>
                             </div>
                         </div>
                         <div class="col-12">
@@ -122,8 +122,10 @@
 <script src="{{asset('jsPDF-master/dist/jspdf.umd.js')}}"></script>
 <script src="{{asset('jsPDF-AutoTable/dist/jspdf.plugin.autotable.min.js')}}"></script>
 
+@include('select2')
+
 <script>
-    document.addEventListener("DOMContentLoaded", function() {
+    $(document).ready(function() {
 
         select_medecin();
         select_specialite();
@@ -131,8 +133,14 @@
 
         document.getElementById("date1").addEventListener("change", datechange);
         document.getElementById("btn_imp").addEventListener("click", imp_fac);
-        document.getElementById("acte").addEventListener("change", change_div_cons);
-        document.getElementById("pres").addEventListener("change", change_pres);
+
+        $('#acte').on('select2:select', function() {
+            change_div_cons();
+        });
+
+        $('#pres').on('select2:select', function() {
+            change_pres();
+        });
 
         function showAlert(title, message, type) {
             Swal.fire({
@@ -245,41 +253,37 @@
         }
 
         function change_div_cons() {
+            const select = $('#acte').val();
+            $('#pres').val('tous').trigger('change'); // Reset 'pres' to 'tous' and trigger change
 
-            const select = document.getElementById('acte').value;
-
-            document.getElementById('pres').value = 'tous';
-
-            if (select == "cons") {
-                document.getElementById('div_pres').style.display = "block";
-                document.getElementById('div_statut_hos').style.display = "none";
+            if (select === "cons") {
+                $('#div_pres').show();
             } else {
-                document.getElementById('div_pres').style.display = "none";
+                $('#div_pres').hide();
             }
 
-            document.getElementById('div_medecin').style.display = "none";
-            document.getElementById('div_specialite').style.display = "none"; 
-            document.getElementById('medecin_id').value = 'tous';
-            document.getElementById('specialite_id').value = 'tous';
+            $('#div_medecin').hide();
+            $('#div_specialite').hide();
+            $('#medecin_id').val('tous').trigger('change');
+            $('#specialite_id').val('tous').trigger('change');
         }
 
         function change_pres() {
+            const select = $('#pres').val();
 
-            const select = document.getElementById('pres').value;
-
-            if (select == "medecin") {
-                document.getElementById('div_medecin').style.display = "block";
-                document.getElementById('div_specialite').style.display = "none";
-            } else if (select == "specialite") {
-                document.getElementById('div_medecin').style.display = "none";
-                document.getElementById('div_specialite').style.display = "block"; 
+            if (select === "medecin") {
+                $('#div_medecin').show();
+                $('#div_specialite').hide();
+            } else if (select === "specialite") {
+                $('#div_medecin').hide();
+                $('#div_specialite').show();
             } else {
-                document.getElementById('div_medecin').style.display = "none";
-                document.getElementById('div_specialite').style.display = "none"; 
+                $('#div_medecin').hide();
+                $('#div_specialite').hide();
             }
 
-            document.getElementById('medecin_id').value = 'tous';
-            document.getElementById('specialite_id').value = 'tous';
+            $('#medecin_id').val('tous').trigger('change');
+            $('#specialite_id').val('tous').trigger('change');
         }
 
         function select_assurance()

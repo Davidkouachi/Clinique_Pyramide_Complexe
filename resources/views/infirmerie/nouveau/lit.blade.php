@@ -100,7 +100,7 @@
                                                 <label class="form-label">
                                                     Chambre
                                                 </label>
-                                                <select class="form-select" id="chambre_id">
+                                                <select class="form-select select2" id="chambre_id">
                                                 </select>
                                             </div>
                                         </div>
@@ -231,30 +231,30 @@
     </div>
 </div>
 
+@include('select2')
+
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
+    $(document).ready(function() {
 
         refresh_num();
         select_lit();
         list_lit();
 
-        document.getElementById("btn_search_num").addEventListener("click", refresh_num);
-        document.getElementById("btn_eng_lit").addEventListener("click", eng_lit);
+        $("#btn_search_num").on("click", refresh_num);
+        $("#btn_eng_lit").on("click", eng_lit);
 
-        document.getElementById("btn_refresh_table_day").addEventListener("click", list_lit);
-        document.getElementById("updateLitBtn").addEventListener("click", update_lit);
-        document.getElementById("deleteLitBtn").addEventListener("click", delete_lit);
+        $("#btn_refresh_table_day").on("click", list_lit);
+        $("#updateLitBtn").on("click", update_lit);
+        $("#deleteLitBtn").on("click", delete_lit);
 
-        function refresh_num(){
-
-            var num_lit = document.getElementById('num_lit');
+        function refresh_num() {
+            const num_lit = $('#num_lit');
 
             $.ajax({
                 url: '/api/refresh_num_lit',
                 method: 'GET',
                 success: function(response) {
-                    // showAlert('success', 'Code générer avec succès');
-                    num_lit.value = response.code;
+                    num_lit.val(response.code);
                 },
                 error: function() {
                     // showAlert('danger', 'Impossible de generer le code automatiquement');
@@ -263,26 +263,27 @@
         }
 
         function select_lit() {
-            const selectElement = document.getElementById('chambre_id');
-
+            const selectElement = $('#chambre_id');
+            
             // Clear existing options
-            selectElement.innerHTML = '';
-
-            const defaultOption = document.createElement('option');
-            defaultOption.value = '';
-            defaultOption.textContent = 'Sélectionner une Chambre';
-            selectElement.appendChild(defaultOption);
+            selectElement.empty();
+            
+            // Add default option
+            selectElement.append($('<option>', {
+                value: '',
+                text: 'Sélectionner une Chambre'
+            }));
 
             $.ajax({
                 url: '/api/list_chambre_select',
                 method: 'GET',
                 success: function(response) {
-                    data = response.list;
-                    data.forEach(list => {
-                        const option = document.createElement('option');
-                        option.value = list.id; // Ensure 'id' is the correct key
-                        option.textContent = 'CH-'+list.code; // Ensure 'nom' is the correct key
-                        selectElement.appendChild(option);
+                    const data = response.list;
+                    $.each(data, function(index, list) {
+                        selectElement.append($('<option>', {
+                            value: list.id, // Ensure 'id' is the correct key
+                            text: 'CH-' + list.code // Ensure 'nom' is the correct key
+                        }));
                     });
                 },
                 error: function() {
@@ -301,273 +302,202 @@
 
         function eng_lit() {
 
-            const num_lit = document.getElementById("num_lit");
-            const type = document.getElementById("type");
-            const chambre_id = document.getElementById("chambre_id");
+            const num_lit = $('#num_lit').val().trim();
+            const type = $('#type').val().trim();
+            const chambre_id = $('#chambre_id').val().trim();
 
-            if(!num_lit.value.trim() || !type.value.trim() || !chambre_id.value.trim()){
-                showAlert('Alert', 'Veuillez remplir tous les champs SVP.','warning');
+            if (!num_lit || !type || !chambre_id) {
+                showAlert('Alert', 'Veuillez remplir tous les champs SVP.', 'warning');
                 return false;
             }
 
-            var preloader_ch = `
+            const preloader_ch = `
                 <div id="preloader_ch">
                     <div class="spinner_preloader_ch"></div>
                 </div>
             `;
-            // Add the preloader to the body
-            document.body.insertAdjacentHTML('beforeend', preloader_ch);
+            $('body').append(preloader_ch);
 
             $.ajax({
                 url: '/api/lit_new',
-                method: 'GET',  // Use 'POST' for data creation
-                data: { num_lit: num_lit.value, type: type.value, chambre_id: chambre_id.value },
+                method: 'GET', // Use 'POST' for data creation
+                data: { num_lit, type, chambre_id },
                 success: function(response) {
-                    var preloader = document.getElementById('preloader_ch');
-                    if (preloader) {
-                        preloader.remove();
-                    }
+                    $('#preloader_ch').remove();
 
                     if (response.existe) {
-
                         select_lit();
-
-                        showAlert('Alert', 'Cet Lit Existe déjà.','warning');
-
+                        showAlert('Alert', 'Cet Lit Existe déjà.', 'warning');
                     } else if (response.nbre) {
-
                         select_lit();
-
-                        showAlert('Alert', 'Cette Chambre a atteint sa limite, Veuillez selectionner une autre chambre.','warning');
-
+                        showAlert('Alert', 'Cette Chambre a atteint sa limite, Veuillez selectionner une autre chambre.', 'warning');
                     } else if (response.success) {
-
-                        num_lit.value = '';
-                        type.value = '';
-                        chambre_id.value = '';
-
+                        $('#num_lit, #type').val('');
+                        $('#chambre_id').val('').trigger('change');
                         refresh_num();
                         select_lit();
                         list_lit();
-
-                        showAlert('Succès', 'Opération éffectuée.','success');
-
+                        showAlert('Succès', 'Opération éffectuée.', 'success');
                     } else if (response.error) {
-
                         select_lit();
-
-                        showAlert('Erreur', 'Une erreur est survenue lors de l\'enregistrement.','error');
-
+                        showAlert('Erreur', 'Une erreur est survenue lors de l\'enregistrement.', 'error');
                     }
-
                 },
                 error: function() {
-                    var preloader = document.getElementById('preloader_ch');
-                    if (preloader) {
-                        preloader.remove();
-                    }
-
+                    $('#preloader_ch').remove();
                     select_lit();
-
-                    showAlert('Erreur', 'Une erreur est survenue lors de l\'enregistrement.','error');
+                    showAlert('Erreur', 'Une erreur est survenue lors de l\'enregistrement.', 'error');
                 }
             });
-
         }
 
         function list_lit() {
 
-            const tableBody = document.querySelector('#Table_lit_day tbody'); // Target the specific table by id
-            const messageDiv = document.getElementById('message_Table_lit_day');
-            const tableDiv = document.getElementById('div_Table_lit_day'); // The message div
-            const loaderDiv = document.getElementById('div_Table_loader');
+            const tableBody = $('#Table_lit_day tbody');
+            const messageDiv = $('#message_Table_lit_day');
+            const tableDiv = $('#div_Table_lit_day');
+            const loaderDiv = $('#div_Table_loader');
 
-            messageDiv.style.display = 'none';
-            tableDiv.style.display = 'none';
-            loaderDiv.style.display = 'block';
+            messageDiv.hide();
+            tableDiv.hide();
+            loaderDiv.show();
 
-            // Fetch data from the API
-            fetch('/api/list_lit') // API endpoint
-                .then(response => response.json())
-                .then(data => {
-                    // Access the 'chambre' array from the API response
+            $.ajax({
+                url: '/api/list_lit',
+                method: 'GET',
+                dataType: 'json',
+                success: function(data) {
                     const lits = data.lit;
-
-                    // Clear any existing rows in the table body
-                    tableBody.innerHTML = '';
+                    tableBody.empty();
 
                     if (lits.length > 0) {
+                        loaderDiv.hide();
+                        messageDiv.hide();
+                        tableDiv.show();
 
-                        loaderDiv.style.display = 'none';
-                        messageDiv.style.display = 'none';
-                        tableDiv.style.display = 'block';
+                        $.each(lits, function(index, item) {
+                            const row = $(`
+                                <tr>
+                                    <td>${index + 1}</td>
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            <a class="d-flex align-items-center flex-column me-2">
+                                                <img src="{{asset('assets/images/lit.avif')}}" class="img-2x rounded-circle border border-1">
+                                            </a>
+                                            ${item.code}
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <span class="badge ${item.statut === 'indisponible' ? 'bg-danger' : 'bg-success'}">${item.statut}</span>
+                                    </td>
+                                    <td>CH-${item.code_ch}</td>
+                                    <td>${item.type}</td>
+                                    <td>${item.prix} Fcfa</td>
+                                    <td>
+                                        <div class="d-inline-flex gap-1">
+                                            <a class="btn btn-outline-info btn-sm rounded-5" data-bs-toggle="modal" data-bs-target="#Mmodif" id="edit-${item.id}">
+                                                <i class="ri-edit-box-line"></i>
+                                            </a>
+                                            ${item.statut === 'disponible' ? 
+                                                `<a class="btn btn-outline-danger btn-sm rounded-5" data-bs-toggle="modal" data-bs-target="#Mdelete" id="delete-${item.id}">
+                                                    <i class="ri-delete-bin-line"></i>
+                                                </a>` : ''}
+                                        </div>
+                                    </td>
+                                </tr>
+                            `);
 
-                        // Loop through each item in the chambre array
-                        lits.forEach((item, index) => {
-                            // Create a new row
-                            const row = document.createElement('tr');
-                            // Create and append cells to the row based on your table's structure
-                            row.innerHTML = `
-                                <td>${index + 1}</td>
-                                <td>
-                                    <div class="d-flex align-items-center ">
-                                        <a class="d-flex align-items-center flex-column me-2">
-                                            <img src="{{asset('assets/images/lit.avif')}}" class="img-2x rounded-circle border border-1">
-                                        </a>
-                                        ${item.code}
-                                    </div>
-                                </td>
-                                <td>
-                                    ${item.statut === 'indisponible' ? 
-                                        `<span class="badge bg-danger">${item.statut}</span>` : 
-                                        `<span class="badge bg-success">${item.statut}</span>`}
-                                </td>
-                                <td>CH-${item.code_ch}</td>
-                                <td>${item.type}</td>
-                                <td>${item.prix} Fcfa</td>
-                                <td>
-                                    <div class="d-inline-flex gap-1">
-                                        <a class="btn btn-outline-info btn-sm rounded-5" data-bs-toggle="modal" data-bs-target="#Mmodif" id="edit-${item.id}">
-                                            <i class="ri-edit-box-line"></i>
-                                        </a>
-                                        ${item.statut === 'disponible' ? 
-                                            `<a class="btn btn-outline-danger btn-sm rounded-5" data-bs-toggle="modal" data-bs-target="#Mdelete" id="delete-${item.id}">
-                                                <i class="ri-delete-bin-line"></i>
-                                            </a>` : `` }
-                                    </div>
-                                </td>
-                            `;
-                            // Append the row to the table body
-                            tableBody.appendChild(row);
+                            tableBody.append(row);
 
-                            // Add event listener to the edit button to open the modal with pre-filled data
-                            document.getElementById(`edit-${item.id}`).addEventListener('click', () => {
-                                // Set the values in the modal form
-                                document.getElementById('litId').value = item.id;
-                                document.getElementById('litCode').value = item.code;
-
-                                const litTypeSelect = document.getElementById('typeLit');
-                                const typeOptions = litTypeSelect.options;
-
-                                // Loop through the options to find the matching value
-                                for (let i = 0; i < typeOptions.length; i++) {
-                                    if (typeOptions[i].value === item.type) { // Replace 'item.type_lit' with the correct field from your data
-                                        typeOptions[i].selected = true; // Set the matching option as selected
-                                        break; // Stop the loop once a match is found
-                                    }
-                                }
+                            $(`#edit-${item.id}`).on('click', function() {
+                                $('#litId').val(item.id);
+                                $('#litCode').val(item.code);
+                                $('#typeLit').val(item.type);
                             });
 
-                            const deleteButton = document.getElementById(`delete-${item.id}`);
-                            if (deleteButton) {
-                                deleteButton.addEventListener('click', () => {
-                                    // Set the values in the modal form
-                                    document.getElementById('litIddelete').value = item.id;
-                                });
-                            }
-
+                            $(`#delete-${item.id}`).on('click', function() {
+                                $('#litIddelete').val(item.id);
+                            });
                         });
                     } else {
-                        loaderDiv.style.display = 'none';
-                        messageDiv.style.display = 'block';
-                        tableDiv.style.display = 'none';
+                        loaderDiv.hide();
+                        messageDiv.show();
+                        tableDiv.hide();
                     }
-                })
-                .catch(error => {
-                    console.error('Erreur lors du chargement des données:', error);
-                    // Hide the table and show the error message in case of failure
-                    loaderDiv.style.display = 'none';
-                    messageDiv.style.display = 'block';
-                    tableDiv.style.display = 'none';
-                });
+                },
+                error: function() {
+                    loaderDiv.hide();
+                    messageDiv.show();
+                    tableDiv.hide();
+                }
+            });
         }
 
         function update_lit() {
+            const id = $('#litId').val();
+            const typeLit = $('#typeLit').val().trim();
 
-            const id = document.getElementById('litId').value;
-            const typeLit = document.getElementById('typeLit').value;
-
-            if(!typeLit.trim()){
-                showAlert('Alert', 'Veuillez remplir tous les champs SVP.','warning');
+            if (!typeLit) {
+                showAlert('Alert', 'Veuillez remplir tous les champs SVP.', 'warning');
                 return false;
             }
 
-            var modal = bootstrap.Modal.getInstance(document.getElementById('Mmodif'));
+            const modal = bootstrap.Modal.getInstance(document.getElementById('Mmodif'));
             modal.hide();
 
-            var preloader_ch = `
+            const preloader_ch = `
                 <div id="preloader_ch">
                     <div class="spinner_preloader_ch"></div>
                 </div>
             `;
-            // Add the preloader to the body
-            document.body.insertAdjacentHTML('beforeend', preloader_ch);
+            $('body').append(preloader_ch);
 
             $.ajax({
-                url: '/api/update_lit/'+id,
-                method: 'GET',
-                data: { typeLit: typeLit},
+                url: '/api/update_lit/' + id,
+                method: 'GET', // Use 'POST' if updating data
+                data: { typeLit },
                 success: function(response) {
-                    var preloader = document.getElementById('preloader_ch');
-                    if (preloader) {
-                        preloader.remove();
-                    }
+                    $('#preloader_ch').remove();
 
                     if (response.success) {
-
-                        showAlert('Succès', 'Opération éffectuée.','success');
-
+                        list_lit();
+                        showAlert('Succès', 'Opération éffectuée.', 'success');
                     }
-
                 },
                 error: function() {
-                    var preloader = document.getElementById('preloader_ch');
-                    if (preloader) {
-                        preloader.remove();
-                    }
-
-                    showAlert('Erreur', 'Erreur lors de la mise à jour de la chambre.','error');
+                    $('#preloader_ch').remove();
+                    showAlert('Erreur', 'Erreur lors de la mise à jour de la chambre.', 'error');
                 }
             });
         }
 
         function delete_lit() {
+            const id = $('#litIddelete').val();
 
-            const id = document.getElementById('litIddelete').value;
-
-            var modal = bootstrap.Modal.getInstance(document.getElementById('Mdelete'));
+            const modal = bootstrap.Modal.getInstance(document.getElementById('Mdelete'));
             modal.hide();
 
-            var preloader_ch = `
+            const preloader_ch = `
                 <div id="preloader_ch">
                     <div class="spinner_preloader_ch"></div>
                 </div>
             `;
-            // Add the preloader to the body
-            document.body.insertAdjacentHTML('beforeend', preloader_ch);
+            $('body').append(preloader_ch);
 
             $.ajax({
-                url: '/api/delete_lit/'+id,
-                method: 'GET',
+                url: '/api/delete_lit/' + id,
+                method: 'GET', // Use 'DELETE' for deletion
                 success: function(response) {
-                    var preloader = document.getElementById('preloader_ch');
-                    if (preloader) {
-                        preloader.remove();
-                    }
+                    $('#preloader_ch').remove();
 
                     if (response.success) {
-
-                        showAlert('Succès', 'Opération éffectuée.','success');
-
+                        list_lit();
+                        showAlert('Succès', 'Opération éffectuée.', 'success');
                     }
                 },
                 error: function() {
-                    var preloader = document.getElementById('preloader_ch');
-                    if (preloader) {
-                        preloader.remove();
-                    }
-
-                    showAlert('Erreur', 'Erreur lors de la suppression de la chambre.','error');
+                    $('#preloader_ch').remove();
+                    showAlert('Erreur', 'Erreur lors de la suppression de la chambre.', 'error');
                 }
             });
         }

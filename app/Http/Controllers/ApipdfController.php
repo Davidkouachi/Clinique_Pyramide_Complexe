@@ -713,6 +713,10 @@ class ApipdfController extends Controller
             'assurance' => $assurance,
             'date1' => $date1,
             'date2' => $date2,
+            'date_payer' => $fac->date_payer,
+            'statut' => $fac->statut,
+            'type_paiement' => $fac->type_paiement,
+            'num_cheque' => $fac->num_cheque,
         ]);
     }
 

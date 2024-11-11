@@ -200,38 +200,40 @@
 </div>
 
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
+    $(document).ready(function() {
 
         select();
         select_modif();
         list();
 
-        document.getElementById("btn_eng").addEventListener("click", eng);
-        document.getElementById("btn_refresh_table").addEventListener("click", list);
-        document.getElementById("updateBtn").addEventListener("click", updatee);
-        document.getElementById("deleteBtn").addEventListener("click", deletee);
+        $('#btn_eng').on('click', eng);
+        $('#btn_refresh_table').on('click', list);
+        $('#updateBtn').on('click', updatee);
+        $('#deleteBtn').on('click', deletee);
+
 
         function select() {
-            const selectElement = document.getElementById('type_id');
+            const $selectElement = $('#type_id');
 
             // Clear existing options
-            selectElement.innerHTML = '';
+            $selectElement.empty();
 
-            const defaultOption = document.createElement('option');
-            defaultOption.value = '';
-            defaultOption.textContent = 'Sélectionner un Type d\'admission';
-            selectElement.appendChild(defaultOption);
+            // Add default option
+            $selectElement.append($('<option>', {
+                value: '',
+                text: 'Sélectionner un Type d\'admission'
+            }));
 
             $.ajax({
                 url: '/api/list_typeadmission',
                 method: 'GET',
                 success: function(response) {
-                    typeadmissions = response.typeadmission;
+                    const typeadmissions = response.typeadmission;
                     typeadmissions.forEach(item => {
-                        const option = document.createElement('option');
-                        option.value = item.id; // Ensure 'id' is the correct key
-                        option.textContent = item.nom; // Ensure 'nom' is the correct key
-                        selectElement.appendChild(option);
+                        $selectElement.append($('<option>', {
+                            value: item.id, // 'id' est la clé correcte
+                            text: item.nom  // 'nom' est la clé correcte
+                        }));
                     });
                 },
                 error: function() {
@@ -241,21 +243,19 @@
         }
 
         function select_modif() {
-            const selectElement = document.getElementById('type_id_modif');
-
-            // Clear existing options
-            selectElement.innerHTML = '';
+            const $selectElement = $('#type_id_modif');
+            $selectElement.empty();
 
             $.ajax({
                 url: '/api/list_typeadmission',
                 method: 'GET',
                 success: function(response) {
-                    typeadmissions = response.typeadmission;
+                    const typeadmissions = response.typeadmission;
                     typeadmissions.forEach(item => {
-                        const option = document.createElement('option');
-                        option.value = item.id; // Ensure 'id' is the correct key
-                        option.textContent = item.nom; // Ensure 'nom' is the correct key
-                        selectElement.appendChild(option);
+                        $selectElement.append($('<option>', {
+                            value: item.id, // 'id' est la clé correcte
+                            text: item.nom  // 'nom' est la clé correcte
+                        }));
                     });
                 },
                 error: function() {
@@ -274,56 +274,49 @@
 
         function eng() {
 
-            const type_id = document.getElementById("type_id");
-            const nom = document.getElementById("nom_nature");
+            const type_id = $('#type_id').val().trim();
+            const nom = $('#nom_nature').val().trim();
 
-            if(!type_id.value.trim() || !nom.value.trim()){
-                showAlert('Alert', 'Veuillez remplir tous les champs SVP.','warning');
+            if(!type_id || !nom) {
+                showAlert('Alert', 'Veuillez remplir tous les champs SVP.', 'warning');
                 return false;
             }
 
-            var preloader_ch = `
+            const preloader_ch = `
                 <div id="preloader_ch">
                     <div class="spinner_preloader_ch"></div>
                 </div>
             `;
-            // Add the preloader to the body
-            document.body.insertAdjacentHTML('beforeend', preloader_ch);
+            $('body').append(preloader_ch);
 
             $.ajax({
                 url: '/api/new_natureadmission',
                 method: 'GET',  // Use 'POST' for data creation
-                data: { id: type_id.value, nom: nom.value},
+                data: { id: type_id, nom: nom },
                 success: function(response) {
-                    var preloader = document.getElementById('preloader_ch');
-                    if (preloader) {
-                        preloader.remove();
-                    }
+                    $('#preloader_ch').remove();
 
                     if (response.success) {
-                        showAlert('Succès', 'Opération éffectuée.','success');
+                        showAlert('Succès', 'Opération effectuée.', 'success');
                     } else if (response.error) {
-                        showAlert('Erreur', 'Une erreur est survenue lors de l\'enregistrement.','error');
+                        showAlert('Erreur', 'Une erreur est survenue lors de l\'enregistrement.', 'error');
                     }
 
-                    type_id.value = '';
-                    nom.value = '';
+                    $('#type_id').val('');
+                    $('#nom_nature').val('');
 
                     select_modif();
                     select();
                     list();
                 },
                 error: function() {
-                    var preloader = document.getElementById('preloader_ch');
-                    if (preloader) {
-                        preloader.remove();
-                    }
+                    $('#preloader_ch').remove();
 
-                    showAlert('Erreur', 'Une erreur est survenue lors de l\'enregistrement.','error');
-                    
-                    type_id.value = '';
-                    nom.value = '';
-                    
+                    showAlert('Erreur', 'Une erreur est survenue lors de l\'enregistrement.', 'error');
+
+                    $('#type_id').val('');
+                    $('#nom_nature').val('');
+
                     select_modif();
                     select();
                     list();
@@ -332,47 +325,39 @@
         }
 
         function list(page = 1) {
+            const tableBody = $('#Table tbody');
+            const messageDiv = $('#message_Table');
+            const tableDiv = $('#div_Table');
+            const loaderDiv = $('#div_Table_loader');
 
-            const tableBody = document.querySelector('#Table tbody');
-            const messageDiv = document.getElementById('message_Table');
-            const tableDiv = document.getElementById('div_Table'); // The message div
-            const loaderDiv = document.getElementById('div_Table_loader');
-
-            messageDiv.style.display = 'none';
-            tableDiv.style.display = 'none';
-            loaderDiv.style.display = 'block';
+            messageDiv.hide();
+            tableDiv.hide();
+            loaderDiv.show();
 
             let allNatureadmissions = [];
 
             const url = `/api/list_natureadmission?page=${page}`;
-            fetch(url) // API endpoint
-                .then(response => response.json())
-                .then(data => {
+            $.get(url, function(data) {
+                allNatureadmissions = data.natureadmission || [];
+                const pagination = data.pagination || {};
 
-                    allNatureadmissions = data.natureadmission || [] ;
-                    const pagination = data.pagination || {};
+                const perPage = pagination.per_page || 10;
+                const currentPage = pagination.current_page || 1;
 
-                    const perPage = pagination.per_page || 10;
-                    const currentPage = pagination.current_page || 1;
+                if (allNatureadmissions.length > 0) {
+                    function displayRows(filteredNatureadmissions) {
+                        loaderDiv.hide();
+                        messageDiv.hide();
+                        tableDiv.show();
 
-                    if (allNatureadmissions.length > 0) {
+                        tableBody.empty();
 
-                        function displayRows(filteredNatureadmissions) {
-                            loaderDiv.style.display = 'none';
-                            messageDiv.style.display = 'none';
-                            tableDiv.style.display = 'block';
-
-                            tableBody.innerHTML = '';
-
-                            // Loop through each item in the chambre array
-                            filteredNatureadmissions.forEach((item, index) => {
-                                // Create a new row
-                                const row = document.createElement('tr');
-                                // Create and append cells to the row based on your table's structure
-                                row.innerHTML = `
+                        filteredNatureadmissions.forEach((item, index) => {
+                            const row = `
+                                <tr>
                                     <td>${((currentPage - 1) * perPage) + index + 1}</td>
                                     <td>
-                                        <div class="d-flex align-items-center ">
+                                        <div class="d-flex align-items-center">
                                             <a class="d-flex align-items-center flex-column me-2">
                                                 <img src="{{asset('assets/images/type_admission.jpg')}}" class="img-2x rounded-circle border border-1">
                                             </a>
@@ -391,246 +376,180 @@
                                                 </a>` : `` }
                                         </div>
                                     </td>
-                                `;
+                                </tr>
+                            `;
 
-                                tableBody.appendChild(row);
+                            tableBody.append(row);
 
-                                document.getElementById(`edit-${item.id}`).addEventListener('click', () =>
-                                {
-                                    // Set the values in the modal form
-                                    document.getElementById('Id').value = item.id;
-                                    document.getElementById('nomModif').value = item.nom;
-
-                                    const modifActeSelect = document.getElementById('type_id_modif');
-                                    const typeeOptions = modifActeSelect.options;
-
-                                    // Loop through the options to find the matching value
-                                    for (let i = 0; i < typeeOptions.length; i++) {
-                                        if (String(typeeOptions[i].value) === String(item.acte_id)) {
-                                            typeeOptions[i].selected = true; // Set the matching option as selected
-                                            break; // Stop the loop once a match is found
-                                        }
-                                    }
-                                });
-
-                                const deleteButton = document.getElementById(`delete-${item.id}`);
-                                if (deleteButton) {
-                                    deleteButton.addEventListener('click', () => {
-                                        // Set the values in the modal form
-                                        document.getElementById('Iddelete').value = item.id;
-                                    });
-                                }
-
+                            $(`#edit-${item.id}`).on('click', () => {
+                                $('#Id').val(item.id);
+                                $('#nomModif').val(item.nom);
+                                $('#type_id_modif').val(item.typeadmission_id).trigger('change');
                             });
-                        }
 
-                        // Update table with filtered factures
-                        function applySearchFilter() {
-                            const searchTerm = searchInput.value.toLowerCase();
-                            const filteredNatureadmissions = allNatureadmissions.filter(item =>
-                                item.nom.toLowerCase().includes(searchTerm)
-                            );
-                            displayRows(filteredNatureadmissions); // Display only filtered factures
-                        }
-
-                        searchInput.addEventListener('input', applySearchFilter);
-
-                        displayRows(allNatureadmissions);
-
-                        PaginationControls(pagination);
-
-                    } else {
-                        loaderDiv.style.display = 'none';
-                        messageDiv.style.display = 'block';
-                        tableDiv.style.display = 'none';
+                            const deleteButton = $(`#delete-${item.id}`);
+                            if (deleteButton.length) {
+                                deleteButton.on('click', () => {
+                                    $('#Iddelete').val(item.id);
+                                });
+                            }
+                        });
                     }
-                })
-                .catch(error => {
-                    console.error('Erreur lors du chargement des données:', error);
-                    // Hide the table and show the error message in case of failure
-                    loaderDiv.style.display = 'none';
-                    messageDiv.style.display = 'block';
-                    tableDiv.style.display = 'none';
-                });
+
+                    function applySearchFilter() {
+                        const searchTerm = $('#searchInput').val().toLowerCase();
+                        const filteredNatureadmissions = allNatureadmissions.filter(item =>
+                            item.nom.toLowerCase().includes(searchTerm)
+                        );
+                        displayRows(filteredNatureadmissions);
+                    }
+
+                    $('#searchInput').on('input', applySearchFilter);
+                    displayRows(allNatureadmissions);
+                    PaginationControls(pagination);
+
+                } else {
+                    loaderDiv.hide();
+                    messageDiv.show();
+                    tableDiv.hide();
+                }
+            }).fail(function() {
+                console.error('Erreur lors du chargement des données');
+                loaderDiv.hide();
+                messageDiv.show();
+                tableDiv.hide();
+            });
         }
 
         function PaginationControls(pagination) {
-            const paginationDiv = document.getElementById('pagination-controls');
-            paginationDiv.innerHTML = '';
+            const paginationDiv = $('#pagination-controls');
+            paginationDiv.empty();
 
-            // Bootstrap pagination wrapper
-            const paginationWrapper = document.createElement('ul');
-            paginationWrapper.className = 'pagination justify-content-center';
+            const paginationWrapper = $('<ul class="pagination justify-content-center"></ul>');
 
-            // Previous button
             if (pagination.current_page > 1) {
-                const prevButton = document.createElement('li');
-                prevButton.className = 'page-item';
-                prevButton.innerHTML = `<a class="page-link" href="#">Precédent</a>`;
-                prevButton.onclick = (event) => {
-                    event.preventDefault(); // Empêche le défilement en haut de la page
+                const prevButton = $('<li class="page-item"><a class="page-link" href="#">Precédent</a></li>');
+                prevButton.on('click', function(event) {
+                    event.preventDefault();
                     list(pagination.current_page - 1);
-                };
-                paginationWrapper.appendChild(prevButton);
+                });
+                paginationWrapper.append(prevButton);
             } else {
-                // Disable the previous button if on the first page
-                const prevButton = document.createElement('li');
-                prevButton.className = 'page-item disabled';
-                prevButton.innerHTML = `<a class="page-link" href="#">Precédent</a>`;
-                paginationWrapper.appendChild(prevButton);
+                paginationWrapper.append('<li class="page-item disabled"><a class="page-link" href="#">Precédent</a></li>');
             }
 
-            // Page number links (show a few around the current page)
             const totalPages = pagination.last_page;
             const currentPage = pagination.current_page;
-            const maxVisiblePages = 5; // Max number of page links to display
+            const maxVisiblePages = 5;
 
             let startPage = Math.max(1, currentPage - Math.floor(maxVisiblePages / 2));
             let endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
 
-            // Adjust start page if end page exceeds the total pages
             if (endPage - startPage < maxVisiblePages - 1) {
                 startPage = Math.max(1, endPage - maxVisiblePages + 1);
             }
 
-            // Loop through pages and create page links
             for (let i = startPage; i <= endPage; i++) {
-                const pageItem = document.createElement('li');
-                pageItem.className = `page-item ${i === currentPage ? 'active' : ''}`;
-                pageItem.innerHTML = `<a class="page-link" href="#">${i}</a>`;
-                pageItem.onclick = (event) => {
-                    event.preventDefault(); // Empêche le défilement en haut de la page
+                const pageItem = $(`<li class="page-item ${i === currentPage ? 'active' : ''}"><a class="page-link" href="#">${i}</a></li>`);
+                pageItem.on('click', function(event) {
+                    event.preventDefault();
                     list(i);
-                };
-                paginationWrapper.appendChild(pageItem);
+                });
+                paginationWrapper.append(pageItem);
             }
 
-            // Ellipsis (...) if not all pages are shown
             if (endPage < totalPages) {
-                const ellipsis = document.createElement('li');
-                ellipsis.className = 'page-item disabled';
-                ellipsis.innerHTML = `<a class="page-link" href="#">...</a>`;
-                paginationWrapper.appendChild(ellipsis);
+                paginationWrapper.append('<li class="page-item disabled"><a class="page-link" href="#">...</a></li>');
 
-                // Add the last page link
-                const lastPageItem = document.createElement('li');
-                lastPageItem.className = `page-item`;
-                lastPageItem.innerHTML = `<a class="page-link" href="#">${totalPages}</a>`;
-                lastPageItem.onclick = (event) => {
-                    event.preventDefault(); // Empêche le défilement en haut de la page
+                const lastPageItem = $(`<li class="page-item"><a class="page-link" href="#">${totalPages}</a></li>`);
+                lastPageItem.on('click', function(event) {
+                    event.preventDefault();
                     list(totalPages);
-                };
-                paginationWrapper.appendChild(lastPageItem);
+                });
+                paginationWrapper.append(lastPageItem);
             }
 
-            // Next button
             if (pagination.current_page < pagination.last_page) {
-                const nextButton = document.createElement('li');
-                nextButton.className = 'page-item';
-                nextButton.innerHTML = `<a class="page-link" href="#">Suivant</a>`;
-                nextButton.onclick = (event) => {
-                    event.preventDefault(); // Empêche le défilement en haut de la page
+                const nextButton = $('<li class="page-item"><a class="page-link" href="#">Suivant</a></li>');
+                nextButton.on('click', function(event) {
+                    event.preventDefault();
                     list(pagination.current_page + 1);
-                };
-                paginationWrapper.appendChild(nextButton);
+                });
+                paginationWrapper.append(nextButton);
             } else {
-                // Disable the next button if on the last page
-                const nextButton = document.createElement('li');
-                nextButton.className = 'page-item disabled';
-                nextButton.innerHTML = `<a class="page-link" href="#">Suivant</a>`;
-                paginationWrapper.appendChild(nextButton);
+                paginationWrapper.append('<li class="page-item disabled"><a class="page-link" href="#">Suivant</a></li>');
             }
 
-            // Append pagination controls to the DOM
-            paginationDiv.appendChild(paginationWrapper);
+            paginationDiv.append(paginationWrapper);
         }
 
         function updatee() {
 
-            const id = document.getElementById('Id').value;
-            const nomModif = document.getElementById('nomModif').value;
-            const type_id_modif = document.getElementById('type_id_modif').value;
+            const id = $('#Id').val();
+            const nomModif = $('#nomModif').val();
+            const type_id_modif = $('#type_id_modif').val();
 
-            if(!nomModif.trim() || !type_id_modif.trim()){
-                showAlert('Alert', 'Veuillez remplir tous les champs SVP.','warning');
+            if (!nomModif.trim() || !type_id_modif.trim()) {
+                showAlert('Alert', 'Veuillez remplir tous les champs SVP.', 'warning');
                 return false;
             }
 
-            var modal = bootstrap.Modal.getInstance(document.getElementById('Mmodif'));
+            const modal = bootstrap.Modal.getInstance($('#Mmodif')[0]);
             modal.hide();
 
-            var preloader_ch = `
+            const preloader_ch = `
                 <div id="preloader_ch">
                     <div class="spinner_preloader_ch"></div>
                 </div>
             `;
-            // Add the preloader to the body
-            document.body.insertAdjacentHTML('beforeend', preloader_ch);
+            $('body').append(preloader_ch);
 
             $.ajax({
-                url: '/api/update_natureadmission/'+id,
+                url: `/api/update_natureadmission/${id}`,
                 method: 'GET',  // Use 'POST' for data creation
-                data: { type: nomModif, type_id: type_id_modif},
+                data: { nomModif: nomModif, type_id: type_id_modif },
                 success: function(response) {
-                    var preloader = document.getElementById('preloader_ch');
-                    if (preloader) {
-                        preloader.remove();
-                    }
+                    $('#preloader_ch').remove();
+                    showAlert('Succès', 'Nature d\'admission mise à jour avec succès.', 'success');
 
-                    showAlert('Succès', 'Nature d\'admission mis à jour avec succès.','success');
-            
                     list();
                     select();
                     select_modif();
                 },
                 error: function() {
-                    var preloader = document.getElementById('preloader_ch');
-                    if (preloader) {
-                        preloader.remove();
-                    }
-
-                    showAlert('Erreur', 'Erreur lors de la mise à jour.','error');
+                    $('#preloader_ch').remove();
+                    showAlert('Erreur', 'Erreur lors de la mise à jour.', 'error');
                 }
             });
         }
 
         function deletee() {
+            const id = $('#Iddelete').val();
 
-            const id = document.getElementById('Iddelete').value;
-
-            var modal = bootstrap.Modal.getInstance(document.getElementById('Mdelete'));
+            const modal = bootstrap.Modal.getInstance($('#Mdelete')[0]);
             modal.hide();
 
-            var preloader_ch = `
+            const preloader_ch = `
                 <div id="preloader_ch">
                     <div class="spinner_preloader_ch"></div>
                 </div>
             `;
-            // Add the preloader to the body
-            document.body.insertAdjacentHTML('beforeend', preloader_ch);
+            $('body').append(preloader_ch);
 
             $.ajax({
-                url: '/api/delete_natureadmission/'+id,
-                method: 'GET',  // Use 'POST' for data creation
+                url: `/api/delete_natureadmission/${id}`,
+                method: 'GET',  // Use 'POST' for data deletion
                 success: function(response) {
-                    var preloader = document.getElementById('preloader_ch');
-                    if (preloader) {
-                        preloader.remove();
-                    }
+                    $('#preloader_ch').remove();
+                    showAlert('Succès', 'Nature d\'admission supprimée avec succès.', 'success');
 
-                    showAlert('Succès', 'Chambre supprimer avec succès.','success');
-                    
                     list();
                     select();
                     select_modif();
                 },
                 error: function() {
-                    var preloader = document.getElementById('preloader_ch');
-                    if (preloader) {
-                        preloader.remove();
-                    }
-
-                    showAlert('Erreur', 'Erreur lors de la suppression de la chambre.','eror');
+                    $('#preloader_ch').remove();
+                    showAlert('Erreur', 'Erreur lors de la suppression de la nature d\'admission.', 'error');
                 }
             });
         }

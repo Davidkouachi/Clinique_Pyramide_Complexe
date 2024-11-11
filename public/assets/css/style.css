@@ -103,6 +103,8 @@
 
 
 
+
+
 /*debut animation appel d'urgence*/
 @keyframes flash-background {
     0% {
@@ -217,5 +219,74 @@
     background-color: #f0f0f0;
 }
 /*fin div suggestion*/
+
+
+
+
+
+/* Table Styles */
+#Table_day {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+/* Table headers */
+#Table_day th {
+    background-color: #007bff;  /* Bleu de l'en-tête */
+    color: #fff;                /* Texte en blanc */
+    text-align: center;         /* Centrer le texte */
+    font-weight: bold;
+    padding: 12px 15px;
+}
+
+/* Table rows */
+#Table_day td {
+    padding: 10px 15px;
+    text-align: center;
+    vertical-align: middle;
+}
+
+/* Row hover effect */
+#Table_day tbody tr:hover {
+    background-color: #f8f9fa;
+}
+
+/* Zebra striping */
+#Table_day tbody tr:nth-child(odd) {
+    background-color: #f2f2f2;
+}
+
+/* Styling buttons */
+#Table_day .btn {
+    padding: 6px 12px;
+    font-size: 14px;
+    border-radius: 5px;
+}
+
+/* Action buttons */
+#Table_day .btn-outline-info {
+    color: #0d6efd;
+    border-color: #0d6efd;
+}
+
+#Table_day .btn-outline-info:hover {
+    background-color: #0d6efd;
+    color: white;
+}
+
+/* Responsive table */
+#Table_day_wrapper {
+    overflow-x: auto;
+}
+
+.dataTables_wrapper {
+    width: 100%;
+}
+
+.dataTables_scrollBody {
+    width: 100% !important;
+    overflow-x: auto;
+}
+
 
 

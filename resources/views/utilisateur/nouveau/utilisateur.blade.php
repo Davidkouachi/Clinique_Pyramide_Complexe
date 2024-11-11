@@ -103,7 +103,7 @@
                                         <div class="col-xxl-3 col-lg-4 col-sm-6">
                                             <div class="mb-3">
                                                 <label class="form-label">Rôle</label>
-                                                <select class="form-select" id="role_id">
+                                                <select class="form-select select2" id="role_id">
                                                 </select>
                                             </div>
                                         </div>
@@ -202,7 +202,7 @@
     </div>
 </div>
 
-<div class="modal fade" id="Mmodif" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="Mmodif" tabindex="-1">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -211,9 +211,6 @@
             </div>
             <div class="modal-body">
                 <form id="updateForm">
-                    <div class="mb-3" id="alert_update">
-                        
-                    </div>
                     <input type="hidden" id="Id">
                     <div class="mb-3">
                         <label class="form-label">Nom et Prénoms</label>
@@ -244,7 +241,7 @@
                     </div>
                     <div class="mb-3">
                         <label class="form-label">Rôle</label>
-                        <select class="form-select" id="role_idModif"></select>
+                        <select class="form-select select2" id="role_idModif"></select>
                     </div>
                 </form>
             </div>
@@ -256,64 +253,75 @@
     </div>
 </div>
 
+@include('select2')
+
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
+    $('#Mmodif').on('shown.bs.modal', function () {
+        $('#role_idModif').select2({
+            theme: 'bootstrap',
+            placeholder: 'Selectionner',
+            language: {
+                noResults: function() {
+                    return "Aucun résultat trouvé";
+                }
+            },
+            width: '100%',
+            dropdownParent: $('#Mmodif'),
+        });
+    });
+</script>
+
+<script>
+    $(document).ready(function() {
 
         select();
         select_modif();
         list();
 
-        document.getElementById("btn_eng").addEventListener("click", eng);
-        document.getElementById("btn_refresh_table").addEventListener("click", list);
-        document.getElementById("updateBtn").addEventListener("click", updatee);
-        document.getElementById("deleteBtn").addEventListener("click", deletee);
+        $("#btn_eng").on("click", eng);
+        $("#btn_refresh_table").on("click", list);
+        $("#updateBtn").on("click", updatee);
+        $("#deleteBtn").on("click", deletee);
 
-        var inputs = ['tel', 'tel2', 'telModif', 'tel2Modif']; // Array of element IDs
+        var inputs = ['tel', 'tel2', 'telModif', 'tel2Modif'];
         inputs.forEach(function(id) {
-            var inputElement = document.getElementById(id); // Get each element by its ID
-            inputElement.addEventListener('input', function() {
+            $("#" + id).on("input", function() {
                 this.value = this.value.replace(/[^0-9]/g, ''); // Allow only numbers
             });
         });
 
-        document.getElementById("btn_hidden_mpd").addEventListener("click", function(event) {
+        $("#btn_hidden_mpd").on("click", function(event) {
             event.preventDefault();
-            const passwordField = document.getElementById('password');
-            const toggleIcon = document.getElementById('toggleIcon');
-                
-            // Toggle the type attribute
-            if (passwordField.type === 'password') {
-                passwordField.type = 'text';
-                toggleIcon.classList.remove('ri-eye-line');
-                toggleIcon.classList.add('ri-eye-off-line');
+            const passwordField = $('#password');
+            const toggleIcon = $('#toggleIcon');
+
+            if (passwordField.attr("type") === 'password') {
+                passwordField.attr("type", "text");
+                toggleIcon.removeClass('ri-eye-line').addClass('ri-eye-off-line');
             } else {
-                passwordField.type = 'password';
-                toggleIcon.classList.remove('ri-eye-off-line');
-                toggleIcon.classList.add('ri-eye-line');
+                passwordField.attr("type", "password");
+                toggleIcon.removeClass('ri-eye-off-line').addClass('ri-eye-line');
             }
         });
 
         function select() {
-            const selectElement = document.getElementById('role_id');
-
-            // Clear existing options
-            selectElement.innerHTML = '';
-
-            const defaultOption = document.createElement('option');
-            defaultOption.value = '';
-            defaultOption.textContent = 'Selectionner';
-            selectElement.appendChild(defaultOption);
+            const selectElement = $('#role_id');
+            selectElement.empty(); // Clear existing options
+            selectElement.append($('<option>', {
+                value: '',
+                text: 'Selectionner'
+            }));
 
             $.ajax({
                 url: '/api/select_role',
                 method: 'GET',
                 success: function(response) {
-                    data = response.role;
-                    data.forEach(item => {
-                        const option = document.createElement('option');
-                        option.value = item.id; // Ensure 'id' is the correct key
-                        option.textContent = item.nom; // Ensure 'nom' is the correct key
-                        selectElement.appendChild(option);
+                    const data = response.role;
+                    data.forEach(function(item) {
+                        selectElement.append($('<option>', {
+                            value: item.id, // Ensure 'id' is the correct key
+                            text: item.nom  // Ensure 'nom' is the correct key
+                        }));
                     });
                 },
                 error: function() {
@@ -323,21 +331,19 @@
         }
 
         function select_modif() {
-            const selectElement = document.getElementById('role_idModif');
-
-            // Clear existing options
-            selectElement.innerHTML = '';
+            const selectElement = $('#role_idModif');
+            selectElement.empty(); // Clear existing options
 
             $.ajax({
                 url: '/api/select_role',
                 method: 'GET',
                 success: function(response) {
-                    data = response.role;
-                    data.forEach(item => {
-                        const option = document.createElement('option');
-                        option.value = item.id; // Ensure 'id' is the correct key
-                        option.textContent = item.nom; // Ensure 'nom' is the correct key
-                        selectElement.appendChild(option);
+                    const data = response.role;
+                    data.forEach(function(item) {
+                        selectElement.append($('<option>', {
+                            value: item.id, // Ensure 'id' is the correct key
+                            text: item.nom  // Ensure 'nom' is the correct key
+                        }));
                     });
                 },
                 error: function() {
@@ -354,246 +360,194 @@
             });
         }
 
+        // Function to handle form submission and validation
         function eng() {
+            const nom = $("#nom");
+            const email = $("#email");
+            const tel = $("#tel");
+            const tel2 = $("#tel2");
+            const sexe = $("#sexe");
+            const adresse = $("#adresse");
+            const role_id = $("#role_id");
+            const password = $("#password");
 
-            const nom = document.getElementById("nom");
-            const email = document.getElementById("email");
-            const tel = document.getElementById("tel");
-            const tel2 = document.getElementById("tel2");
-            const sexe = document.getElementById("sexe");
-            const adresse = document.getElementById("adresse");
-            const role_id = document.getElementById("role_id");
-            const password = document.getElementById("password");
-
-            if (!nom.value.trim() || !email.value.trim() || !tel.value.trim() || !sexe.value.trim() || !adresse.value.trim() || !role_id.value.trim() || !password.value.trim()) {
-                showAlert('Alert', 'Veuillez remplir tous les champs SVP.','warning');
-                return false;
-            }
-
-            var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            if (!emailRegex.test(email.value.trim())) { 
-                showAlert('Alert', 'Email incorrect.','warning');
-                return false;
-            }
-
-            if (tel.value.length !== 10 || (tel2.value.trim() && tel2.value.length !== 10)) {
-                showAlert('Alert', 'Contact incomplet.','warning');
-                return false;
-            }
-
-            var preloader_ch = `
-                <div id="preloader_ch">
-                    <div class="spinner_preloader_ch"></div>
-                </div>
-            `;
-            // Add the preloader to the body
-            document.body.insertAdjacentHTML('beforeend', preloader_ch);
-
-            $.ajax({
-                url: '/api/new_user',
-                method: 'GET',
-                data: { 
-                    nom: nom.value, 
-                    email: email.value, 
-                    tel: tel.value, 
-                    tel2: tel2.value || null, 
-                    adresse: adresse.value, 
-                    sexe: sexe.value, 
-                    role_id: role_id.value,
-                    password: password.value,
-                },
-                success: function(response) {
-                    var preloader = document.getElementById('preloader_ch');
-                    if (preloader) preloader.remove();
-
-                    if (response.tel_existe) {
-
-                        showAlert('Alert', 'Veuillez saisir autre numéro de téléphone s\'il vous plaît','warning');
-
-                    }else if (response.email_existe) {
-
-                        showAlert('Alert', 'Veuillez saisir autre email s\'il vous plaît','warning');
-
-                    }else if (response.nom_existe) {
-
-                        showAlert('Alert', 'Cet Utilisateur existe déjà.','warning');
-
-                    } else if (response.success) {
-
-                        nom.value = '';
-                        email.value = '';
-                        tel.value = '';
-                        tel2.value = '';
-                        adresse.value = '';
-                        sexe.value = '';
-                        role_id.value = '';
-                        password.value = '0000';
-
-                        list();
-
-                        showAlert('Succès', 'Opération éffectuée.','success');
-
-                    } else if (response.error) {
-
-                        showAlert('Erreur', 'Une erreur est survenue lors de l\'enregistrement.','error');
-
-                    }
-                },
-                error: function() {
-                    var preloader = document.getElementById('preloader_ch');
-                    if (preloader) {
-                        preloader.remove();
-                    }
-
-                    showAlert('Erreur', 'Une erreur est survenue','error');
-                }
-            });
-        }
-
-        function list() {
-
-            const tableBody = document.querySelector('#Table tbody');
-            const messageDiv = document.getElementById('message_Table');
-            const tableDiv = document.getElementById('div_Table'); // The message div
-            const loaderDiv = document.getElementById('div_Table_loader');
-
-            messageDiv.style.display = 'none';
-            tableDiv.style.display = 'none';
-            loaderDiv.style.display = 'block';
-
-            // Fetch data from the API
-            fetch('/api/list_user') // API endpoint
-                .then(response => response.json())
-                .then(data => {
-                    // Access the 'chambre' array from the API response
-                    const users = data.user;
-
-                    // Clear any existing rows in the table body
-                    tableBody.innerHTML = '';
-
-                    if (users.length > 0) {
-
-                        loaderDiv.style.display = 'none';
-                        messageDiv.style.display = 'none';
-                        tableDiv.style.display = 'block';
-
-                        // Loop through each item in the chambre array
-                        users.forEach((item, index) => {
-                            // Create a new row
-                            const row = document.createElement('tr');
-                            // Create and append cells to the row based on your table's structure
-                            row.innerHTML = `
-                                <td>${index + 1}</td>
-                                <td>
-                                    <div class="d-flex align-items-center ">
-                                        <a class="d-flex align-items-center flex-column me-2">
-                                            <img src="{{asset('assets/images/user8.png')}}" class="img-2x rounded-circle border border-1">
-                                        </a>
-                                        ${item.sexe}. ${item.name}
-                                    </div>
-                                </td>
-                                <td>${item.email}</td>
-                                <td>${item.matricule}</td>
-                                <td>${item.role}</td>
-                                <td>+225 ${item.tel}</td>
-                                <td>${item.adresse}</td>
-                                <td>
-                                    <div class="d-inline-flex gap-1">
-                                        <a class="btn btn-outline-info btn-sm rounded-5" data-bs-toggle="modal" data-bs-target="#Mmodif" id="edit-${item.id}">
-                                            <i class="ri-edit-box-line"></i>
-                                        </a>
-                                        <a class="btn btn-outline-danger btn-sm rounded-5" data-bs-toggle="modal" data-bs-target="#Mdelete" id="delete-${item.id}">
-                                            <i class="ri-delete-bin-line"></i>
-                                        </a>
-                                    </div>
-                                </td>
-                            `;
-                            // Append the row to the table body
-                            tableBody.appendChild(row);
-
-                            // Add event listener to the edit button to open the modal with pre-filled data
-                            document.getElementById(`edit-${item.id}`).addEventListener('click', () =>
-                            {
-                                // Set the values in the modal form
-                                document.getElementById('Id').value = item.id;
-                                document.getElementById('nomModif').value = item.name;
-                                document.getElementById('emailModif').value = item.email;
-                                document.getElementById('telModif').value = item.tel;
-                                document.getElementById('tel2Modif').value = item.tel2;
-                                document.getElementById('adresseModif').value = item.adresse;
-
-                                const modifSexeSelect = document.getElementById('sexeModif');
-                                const typeeOptions = modifSexeSelect.options;
-                                // Loop through the options to find the matching value
-                                for (let i = 0; i < typeeOptions.length; i++) {
-                                    if (String(typeeOptions[i].value) === String(item.sexe)) {
-                                        typeeOptions[i].selected = true; // Set the matching option as selected
-                                        break; // Stop the loop once a match is found
-                                    }
-                                }
-
-                                const modifActeSelect = document.getElementById('role_idModif');
-                                const typeOptions = modifActeSelect.options;
-                                // Loop through the options to find the matching value
-                                for (let i = 0; i < typeOptions.length; i++) {
-                                    if (String(typeOptions[i].value) === String(item.role_id)) {
-                                        typeOptions[i].selected = true; // Set the matching option as selected
-                                        break; // Stop the loop once a match is found
-                                    }
-                                }
-                            });
-
-                            document.getElementById(`delete-${item.id}`).addEventListener('click', () => {
-                                // Set the values in the modal form
-                                document.getElementById('Iddelete').value = item.id;
-                            });
-
-                        });
-                    } else {
-                        loaderDiv.style.display = 'none';
-                        messageDiv.style.display = 'block';
-                        tableDiv.style.display = 'none';
-                    }
-                })
-                .catch(error => {
-                    console.error('Erreur lors du chargement des données:', error);
-                    // Hide the table and show the error message in case of failure
-                    loaderDiv.style.display = 'none';
-                    messageDiv.style.display = 'block';
-                    tableDiv.style.display = 'none';
-                });
-        }
-
-        function updatee() {
-            const id = document.getElementById("Id").value;
-            const nom = document.getElementById("nomModif");
-            const email = document.getElementById("emailModif");
-            const tel = document.getElementById("telModif");
-            const tel2 = document.getElementById("tel2Modif");
-            const sexe = document.getElementById("sexeModif");
-            const adresse = document.getElementById("adresseModif");
-            const role_id = document.getElementById("role_idModif");
-
-            // Field validation
-            if (!nom.value.trim() || !email.value.trim() || !tel.value.trim() || !sexe.value.trim() || !adresse.value.trim() || !role_id.value.trim()) {
-                showAlert('Alert', 'Veuillez remplir tous les champs SVP.','warning');
+            // Check for empty required fields
+            if (!nom.val().trim() || !email.val().trim() || !tel.val().trim() || !sexe.val().trim() || !adresse.val().trim() || !role_id.val().trim() || !password.val().trim()) {
+                showAlert('Alert', 'Veuillez remplir tous les champs SVP.', 'warning');
                 return false;
             }
 
             // Email validation
-            var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            if (!emailRegex.test(email.value.trim())) {
-                showAlert('Alert', 'Email incorrect.','warning');
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email.val().trim())) { 
+                showAlert('Alert', 'Email incorrect.', 'warning');
                 return false;
             }
 
-            // Phone validation
-            if (tel.value.length !== 10 || (tel2.value !== '' && tel2.value.length !== 10)) {
-                showAlert('Alert', 'Contact incomplet.','warning');
+            // Phone number validation
+            if (tel.val().length !== 10 || (tel2.val().trim() && tel2.val().length !== 10)) {
+                showAlert('Alert', 'Contact incomplet.', 'warning');
                 return false;
             }
 
-            var modal = bootstrap.Modal.getInstance(document.getElementById('Mmodif'));
+            // Show preloader
+            const preloader_ch = `
+                <div id="preloader_ch">
+                    <div class="spinner_preloader_ch"></div>
+                </div>
+            `;
+            $("body").append(preloader_ch);
+
+            // AJAX request to create a new user
+            $.ajax({
+                url: '/api/new_user',
+                method: 'GET',
+                data: { 
+                    nom: nom.val(),
+                    email: email.val(),
+                    tel: tel.val(),
+                    tel2: tel2.val() || null,
+                    adresse: adresse.val(),
+                    sexe: sexe.val(),
+                    role_id: role_id.val(),
+                    password: password.val(),
+                },
+                success: function(response) {
+                    $("#preloader_ch").remove();
+
+                    if (response.tel_existe) {
+                        showAlert('Alert', 'Veuillez saisir autre numéro de téléphone s\'il vous plaît', 'warning');
+                    } else if (response.email_existe) {
+                        showAlert('Alert', 'Veuillez saisir autre email s\'il vous plaît', 'warning');
+                    } else if (response.nom_existe) {
+                        showAlert('Alert', 'Cet Utilisateur existe déjà.', 'warning');
+                    } else if (response.success) {
+                        // Clear form inputs
+                        nom.val('');
+                        email.val('');
+                        tel.val('');
+                        tel2.val('');
+                        adresse.val('');
+                        sexe.val('');
+                        role_id.val('').trigger('change');
+                        password.val('0000');
+
+                        list(); // Refresh the list
+                        showAlert('Succès', 'Opération éffectuée.', 'success');
+                    } else if (response.error) {
+                        showAlert('Erreur', 'Une erreur est survenue lors de l\'enregistrement.', 'error');
+                    }
+                },
+                error: function() {
+                    $("#preloader_ch").remove();
+                    showAlert('Erreur', 'Une erreur est survenue', 'error');
+                }
+            });
+        }
+
+        // Function to load and display the user list
+        function list() {
+            const tableBody = $('#Table tbody');
+            const messageDiv = $('#message_Table');
+            const tableDiv = $('#div_Table');
+            const loaderDiv = $('#div_Table_loader');
+
+            messageDiv.hide();
+            tableDiv.hide();
+            loaderDiv.show();
+
+            // Fetch user data from API
+            $.getJSON('/api/list_user')
+                .done(function(data) {
+                    const users = data.user;
+                    tableBody.empty();
+
+                    if (users.length > 0) {
+                        loaderDiv.hide();
+                        messageDiv.hide();
+                        tableDiv.show();
+
+                        users.forEach((item, index) => {
+                            const row = `
+                                <tr>
+                                    <td>${index + 1}</td>
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            <a class="d-flex align-items-center flex-column me-2">
+                                                <img src="{{asset('assets/images/user8.png')}}" class="img-2x rounded-circle border border-1">
+                                            </a>
+                                            ${item.sexe}. ${item.name}
+                                        </div>
+                                    </td>
+                                    <td>${item.email}</td>
+                                    <td>${item.matricule}</td>
+                                    <td>${item.role}</td>
+                                    <td>+225 ${item.tel}</td>
+                                    <td>${item.adresse}</td>
+                                    <td>
+                                        <div class="d-inline-flex gap-1">
+                                            <a class="btn btn-outline-info btn-sm rounded-5 edit-btn" data-id="${item.id}" data-bs-toggle="modal" data-bs-target="#Mmodif">
+                                                <i class="ri-edit-box-line"></i>
+                                            </a>
+                                            <a class="btn btn-outline-danger btn-sm rounded-5 delete-btn" data-id="${item.id}" data-bs-toggle="modal" data-bs-target="#Mdelete">
+                                                <i class="ri-delete-bin-line"></i>
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
+                            `;
+                            tableBody.append(row);
+                        });
+
+                        // Attach event listeners to dynamically added buttons
+                        $(".edit-btn").on('click', function() {
+                            const id = $(this).data('id');
+                            const user = users.find(u => u.id === id);
+                            if (user) {
+                                $('#Id').val(user.id);
+                                $('#nomModif').val(user.name);
+                                $('#emailModif').val(user.email);
+                                $('#telModif').val(user.tel);
+                                $('#tel2Modif').val(user.tel2);
+                                $('#adresseModif').val(user.adresse);
+                                $('#sexeModif').val(user.sexe);
+
+                                $('#role_idModif').val(null).trigger('change');
+                                $('#role_idModif').val(user.role_id).trigger('change');
+                            }
+                        });
+
+                        $(".delete-btn").on('click', function() {
+                            $('#Iddelete').val($(this).data('id'));
+                        });
+
+                    } else {
+                        loaderDiv.hide();
+                        messageDiv.show();
+                        tableDiv.hide();
+                    }
+                })
+                .fail(function(error) {
+                    console.error('Erreur lors du chargement des données:', error);
+                    loaderDiv.hide();
+                    messageDiv.show();
+                    tableDiv.hide();
+                });
+        }
+
+        function updatee() {
+
+            const id = $('#Id').val();
+            const nomModif = $('#nomModif').val();
+            const typesoins_id_modif = $('#typesoins_id_modif').val();
+            const prixModif = $('#prixModif').val();
+
+            if (!nomModif.trim() || !typesoins_id_modif.trim() || !prixModif.trim()) {
+                showAlert('Alert', 'Veuillez remplir tous les champs SVP.', 'warning');
+                return false;
+            }
+
+            var modal = bootstrap.Modal.getInstance($('#Mmodif')[0]);
             modal.hide();
 
             var preloader_ch = `
@@ -601,60 +555,39 @@
                     <div class="spinner_preloader_ch"></div>
                 </div>
             `;
-            document.body.insertAdjacentHTML('beforeend', preloader_ch);
+            // Add the preloader to the body
+            $('body').append(preloader_ch);
 
             $.ajax({
-                url: '/api/update_user/' + id,
-                method: 'GET',
+                url: '/api/update_soinIn/' + id,
+                method: 'GET',  // Use 'POST' for data creation
                 data: {
-                    nom: nom.value, 
-                    email: email.value, 
-                    tel: tel.value, 
-                    tel2: tel2.value || null, 
-                    adresse: adresse.value, 
-                    sexe: sexe.value, 
-                    role_id: role_id.value
+                    nomModif: nomModif,
+                    typesoins_id: typesoins_id_modif,
+                    prix: prixModif
                 },
                 success: function(response) {
+                    $('#preloader_ch').remove(); // Remove preloader
 
-                    document.getElementById('preloader_ch').remove();
+                    showAlert('Succès', 'Soins Infirmier mis à jour avec succès.', 'success');
 
-                    if (response.tel_existe) {
-
-                        showAlert('Alert', 'Veuillez saisir autre numéro de téléphone s\'il vous plaît','warning');
-
-                    }else if (response.email_existe) {
-
-                        showAlert('Alert', 'Veuillez saisir autre email s\'il vous plaît','warning');
-
-                    }else if (response.nom_existe) {
-
-                        showAlert('Alert', 'Cet Utilisateur existe déjà.','warning');
-
-                    } else if (response.success) {
-
-                        list();
-
-                        showAlert('Succès', 'Opération éffectuée.','success');
-
-                    } else if (response.error) {
-
-                        showAlert('Erreur', 'Une erreur est survenue lors de l\'enregistrement.','error');
-
-                    }
+                    list();
+                    select();
+                    select_modif();
                 },
                 error: function() {
-                    document.getElementById('preloader_ch').remove();
-                    showAlert('Erreur', 'Erreur lors de la mise à jour.','error');
+                    $('#preloader_ch').remove(); // Remove preloader
+
+                    showAlert('Erreur', 'Erreur lors de la mise à jour.', 'error');
                 }
             });
         }
 
         function deletee() {
 
-            const id = document.getElementById('Iddelete').value;
+            const id = $('#Iddelete').val();
 
-            var modal = bootstrap.Modal.getInstance(document.getElementById('Mdelete'));
+            var modal = bootstrap.Modal.getInstance($('#Mdelete')[0]);
             modal.hide();
 
             var preloader_ch = `
@@ -663,32 +596,24 @@
                 </div>
             `;
             // Add the preloader to the body
-            document.body.insertAdjacentHTML('beforeend', preloader_ch);
+            $('body').append(preloader_ch);
 
             $.ajax({
-                url: '/api/delete_user/'+id,
-                method: 'GET',
+                url: '/api/delete_soinsIn/' + id,
+                method: 'GET',  // Use 'POST' for data creation
                 success: function(response) {
-                    var preloader = document.getElementById('preloader_ch');
-                    if (preloader) {
-                        preloader.remove();
-                    }
+                    $('#preloader_ch').remove(); // Remove preloader
 
-                    if (response.success) {
+                    showAlert('Succès', 'Soins Infirmier supprimé avec succès.', 'success');
 
-                        list();
-
-                        showAlert('Succès', 'Opération éffectuée.','success');
-                    }
-
+                    list();
+                    select();
+                    select_modif();
                 },
                 error: function() {
-                    var preloader = document.getElementById('preloader_ch');
-                    if (preloader) {
-                        preloader.remove();
-                    }
+                    $('#preloader_ch').remove(); // Remove preloader
 
-                    showAlert('Erreur', 'Erreur lors de la suppression de la chambre.','error');
+                    showAlert('Erreur', 'Erreur lors de la suppression.', 'error');
                 }
             });
         }

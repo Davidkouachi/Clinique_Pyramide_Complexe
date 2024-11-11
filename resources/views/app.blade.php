@@ -17,6 +17,13 @@
     <link href="{{asset('assets/vendor/select2/dist/css/select2.min.css')}}" rel="stylesheet" />
     <script src="{{asset('assets/vendor/select2/dist/js/select2.min.js')}}"></script>
 
+    <link rel="stylesheet" href="{{asset('assets/vendor/dataTable2/datatables.css')}}" />
+    <script src="{{asset('assets/vendor/dataTable2/datatables.js')}}"></script>
+
+    <link rel="stylesheet" href="assets/vendor/datatables/dataTables.bs5.css">
+    <link rel="stylesheet" href="assets/vendor/datatables/dataTables.bs5-custom.css">
+    <link rel="stylesheet" href="assets/vendor/datatables/buttons/dataTables.bs5-custom.css">
+
 </head>
 
 <body>

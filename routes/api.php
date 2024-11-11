@@ -177,7 +177,7 @@ Route::middleware(['statutchambre','dateRdv'])->group(function () {
 	Route::get('/list_horaire/{medecin}/{specialite}/{jour}/{periode}', [ApilistController::class, 'list_horaire']);
 	Route::get('/list_rdv/{statut}', [ApilistController::class, 'list_rdv']);
 	Route::get('/list_specialite', [ApilistController::class, 'list_specialite']);
-	Route::get('/list_depotfacture/{date1}/{date2}/{statut}', [ApilistController::class, 'list_depotfacture']);
+	Route::get('/list_depotfacture', [ApilistController::class, 'list_depotfacture']);
 	Route::get('/list_cons_patient/{id}', [ApilistController::class, 'list_cons_patient']);
 	Route::get('/list_examend_patient/{id}', [ApilistController::class, 'list_examend_patient']);
 	Route::get('/list_hopital_patient/{id}', [ApilistController::class, 'list_hopital_patient']);

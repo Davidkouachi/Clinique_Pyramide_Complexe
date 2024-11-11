@@ -110,7 +110,7 @@
                                         <div class="col-xxl-3 col-lg-4 col-sm-6">
                                             <div class="mb-3">
                                                 <label class="form-label">Spécialité</label>
-                                                <select class="form-select" id="typeacte_id">
+                                                <select class="form-select select2" id="typeacte_id">
                                                 </select>
                                             </div>
                                         </div>
@@ -227,7 +227,7 @@
                     <div class="mb-3">
                         <label class="form-label">Sexe</label>
                         <select class="form-select" id="sexeModif">
-                            <option value="M">Homme</option>
+                            <option value="Mr">Homme</option>
                             <option value="Mme">Femme</option>
                         </select>
                     </div>
@@ -249,7 +249,7 @@
                     </div>
                     <div class="mb-3">
                         <label class="form-label">Specialité</label>
-                        <select class="form-select" id="typeacte_idModif"></select>
+                        <select class="form-select select2" id="typeacte_idModif"></select>
                     </div>
                 </form>
             </div>
@@ -261,48 +261,62 @@
     </div>
 </div>
 
+@include('select2')
+
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
+    $('#Mmodif').on('shown.bs.modal', function () {
+        $('#typeacte_idModif').select2({
+            theme: 'bootstrap',
+            placeholder: 'Selectionner',
+            language: {
+                noResults: function() {
+                    return "Aucun résultat trouvé";
+                }
+            },
+            width: '100%',
+            dropdownParent: $('#Mmodif'),
+        });
+    });
+</script>
+
+<script>
+    $(document).ready(function() {
 
         select();
         select_modif();
         list();
 
-        document.getElementById("btn_eng").addEventListener("click", eng);
-        document.getElementById("btn_refresh_table").addEventListener("click", list);
-        document.getElementById("updateBtn").addEventListener("click", updatee);
-        document.getElementById("deleteBtn").addEventListener("click", deletee);
+        $("#btn_eng").on("click", eng);
+        $("#btn_refresh_table").on("click", list);
+        $("#updateBtn").on("click", updatee);
+        $("#deleteBtn").on("click", deletee);
 
-        var inputs = ['tel', 'tel2', 'telModif', 'tel2Modif']; // Array of element IDs
-        inputs.forEach(function(id) {
-            var inputElement = document.getElementById(id); // Get each element by its ID
-            inputElement.addEventListener('input', function() {
+
+        // Only allow numeric input for specified elements
+        var inputs = ['#tel', '#tel2', '#telModif', '#tel2Modif']; // Array of element selectors
+        inputs.forEach(function(selector) {
+            $(selector).on('input', function() {
                 this.value = this.value.replace(/[^0-9]/g, ''); // Allow only numbers
             });
         });
 
-
+        // Function to populate a select element with options
         function select() {
-            const selectElement = document.getElementById('typeacte_id');
+            const $selectElement = $('#typeacte_id');
 
             // Clear existing options
-            selectElement.innerHTML = '';
+            $selectElement.empty();
 
-            const defaultOption = document.createElement('option');
-            defaultOption.value = '';
-            defaultOption.textContent = 'Sélectionner une spécialité';
-            selectElement.appendChild(defaultOption);
+            // Add default option
+            $selectElement.append('<option value="">Sélectionner une spécialité</option>');
 
             $.ajax({
                 url: '/api/select_specialite',
                 method: 'GET',
                 success: function(response) {
-                    data = response.typeacte;
+                    const data = response.typeacte;
                     data.forEach(typeacte => {
-                        const option = document.createElement('option');
-                        option.value = typeacte.id; // Ensure 'id' is the correct key
-                        option.textContent = typeacte.nom; // Ensure 'nom' is the correct key
-                        selectElement.appendChild(option);
+                        $selectElement.append(`<option value="${typeacte.id}">${typeacte.nom}</option>`);
                     });
                 },
                 error: function() {
@@ -311,22 +325,20 @@
             });
         }
 
+        // Function to populate another select element for modification
         function select_modif() {
-            const selectElement = document.getElementById('typeacte_idModif');
+            const $selectElement = $('#typeacte_idModif');
 
             // Clear existing options
-            selectElement.innerHTML = '';
+            $selectElement.empty();
 
             $.ajax({
                 url: '/api/select_specialite',
                 method: 'GET',
                 success: function(response) {
-                    data = response.typeacte;
+                    const data = response.typeacte;
                     data.forEach(typeacte => {
-                        const option = document.createElement('option');
-                        option.value = typeacte.id; // Ensure 'id' is the correct key
-                        option.textContent = typeacte.nom; // Ensure 'nom' is the correct key
-                        selectElement.appendChild(option);
+                        $selectElement.append(`<option value="${typeacte.id}">${typeacte.nom}</option>`);
                     });
                 },
                 error: function() {
@@ -344,346 +356,276 @@
         }
 
         function eng() {
+            const nom = $('#nom');
+            const email = $('#email');
+            const tel = $('#tel');
+            const tel2 = $('#tel2');
+            const sexe = $('#sexe');
+            const adresse = $('#adresse');
+            const typeacte_id = $('#typeacte_id');
 
-            const nom = document.getElementById("nom");
-            const email = document.getElementById("email");
-            const tel = document.getElementById("tel");
-            const tel2 = document.getElementById("tel2");
-            const sexe = document.getElementById("sexe");
-            const adresse = document.getElementById("adresse");
-            const typeacte_id = document.getElementById("typeacte_id");
-            
-            var dynamicFields = document.getElementById("div_alert");
-            // Remove existing content
-            while (dynamicFields.firstChild) {
-                dynamicFields.removeChild(dynamicFields.firstChild);
-            }
-
-            if (!nom.value.trim() || !email.value.trim() || !tel.value.trim() || !sexe.value.trim() || !adresse.value.trim() || !typeacte_id.value.trim()) {
-                showAlert('Alert', 'Veuillez remplir tous les champs SVP.','warning');
+            if (!nom.val().trim() || !email.val().trim() || !tel.val().trim() || !sexe.val().trim() || !adresse.val().trim() || !typeacte_id.val().trim()) {
+                showAlert('Alert', 'Veuillez remplir tous les champs SVP.', 'warning');
                 return false;
             }
 
-            var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            if (!emailRegex.test(email.value.trim())) { 
-                showAlert('Alert', 'Email incorrect.','warning');
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email.val().trim())) {
+                showAlert('Alert', 'Email incorrect.', 'warning');
                 return false;
             }
 
-            if (tel.value.length !== 10 || (tel2.value.trim() && tel2.value.length !== 10)) {
-                showAlert('Alert', 'Contact incomplet.','warning');
+            if (tel.val().length !== 10 || (tel2.val().trim() && tel2.val().length !== 10)) {
+                showAlert('Alert', 'Contact incomplet.', 'warning');
                 return false;
             }
 
-            var preloader_ch = `
+            // Add preloader
+            const preloader_ch = `
                 <div id="preloader_ch">
                     <div class="spinner_preloader_ch"></div>
                 </div>
             `;
-            // Add the preloader to the body
-            document.body.insertAdjacentHTML('beforeend', preloader_ch);
+            $('body').append(preloader_ch);
 
             $.ajax({
                 url: '/api/new_medecin',
                 method: 'GET',
-                data: { nom: nom.value, email: email.value, tel: tel.value, tel2: tel2.value || null, adresse: adresse.value, sexe: sexe.value, typeacte_id: typeacte_id.value },
+                data: {
+                    nom: nom.val(),
+                    email: email.val(),
+                    tel: tel.val(),
+                    tel2: tel2.val() || null,
+                    adresse: adresse.val(),
+                    sexe: sexe.val(),
+                    typeacte_id: typeacte_id.val()
+                },
                 success: function(response) {
-                    var preloader = document.getElementById('preloader_ch');
-                    if (preloader) {
-                        preloader.remove();
-                    }
+                    $('#preloader_ch').remove();
 
                     if (response.tel_existe) {
-
-                        showAlert('Alert', 'Veuillez saisir autre numéro de téléphone s\'il vous plaît','warning');
-
-                    }else if (response.email_existe) {
-
-                        showAlert('Alert', 'Veuillez saisir autre email s\'il vous plaît','warning');
-
-                    }else if (response.nom_existe) {
-
-                        showAlert('Alert', 'Cet Médecin existe déjà.','warning');
-
+                        showAlert('Alert', 'Veuillez saisir autre numéro de téléphone s\'il vous plaît', 'warning');
+                    } else if (response.email_existe) {
+                        showAlert('Alert', 'Veuillez saisir autre email s\'il vous plaît', 'warning');
+                    } else if (response.nom_existe) {
+                        showAlert('Alert', 'Cet Médecin existe déjà.', 'warning');
                     } else if (response.success) {
 
-                        nom.value = '';
-                        email.value = '';
-                        tel.value = '';
-                        tel2.value = '';
-                        adresse.value = '';
-                        sexe.value = '';
-                        typeacte_id.value = '';
-
+                        nom.val('');
+                        email.val('');
+                        tel.val('');
+                        tel2.val('');
+                        adresse.val('');
+                        sexe.val('');
+                        typeacte_id.val('').trigger('change');
+                        
                         list();
-
-                        showAlert('Succès', 'Opération éffectuée.','success');
-
+                        showAlert('Succès', 'Opération éffectuée.', 'success');
                     } else if (response.error) {
-
-                        showAlert('Erreur', 'Une erreur est survenue lors de l\'enregistrement.','error');
-
+                        showAlert('Erreur', 'Une erreur est survenue lors de l\'enregistrement.', 'error');
                     }
                 },
                 error: function() {
-                    var preloader = document.getElementById('preloader_ch');
-                    if (preloader) {
-                        preloader.remove();
-                    }
-
-                    showAlert('Erreur', 'Une erreur est survenue lors de l\'enregistrement.','error');
+                    $('#preloader_ch').remove();
+                    showAlert('Erreur', 'Une erreur est survenue lors de l\'enregistrement.', 'error');
                 }
             });
         }
 
         function list() {
 
-            const tableBody = document.querySelector('#Table tbody');
-            const messageDiv = document.getElementById('message_Table');
-            const tableDiv = document.getElementById('div_Table'); // The message div
-            const loaderDiv = document.getElementById('div_Table_loader');
+            const tableBody = $('#Table tbody');
+            const messageDiv = $('#message_Table');
+            const tableDiv = $('#div_Table');
+            const loaderDiv = $('#div_Table_loader');
 
-            messageDiv.style.display = 'none';
-            tableDiv.style.display = 'none';
-            loaderDiv.style.display = 'block';
+            messageDiv.hide();
+            tableDiv.hide();
+            loaderDiv.show();
 
             // Fetch data from the API
-            fetch('/api/list_medecin') // API endpoint
+            fetch('/api/list_medecin')
                 .then(response => response.json())
                 .then(data => {
-                    // Access the 'chambre' array from the API response
                     const medecins = data.medecin;
-
-                    // Clear any existing rows in the table body
-                    tableBody.innerHTML = '';
+                    tableBody.empty();
 
                     if (medecins.length > 0) {
+                        loaderDiv.hide();
+                        messageDiv.hide();
+                        tableDiv.show();
 
-                        loaderDiv.style.display = 'none';
-                        messageDiv.style.display = 'none';
-                        tableDiv.style.display = 'block';
-
-                        // Loop through each item in the chambre array
                         medecins.forEach((item, index) => {
-                            // Create a new row
-                            const row = document.createElement('tr');
-                            // Create and append cells to the row based on your table's structure
-                            row.innerHTML = `
-                                <td>${index + 1}</td>
-                                <td>
-                                    <div class="d-flex align-items-center ">
-                                        <a class="d-flex align-items-center flex-column me-2">
-                                            <img src="{{asset('assets/images/docteur.png')}}" class="img-3x rounded-circle border border-1">
-                                        </a>
-                                        Dr. ${item.name}
-                                    </div>
-                                </td>
-                                <td>${item.email}</td>
-                                <td>${item.matricule}</td>
-                                <td>${item.typeacte}</td>
-                                <td>+225 ${item.tel}</td>
-                                <td>${item.adresse}</td>
-                                <td>
-                                    <div class="d-inline-flex gap-1">
-                                        <a class="btn btn-outline-info btn-sm rounded-5" data-bs-toggle="modal" data-bs-target="#Mmodif" id="edit-${item.id}">
-                                            <i class="ri-edit-box-line"></i>
-                                        </a>
-                                        <a class="btn btn-outline-danger btn-sm rounded-5" data-bs-toggle="modal" data-bs-target="#Mdelete" id="delete-${item.id}">
-                                            <i class="ri-delete-bin-line"></i>
-                                        </a>
-                                    </div>
-                                </td>
+                            const row = `
+                                <tr>
+                                    <td>${index + 1}</td>
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            <a class="d-flex align-items-center flex-column me-2">
+                                                <img src="{{asset('assets/images/docteur.png')}}" class="img-3x rounded-circle border border-1">
+                                            </a>
+                                            Dr. ${item.name}
+                                        </div>
+                                    </td>
+                                    <td>${item.email}</td>
+                                    <td>${item.matricule}</td>
+                                    <td>${item.typeacte}</td>
+                                    <td>+225 ${item.tel}</td>
+                                    <td>${item.adresse}</td>
+                                    <td>
+                                        <div class="d-inline-flex gap-1">
+                                            <a class="btn btn-outline-info btn-sm rounded-5 edit-btn" data-id="${item.id}" data-bs-toggle="modal" data-bs-target="#Mmodif">
+                                                <i class="ri-edit-box-line"></i>
+                                            </a>
+                                            <a class="btn btn-outline-danger btn-sm rounded-5 delete-btn" data-id="${item.id}" data-bs-toggle="modal" data-bs-target="#Mdelete">
+                                                <i class="ri-delete-bin-line"></i>
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
                             `;
-                            // Append the row to the table body
-                            tableBody.appendChild(row);
+                            tableBody.append(row);
+                        });
 
-                            // Add event listener to the edit button to open the modal with pre-filled data
-                            document.getElementById(`edit-${item.id}`).addEventListener('click', () =>
-                            {
-                                // Set the values in the modal form
-                                document.getElementById('Id').value = item.id;
-                                document.getElementById('nomModif').value = item.name;
-                                document.getElementById('emailModif').value = item.email;
-                                document.getElementById('telModif').value = item.tel;
-                                document.getElementById('tel2Modif').value = item.tel2;
-                                document.getElementById('adresseModif').value = item.adresse;
+                        // Event delegation for dynamically added buttons
+                        $('.edit-btn').on('click', function() {
+                            const itemId = $(this).data('id');
+                            const item = medecins.find(m => m.id === itemId);
+                            $('#Id').val(item.id);
+                            $('#nomModif').val(item.name);
+                            $('#emailModif').val(item.email);
+                            $('#telModif').val(item.tel);
+                            $('#tel2Modif').val(item.tel2);
+                            $('#adresseModif').val(item.adresse);
+                            $('#sexeModif').val(item.sexe);
 
-                                const modifSexeSelect = document.getElementById('sexeModif');
-                                const typeeOptions = modifSexeSelect.options;
-                                // Loop through the options to find the matching value
-                                for (let i = 0; i < typeeOptions.length; i++) {
-                                    if (String(typeeOptions[i].value) === String(item.sexe)) {
-                                        typeeOptions[i].selected = true; // Set the matching option as selected
-                                        break; // Stop the loop once a match is found
-                                    }
-                                }
+                            $('#typeacte_idModif').val(null).trigger('change');
+                            $('#typeacte_idModif').val(item.typeacte_id).trigger('change');
+                        });
 
-                                const modifActeSelect = document.getElementById('typeacte_idModif');
-                                const typeOptions = modifActeSelect.options;
-                                // Loop through the options to find the matching value
-                                for (let i = 0; i < typeOptions.length; i++) {
-                                    if (String(typeOptions[i].value) === String(item.typeacte_id)) {
-                                        typeOptions[i].selected = true; // Set the matching option as selected
-                                        break; // Stop the loop once a match is found
-                                    }
-                                }
-                            });
-
-                            document.getElementById(`delete-${item.id}`).addEventListener('click', () => {
-                                // Set the values in the modal form
-                                document.getElementById('Iddelete').value = item.id;
-                            });
-
+                        $('.delete-btn').on('click', function() {
+                            $('#Iddelete').val($(this).data('id'));
                         });
                     } else {
-                        loaderDiv.style.display = 'none';
-                        messageDiv.style.display = 'block';
-                        tableDiv.style.display = 'none';
+                        loaderDiv.hide();
+                        messageDiv.show();
+                        tableDiv.hide();
                     }
                 })
                 .catch(error => {
                     console.error('Erreur lors du chargement des données:', error);
-                    // Hide the table and show the error message in case of failure
-                    loaderDiv.style.display = 'none';
-                    messageDiv.style.display = 'block';
-                    tableDiv.style.display = 'none';
+                    loaderDiv.hide();
+                    messageDiv.show();
+                    tableDiv.hide();
                 });
         }
 
         function updatee() {
-            const id = document.getElementById("Id").value;
-            const nom = document.getElementById("nomModif");
-            const email = document.getElementById("emailModif");
-            const tel = document.getElementById("telModif");
-            const tel2 = document.getElementById("tel2Modif");
-            const sexe = document.getElementById("sexeModif");
-            const adresse = document.getElementById("adresseModif");
-            const typeacte_id = document.getElementById("typeacte_idModif");
 
-            var dynamicFields = document.getElementById("alert_update");
-            while (dynamicFields.firstChild) {
-                dynamicFields.removeChild(dynamicFields.firstChild);
-            }
+            const id = $("#Id").val();
+            const nom = $("#nomModif").val().trim();
+            const email = $("#emailModif").val().trim();
+            const tel = $("#telModif").val().trim();
+            const tel2 = $("#tel2Modif").val().trim();
+            const sexe = $("#sexeModif").val().trim();
+            const adresse = $("#adresseModif").val().trim();
+            const typeacte_id = $("#typeacte_idModif").val().trim();
 
             // Field validation
-            if (!nom.value.trim() || !email.value.trim() || !tel.value.trim() || !sexe.value.trim() || !adresse.value.trim() || !typeacte_id.value.trim()) {
-                showAlert('Alert', 'Veuillez remplir tous les champs SVP.','warning');
+            if (!nom || !email || !tel || !sexe || !adresse || !typeacte_id) {
+                showAlert('Alert', 'Veuillez remplir tous les champs SVP.', 'warning');
                 return false;
             }
 
             // Email validation
-            var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            if (!emailRegex.test(email.value.trim())) {
-                showAlert('Alert', 'Email incorrect.','warning');
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email)) {
+                showAlert('Alert', 'Email incorrect.', 'warning');
                 return false;
             }
 
             // Phone validation
-            if (tel.value.length !== 10 || (tel2.value !== '' && tel2.value.length !== 10)) {
-                showAlert('Alert', 'Contact incomplet.','warning');
+            if (tel.length !== 10 || (tel2 && tel2.length !== 10)) {
+                showAlert('Alert', 'Contact incomplet.', 'warning');
                 return false;
             }
 
-            var modal = bootstrap.Modal.getInstance(document.getElementById('Mmodif'));
+            const modal = bootstrap.Modal.getInstance(document.getElementById('Mmodif'));
             modal.hide();
 
-            var preloader_ch = `
+            const preloader = `
                 <div id="preloader_ch">
                     <div class="spinner_preloader_ch"></div>
                 </div>
             `;
-            document.body.insertAdjacentHTML('beforeend', preloader_ch);
+            $("body").append(preloader);
 
             $.ajax({
                 url: '/api/update_medecin/' + id,
-                method: 'GET', // Corrected to 'PUT'
+                method: 'GET',
                 data: {
-                    nom: nom.value, 
-                    email: email.value, 
-                    tel: tel.value, 
-                    tel2: tel2.value || null, 
-                    adresse: adresse.value, 
-                    sexe: sexe.value, 
-                    typeacte_id: typeacte_id.value
+                    nom: nom,
+                    email: email,
+                    tel: tel,
+                    tel2: tel2 || null,
+                    adresse: adresse,
+                    sexe: sexe,
+                    typeacte_id: typeacte_id
                 },
                 success: function(response) {
-
-                    document.getElementById('preloader_ch').remove();
+                    $("#preloader_ch").remove();
 
                     if (response.tel_existe) {
-
-                        showAlert('Alert', 'Veuillez saisir autre numéro de téléphone s\'il vous plaît','warning');
-
-                    }else if (response.email_existe) {
-
-                        showAlert('Alert', 'Veuillez saisir autre email s\'il vous plaît','warning');
-
-                    }else if (response.nom_existe) {
-
-                        showAlert('Alert', 'Cet Médecin existe déjà.','warning');
-
+                        showAlert('Alert', 'Veuillez saisir autre numéro de téléphone s\'il vous plaît', 'warning');
+                    } else if (response.email_existe) {
+                        showAlert('Alert', 'Veuillez saisir autre email s\'il vous plaît', 'warning');
+                    } else if (response.nom_existe) {
+                        showAlert('Alert', 'Cet Médecin existe déjà.', 'warning');
                     } else if (response.success) {
-
                         list();
-
-                        showAlert('Succès', 'Opération éffectuée.','success');
-
+                        showAlert('Succès', 'Opération éffectuée.', 'success');
                     } else if (response.error) {
-
-                        showAlert('Erreur', 'Une erreur est survenue lors de l\'enregistrement.','error');
-
+                        showAlert('Erreur', 'Une erreur est survenue lors de l\'enregistrement.', 'error');
                     }
                 },
                 error: function() {
-                    document.getElementById('preloader_ch').remove();
-                    showAlert('Erreur', 'Erreur lors de la mise à jour.','error');
+                    $("#preloader_ch").remove();
+                    showAlert('Erreur', 'Erreur lors de la mise à jour.', 'error');
                 }
             });
         }
 
-
         function deletee() {
+            const id = $("#Iddelete").val();
 
-            const id = document.getElementById('Iddelete').value;
-
-            var modal = bootstrap.Modal.getInstance(document.getElementById('Mdelete'));
+            const modal = bootstrap.Modal.getInstance(document.getElementById('Mdelete'));
             modal.hide();
 
-            var preloader_ch = `
+            const preloader = `
                 <div id="preloader_ch">
                     <div class="spinner_preloader_ch"></div>
                 </div>
             `;
-            // Add the preloader to the body
-            document.body.insertAdjacentHTML('beforeend', preloader_ch);
+            $("body").append(preloader);
 
             $.ajax({
-                url: '/api/delete_medecin/'+id,
-                method: 'GET',
+                url: '/api/delete_medecin/' + id,
+                method: 'DELETE',
                 success: function(response) {
-                    var preloader = document.getElementById('preloader_ch');
-                    if (preloader) {
-                        preloader.remove();
-                    }
+                    $("#preloader_ch").remove();
 
                     if (response.success) {
-
                         list();
-
-                        showAlert('Succès', 'Opération éffectuée.','success');
+                        showAlert('Succès', 'Opération éffectuée.', 'success');
                     }
-
                 },
                 error: function() {
-                    var preloader = document.getElementById('preloader_ch');
-                    if (preloader) {
-                        preloader.remove();
-                    }
-
-                    showAlert('Erreur', 'Erreur lors de la suppression de la chambre.','error');
+                    $("#preloader_ch").remove();
+                    showAlert('Erreur', 'Erreur lors de la suppression de la chambre.', 'error');
                 }
             });
         }
+
 
     });
 </script>

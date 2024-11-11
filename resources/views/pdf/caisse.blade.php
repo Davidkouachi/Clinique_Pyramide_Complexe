@@ -89,20 +89,20 @@
                     <div class="row gx-3">
                         <div class="col-12">
                             <div class="mb-3">
-                                <label class="form-label">
-                                    Caissier(ère)
-                                </label>
-                                <select class="form-select" id="caissier_id_ope"></select>
-                            </div>
-                        </div>
-                        <div class="col-12">
-                            <div class="mb-3">
                                 <label class="form-label">Type d'opération</label>
-                                <select class="form-select" id="type_ope">
+                                <select class="form-select select2" id="type_ope">
                                     <option value="tous">Tout</option>
                                     <option value="Entrer de Caisse">Entrer d'argent</option>
                                     <option value="Sortie de Caisse">Sortie d'argent</option>
                                 </select>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="mb-3">
+                                <label class="form-label">
+                                    Caissier(ère)
+                                </label>
+                                <select class="form-select select2" id="caissier_id_ope"></select>
                             </div>
                         </div>
                         <div class="col-12">
@@ -140,6 +140,8 @@
 <script src="{{asset('assets/js/app/js/jspdfinvoicetemplate/dist/index.js')}}" ></script>
 <script src="{{asset('jsPDF-master/dist/jspdf.umd.js')}}"></script>
 <script src="{{asset('jsPDF-AutoTable/dist/jspdf.plugin.autotable.min.js')}}"></script>
+
+@include('select2')
 
 <script>
     document.addEventListener("DOMContentLoaded", function() {

@@ -41,7 +41,7 @@
                                 <label class="form-label">
                                     Assurance
                                 </label>
-                                <select class="form-select" id="assurance_id"></select>
+                                <select class="form-select select2" id="assurance_id"></select>
                             </div>
                         </div>
                         <div class="col-12">
@@ -87,14 +87,16 @@
 <script src="{{asset('jsPDF-master/dist/jspdf.umd.js')}}"></script>
 <script src="{{asset('jsPDF-AutoTable/dist/jspdf.plugin.autotable.min.js')}}"></script>
 
+@include('select2')
+
 <script>
-    document.addEventListener("DOMContentLoaded", function() {
+    $(document).ready(function() {
 
         select_assurance();
 
-        document.getElementById("date1").addEventListener("change", datechange);
-        document.getElementById("btn_imp").addEventListener("click", imp_fac_assurance);
-        document.getElementById("btn_imp_bordo").addEventListener("click", imp_fac_assurance_bordo);
+        $("#date1").on("change", datechange);
+        $("#btn_imp").on("click", imp_fac_assurance);
+        $("#btn_imp_bordo").on("click", imp_fac_assurance_bordo);
 
         function showAlert(title, message, type) {
             Swal.fire({
@@ -143,214 +145,135 @@
             return `${day}/${month}/${year} à ${hours}:${minutes}:${seconds}`;
         }
 
-        function datechange()
-        {
-            const date1Value = document.getElementById('date1').value;
-            const date2 = document.getElementById('date2');
-
-            date2.value = date1Value;
-
-            date2.min = date1Value;
+        function isValidDate(dateString) {
+            const regEx = /^\d{4}-\d{2}-\d{2}$/;
+            if (!dateString.match(regEx)) return false;
+            const date = new Date(dateString);
+            return dateString === date.toISOString().split('T')[0];
         }
 
-        function select_assurance()
-        {
-            const selectElement = document.getElementById('assurance_id');
+        function datechange() {
+            const date1Value = $('#date1').val();
+            const $date2 = $('#date2');
 
-            selectElement.innerHTML = '';
-            const defaultOption = document.createElement('option');
-            defaultOption.value = '';
-            defaultOption.textContent = 'Selectionner';
-            selectElement.appendChild(defaultOption);
-
-            fetch('/api/assurance_select_patient_new')
-                .then(response => response.json())
-                .then(data => {
-                    data.forEach(assurance => {
-                        const option = document.createElement('option');
-                        option.value = assurance.id; // Ensure 'id' is the correct key
-                        option.textContent = assurance.nom; // Ensure 'nom' is the correct key
-                        selectElement.appendChild(option);
-                    });
-                })
-                .catch(error => console.error('Erreur lors du chargement des societes:', error));
+            $date2.val(date1Value);
+            $date2.attr('min', date1Value);
         }
 
-        function imp_fac_assurance()
-        {
-            const assurance_id = document.getElementById('assurance_id');
-            const date1 = document.getElementById('date1');
-            const date2 = document.getElementById('date2');
+        function select_assurance() {
+            const $selectElement = $('#assurance_id');
+            $selectElement.empty();
 
-            if (!assurance_id.value.trim() || !date1.value.trim() || !date2.value.trim()) {
-                showAlert('Alert', 'Tous les champs sont obligatoires.','warning');
-                return false; 
+            const defaultOption = $('<option>', { value: '', text: 'Selectionner' });
+            $selectElement.append(defaultOption);
+
+            $.getJSON('/api/assurance_select_patient_new', function(data) {
+                $.each(data, function(index, assurance) {
+                    const option = $('<option>', { value: assurance.id, text: assurance.nom });
+                    $selectElement.append(option);
+                });
+            }).fail(function() {
+                console.error('Erreur lors du chargement des societes');
+            });
+        }
+
+        function imp_fac_assurance() {
+
+            const assurance_id = $('#assurance_id').val().trim();
+            const date1 = $('#date1').val().trim();
+            const date2 = $('#date2').val().trim();
+
+            if (!assurance_id || !date1 || !date2) {
+                showAlert('Alert', 'Tous les champs sont obligatoires.', 'warning');
+                return false;
             }
 
-            function isValidDate(dateString) {
-                const regEx = /^\d{4}-\d{2}-\d{2}$/;
-                if (!dateString.match(regEx)) return false;
-                const date = new Date(dateString);
-                const timestamp = date.getTime();
-                if (typeof timestamp !== 'number' || isNaN(timestamp)) return false;
-                return dateString === date.toISOString().split('T')[0];
-            }
-
-            if (!isValidDate(date1.value)) {
+            if (!isValidDate(date1)) {
                 showAlert('Erreur', 'La première date est invalide.', 'error');
                 return false;
             }
 
-            if (!isValidDate(date2.value)) {
+            if (!isValidDate(date2)) {
                 showAlert('Erreur', 'La deuxième date est invalide.', 'error');
                 return false;
             }
 
-            const startDate = new Date(date1.value);
-            const endDate = new Date(date2.value);
+            const startDate = new Date(date1);
+            const endDate = new Date(date2);
 
             if (startDate > endDate) {
                 showAlert('Erreur', 'La date de début ne peut pas être supérieur à la date de fin.', 'error');
                 return false;
             }
 
-            const oneYearInMs = 365 * 24 * 60 * 60 * 1000;
-            if (endDate - startDate > oneYearInMs) {
-                showAlert('Erreur', 'La plage de dates ne peut pas dépasser un an.', 'error');
-                return false;
-            }
-
-            var preloader_ch = `
-                <div id="preloader_ch">
-                    <div class="spinner_preloader_ch"></div>
-                </div>
-            `;
-            // Add the preloader to the body
-            document.body.insertAdjacentHTML('beforeend', preloader_ch);
+            $('body').append('<div id="preloader_ch"><div class="spinner_preloader_ch"></div></div>');
 
             $.ajax({
                 url: '/api/imp_fac_assurance',
                 method: 'GET',
-                data: {assurance_id: assurance_id.value, date1: date1.value, date2: date2.value,},
+                data: { assurance_id, date1, date2 },
                 success: function(response) {
-
-                    var preloader = document.getElementById('preloader_ch');
-                    if (preloader) {
-                        preloader.remove();
-                    }
-
-                    const societes = response.societes;
-                    const assurance = response.assurance;
-                    const date1 = response.date1;
-                    const date2 = response.date2;
-
+                    $('#preloader_ch').remove();
+                    const { societes, assurance } = response;
                     if (societes.length > 0) {
-
-                        generatePDFInvoice_Fac_Assurance(societes,assurance,date1,date2);
-
+                        generatePDFInvoice_Fac_Assurance(societes, assurance, date1, date2);
                     } else {
-
-                        showAlert('Informations', 'Aucune facture n\'a été trouvée pour cette période','info');
+                        showAlert('Informations', "Aucune facture n'a été trouvée pour cette période", 'info');
                     }
-
                 },
                 error: function() {
-
-                    var preloader = document.getElementById('preloader_ch');
-                    if (preloader) {
-                        preloader.remove();
-                    }
-
-                    showAlert('Alert', ' Une erreur est survenue.','error');
+                    $('#preloader_ch').remove();
+                    showAlert('Alert', 'Une erreur est survenue.', 'error');
                 }
             });
         }
 
-        function imp_fac_assurance_bordo()
-        {
-            const assurance_id = document.getElementById('assurance_id');
-            const date1 = document.getElementById('date1');
-            const date2 = document.getElementById('date2');
+        function imp_fac_assurance_bordo() {
+            const assurance_id = $('#assurance_id').val().trim();
+            const date1 = $('#date1').val().trim();
+            const date2 = $('#date2').val().trim();
 
-            if (!assurance_id.value.trim() || !date1.value.trim() || !date2.value.trim()) {
-                showAlert('Alert', 'Tous les champs sont obligatoires.','warning');
-                return false; 
+            if (!assurance_id || !date1 || !date2) {
+                showAlert('Alert', 'Tous les champs sont obligatoires.', 'warning');
+                return false;
             }
 
-            function isValidDate(dateString) {
-                const regEx = /^\d{4}-\d{2}-\d{2}$/;
-                if (!dateString.match(regEx)) return false;
-                const date = new Date(dateString);
-                const timestamp = date.getTime();
-                if (typeof timestamp !== 'number' || isNaN(timestamp)) return false;
-                return dateString === date.toISOString().split('T')[0];
-            }
-
-            if (!isValidDate(date1.value)) {
+            if (!isValidDate(date1)) {
                 showAlert('Erreur', 'La première date est invalide.', 'error');
                 return false;
             }
 
-            if (!isValidDate(date2.value)) {
+            if (!isValidDate(date2)) {
                 showAlert('Erreur', 'La deuxième date est invalide.', 'error');
                 return false;
             }
 
-            const startDate = new Date(date1.value);
-            const endDate = new Date(date2.value);
+            const startDate = new Date(date1);
+            const endDate = new Date(date2);
 
             if (startDate > endDate) {
                 showAlert('Erreur', 'La date de début ne peut pas être supérieur à la date de fin.', 'error');
                 return false;
             }
 
-            const oneYearInMs = 365 * 24 * 60 * 60 * 1000;
-            if (endDate - startDate > oneYearInMs) {
-                showAlert('Erreur', 'La plage de dates ne peut pas dépasser un an.', 'error');
-                return false;
-            }
-
-            var preloader_ch = `
-                <div id="preloader_ch">
-                    <div class="spinner_preloader_ch"></div>
-                </div>
-            `;
-            // Add the preloader to the body
-            document.body.insertAdjacentHTML('beforeend', preloader_ch);
+            $('body').append('<div id="preloader_ch"><div class="spinner_preloader_ch"></div></div>');
 
             $.ajax({
                 url: '/api/imp_fac_assurance_bordo',
                 method: 'GET',
-                data: {assurance_id: assurance_id.value, date1: date1.value, date2: date2.value,},
+                data: { assurance_id, date1, date2 },
                 success: function(response) {
-
-                    var preloader = document.getElementById('preloader_ch');
-                    if (preloader) {
-                        preloader.remove();
-                    }
-
-                    const societes = response.societes;
-                    const assurance = response.assurance;
-                    const date1 = response.date1;
-                    const date2 = response.date2;
-
+                    $('#preloader_ch').remove();
+                    const { societes, assurance } = response;
                     if (societes.length > 0) {
-
-                        generatePDFInvoice_Fac_Assurance_Bordo(societes,assurance,date1,date2);
-
+                        generatePDFInvoice_Fac_Assurance_Bordo(societes, assurance, date1, date2);
                     } else {
-                        showAlert('Informations', 'Aucune facture n\'a été trouvée pour cette période','info');
+                        showAlert('Informations', "Aucune facture n'a été trouvée pour cette période", 'info');
                     }
-
                 },
                 error: function() {
-
-                    var preloader = document.getElementById('preloader_ch');
-                    if (preloader) {
-                        preloader.remove();
-                    }
-
-                    showAlert('Alert', ' Une erreur est survenue.','error');
+                    $('#preloader_ch').remove();
+                    showAlert('Alert', 'Une erreur est survenue.', 'error');
                 }
             });
         }
@@ -709,7 +632,6 @@
 
             doc.output('dataurlnewwindow');
         }
-
 
     });
 </script>

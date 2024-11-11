@@ -41,7 +41,7 @@
                         Liste des Dépôts
                     </h5>
                 </div>
-                <div class="card-header d-flex align-items-center justify-content-between">
+                {{-- <div class="card-header d-flex align-items-center justify-content-between" style="display: none;">
                     <div class="w-100">
                         <div class="input-group">
                             <span class="input-group-text">Du</span>
@@ -59,11 +59,11 @@
                             </a>
                         </div>
                     </div>
-                </div>
+                </div> --}}
                 <div class="card-body">
-                    <div class="table-outer" id="div_Table" style="display: none;">
+                    <div class="">
                         <div class="table-responsive">
-                            <table class="table align-middle table-hover m-0 truncate" id="Table">
+                            <table id="Table_day" class="table table-hover">
                                 <thead>
                                     <tr>
                                         <th scope="col">N°</th>
@@ -84,18 +84,6 @@
                             </table>
                         </div>
                     </div>
-                    <div id="message_Table" style="display: none;">
-                        <p class="text-center">
-                            Aucun dépôt n'a été trouvé
-                        </p>
-                    </div>
-                    <div id="div_Table_loader" style="display: none;">
-                        <div class="d-flex justify-content-center align-items-center">
-                            <div class="spinner-border text-warning me-2" role="status" aria-hidden="true"></div>
-                            <strong>Chargement des données...</strong>
-                        </div>
-                    </div>
-                    <div id="pagination-controls"></div>
                 </div>
             </div>
         </div>
@@ -223,17 +211,18 @@
 <script src="{{asset('jsPDF-AutoTable/dist/jspdf.plugin.autotable.min.js')}}"></script>
 
 <script>
-    document.addEventListener("DOMContentLoaded", function() {
+    $(document).ready(function() {
 
-        list();
+        $("#btn_paiement").on("click", eng_paiement);
+        $("#updateBtn").on("click", updatee);
+        $("#deleteBtn").on("click", deletee);
+        $("#type_payer").on("change", num_cheque);
 
-        document.getElementById("btn_paiement").addEventListener("click", eng_paiement);
-        document.getElementById("btn_search_table").addEventListener("click", list);
-        document.getElementById("updateBtn").addEventListener("click", updatee);
-        document.getElementById("deleteBtn").addEventListener("click", deletee);
-        document.getElementById("type_payer").addEventListener("change", num_cheque);
+        $('#btn_search_table').on('click', function () {
+            $('#Table_day').DataTable().ajax.reload();
+        });
 
-        document.getElementById('num_cheque_payer').addEventListener('input', function()
+        $('#num_cheque_payer').on('input', function()
         {
             this.value = this.value.replace(/[^0-9]/g, '');
         });
@@ -296,418 +285,250 @@
             return `${day}/${month}/${year} à ${hours}:${minutes}:${seconds}`;
         }
 
-        function datechangeM()
+        function datechangeM() 
         {
-            const date1Value = document.getElementById('date1M').value;
-            const date2 = document.getElementById('date2M');
+            const date1Value = $('#date1M').val();
+            const $date2 = $('#date2M');
 
-            date2.value = date1Value;
-
-            date2.min = date1Value;
+            $date2.val(date1Value);
+            $date2.attr('min', date1Value);
         }
 
         function num_cheque() {
-            const paymentType = document.getElementById('type_payer').value;
-            const divNumCheque = document.getElementById('div_num_cheque');
-
-            document.getElementById('num_cheque_payer').value = "";
+            const paymentType = $('#type_payer').val();
+            $('#num_cheque_payer').val("");
 
             if (paymentType === 'virement') {
-                divNumCheque.style.display = 'none';
+                $('#div_num_cheque').hide();
             } else if (paymentType === 'cheque') {
-                divNumCheque.style.display = 'block';
+                $('#div_num_cheque').show();
             } else {
-                divNumCheque.style.display = 'none';
+                $('#div_num_cheque').hide();
             }
         }
 
-        function eng_paiement()
-        {
+        $('#Table_day').DataTable({
+
+            processing: true,
+            serverSide: true,
+            ajax: {
+                url: `/api/list_depotfacture`,
+                type: 'GET',
+                dataSrc: 'data',
+            },
+            columns: [
+                { data: null, render: (data, type, row, meta) => meta.row + 1 },
+                { data: 'assurance', render: (data) => `<img src="{{asset('assets/images/depot_fac.jpg')}}" class="img-2x rounded-circle"> ${data}` },
+                { data: 'date1', render: formatDate },
+                { data: 'date2', render: formatDate },
+                { data: 'date_depot', render: formatDate },
+                { data: 'statut', render: (data) => `<span class="badge ${data === 'oui' ? 'bg-success' : 'bg-danger'}">${data === 'oui' ? 'Réglée' : 'Non Réglée'}</span>` },
+                { data: 'part_assurance', render: (data) => `${data} Fcfa` },
+                { data: 'part_patient', render: (data) => `${data} Fcfa` },
+                { data: 'total', render: (data) => `${data} Fcfa` },
+                { data: 'created_at', render: formatDateHeure },
+                {
+                    data: null,
+                    render: (data, type, row) => `
+                        <div class="d-inline-flex gap-1">
+                            ${row.statut === 'non' ? `<a class="btn btn-outline-success btn-sm rounded-5" data-bs-toggle="modal" data-bs-target="#Paiement" id="paiement" data-date_depot="${row.date_depot}" data-id="${row.id}"><i class="ri-inbox-archive-line"></i></a>` : ''}
+                            <a class="btn btn-outline-warning btn-sm rounded-5" id="detail" data-id="${row.id}" ><i class="ri-eye-line"></i></a>
+                            ${row.statut === 'non' ? `<a class="btn btn-outline-info btn-sm rounded-5" data-bs-toggle="modal" data-bs-target="#Mmodif" id="modif" data-date_depot="${row.date_depot}" data-date1="${row.date1}" data-date2="${row.date2}" data-id="${row.id}" data-assurance_id="${row.assurance_id}" ><i class="ri-edit-line"></i></a>` : ''}
+                            ${row.statut === 'non' ? `<a class="btn btn-outline-danger btn-sm rounded-5" data-bs-toggle="modal" data-bs-target="#Mdelete" id="delete" data-id="${row.id}" ><i class="ri-delete-bin-line"></i></a>` : ''}
+                            <a class="btn btn-outline-dark btn-sm rounded-5" id="printer" data-id="${row.id}" ><i class="ri-printer-line"></i></a>
+                        </div>
+                    `
+                }
+            ],
+            language: {
+                search: "Recherche:",
+                lengthMenu: "Afficher _MENU_ entrées",
+                info: "Affichage de _START_ à _END_ sur _TOTAL_ entrées",
+                infoEmpty: "Affichage de 0 à 0 sur 0 entrée",
+                paginate: {
+                    previous: "Précédent",
+                    next: "Suivant"
+                },
+                zeroRecords: "Aucun produit trouvé",
+                emptyTable: "Aucune donnée disponible dans le tableau",
+            },
+            // autoWidth: true,
+            // scrollX: true, 
+            initComplete: function(settings, json) {
+                initializeRowEventListeners();
+            },
+        });
+
+        function initializeRowEventListeners() {
+            $('#Table_day').on('click', '#paiement', function() {
+                const id = $(this).data('id');
+                const date_depot = $(this).data('date_depot');
+                // Handle the 'Paiement' button click
+                document.getElementById('date_payer').value = "";
+                document.getElementById('type_payer').value = "";
+                document.getElementById('num_cheque_payer').value = "";
+                document.getElementById('IdPaiement').value = id;
+                document.getElementById('date_depotP').value = date_depot;
+            });
+
+            $('#Table_day').on('click', '#detail', function() {
+                const id = $(this).data('id');
+                // Handle the 'Detail' button click
+                var preloader_ch = `
+                    <div id="preloader_ch">
+                        <div class="spinner_preloader_ch"></div>
+                    </div>
+                `;
+                document.body.insertAdjacentHTML('beforeend', preloader_ch);
+                fetch(`/api/imp_fac_depot/${id}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        var preloader = document.getElementById('preloader_ch');
+                        if (preloader) preloader.remove();
+                        const societes = data.societes;
+                        const assurance = data.assurance;
+                        const date1 = data.date1;
+                        const date2 = data.date2;
+                        if (societes.length > 0) {
+                            generatePDFInvoice_Fac(societes, assurance, date1, date2);
+                        } else {
+                            showAlert('Informations', 'Aucune donnée trouvée pour cette période', 'info');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Erreur lors du chargement des données:', error);
+                    });
+            });
+
+            $('#Table_day').on('click', '#modif', function() {
+                const id = $(this).data('id');
+                const date_depot = $(this).data('date_depot');
+                const date1 = $(this).data('date1');
+                const date2 = $(this).data('date2');
+                const assurance_id = $(this).data('assurance_id');
+                // Handle the 'Modif' button click
+                const row = document.getElementById(`row-${id}`);
+                document.getElementById('date1M').value = date1;
+                document.getElementById('date2M').value = date2;
+                document.getElementById('date_depotM').value = date_depot;
+                document.getElementById('IdModif').value = id;
+                document.getElementById('assurance_idM').value = assurance_id;
+            });
+
+            $('#Table_day').on('click', '#delete', function() {
+                const id = $(this).data('id');
+                // Handle the 'Delete' button click
+                document.getElementById('Iddelete').value = id;
+            });
+
+            $('#Table_day').on('click', '#printer', function() {
+                const id = $(this).data('id');
+                // Handle the 'Printer' button click
+                var preloader_ch = `
+                    <div id="preloader_ch">
+                        <div class="spinner_preloader_ch"></div>
+                    </div>
+                `;
+                document.body.insertAdjacentHTML('beforeend', preloader_ch);
+                fetch(`/api/imp_fac_depot_bordo/${id}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        var preloader = document.getElementById('preloader_ch');
+                        if (preloader) preloader.remove();
+                        const societes = data.societes;
+                        const assurance = data.assurance;
+                        const date1 = data.date1;
+                        const date2 = data.date2;
+                        const statut = data.statut;
+                        const date_paiement = formatDate(data.date_payer);
+                        const type = data.type_paiement;
+                        const cheque = data.num_cheque;
+                        if (societes.length > 0) {
+                            generatePDFInvoice_Fac_Bordo(societes, assurance, date1, date2, statut, date_paiement, type, cheque);
+                        } else {
+                            showAlert('Informations', 'Aucune donnée trouvée pour cette période', 'info');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Erreur lors du chargement des données:', error);
+                    });
+            });
+        }
+
+        function eng_paiement() {
+            
             const auth_id = {{ Auth::user()->id }};
-            const id = document.getElementById('IdPaiement').value;
-            const date_depot = document.getElementById('date_depotP');
-            const date = document.getElementById('date_payer');
-            const type = document.getElementById('type_payer');
-            const cheque = document.getElementById('num_cheque_payer');
+            const id = $('#IdPaiement').val();
+            const date_depot = $('#date_depotP').val();
+            const date = $('#date_payer').val();
+            const type = $('#type_payer').val();
+            const cheque = $('#num_cheque_payer').val();
 
-            if (!date.value.trim() || !type.value.trim()) {
-                showAlert('Alert', 'Tous les champs sont obligatoires.','warning');
-                return false; 
-            }
-
-            if (type.value === 'cheque' && !cheque.value.trim() ) {
+            if (!date.trim() || !type.trim()) {
                 showAlert('Alert', 'Tous les champs sont obligatoires.', 'warning');
-                return false; 
+                return false;
             }
 
-            if (!isValidDate(date.value)) {
+            if (type === 'cheque' && !cheque.trim()) {
+                showAlert('Alert', 'Tous les champs sont obligatoires.', 'warning');
+                return false;
+            }
+
+            if (!isValidDate(date)) {
                 showAlert('Erreur', 'La date de paiement est invalide.', 'error');
                 return false;
             }
 
-            const pDate = new Date(date.value);
-            const Datedepot = new Date(date_depot.value);
+            const pDate = new Date(date);
+            const Datedepot = new Date(date_depot);
 
             if (pDate < Datedepot) {
-                showAlert('Erreur', 'La date de paiement ne peut pas être inférieure à la date du depôt.', 'error');
+                showAlert('Erreur', 'La date de paiement ne peut pas être inférieure à la date du dépôt.', 'error');
                 return false;
             }
 
-            var modal = bootstrap.Modal.getInstance(document.getElementById('Paiement'));
+            const modal = bootstrap.Modal.getInstance(document.getElementById('Paiement'));
             modal.hide();
 
-            var preloader_ch = `
+            const preloader_ch = `
                 <div id="preloader_ch">
                     <div class="spinner_preloader_ch"></div>
                 </div>
             `;
-            // Add the preloader to the body
-            document.body.insertAdjacentHTML('beforeend', preloader_ch);
+            $('body').append(preloader_ch);
 
             $.ajax({
-                url: '/api/paiement_depot_fac/'+id,
+                url: '/api/paiement_depot_fac/' + id,
                 method: 'GET',
                 data: {
-                    date: date.value, 
-                    type: type.value, 
-                    cheque: cheque.value || null,
+                    date: date,
+                    type: type,
+                    cheque: cheque || null,
                     auth_id: auth_id,
                 },
                 success: function(response) {
-
-                    var preloader = document.getElementById('preloader_ch');
-                    if (preloader) {
-                        preloader.remove();
-                    }
+                    $('#preloader_ch').remove();
 
                     if (response.success) {
+                        $('#date_payer').val('');
+                        $('#type_payer').val('').trigger('change');
+                        $('#num_cheque_payer').val('');
 
-                        date.value = "";
-                        type.value = "";
-                        cheque.value = "";
-
-                        list();
-
-                        showAlert('Succès', 'Opération éffectuée','success');
+                        $('#Table_day').DataTable().ajax.reload();
+                        showAlert('Succès', 'Opération effectuée', 'success');
 
                     } else if (response.error) {
-
-                        showAlert('Informations', 'Echec de l\'opération','info');
+                        showAlert('Informations', 'Échec de l\'opération', 'info');
 
                     } else if (response.non_touve) {
-                        
-                        showAlert('Information', 'Echec de l\'opération: Dépôt introuvable.', 'info');
-
+                        showAlert('Information', 'Échec de l\'opération: Dépôt introuvable.', 'info');
                     }
-
                 },
                 error: function() {
-
-                    var preloader = document.getElementById('preloader_ch');
-                    if (preloader) {
-                        preloader.remove();
-                    }
-
-                    showAlert('Alert', ' Une erreur est survenue.','error');
+                    $('#preloader_ch').remove();
+                    showAlert('Alert', 'Une erreur est survenue.', 'error');
                 }
             });
-        }
-
-        function list(page = 1)
-        {
-            const tableBody = document.querySelector('#Table tbody');
-            const messageDiv = document.getElementById('message_Table');
-            const tableDiv = document.getElementById('div_Table');
-            const loaderDiv = document.getElementById('div_Table_loader');
-
-            const date1 = document.getElementById('searchDate1').value;
-            const date2 = document.getElementById('searchDate2').value;
-
-            messageDiv.style.display = 'none';
-            tableDiv.style.display = 'none';
-            loaderDiv.style.display = 'block';
-
-            const statut = document.getElementById('statut').value;
-            const url = `/api/list_depotfacture/${date1}/${date2}/${statut}?page=${page}`;
-
-            fetch(url)
-                .then(response => response.json())
-                .then(data => {
-                    alldepots = data.depot || [] ;
-                    const pagination = data.pagination || {};
-
-                    const perPage = pagination.per_page || 10;
-                    const currentPage = pagination.current_page || 1;
-
-                    tableBody.innerHTML = '';
-
-                    if (alldepots.length > 0) {
-
-                        loaderDiv.style.display = 'none';
-                        messageDiv.style.display = 'none';
-                        tableDiv.style.display = 'block';
-
-                            tableBody.innerHTML = ''; 
-
-                            alldepots.forEach((item, index) => {
-                                const row = document.createElement('tr');
-                                row.innerHTML = `
-                                    <td>${((currentPage - 1) * perPage) + index + 1}</td>
-                                    <td>
-                                        <div class="d-flex align-items-center ">
-                                            <a class="d-flex align-items-center flex-column me-2">
-                                                <img src="{{asset('assets/images/depot_fac.jpg')}}" class="img-2x rounded-circle">
-                                            </a>
-                                            ${item.assurance}
-                                        </div>
-                                    </td>
-                                    <td>${formatDate(item.date1)}</td>
-                                    <td>${formatDate(item.date2)}</td>
-                                    <td>${formatDate(item.date_depot)}</td>
-                                    <td>
-                                        <span class="badge ${item.statut === 'oui' ? 'bg-success' : 'bg-danger'}">
-                                            ${item.statut === 'oui' ? 'Réglée' : 'Non Réglée'}
-                                        </span>
-                                    </td>
-                                    <td>${item.part_assurance} Fcfa</td>
-                                    <td>${item.part_patient} Fcfa</td>
-                                    <td>${item.total} Fcfa</td>
-                                    <td>${formatDateHeure(item.created_at)}</td>
-                                    <td>
-                                        <div class="d-inline-flex gap-1">
-                                            ${item.statut === 'non' ?  
-                                            `<a class="btn btn-outline-success btn-sm rounded-5" data-bs-toggle="modal" data-bs-target="#Paiement" id="paiement-${item.id}">
-                                                <i class="ri-inbox-archive-line"></i>
-                                            </a>` : ``}
-                                            <a class="btn btn-outline-warning btn-sm rounded-5"  id="detail-${item.id}">
-                                                <i class="ri-eye-line"></i>
-                                            </a>
-                                            ${item.statut === 'non' ?  
-                                            `<a class="btn btn-outline-info btn-sm rounded-5" data-bs-toggle="modal" data-bs-target="#Mmodif" id="modif-${item.id}">
-                                                <i class="ri-edit-line"></i>
-                                            </a>` : ``}
-                                            ${item.statut === 'non' ?  
-                                            `<a class="btn btn-outline-danger btn-sm rounded-5" data-bs-toggle="modal" data-bs-target="#Mdelete" id="delete-${item.id}">
-                                                <i class="ri-delete-bin-line"></i>
-                                            </a>` : ``}
-                                            <a class="btn btn-outline-dark btn-sm rounded-5"  id="printer-${item.id}">
-                                                <i class="ri-printer-line"></i>
-                                            </a>
-                                        </div>
-                                    </td>
-                                `;
-                                tableBody.appendChild(row);
-
-                                const deleteButton = document.getElementById(`delete-${item.id}`);
-                                if (deleteButton) {
-                                    deleteButton.addEventListener('click', () => {
-                                        document.getElementById('Iddelete').value = item.id;
-                                    });
-                                }
-
-                                const updateButton = document.getElementById(`modif-${item.id}`);
-                                if (updateButton) {
-                                    updateButton.addEventListener('click', () => {
-
-                                        document.getElementById('date1M').value = `${item.date1}`;
-                                        document.getElementById('date2M').value = `${item.date2}`;
-                                        document.getElementById('date_depotM').value = `${item.date_depot}`;
-                                        document.getElementById('IdModif').value = `${item.id}`;
-                                        document.getElementById('assurance_idM').value = `${item.assurance_id}`;
-
-                                    });
-                                }
-
-                                const paieButton = document.getElementById(`paiement-${item.id}`);
-                                if (paieButton) {
-                                    paieButton.addEventListener('click', () => {
-
-                                        document.getElementById('date_payer').value = "";
-                                        document.getElementById('type_payer').value = "";
-                                        document.getElementById('num_cheque_payer').value = "";
-
-                                        document.getElementById('IdPaiement').value = `${item.id}`;
-                                        document.getElementById('date_depotP').value = `${item.date_depot}`;
-
-                                    });
-                                }
-
-                                document.getElementById(`detail-${item.id}`).addEventListener('click', () => {
-
-                                    var preloader_ch = `
-                                        <div id="preloader_ch">
-                                            <div class="spinner_preloader_ch"></div>
-                                        </div>
-                                    `;
-                                    // Add the preloader to the body
-                                    document.body.insertAdjacentHTML('beforeend', preloader_ch);
-
-                                    fetch(`/api/imp_fac_depot/${item.id}`)
-                                            .then(response => response.json())
-                                            .then(data => {
-
-                                                var preloader = document.getElementById('preloader_ch');
-                                                if (preloader) {
-                                                    preloader.remove();
-                                                }
-
-                                                const societes = data.societes;
-                                                const assurance = data.assurance;
-                                                const date1 = data.date1;
-                                                const date2 = data.date2;
-
-                                                if (societes.length > 0) {
-
-                                                    generatePDFInvoice_Fac(societes,assurance,date1,date2);
-
-                                                } else {
-
-                                                    showAlert('Informations', 'Aucune donnée n\'a été trouvée pour cette période','info');
-                                                }
-                                            })
-                                            .catch(error => {
-                                                console.error('Erreur lors du chargement des données:', error);
-                                            });
-                                });
-
-                                document.getElementById(`printer-${item.id}`).addEventListener('click', () => {
-
-                                    var preloader_ch = `
-                                        <div id="preloader_ch">
-                                            <div class="spinner_preloader_ch"></div>
-                                        </div>
-                                    `;
-                                    // Add the preloader to the body
-                                    document.body.insertAdjacentHTML('beforeend', preloader_ch);
-
-                                    fetch(`/api/imp_fac_depot_bordo/${item.id}`)
-                                            .then(response => response.json())
-                                            .then(data => {
-
-                                                var preloader = document.getElementById('preloader_ch');
-                                                if (preloader) {
-                                                    preloader.remove();
-                                                }
-
-                                                const societes = data.societes;
-                                                const assurance = data.assurance;
-                                                const date1 = data.date1;
-                                                const date2 = data.date2;
-                                                const statut = item.statut;
-                                                const date_paiement = formatDate(item.date_payer);
-                                                const type = item.type_paiement;
-                                                const cheque = item.num_cheque;
-
-                                                if (societes.length > 0) {
-
-                                                    generatePDFInvoice_Fac_Bordo(societes,assurance,date1,date2,statut,date_paiement,type,cheque);
-
-                                                } else {
-
-                                                    showAlert('Informations', 'Aucune donnée n\'a été trouvée pour cette période','info');
-                                                }
-                                            })
-                                            .catch(error => {
-                                                console.error('Erreur lors du chargement des données:', error);
-                                            });
-                                });
-
-                            });
-
-                        updatePaginationControls(pagination);
-
-                    } else {
-                        tableDiv.style.display = 'none';
-                        loaderDiv.style.display = 'none';
-                        messageDiv.style.display = 'block';
-                    }
-                })
-                .catch(error => {
-                    console.error('Erreur lors du chargement des données:', error);
-                    loaderDiv.style.display = 'none';
-                    tableDiv.style.display = 'none';
-                    messageDiv.style.display = 'block';
-                });
-        }
-
-        function updatePaginationControls(pagination)
-        {
-            const paginationDiv = document.getElementById('pagination-controls');
-            paginationDiv.innerHTML = '';
-
-            // Bootstrap pagination wrapper
-            const paginationWrapper = document.createElement('ul');
-            paginationWrapper.className = 'pagination justify-content-center';
-
-            // Previous button
-            if (pagination.current_page > 1) {
-                const prevButton = document.createElement('li');
-                prevButton.className = 'page-item';
-                prevButton.innerHTML = `<a class="page-link" href="#">Precédent</a>`;
-                prevButton.onclick = () => list(pagination.current_page - 1);
-                paginationWrapper.appendChild(prevButton);
-            } else {
-                // Disable the previous button if on the first page
-                const prevButton = document.createElement('li');
-                prevButton.className = 'page-item disabled';
-                prevButton.innerHTML = `<a class="page-link" href="#">Precédent</a>`;
-                paginationWrapper.appendChild(prevButton);
-            }
-
-            // Page number links (show a few around the current page)
-            const totalPages = pagination.last_page;
-            const currentPage = pagination.current_page;
-            const maxVisiblePages = 5; // Max number of page links to display
-
-            let startPage = Math.max(1, currentPage - Math.floor(maxVisiblePages / 2));
-            let endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
-
-            // Adjust start page if end page exceeds the total pages
-            if (endPage - startPage < maxVisiblePages - 1) {
-                startPage = Math.max(1, endPage - maxVisiblePages + 1);
-            }
-
-            // Loop through pages and create page links
-            for (let i = startPage; i <= endPage; i++) {
-                const pageItem = document.createElement('li');
-                pageItem.className = `page-item ${i === currentPage ? 'active' : ''}`;
-                pageItem.innerHTML = `<a class="page-link" href="#">${i}</a>`;
-                pageItem.onclick = () => list(i);
-                paginationWrapper.appendChild(pageItem);
-            }
-
-            // Ellipsis (...) if not all pages are shown
-            if (endPage < totalPages) {
-                const ellipsis = document.createElement('li');
-                ellipsis.className = 'page-item disabled';
-                ellipsis.innerHTML = `<a class="page-link" href="#">...</a>`;
-                paginationWrapper.appendChild(ellipsis);
-
-                // Add the last page link
-                const lastPageItem = document.createElement('li');
-                lastPageItem.className = `page-item`;
-                lastPageItem.innerHTML = `<a class="page-link" href="#">${totalPages}</a>`;
-                lastPageItem.onclick = () => list(totalPages);
-                paginationWrapper.appendChild(lastPageItem);
-            }
-
-            // Next button
-            if (pagination.current_page < pagination.last_page) {
-                const nextButton = document.createElement('li');
-                nextButton.className = 'page-item';
-                nextButton.innerHTML = `<a class="page-link" href="#">Suivant</a>`;
-                nextButton.onclick = () => list(pagination.current_page + 1);
-                paginationWrapper.appendChild(nextButton);
-            } else {
-                // Disable the next button if on the last page
-                const nextButton = document.createElement('li');
-                nextButton.className = 'page-item disabled';
-                nextButton.innerHTML = `<a class="page-link" href="#">Suivant</a>`;
-                paginationWrapper.appendChild(nextButton);
-            }
-
-            // Append pagination controls to the DOM
-            paginationDiv.appendChild(paginationWrapper);
         }
 
         function updatee()
@@ -738,9 +559,17 @@
                 return false;
             }
 
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+
             const startDate = new Date(date1.value);
             const endDate = new Date(date2.value);
             const Datedepot = new Date(date_depot.value);
+
+            if (startDate.toISOString().slice(0, 10) === today.toISOString().slice(0, 10) || endDate.toISOString().slice(0, 10) === today.toISOString().slice(0, 10)) {
+                showAlert('Erreur', 'La date de début ou la date de fin ne doit pas être égale à la date du jour.', 'error');
+                return false;
+            }
 
             if (startDate > endDate) {
                 showAlert('Erreur', 'La date de début ne peut pas être supérieur à la date de fin.', 'error');
@@ -749,12 +578,6 @@
 
             if (endDate > Datedepot) {
                 showAlert('Erreur', 'La date du dépôt ne peut pas être supérieur à la date de fin.', 'error');
-                return false;
-            }
-
-            const oneYearInMs = 365 * 24 * 60 * 60 * 1000;
-            if (endDate - startDate > oneYearInMs) {
-                showAlert('Erreur', 'La plage de dates ne peut pas dépasser un an.', 'error');
                 return false;
             }
 
@@ -791,8 +614,7 @@
                         date2.value = "";
                         date_depot.value = "";
 
-                        list();
-
+                        $('#Table_day').DataTable().ajax.reload();
                         showAlert('Succès', 'Opération éffectuée','success');
 
                     } else if (response.error) {
@@ -824,7 +646,6 @@
 
         function deletee()
         {
-
             const id = document.getElementById('Iddelete').value;
 
             var modal = bootstrap.Modal.getInstance(document.getElementById('Mdelete'));
@@ -849,7 +670,7 @@
                     }
 
                     if (response.success) {
-                        list();
+                        $('#Table_day').DataTable().ajax.reload();
                         showAlert('Succès', 'Opération éffectuée.','success');
                     } else if (response.error) {
                         showAlert('Erreur', 'Echec de l\'opération.','error');

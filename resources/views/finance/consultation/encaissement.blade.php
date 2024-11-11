@@ -54,6 +54,7 @@
     </div>
 
     <div id="div_caisse" style="display: none;" >
+        
         @include('finance.btnFacNonRegle')
 
         <div class="row justify-content-center">

@@ -72,7 +72,7 @@
                                                 <label class="form-label">
                                                     Type de Soins
                                                 </label>
-                                                <select class="form-select" id="typesoins_id">
+                                                <select class="form-select select2" id="typesoins_id">
                                                 </select>
                                             </div>
                                         </div>
@@ -198,7 +198,7 @@
                     </div>
                     <div class="mb-3">
                         <label class="form-label">Acte</label>
-                        <select class="form-select" id="typesoins_id_modif"></select>
+                        <select class="form-select select2" id="typesoins_id_modif"></select>
                     </div>
                     <div class="mb-3">
                         <label class="form-label">Prix</label>
@@ -217,32 +217,52 @@
     </div>
 </div>
 
+@include('select2')
+
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
+    $('#Mmodif').on('shown.bs.modal', function () {
+        $('#typesoins_id_modif').select2({
+            theme: 'bootstrap',
+            placeholder: 'Selectionner',
+            language: {
+                noResults: function() {
+                    return "Aucun résultat trouvé";
+                }
+            },
+            width: '100%',
+            dropdownParent: $('#Mmodif'),
+        });
+    });
+</script>
+
+<script>
+    $(document).ready(function() {
 
         select();
         select_modif();
         list();
 
-        document.getElementById("btn_eng").addEventListener("click", eng);
-        document.getElementById("btn_refresh_table").addEventListener("click", list);
-        document.getElementById("updateBtn").addEventListener("click", updatee);
-        document.getElementById("deleteBtn").addEventListener("click", deletee);
+        $("#btn_eng").on("click", eng);
+        $("#btn_refresh_table").on("click", list);
+        $("#updateBtn").on("click", updatee);
+        $("#deleteBtn").on("click", deletee);
 
-        document.getElementById('prix').addEventListener('input', function() {
-            this.value = formatPrice(this.value);
+        $("#prix").on("input", function() {
+            $(this).val(formatPrice($(this).val()));
         });
-        document.getElementById('prix').addEventListener('keypress', function(event) {
+
+        $("#prix").on("keypress", function(event) {
             const key = event.key;
             if (isNaN(key)) {
                 event.preventDefault();
             }
         });
 
-        document.getElementById('prixModif').addEventListener('input', function() {
-            this.value = formatPrice(this.value);
+        $("#prixModif").on("input", function() {
+            $(this).val(formatPrice($(this).val()));
         });
-        document.getElementById('prixModif').addEventListener('keypress', function(event) {
+
+        $("#prixModif").on("keypress", function(event) {
             const key = event.key;
             if (isNaN(key)) {
                 event.preventDefault();
@@ -257,57 +277,54 @@
         }
 
         function select() {
-            const selectElement = document.getElementById('typesoins_id');
+            const $selectElement = $('#typesoins_id');
 
             // Clear existing options
-            selectElement.innerHTML = '';
+            $selectElement.empty();
 
-            const defaultOption = document.createElement('option');
-            defaultOption.value = '';
-            defaultOption.textContent = 'Selectionner';
-            selectElement.appendChild(defaultOption);
+            // Add default option
+            $selectElement.append('<option value="">Selectionner</option>');
 
             $.ajax({
                 url: '/api/list_typesoins',
                 method: 'GET',
                 success: function(response) {
-                    data = response.typesoins;
+                    const data = response.typesoins;
                     data.forEach(item => {
-                        const option = document.createElement('option');
-                        option.value = item.id; // Ensure 'id' is the correct key
-                        option.textContent = item.nom; // Ensure 'nom' is the correct key
-                        selectElement.appendChild(option);
+                        // Add each item as an option
+                        $selectElement.append(`<option value="${item.id}">${item.nom}</option>`);
                     });
                 },
                 error: function() {
+                    // Optionally handle the error
                     // showAlert('danger', 'Impossible de generer le code automatiquement');
                 }
             });
         }
 
         function select_modif() {
-            const selectElement = document.getElementById('typesoins_id_modif');
+            const $selectElement = $('#typesoins_id_modif');
 
             // Clear existing options
-            selectElement.innerHTML = '';
+            $selectElement.empty();
 
             $.ajax({
                 url: '/api/list_typesoins',
                 method: 'GET',
                 success: function(response) {
-                    data = response.typesoins;
+                    const data = response.typesoins;
                     data.forEach(item => {
-                        const option = document.createElement('option');
-                        option.value = item.id; // Ensure 'id' is the correct key
-                        option.textContent = item.nom; // Ensure 'nom' is the correct key
-                        selectElement.appendChild(option);
+                        // Add each item as an option
+                        $selectElement.append(`<option value="${item.id}">${item.nom}</option>`);
                     });
                 },
                 error: function() {
+                    // Optionally handle the error
                     // showAlert('danger', 'Impossible de generer le code automatiquement');
                 }
             });
         }
+
 
         function showAlert(title, message, type) {
             Swal.fire({
@@ -318,84 +335,72 @@
         }
 
         function eng() {
+            const $typesoins_id = $("#typesoins_id");
+            const $nom_soins = $("#nom_soins");
+            const $prix = $("#prix");
 
-            const typesoins_id = document.getElementById("typesoins_id");
-            const nom_soins = document.getElementById("nom_soins");
-            const prix = document.getElementById("prix");
-
-            var dynamicFields = document.getElementById("div_alert");
-            // Remove existing content
-            while (dynamicFields.firstChild) {
-                dynamicFields.removeChild(dynamicFields.firstChild);
-            }
-
-            if(!typesoins_id.value.trim() || !nom_soins.value.trim() || !prix.value.trim()){
-                showAlert('Alert', 'Veuillez remplir tous les champs SVP.','warning');
+            if (!$typesoins_id.val().trim() || !$nom_soins.val().trim() || !$prix.val().trim()) {
+                showAlert('Alert', 'Veuillez remplir tous les champs SVP.', 'warning');
                 return false;
             }
 
-            var preloader_ch = `
+            const preloader_ch = `
                 <div id="preloader_ch">
                     <div class="spinner_preloader_ch"></div>
                 </div>
             `;
             // Add the preloader to the body
-            document.body.insertAdjacentHTML('beforeend', preloader_ch);
+            $("body").append(preloader_ch);
 
             $.ajax({
                 url: '/api/new_soinsIn',
-                method: 'GET',  // Use 'POST' for data creation
-                data: { typesoins_id: typesoins_id.value, nom_soins: nom_soins.value, prix: prix.value },
+                method: 'GET',  // Changed to 'POST' for data creation
+                data: {
+                    typesoins_id: $typesoins_id.val(),
+                    nom_soins: $nom_soins.val(),
+                    prix: $prix.val()
+                },
                 success: function(response) {
-                    var preloader = document.getElementById('preloader_ch');
-                    if (preloader) {
-                        preloader.remove();
-                    }
+                    $("#preloader_ch").remove();
 
                     if (response.success) {
-                        showAlert('Succès', 'Opération éffectuée.','success');
+                        showAlert('Succès', 'Opération éffectuée.', 'success');
                     } else if (response.error) {
-                        showAlert('Erreur', 'Une erreur est survenue lors de l\'enregistrement.','error');
+                        showAlert('Erreur', 'Une erreur est survenue lors de l\'enregistrement.', 'error');
                     }
 
-                    typesoins_id.value = '';
-                    nom_soins.value = '';
-                    prix.value = '';
+                    // Clear input fields
+                    $typesoins_id.val('').trigger('change');
+                    $nom_soins.val('');
+                    $prix.val('');
 
                     select_modif();
                     select();
                     list();
                 },
                 error: function() {
-                    var preloader = document.getElementById('preloader_ch');
-                    if (preloader) {
-                        preloader.remove();
-                    }
-
-                    showAlert('Erreur', 'Une erreur est survenue lors de l\'enregistrement.','error');
+                    $("#preloader_ch").remove();
+                    showAlert('Erreur', 'Une erreur est survenue lors de l\'enregistrement.', 'error');
                 }
             });
         }
 
         function list(page = 1) {
+            const $tableBody = $('#Table tbody');
+            const $messageDiv = $('#message_Table');
+            const $tableDiv = $('#div_Table');
+            const $loaderDiv = $('#div_Table_loader');
 
-            const tableBody = document.querySelector('#Table tbody');
-            const messageDiv = document.getElementById('message_Table');
-            const tableDiv = document.getElementById('div_Table'); // The message div
-            const loaderDiv = document.getElementById('div_Table_loader');
-
-            messageDiv.style.display = 'none';
-            tableDiv.style.display = 'none';
-            loaderDiv.style.display = 'block';
+            $messageDiv.hide();
+            $tableDiv.hide();
+            $loaderDiv.show();
 
             let allSoinsins = [];
 
             const url = `/api/list_soinsIn?page=${page}`;
-            fetch(url) // API endpoint
-                .then(response => response.json())
-                .then(data => {
-
-                    allSoinsins = data.soinsin || [] ;
+            $.get(url)
+                .done(function(data) {
+                    allSoinsins = data.soinsin || [];
                     const pagination = data.pagination || {};
 
                     const perPage = pagination.per_page || 10;
@@ -404,18 +409,14 @@
                     if (allSoinsins.length > 0) {
 
                         function displayRows(filteredSoinsins) {
-                            loaderDiv.style.display = 'none';
-                            messageDiv.style.display = 'none';
-                            tableDiv.style.display = 'block';
+                            $loaderDiv.hide();
+                            $messageDiv.hide();
+                            $tableDiv.show();
 
-                            tableBody.innerHTML = '';
+                            $tableBody.empty();
 
-                            // Loop through each item in the chambre array
                             filteredSoinsins.forEach((item, index) => {
-                                // Create a new row
-                                const row = document.createElement('tr');
-                                // Create and append cells to the row based on your table's structure
-                                row.innerHTML = `
+                                const row = $('<tr></tr>').html(`
                                     <td>${((currentPage - 1) * perPage) + index + 1}</td>
                                     <td>
                                         <div class="d-flex align-items-center ">
@@ -432,164 +433,117 @@
                                             <a class="btn btn-outline-info btn-sm rounded-5" data-bs-toggle="modal" data-bs-target="#Mmodif" id="edit-${item.id}">
                                                 <i class="ri-edit-box-line"></i>
                                             </a>
-                                            
                                         </div>
                                     </td>
-                                `;
-                                // <a class="btn btn-outline-danger btn-sm rounded-5" data-bs-toggle="modal" data-bs-target="#Mdelete" id="delete-${item.id}">
-                                //                 <i class="ri-delete-bin-line"></i>
-                                //             </a>
-                                // Append the row to the table body
-                                tableBody.appendChild(row);
+                                `);
 
-                                // Add event listener to the edit button to open the modal with pre-filled data
-                                document.getElementById(`edit-${item.id}`).addEventListener('click', () =>
-                                {
-                                    // Set the values in the modal form
-                                    document.getElementById('Id').value = item.id;
-                                    document.getElementById('nomModif').value = item.nom;
-                                    document.getElementById('prixModif').value = item.prix;
+                                $tableBody.append(row);
 
-                                    const modifActeSelect = document.getElementById('typesoins_id_modif');
-                                    const typeeOptions = modifActeSelect.options;
+                                $(`#edit-${item.id}`).on('click', function() {
+                                    $('#Id').val(item.id);
+                                    $('#nomModif').val(item.nom);
+                                    $('#prixModif').val(item.prix);
 
-                                    // Loop through the options to find the matching value
-                                    for (let i = 0; i < typeeOptions.length; i++) {
-                                        if (String(typeeOptions[i].value) === String(item.typesoins_id)) {
-                                            typeeOptions[i].selected = true; // Set the matching option as selected
-                                            break; // Stop the loop once a match is found
-                                        }
-                                    }
+                                    $('#typesoins_id_modif').val(null).trigger('change');
+                                    $('#typesoins_id_modif').val(item.typesoins_id).trigger('change');
                                 });
-
-                                // Add event listener to the edit button to open the modal with pre-filled data
-                                // document.getElementById(`delete-${item.id}`).addEventListener('click', () => {
-                                //     // Set the values in the modal form
-                                //     document.getElementById('Iddelete').value = item.id;
-                                // });
-
                             });
                         }
 
-                        // Update table with filtered factures
                         function applySearchFilter() {
-                            const searchTerm = searchInput.value.toLowerCase();
+                            const searchTerm = $('#searchInput').val().toLowerCase();
                             const filteredSoinsins = allSoinsins.filter(item =>
                                 item.nom.toLowerCase().includes(searchTerm)
                             );
-                            displayRows(filteredSoinsins); // Display only filtered factures
+                            displayRows(filteredSoinsins);
                         }
 
-                        searchInput.addEventListener('input', applySearchFilter);
+                        $('#searchInput').on('input', applySearchFilter);
 
                         displayRows(allSoinsins);
 
                         PaginationControls(pagination);
 
                     } else {
-                        loaderDiv.style.display = 'none';
-                        messageDiv.style.display = 'block';
-                        tableDiv.style.display = 'none';
+                        $loaderDiv.hide();
+                        $messageDiv.show();
+                        $tableDiv.hide();
                     }
                 })
-                .catch(error => {
-                    console.error('Erreur lors du chargement des données:', error);
-                    // Hide the table and show the error message in case of failure
-                    loaderDiv.style.display = 'none';
-                    messageDiv.style.display = 'block';
-                    tableDiv.style.display = 'none';
+                .fail(function() {
+                    console.error('Erreur lors du chargement des données');
+                    $loaderDiv.hide();
+                    $messageDiv.show();
+                    $tableDiv.hide();
                 });
         }
 
         function PaginationControls(pagination) {
-            const paginationDiv = document.getElementById('pagination-controls');
-            paginationDiv.innerHTML = '';
+            const $paginationDiv = $('#pagination-controls');
+            $paginationDiv.empty();
 
-            // Bootstrap pagination wrapper
-            const paginationWrapper = document.createElement('ul');
-            paginationWrapper.className = 'pagination justify-content-center';
+            const $paginationWrapper = $('<ul></ul>').addClass('pagination justify-content-center');
 
             // Previous button
             if (pagination.current_page > 1) {
-                const prevButton = document.createElement('li');
-                prevButton.className = 'page-item';
-                prevButton.innerHTML = `<a class="page-link" href="#">Precédent</a>`;
-                prevButton.onclick = (event) => {
-                    event.preventDefault(); // Empêche le défilement en haut de la page
+                const $prevButton = $('<li></li>').addClass('page-item').html('<a class="page-link" href="#">Precédent</a>');
+                $prevButton.on('click', function(event) {
+                    event.preventDefault();
                     list(pagination.current_page - 1);
-                };
-                paginationWrapper.appendChild(prevButton);
+                });
+                $paginationWrapper.append($prevButton);
             } else {
-                // Disable the previous button if on the first page
-                const prevButton = document.createElement('li');
-                prevButton.className = 'page-item disabled';
-                prevButton.innerHTML = `<a class="page-link" href="#">Precédent</a>`;
-                paginationWrapper.appendChild(prevButton);
+                const $prevButton = $('<li></li>').addClass('page-item disabled').html('<a class="page-link" href="#">Precédent</a>');
+                $paginationWrapper.append($prevButton);
             }
 
-            // Page number links (show a few around the current page)
+            // Page number links
             const totalPages = pagination.last_page;
             const currentPage = pagination.current_page;
-            const maxVisiblePages = 5; // Max number of page links to display
+            const maxVisiblePages = 5;
 
             let startPage = Math.max(1, currentPage - Math.floor(maxVisiblePages / 2));
             let endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
 
-            // Adjust start page if end page exceeds the total pages
             if (endPage - startPage < maxVisiblePages - 1) {
                 startPage = Math.max(1, endPage - maxVisiblePages + 1);
             }
 
-            // Loop through pages and create page links
             for (let i = startPage; i <= endPage; i++) {
-                const pageItem = document.createElement('li');
-                pageItem.className = `page-item ${i === currentPage ? 'active' : ''}`;
-                pageItem.innerHTML = `<a class="page-link" href="#">${i}</a>`;
-                pageItem.onclick = (event) => {
-                    event.preventDefault(); // Empêche le défilement en haut de la page
+                const $pageItem = $('<li></li>').addClass(`page-item ${i === currentPage ? 'active' : ''}`).html(`<a class="page-link" href="#">${i}</a>`);
+                $pageItem.on('click', function(event) {
+                    event.preventDefault();
                     list(i);
-                };
-                paginationWrapper.appendChild(pageItem);
+                });
+                $paginationWrapper.append($pageItem);
             }
 
-            // Ellipsis (...) if not all pages are shown
             if (endPage < totalPages) {
-                const ellipsis = document.createElement('li');
-                ellipsis.className = 'page-item disabled';
-                ellipsis.innerHTML = `<a class="page-link" href="#">...</a>`;
-                paginationWrapper.appendChild(ellipsis);
+                const $ellipsis = $('<li></li>').addClass('page-item disabled').html('<a class="page-link" href="#">...</a>');
+                $paginationWrapper.append($ellipsis);
 
-                // Add the last page link
-                const lastPageItem = document.createElement('li');
-                lastPageItem.className = `page-item`;
-                lastPageItem.innerHTML = `<a class="page-link" href="#">${totalPages}</a>`;
-                lastPageItem.onclick = (event) => {
-                    event.preventDefault(); // Empêche le défilement en haut de la page
+                const $lastPageItem = $('<li></li>').addClass('page-item').html(`<a class="page-link" href="#">${totalPages}</a>`);
+                $lastPageItem.on('click', function(event) {
+                    event.preventDefault();
                     list(totalPages);
-                };
-                paginationWrapper.appendChild(lastPageItem);
+                });
+                $paginationWrapper.append($lastPageItem);
             }
 
             // Next button
             if (pagination.current_page < pagination.last_page) {
-                const nextButton = document.createElement('li');
-                nextButton.className = 'page-item';
-                nextButton.innerHTML = `<a class="page-link" href="#">Suivant</a>`;
-                nextButton.onclick = (event) => {
-                    event.preventDefault(); // Empêche le défilement en haut de la page
+                const $nextButton = $('<li></li>').addClass('page-item').html('<a class="page-link" href="#">Suivant</a>');
+                $nextButton.on('click', function(event) {
+                    event.preventDefault();
                     list(pagination.current_page + 1);
-                };
-                paginationWrapper.appendChild(nextButton);
+                });
+                $paginationWrapper.append($nextButton);
             } else {
-                // Disable the next button if on the last page
-                const nextButton = document.createElement('li');
-                nextButton.className = 'page-item disabled';
-                nextButton.innerHTML = `<a class="page-link" href="#">Suivant</a>`;
-                paginationWrapper.appendChild(nextButton);
+                const $nextButton = $('<li></li>').addClass('page-item disabled').html('<a class="page-link" href="#">Suivant</a>');
+                $paginationWrapper.append($nextButton);
             }
 
-            // Append pagination controls to the DOM
-            paginationDiv.appendChild(paginationWrapper);
+            $paginationDiv.append($paginationWrapper);
         }
 
         function updatee() {
@@ -598,13 +552,6 @@
             const nomModif = document.getElementById('nomModif').value;
             const typesoins_id_modif = document.getElementById('typesoins_id_modif').value;
             const prixModif = document.getElementById('prixModif').value;
-
-
-            var dynamicFields = document.getElementById("alert_update");
-            // Remove existing content
-            while (dynamicFields.firstChild) {
-                dynamicFields.removeChild(dynamicFields.firstChild);
-            }
 
             if(!nomModif.trim() || !typesoins_id_modif.trim() || !prixModif.trim()){
                 showAlert('Alert', 'Veuillez remplir tous les champs SVP.','warning');
