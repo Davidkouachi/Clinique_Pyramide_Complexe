@@ -92,21 +92,18 @@ class ApilistController extends Controller
     {
         $role = role::where('nom', '=', 'MEDECIN')->first();
 
-        if ($role) {
-            // Join `users` with `typemedecins` and `typeactes`
-            $medecin = user::join('typemedecins', 'typemedecins.user_id', '=', 'users.id')
-                            ->join('typeactes', 'typemedecins.typeacte_id', '=', 'typeactes.id')
-                            ->where('users.role_id', '=', $role->id)
-                            ->orderBy('users.created_at', 'desc')
-                            ->select(
-                                'users.*', 
-                                'typeactes.nom as typeacte', 
-                                'typemedecins.typeacte_id as typeacte_id'
-                            )
-                            ->get();
+        $medecin = user::join('typemedecins', 'typemedecins.user_id', '=', 'users.id')
+                        ->join('typeactes', 'typemedecins.typeacte_id', '=', 'typeactes.id')
+                        ->where('users.role_id', '=', $role->id)
+                        ->orderBy('users.created_at', 'desc')
+                        ->select(
+                            'users.*', 
+                            'typeactes.nom as typeacte', 
+                            'typemedecins.typeacte_id as typeacte_id'
+                        )
+                        ->get();
 
-            return response()->json(['medecin' => $medecin]);
-        }
+        return response()->json(['data' => $medecin]);
     }
 
     public function list_cons_day()
@@ -182,22 +179,14 @@ class ApilistController extends Controller
 
     public function list_natureadmission()
     {
-        $natureadmissionQuery = natureadmission::join('typeadmissions', 'typeadmissions.id', '=', 'natureadmissions.typeadmission_id')->select('natureadmissions.*','typeadmissions.nom as typeadmission')->orderBy('natureadmissions.created_at', 'desc');
+        $natureadmission = natureadmission::join('typeadmissions', 'typeadmissions.id', '=', 'natureadmissions.typeadmission_id')->select('natureadmissions.*','typeadmissions.nom as typeadmission')->orderBy('natureadmissions.created_at', 'desc')->get();
 
-        $natureadmission = $natureadmissionQuery->paginate(15);
-
-        foreach ($natureadmission->items() as $value) {
+        foreach ($natureadmission as $value) {
             $value->nbre = detailhopital::where('natureadmission_id', '=', $value->id)->count() ?: 0;
         }
 
         return response()->json([
-            'natureadmission' => $natureadmission->items(), // Paginated data
-            'pagination' => [
-                'current_page' => $natureadmission->currentPage(),
-                'last_page' => $natureadmission->lastPage(),
-                'per_page' => $natureadmission->perPage(),
-                'total' => $natureadmission->total(),
-            ]
+            'data' => $natureadmission,
         ]);
     }
 
@@ -287,36 +276,16 @@ class ApilistController extends Controller
             'user' => $user,
             'produit' => $produit,
         ]);
-
     }
 
-    public function list_produit(Request $request)
+    public function list_produit()
     {
-        $search = $request->input('search.value');
-        $start = $request->input('start');
-        $length = $request->input('length');
-        $draw = $request->input('draw');
+        $produits = Produit::orderBy('created_at', 'desc')->get();
 
-        // Initial query for produits, ordered by created_at in descending order
-        $produits = Produit::orderBy('created_at', 'desc');
-
-        // Apply search filter if search term is provided
-        if ($search) {
-            $produits->where('nom', 'like', "%{$search}%");
-        }
-
-        $produits = $produits->paginate($length);
-
-        // Return the data as JSON response for DataTables
         return response()->json([
-            'draw' => intval($draw),
-            'recordsTotal' => $produits->total(),
-            'recordsFiltered' => $produits->total(),
-            'data' => $produits->items(),
+            'data' => $produits,
         ]);
     }
-
-
 
     public function list_produit_all()
     {
@@ -411,18 +380,11 @@ class ApilistController extends Controller
         $soinsinQuery = soinsinfirmier::Join('typesoins', 'typesoins.id', '=', 'soinsinfirmiers.typesoins_id')
                         ->orderBy('soinsinfirmiers.created_at', 'desc')
                         ->select('soinsinfirmiers.*', 'typesoins.nom as nom_typesoins')
-                        ->orderBy('created_at', 'desc');
-
-        $soinsin = $soinsinQuery->paginate(15);
+                        ->orderBy('created_at', 'desc')
+                        ->get();
 
         return response()->json([
-            'soinsin' => $soinsin->items(), // Paginated data
-            'pagination' => [
-                'current_page' => $soinsin->currentPage(),
-                'last_page' => $soinsin->lastPage(),
-                'per_page' => $soinsin->perPage(),
-                'total' => $soinsin->total(),
-            ]
+            'data' => $soinsinQuery,
         ]);
     }
 
@@ -810,11 +772,6 @@ class ApilistController extends Controller
 
     public function list_depotfacture(Request $request)
     {
-        $search = $request->input('search.value');
-        $start = $request->input('start');
-        $length = $request->input('length');
-        $draw = $request->input('draw');
-
         $total_patient = 0;
         $total_assurance = 0;
         $total_montant = 0;
@@ -824,17 +781,10 @@ class ApilistController extends Controller
                                     'depotfactures.*',
                                     'assurances.nom as assurance',
                                 )
-                                ->orderBy('depotfactures.created_at', 'desc');
+                                ->orderBy('depotfactures.created_at', 'desc')
+                                ->get();
 
-        // Appliquer le filtre de recherche, si nécessaire
-        if ($search) {
-            $depotQuery->where('assurances.nom', 'like', "%{$search}%"); // Exemple de filtrage sur le nom de l'assurance
-        }
-
-        // Utilisation de paginate pour gérer la pagination proprement
-        $depotQuery = $depotQuery->paginate($length);
-
-        foreach ($depotQuery->items() as $depo) {
+        foreach ($depotQuery as $depo) {
 
             $date1 = Carbon::parse($depo->date1)->startOfDay();
             $date2 = Carbon::parse($depo->date2)->endOfDay();
@@ -977,10 +927,7 @@ class ApilistController extends Controller
         }
 
         return response()->json([
-            'draw' => intval($draw),
-            'recordsTotal' => $depotQuery->total(),
-            'recordsFiltered' => $depotQuery->total(),
-            'data' => $depotQuery->items(),
+            'data' => $depotQuery,
         ]);
     }
 
@@ -1155,19 +1102,19 @@ class ApilistController extends Controller
         ]);
     }
 
-    public function list_user()
-    {
- 
+    public function list_user(Request $request)
+    { 
         $user = user::join('roles', 'roles.id', '=', 'users.role_id')
                     ->where('roles.nom', '!=', 'MEDECIN')
-                    ->orderBy('users.created_at', 'desc')
                     ->select(
                         'users.*',
                     )
+                    ->orderBy('users.created_at', 'desc')
                     ->get();
 
-        return response()->json(['user' => $user]);
-
+        return response()->json([
+            'data' => $user,
+        ]);
     }
 
     public function list_rdv_two_days()

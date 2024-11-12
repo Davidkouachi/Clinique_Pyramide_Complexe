@@ -290,3 +290,44 @@
 
 
 
+
+
+
+
+#Table_day {
+    font-size: 13px;
+}
+
+#Table_day td,
+#Table_day th {
+    padding: 4px 8px;
+    /* Adjust cell padding */
+}
+
+.dataTables_wrapper .dataTables_filter input,
+.dataTables_wrapper .dataTables_length select {
+    font-size: 12px;
+    /* Adjust search box and dropdown font size */
+}
+
+#Table_day .btn {
+    font-size: 12px;
+    /* Reduce the font size inside the buttons */
+    padding: 4px 6px;
+    /* Adjust the padding for smaller buttons */
+}
+
+#Table_day .btn-sm {
+    font-size: 12px;
+    /* Make small buttons even smaller */
+    padding: 3px 6px;
+    /* Adjust padding for btn-sm size */
+}
+
+#Table_day .d-inline-flex {
+    gap: 2px;
+    /* Reduce the space between buttons */
+}
+
+
+

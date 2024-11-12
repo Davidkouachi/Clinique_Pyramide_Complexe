@@ -140,12 +140,9 @@
                                     </a>
                                 </div>
                                 <div class="card-body">
-                                    <div id="div_alert_table" >
-                                    
-                                    </div>
-                                    <div class="table-outer" id="div_Table" style="display: none;">
+                                    <div class="">
                                         <div class="table-responsive">
-                                            <table class="table align-middle table-hover m-0 truncate" id="Table">
+                                            <table id="Table_day" class="table table-hover table-sm">
                                                 <thead>
                                                     <tr>
                                                         <th scope="col">N°</th>
@@ -161,17 +158,6 @@
                                                 <tbody>
                                                 </tbody>
                                             </table>
-                                        </div>
-                                    </div>
-                                    <div id="message_Table" style="display: none;">
-                                        <p class="text-center" >
-                                            Aucun Medecin n'a été enregistrer
-                                        </p>
-                                    </div>
-                                    <div id="div_Table_loader" style="display: none;">
-                                        <div class="d-flex justify-content-center align-items-center">
-                                            <div class="spinner-border text-warning me-2" role="status" aria-hidden="true"></div>
-                                            <strong>Chargement des données...</strong>
                                         </div>
                                     </div>
                                 </div>
@@ -284,23 +270,22 @@
 
         select();
         select_modif();
-        list();
 
         $("#btn_eng").on("click", eng);
-        $("#btn_refresh_table").on("click", list);
         $("#updateBtn").on("click", updatee);
         $("#deleteBtn").on("click", deletee);
 
+        $('#btn_refresh_table').on('click', function () {
+            $('#Table_day').DataTable().ajax.reload();
+        });
 
-        // Only allow numeric input for specified elements
-        var inputs = ['#tel', '#tel2', '#telModif', '#tel2Modif']; // Array of element selectors
+        var inputs = ['#tel', '#tel2', '#telModif', '#tel2Modif'];
         inputs.forEach(function(selector) {
             $(selector).on('input', function() {
                 this.value = this.value.replace(/[^0-9]/g, ''); // Allow only numbers
             });
         });
 
-        // Function to populate a select element with options
         function select() {
             const $selectElement = $('#typeacte_id');
 
@@ -325,7 +310,6 @@
             });
         }
 
-        // Function to populate another select element for modification
         function select_modif() {
             const $selectElement = $('#typeacte_idModif');
 
@@ -419,7 +403,7 @@
                         sexe.val('');
                         typeacte_id.val('').trigger('change');
                         
-                        list();
+                        $('#Table_day').DataTable().ajax.reload();
                         showAlert('Succès', 'Opération éffectuée.', 'success');
                     } else if (response.error) {
                         showAlert('Erreur', 'Une erreur est survenue lors de l\'enregistrement.', 'error');
@@ -432,92 +416,117 @@
             });
         }
 
-        function list() {
+        $('#Table_day').DataTable({
 
-            const tableBody = $('#Table tbody');
-            const messageDiv = $('#message_Table');
-            const tableDiv = $('#div_Table');
-            const loaderDiv = $('#div_Table_loader');
+            processing: true,
+            serverSide: false,
+            ajax: {
+                url: `/api/list_medecin`,
+                type: 'GET',
+                dataSrc: 'data',
+            },
+            columns: [
+                { 
+                    data: null, 
+                    render: (data, type, row, meta) => meta.row + 1,
+                    searchable: false,
+                    orderable: false,
+                },
+                { 
+                    data: 'name', 
+                    render: (data, type, row) => `
+                    <div class="d-flex align-items-center">
+                        <a class="d-flex align-items-center flex-column me-2">
+                            <img src="/assets/images/docteur.png" class="img-2x rounded-circle border border-1">
+                        </a>
+                        Dr. ${data}
+                    </div>`,
+                    searchable: true, 
+                },
+                { 
+                    data: 'email',
+                    searchable: true,
+                },
+                { 
+                    data: 'matricule',
+                    searchable: true, 
+                },
+                { 
+                    data: 'typeacte',
+                    searchable: true, 
+                },
+                { 
+                    data: 'tel', 
+                    render: (data) => `+225 ${data}`,
+                    searchable: true, 
+                },
+                { 
+                    data: 'adresse',
+                    searchable: true, 
+                },
+                {
+                    data: null,
+                    render: (data, type, row) => `
+                        <div class="d-inline-flex gap-1" style="font-size:10px;">
+                            <a class="btn btn-outline-info btn-sm rounded-5 edit-btn" data-id="${row.id}" data-name="${row.name}" data-email="${row.email}" data-tel="${row.tel}" data-tel2="${row.tel2}" data-adresse="${row.adresse}" data-sexe="${row.sexe}" data-typeacte_id="${row.typeacte_id}" data-bs-toggle="modal" data-bs-target="#Mmodif" id="modif">
+                                <i class="ri-edit-box-line"></i>
+                            </a>
+                            <a class="btn btn-outline-danger btn-sm rounded-5 delete-btn" data-id="${row.id}" data-bs-toggle="modal" data-bs-target="#Mdelete" id="delete">
+                                <i class="ri-delete-bin-line"></i>
+                            </a>
+                        </div>
+                    `,
+                    searchable: false,
+                    orderable: false,
+                }
+            ],
+            language: {
+                search: "Recherche:",
+                lengthMenu: "Afficher _MENU_ entrées",
+                info: "Affichage de _START_ à _END_ sur _TOTAL_ entrées",
+                infoEmpty: "Affichage de 0 à 0 sur 0 entrée",
+                paginate: {
+                    previous: "Précédent",
+                    next: "Suivant"
+                },
+                zeroRecords: "Aucune donnée trouvée",
+                emptyTable: "Aucune donnée disponible dans le tableau",
+            },
+            // autoWidth: true,
+            // scrollX: true, 
+            initComplete: function(settings, json) {
+                initializeRowEventListeners();
+            },
+        });
 
-            messageDiv.hide();
-            tableDiv.hide();
-            loaderDiv.show();
+        function initializeRowEventListeners() {
 
-            // Fetch data from the API
-            fetch('/api/list_medecin')
-                .then(response => response.json())
-                .then(data => {
-                    const medecins = data.medecin;
-                    tableBody.empty();
+            $('#Table_day').on('click', '#modif', function() {
+                const id = $(this).data('id');
+                const name = $(this).data('name');
+                const email = $(this).data('email');
+                const tel = $(this).data('tel');
+                const tel2 = $(this).data('tel2');
+                const adresse = $(this).data('adresse');
+                const sexe = $(this).data('sexe');
+                const typeacte_id = $(this).data('typeacte_id');
+                
+                $('#Id').val(id);
+                $('#nomModif').val(name);
+                $('#emailModif').val(email);
+                $('#telModif').val(tel);
+                $('#tel2Modif').val(tel2);
+                $('#adresseModif').val(adresse);
+                $('#sexeModif').val(sexe);
 
-                    if (medecins.length > 0) {
-                        loaderDiv.hide();
-                        messageDiv.hide();
-                        tableDiv.show();
+                $('#typeacte_idModif').val(null).trigger('change');
+                $('#typeacte_idModif').val(typeacte_id).trigger('change');
+            });
 
-                        medecins.forEach((item, index) => {
-                            const row = `
-                                <tr>
-                                    <td>${index + 1}</td>
-                                    <td>
-                                        <div class="d-flex align-items-center">
-                                            <a class="d-flex align-items-center flex-column me-2">
-                                                <img src="{{asset('assets/images/docteur.png')}}" class="img-3x rounded-circle border border-1">
-                                            </a>
-                                            Dr. ${item.name}
-                                        </div>
-                                    </td>
-                                    <td>${item.email}</td>
-                                    <td>${item.matricule}</td>
-                                    <td>${item.typeacte}</td>
-                                    <td>+225 ${item.tel}</td>
-                                    <td>${item.adresse}</td>
-                                    <td>
-                                        <div class="d-inline-flex gap-1">
-                                            <a class="btn btn-outline-info btn-sm rounded-5 edit-btn" data-id="${item.id}" data-bs-toggle="modal" data-bs-target="#Mmodif">
-                                                <i class="ri-edit-box-line"></i>
-                                            </a>
-                                            <a class="btn btn-outline-danger btn-sm rounded-5 delete-btn" data-id="${item.id}" data-bs-toggle="modal" data-bs-target="#Mdelete">
-                                                <i class="ri-delete-bin-line"></i>
-                                            </a>
-                                        </div>
-                                    </td>
-                                </tr>
-                            `;
-                            tableBody.append(row);
-                        });
-
-                        // Event delegation for dynamically added buttons
-                        $('.edit-btn').on('click', function() {
-                            const itemId = $(this).data('id');
-                            const item = medecins.find(m => m.id === itemId);
-                            $('#Id').val(item.id);
-                            $('#nomModif').val(item.name);
-                            $('#emailModif').val(item.email);
-                            $('#telModif').val(item.tel);
-                            $('#tel2Modif').val(item.tel2);
-                            $('#adresseModif').val(item.adresse);
-                            $('#sexeModif').val(item.sexe);
-
-                            $('#typeacte_idModif').val(null).trigger('change');
-                            $('#typeacte_idModif').val(item.typeacte_id).trigger('change');
-                        });
-
-                        $('.delete-btn').on('click', function() {
-                            $('#Iddelete').val($(this).data('id'));
-                        });
-                    } else {
-                        loaderDiv.hide();
-                        messageDiv.show();
-                        tableDiv.hide();
-                    }
-                })
-                .catch(error => {
-                    console.error('Erreur lors du chargement des données:', error);
-                    loaderDiv.hide();
-                    messageDiv.show();
-                    tableDiv.hide();
-                });
+            $('#Table_day').on('click', '#delete', function() {
+                const id = $(this).data('id');
+                $('#Iddelete').val(id);
+            });
         }
 
         function updatee() {
@@ -582,7 +591,7 @@
                     } else if (response.nom_existe) {
                         showAlert('Alert', 'Cet Médecin existe déjà.', 'warning');
                     } else if (response.success) {
-                        list();
+                        $('#Table_day').DataTable().ajax.reload();
                         showAlert('Succès', 'Opération éffectuée.', 'success');
                     } else if (response.error) {
                         showAlert('Erreur', 'Une erreur est survenue lors de l\'enregistrement.', 'error');
@@ -615,7 +624,7 @@
                     $("#preloader_ch").remove();
 
                     if (response.success) {
-                        list();
+                        $('#Table_day').DataTable().ajax.reload();
                         showAlert('Succès', 'Opération éffectuée.', 'success');
                     }
                 },
@@ -625,7 +634,6 @@
                 }
             });
         }
-
 
     });
 </script>

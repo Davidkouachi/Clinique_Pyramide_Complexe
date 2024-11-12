@@ -320,200 +320,20 @@
             });
         }
 
-        // function list(page = 1) {
-        //     const $tableBody = $('#Table_day tbody');
-        //     const $messageDiv = $('#message_Table');
-        //     const $tableDiv = $('#div_Table');
-        //     const $loaderDiv = $('#div_Table_loader');
-
-        //     $messageDiv.hide();
-        //     $tableDiv.hide();
-        //     $loaderDiv.show();
-
-        //     let allPproduits = [];
-
-        //     // Fetch data from the API
-        //     const url = `/api/list_produit?page=${page}`;
-        //     $.get(url, function(data) {
-        //         allPproduits = data.produit || [];
-        //         const pagination = data.pagination || {};
-
-        //         const perPage = pagination.per_page || 10;
-        //         const currentPage = pagination.current_page || 1;
-
-        //         // Clear any existing rows in the table body
-        //         $tableBody.empty();
-
-        //         if (allPproduits.length > 0) {
-
-        //             $loaderDiv.hide();
-        //             $messageDiv.hide();
-        //             $tableDiv.show();
-
-        //             function displayRows(filteredProduits) {
-        //                 $tableBody.empty(); 
-
-        //                 filteredProduits.forEach((item, index) => {
-        //                     // Create a new row
-        //                     const row = $('<tr>');
-        //                     row.html(`
-        //                         <td>${((currentPage - 1) * perPage) + index + 1}</td>
-        //                         <td>
-        //                             <div class="d-flex align-items-center ">
-        //                                 <a class="d-flex align-items-center flex-column me-2">
-        //                                     <img src="{{asset('assets/images/produit1.png')}}" class="img-2x rounded-circle border border-1">
-        //                                 </a>
-        //                                 ${item.nom}
-        //                             </div>
-        //                         </td>
-        //                         <td>${item.prix} Fcfa</td>
-        //                         <td>${item.quantite}</td>
-        //                         <td>
-        //                             <div class="d-inline-flex gap-1">
-        //                                 <a class="btn btn-outline-info btn-sm rounded-5" data-bs-toggle="modal" data-bs-target="#Mmodif" id="edit-${item.id}">
-        //                                     <i class="ri-edit-box-line"></i>
-        //                                 </a>
-        //                             </div>
-        //                         </td>
-        //                     `);
-        //                     $tableBody.append(row);
-
-        //                     $(`#edit-${item.id}`).on('click', function() {
-        //                         $('#Id').val(item.id);
-        //                         $('#nomModif').val(item.nom);
-        //                         $('#prixModif').val(item.prix);
-        //                         $('#quantiteModif').val(item.quantite);
-        //                     });
-        //                 });
-        //             }
-
-        //             // Update table with filtered produits
-        //             function applySearchFilter() {
-        //                 const search = $('#searchInput').val().toLowerCase();
-        //                 const filteredProduits = allPproduits.filter(item =>
-        //                     item.nom.toLowerCase().includes(search)
-        //                 );
-        //                 displayRows(filteredProduits); // Display only filtered produits
-        //             }
-
-        //             $('#searchInput').on('input', applySearchFilter);
-
-        //             displayRows(allPproduits);
-
-        //             updatePaginationControls(pagination);
-
-        //         } else {
-        //             $loaderDiv.hide();
-        //             $messageDiv.show();
-        //             $tableDiv.hide();
-        //         }
-        //     }).fail(function(xhr, status, error) {
-        //         console.error('Erreur lors du chargement des données:', error);
-        //         // Hide the table and show the error message in case of failure
-        //         $loaderDiv.hide();
-        //         $messageDiv.show();
-        //         $tableDiv.hide();
-        //     });
-        // }
-
-        // function updatePaginationControls(pagination) {
-
-        //     const $paginationDiv = $('#pagination-controls');
-        //     $paginationDiv.empty();
-
-        //     // Bootstrap pagination wrapper
-        //     const $paginationWrapper = $('<ul>', { class: 'pagination justify-content-center' });
-
-        //     // Previous button
-        //     if (pagination.current_page > 1) {
-        //         const $prevButton = $('<li>', { class: 'page-item' });
-        //         $prevButton.html(`<a class="page-link" href="#">Précédent</a>`);
-        //         $prevButton.on('click', function(event) {
-        //             event.preventDefault(); // Empêche le défilement en haut de la page
-        //             list(pagination.current_page - 1);
-        //         });
-        //         $paginationWrapper.append($prevButton);
-        //     } else {
-        //         // Disable the previous button if on the first page
-        //         const $prevButton = $('<li>', { class: 'page-item disabled' });
-        //         $prevButton.html(`<a class="page-link" href="#">Précédent</a>`);
-        //         $paginationWrapper.append($prevButton);
-        //     }
-
-        //     // Page number links (show a few around the current page)
-        //     const totalPages = pagination.last_page;
-        //     const currentPage = pagination.current_page;
-        //     const maxVisiblePages = 5; // Max number of page links to display
-
-        //     let startPage = Math.max(1, currentPage - Math.floor(maxVisiblePages / 2));
-        //     let endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
-
-        //     // Adjust start page if end page exceeds the total pages
-        //     if (endPage - startPage < maxVisiblePages - 1) {
-        //         startPage = Math.max(1, endPage - maxVisiblePages + 1);
-        //     }
-
-        //     // Loop through pages and create page links
-        //     for (let i = startPage; i <= endPage; i++) {
-        //         const $pageItem = $('<li>', { class: `page-item ${i === currentPage ? 'active' : ''}` });
-        //         $pageItem.html(`<a class="page-link" href="#">${i}</a>`);
-        //         $pageItem.on('click', function(event) {
-        //             event.preventDefault(); // Empêche le défilement en haut de la page
-        //             list(i);
-        //         });
-        //         $paginationWrapper.append($pageItem);
-        //     }
-
-        //     // Ellipsis (...) if not all pages are shown
-        //     if (endPage < totalPages) {
-        //         const $ellipsis = $('<li>', { class: 'page-item disabled' });
-        //         $ellipsis.html(`<a class="page-link" href="#">...</a>`);
-        //         $paginationWrapper.append($ellipsis);
-
-        //         // Add the last page link
-        //         const $lastPageItem = $('<li>', { class: 'page-item' });
-        //         $lastPageItem.html(`<a class="page-link" href="#">${totalPages}</a>`);
-        //         $lastPageItem.on('click', function(event) {
-        //             event.preventDefault(); // Empêche le défilement en haut de la page
-        //             list(totalPages);
-        //         });
-        //         $paginationWrapper.append($lastPageItem);
-        //     }
-
-        //     // Next button
-        //     if (pagination.current_page < pagination.last_page) {
-        //         const $nextButton = $('<li>', { class: 'page-item' });
-        //         $nextButton.html(`<a class="page-link" href="#">Suivant</a>`);
-        //         $nextButton.on('click', function(event) {
-        //             event.preventDefault(); // Empêche le défilement en haut de la page
-        //             list(pagination.current_page + 1);
-        //         });
-        //         $paginationWrapper.append($nextButton);
-        //     } else {
-        //         // Disable the next button if on the last page
-        //         const $nextButton = $('<li>', { class: 'page-item disabled' });
-        //         $nextButton.html(`<a class="page-link" href="#">Suivant</a>`);
-        //         $paginationWrapper.append($nextButton);
-        //     }
-
-        //     // Append pagination controls to the DOM
-        //     $paginationDiv.append($paginationWrapper);
-        // }
-
         const table = $('#Table_day').DataTable({
-            processing: true, // Show loading indicator
-            serverSide: true,  // Enable server-side processing
+            processing: true,
+            serverSide: false,
             ajax: {
                 url: '/api/list_produit',
                 type: 'GET',
-                dataSrc: 'data',  // Adjust data source if necessary
+                dataSrc: 'data',
             },
             columns: [
                 {
                     data: null,
-                    render: function(data, type, row, meta) {
-                        return meta.row + meta.settings._iDisplayStart + 1; // Row number
-                    }
+                    render: (data, type, row, meta) => meta.row + 1,
+                    searchable: false,
+                    orderable: false,
                 },
                 {
                     data: 'nom',
@@ -526,23 +346,31 @@
                                 ${data}
                             </div>
                         `;
-                    }
+                    },
+                    searchable: false,
                 },
-                { data: 'prix', render: function(data) { return `${data} Fcfa`; } },
-                { data: 'quantite' },
+                {   
+                    data: 'prix', 
+                    render: function(data) { return `${data} Fcfa`; },
+                    searchable: false,
+                },
+                { 
+                    data: 'quantite', 
+                    searchable: false, 
+                },
                 {
                     data: 'id',
                     render: function(data, type, row) {
                         return `
                             <div class="d-inline-flex gap-1">
-                                <a class="btn btn-outline-info btn-xs" data-bs-toggle="modal" data-bs-target="#Mmodif" id="edit-${data}">
+                                <a class="btn btn-outline-info btn-xs" data-bs-toggle="modal" data-bs-target="#Mmodif" id="edit" data-id="${row.id}" data-nom="${row.nom}" data-prix="${row.prix}" data-quantite="${row.quantite}">
                                     <i class="ri-edit-box-line"></i>
                                 </a>
                             </div>
                         `;
                     },
                     orderable: false,
-                    searchable: false
+                    searchable: false,
                 }
             ],
             // Customize language (if needed)
@@ -558,18 +386,26 @@
                 zeroRecords: "Aucun produit trouvé",
                 emptyTable: "Aucune donnée disponible dans le tableau",
             },
+            initComplete: function(settings, json) {
+                initializeRowEventListeners();
+            },
         });
 
-        $('#Table_day').on('click', '[id^=edit-]', function() {
-            const itemId = this.id.replace('edit-', '');
-            const table = $('#Table_day').DataTable();
-            const rowData = table.row($(this).parents('tr')).data();
-            
-            $('#Id').val(rowData.id);
-            $('#nomModif').val(rowData.nom);
-            $('#prixModif').val(rowData.prix);
-            $('#quantiteModif').val(rowData.quantite);
-        });
+        function initializeRowEventListeners() {
+            $('#Table_day').on('click', '#edit', function() {
+                const id = $(this).data('id');
+                const nom = $(this).data('nom');
+                const prix = $(this).data('prix');
+                const quantite = $(this).data('quantite');
+                
+                $('#Id').val(id);
+                $('#nomModif').val(nom);
+                $('#prixModif').val(prix);
+                $('#quantiteModif').val(quantite);
+            });
+        }
+
+        
 
         function updatee() {
             const id = $('#Id').val();

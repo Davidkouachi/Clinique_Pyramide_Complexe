@@ -112,16 +112,15 @@
                                         Liste des Soins Infirmiers
                                     </h5>
                                     <div class="d-flex">
-                                        <input type="text" id="searchInput" placeholder="Recherche" class="form-control me-1">
                                         <a id="btn_refresh_table" class="btn btn-outline-info ms-auto">
                                             <i class="ri-loop-left-line"></i>
                                         </a>
                                     </div>
                                 </div>
                                 <div class="card-body">
-                                    <div class="table-outer" id="div_Table" style="display: none;">
+                                    <div class="">
                                         <div class="table-responsive">
-                                            <table class="table align-middle table-hover m-0 truncate" id="Table" >
+                                            <table id="Table_day" class="table table-hover table-sm" >
                                                 <thead>
                                                     <tr>
                                                         <th scope="col">N°</th>
@@ -136,18 +135,6 @@
                                             </table>
                                         </div>
                                     </div>
-                                    <div id="message_Table" style="display: none;">
-                                        <p class="text-center" >
-                                            Aucun Soins Infirmier n'a été trouvé
-                                        </p>
-                                    </div>
-                                    <div id="div_Table_loader" style="display: none;">
-                                        <div class="d-flex justify-content-center align-items-center">
-                                            <div class="spinner-border text-warning me-2" role="status" aria-hidden="true"></div>
-                                            <strong>Chargement des données...</strong>
-                                        </div>
-                                    </div>
-                                    <div id="pagination-controls"></div>
                                 </div>
                             </div>
                         </div>
@@ -240,12 +227,14 @@
 
         select();
         select_modif();
-        list();
 
         $("#btn_eng").on("click", eng);
-        $("#btn_refresh_table").on("click", list);
         $("#updateBtn").on("click", updatee);
         $("#deleteBtn").on("click", deletee);
+
+        $('#btn_refresh_table').on('click', function () {
+            $('#Table_day').DataTable().ajax.reload();
+        });
 
         $("#prix").on("input", function() {
             $(this).val(formatPrice($(this).val()));
@@ -325,7 +314,6 @@
             });
         }
 
-
         function showAlert(title, message, type) {
             Swal.fire({
                 title: title,
@@ -376,7 +364,7 @@
 
                     select_modif();
                     select();
-                    list();
+                    $('#Table_day').DataTable().ajax.reload();
                 },
                 error: function() {
                     $("#preloader_ch").remove();
@@ -385,165 +373,89 @@
             });
         }
 
-        function list(page = 1) {
-            const $tableBody = $('#Table tbody');
-            const $messageDiv = $('#message_Table');
-            const $tableDiv = $('#div_Table');
-            const $loaderDiv = $('#div_Table_loader');
+        $('#Table_day').DataTable({
 
-            $messageDiv.hide();
-            $tableDiv.hide();
-            $loaderDiv.show();
+            processing: true,
+            serverSide: false,
+            ajax: {
+                url: `/api/list_soinsIn`,
+                type: 'GET',
+                dataSrc: 'data',
+            },
+            columns: [
+                { 
+                    data: null, 
+                    render: (data, type, row, meta) => meta.row + 1,
+                    searchable: false,
+                    orderable: false,
+                },
+                { 
+                    data: 'nom', 
+                    render: (data, type, row) => `
+                    <div class="d-flex align-items-center">
+                        <a class="d-flex align-items-center flex-column me-2">
+                            <img src="/assets/images/soinsam.webp" class="img-2x rounded-circle border border-1">
+                        </a>
+                        ${data}
+                    </div>`,
+                    searchable: true, 
+                },
+                { 
+                    data: 'nom_typesoins',
+                    searchable: true,
+                },
+                { 
+                    data: 'prix',
+                    render: (data) => `${data} Fcfa`,
+                    searchable: true, 
+                },
+                {
+                    data: null,
+                    render: (data, type, row) => `
+                        <div class="d-inline-flex gap-1" style="font-size:10px;">
+                            <a class="btn btn-outline-info btn-sm rounded-5 edit-btn" data-id="${row.id}" data-nom="${row.nom}" data-prix="${row.prix}" data-typesoins_id="${row.typesoins_id}" data-bs-toggle="modal" data-bs-target="#Mmodif" id="modif">
+                                <i class="ri-edit-box-line"></i>
+                            </a>
+                        </div>
+                    `,
+                    searchable: false,
+                    orderable: false,
+                }
+            ],
+            language: {
+                search: "Recherche:",
+                lengthMenu: "Afficher _MENU_ entrées",
+                info: "Affichage de _START_ à _END_ sur _TOTAL_ entrées",
+                infoEmpty: "Affichage de 0 à 0 sur 0 entrée",
+                paginate: {
+                    previous: "Précédent",
+                    next: "Suivant"
+                },
+                zeroRecords: "Aucune donnée trouvée",
+                emptyTable: "Aucune donnée disponible dans le tableau",
+            },
+            // autoWidth: true,
+            // scrollX: true, 
+            initComplete: function(settings, json) {
+                initializeRowEventListeners();
+            },
+        });
 
-            let allSoinsins = [];
+        function initializeRowEventListeners() {
 
-            const url = `/api/list_soinsIn?page=${page}`;
-            $.get(url)
-                .done(function(data) {
-                    allSoinsins = data.soinsin || [];
-                    const pagination = data.pagination || {};
+            $('#Table_day').on('click', '#modif', function() {
+                const id = $(this).data('id');
+                const nom = $(this).data('nom');
+                const prix = $(this).data('prix');
+                const typesoins_id = $(this).data('typesoins_id');
 
-                    const perPage = pagination.per_page || 10;
-                    const currentPage = pagination.current_page || 1;
+                $('#Id').val(id);
+                $('#nomModif').val(nom);
+                $('#prixModif').val(prix);
 
-                    if (allSoinsins.length > 0) {
-
-                        function displayRows(filteredSoinsins) {
-                            $loaderDiv.hide();
-                            $messageDiv.hide();
-                            $tableDiv.show();
-
-                            $tableBody.empty();
-
-                            filteredSoinsins.forEach((item, index) => {
-                                const row = $('<tr></tr>').html(`
-                                    <td>${((currentPage - 1) * perPage) + index + 1}</td>
-                                    <td>
-                                        <div class="d-flex align-items-center ">
-                                            <a class="d-flex align-items-center flex-column me-2">
-                                                <img src="{{asset('assets/images/soinsam.webp')}}" class="img-2x rounded-circle border border-1">
-                                            </a>
-                                            ${item.nom}
-                                        </div>
-                                    </td>
-                                    <td>${item.nom_typesoins}</td>
-                                    <td>${item.prix} Fcfa</td>
-                                    <td>
-                                        <div class="d-inline-flex gap-1">
-                                            <a class="btn btn-outline-info btn-sm rounded-5" data-bs-toggle="modal" data-bs-target="#Mmodif" id="edit-${item.id}">
-                                                <i class="ri-edit-box-line"></i>
-                                            </a>
-                                        </div>
-                                    </td>
-                                `);
-
-                                $tableBody.append(row);
-
-                                $(`#edit-${item.id}`).on('click', function() {
-                                    $('#Id').val(item.id);
-                                    $('#nomModif').val(item.nom);
-                                    $('#prixModif').val(item.prix);
-
-                                    $('#typesoins_id_modif').val(null).trigger('change');
-                                    $('#typesoins_id_modif').val(item.typesoins_id).trigger('change');
-                                });
-                            });
-                        }
-
-                        function applySearchFilter() {
-                            const searchTerm = $('#searchInput').val().toLowerCase();
-                            const filteredSoinsins = allSoinsins.filter(item =>
-                                item.nom.toLowerCase().includes(searchTerm)
-                            );
-                            displayRows(filteredSoinsins);
-                        }
-
-                        $('#searchInput').on('input', applySearchFilter);
-
-                        displayRows(allSoinsins);
-
-                        PaginationControls(pagination);
-
-                    } else {
-                        $loaderDiv.hide();
-                        $messageDiv.show();
-                        $tableDiv.hide();
-                    }
-                })
-                .fail(function() {
-                    console.error('Erreur lors du chargement des données');
-                    $loaderDiv.hide();
-                    $messageDiv.show();
-                    $tableDiv.hide();
-                });
-        }
-
-        function PaginationControls(pagination) {
-            const $paginationDiv = $('#pagination-controls');
-            $paginationDiv.empty();
-
-            const $paginationWrapper = $('<ul></ul>').addClass('pagination justify-content-center');
-
-            // Previous button
-            if (pagination.current_page > 1) {
-                const $prevButton = $('<li></li>').addClass('page-item').html('<a class="page-link" href="#">Precédent</a>');
-                $prevButton.on('click', function(event) {
-                    event.preventDefault();
-                    list(pagination.current_page - 1);
-                });
-                $paginationWrapper.append($prevButton);
-            } else {
-                const $prevButton = $('<li></li>').addClass('page-item disabled').html('<a class="page-link" href="#">Precédent</a>');
-                $paginationWrapper.append($prevButton);
-            }
-
-            // Page number links
-            const totalPages = pagination.last_page;
-            const currentPage = pagination.current_page;
-            const maxVisiblePages = 5;
-
-            let startPage = Math.max(1, currentPage - Math.floor(maxVisiblePages / 2));
-            let endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
-
-            if (endPage - startPage < maxVisiblePages - 1) {
-                startPage = Math.max(1, endPage - maxVisiblePages + 1);
-            }
-
-            for (let i = startPage; i <= endPage; i++) {
-                const $pageItem = $('<li></li>').addClass(`page-item ${i === currentPage ? 'active' : ''}`).html(`<a class="page-link" href="#">${i}</a>`);
-                $pageItem.on('click', function(event) {
-                    event.preventDefault();
-                    list(i);
-                });
-                $paginationWrapper.append($pageItem);
-            }
-
-            if (endPage < totalPages) {
-                const $ellipsis = $('<li></li>').addClass('page-item disabled').html('<a class="page-link" href="#">...</a>');
-                $paginationWrapper.append($ellipsis);
-
-                const $lastPageItem = $('<li></li>').addClass('page-item').html(`<a class="page-link" href="#">${totalPages}</a>`);
-                $lastPageItem.on('click', function(event) {
-                    event.preventDefault();
-                    list(totalPages);
-                });
-                $paginationWrapper.append($lastPageItem);
-            }
-
-            // Next button
-            if (pagination.current_page < pagination.last_page) {
-                const $nextButton = $('<li></li>').addClass('page-item').html('<a class="page-link" href="#">Suivant</a>');
-                $nextButton.on('click', function(event) {
-                    event.preventDefault();
-                    list(pagination.current_page + 1);
-                });
-                $paginationWrapper.append($nextButton);
-            } else {
-                const $nextButton = $('<li></li>').addClass('page-item disabled').html('<a class="page-link" href="#">Suivant</a>');
-                $paginationWrapper.append($nextButton);
-            }
-
-            $paginationDiv.append($paginationWrapper);
+                $('#typesoins_id_modif').val(null).trigger('change');
+                $('#typesoins_id_modif').val(typesoins_id).trigger('change');
+            });
         }
 
         function updatee() {
@@ -571,25 +483,21 @@
 
             $.ajax({
                 url: '/api/update_soinIn/'+id,
-                method: 'GET',  // Use 'POST' for data creation
-                // headers: {
-                //     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'), // Include CSRF token if required
-                //     'Content-Type': 'application/json',  // Ensure JSON request
-                // },
-                data: { nomModif: nomModif, typesoins_id: typesoins_id_modif, prix: prixModif,},
-                // data: JSON.stringify({
-                //     nbre_lit: nbreLit,
-                //     prix: prix,
-                // }),
+                method: 'GET',
+                data: { 
+                    nomModif: nomModif, 
+                    typesoins_id: typesoins_id_modif, 
+                    prix: prixModif,
+                },
                 success: function(response) {
                     var preloader = document.getElementById('preloader_ch');
                     if (preloader) {
                         preloader.remove();
                     }
 
-                    showAlert('Succès', 'Soins Infirmier mis à jour avec succès.','success');
+                    showAlert('Succès', 'Opération éffectuée.','success');
             
-                    list();
+                    $('#Table_day').DataTable().ajax.reload();
                     select();
                     select_modif();
                 },
@@ -639,7 +547,7 @@
 
                     showAlert('Succès', 'Soins Infirmier supprimer avec succès.','success');
                     
-                    list();
+                    $('#Table_day').DataTable().ajax.reload();
                     select();
                     select_modif();
                 },

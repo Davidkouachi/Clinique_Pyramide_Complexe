@@ -310,23 +310,70 @@
         $('#Table_day').DataTable({
 
             processing: true,
-            serverSide: true,
+            serverSide: false,
             ajax: {
                 url: `/api/list_depotfacture`,
                 type: 'GET',
                 dataSrc: 'data',
             },
             columns: [
-                { data: null, render: (data, type, row, meta) => meta.row + 1 },
-                { data: 'assurance', render: (data) => `<img src="{{asset('assets/images/depot_fac.jpg')}}" class="img-2x rounded-circle"> ${data}` },
-                { data: 'date1', render: formatDate },
-                { data: 'date2', render: formatDate },
-                { data: 'date_depot', render: formatDate },
-                { data: 'statut', render: (data) => `<span class="badge ${data === 'oui' ? 'bg-success' : 'bg-danger'}">${data === 'oui' ? 'Réglée' : 'Non Réglée'}</span>` },
-                { data: 'part_assurance', render: (data) => `${data} Fcfa` },
-                { data: 'part_patient', render: (data) => `${data} Fcfa` },
-                { data: 'total', render: (data) => `${data} Fcfa` },
-                { data: 'created_at', render: formatDateHeure },
+                { 
+                    data: null, 
+                    render: (data, type, row, meta) => meta.row + 1,
+                    searchable: false,
+                    orderable: false,
+                },
+                { 
+                    data: 'assurance', render: (data) => `
+                    <div class="d-flex align-items-center">
+                        <a class="d-flex align-items-center flex-column me-2">
+                            <img src="/assets/images/depot_fac.jpg" class="img-2x rounded-circle border border-1">
+                        </a>
+                        ${data}
+                    </div>
+                    `,
+                    searchable: true,
+                },
+                { 
+                    data: 'date1', 
+                    render: formatDate, 
+                    searchable: true,
+                },
+                { 
+                    data: 'date2', 
+                    render: formatDate, 
+                    searchable: true,
+                },
+                { 
+                    data: 'date_depot', 
+                    render: formatDate, 
+                    searchable: true,
+                },
+                { 
+                    data: 'statut', 
+                    render: (data) => `<span class="badge ${data === 'oui' ? 'bg-success' : 'bg-danger'}">${data === 'oui' ? 'Réglée' : 'Non Réglée'}</span>`,
+                    searchable: true,
+                },
+                { 
+                    data: 'part_assurance', 
+                    render: (data) => `${data} Fcfa`, 
+                    searchable: true, 
+                },
+                { 
+                    data: 'part_patient', 
+                    render: (data) => `${data} Fcfa`, 
+                    searchable: true, 
+                },
+                { 
+                    data: 'total', 
+                    render: (data) => `${data} Fcfa`, 
+                    searchable: true, 
+                },
+                { 
+                    data: 'created_at', 
+                    render: formatDateHeure,
+                    searchable: true, 
+                },
                 {
                     data: null,
                     render: (data, type, row) => `
@@ -337,7 +384,9 @@
                             ${row.statut === 'non' ? `<a class="btn btn-outline-danger btn-sm rounded-5" data-bs-toggle="modal" data-bs-target="#Mdelete" id="delete" data-id="${row.id}" ><i class="ri-delete-bin-line"></i></a>` : ''}
                             <a class="btn btn-outline-dark btn-sm rounded-5" id="printer" data-id="${row.id}" ><i class="ri-printer-line"></i></a>
                         </div>
-                    `
+                    `,
+                    searchable: false,
+                    orderable: false,
                 }
             ],
             language: {
@@ -363,7 +412,7 @@
             $('#Table_day').on('click', '#paiement', function() {
                 const id = $(this).data('id');
                 const date_depot = $(this).data('date_depot');
-                // Handle the 'Paiement' button click
+                
                 document.getElementById('date_payer').value = "";
                 document.getElementById('type_payer').value = "";
                 document.getElementById('num_cheque_payer').value = "";
@@ -373,13 +422,15 @@
 
             $('#Table_day').on('click', '#detail', function() {
                 const id = $(this).data('id');
-                // Handle the 'Detail' button click
+                
                 var preloader_ch = `
                     <div id="preloader_ch">
                         <div class="spinner_preloader_ch"></div>
                     </div>
                 `;
+
                 document.body.insertAdjacentHTML('beforeend', preloader_ch);
+
                 fetch(`/api/imp_fac_depot/${id}`)
                     .then(response => response.json())
                     .then(data => {
@@ -406,8 +457,7 @@
                 const date1 = $(this).data('date1');
                 const date2 = $(this).data('date2');
                 const assurance_id = $(this).data('assurance_id');
-                // Handle the 'Modif' button click
-                const row = document.getElementById(`row-${id}`);
+
                 document.getElementById('date1M').value = date1;
                 document.getElementById('date2M').value = date2;
                 document.getElementById('date_depotM').value = date_depot;
@@ -417,19 +467,21 @@
 
             $('#Table_day').on('click', '#delete', function() {
                 const id = $(this).data('id');
-                // Handle the 'Delete' button click
+                
                 document.getElementById('Iddelete').value = id;
             });
 
             $('#Table_day').on('click', '#printer', function() {
                 const id = $(this).data('id');
-                // Handle the 'Printer' button click
+                
                 var preloader_ch = `
                     <div id="preloader_ch">
                         <div class="spinner_preloader_ch"></div>
                     </div>
                 `;
+
                 document.body.insertAdjacentHTML('beforeend', preloader_ch);
+
                 fetch(`/api/imp_fac_depot_bordo/${id}`)
                     .then(response => response.json())
                     .then(data => {

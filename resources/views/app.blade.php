@@ -386,7 +386,7 @@
                                     </a>
                                     <ul class="treeview-menu">
                                         <li>
-                                            <a href="{{route('medecin_new')}}">Nouveau</a>
+                                            <a @if(request()->routeIs('medecin_new')) class="text-primary" @endif  href="{{route('medecin_new')}}">Nouveau</a>
                                         </li>
                                         {{-- <li>
                                             <a @if(request()->routeIs('acte_new')) class="text-primary" @endif  href="{{route('acte_new')}}">Acte</a>

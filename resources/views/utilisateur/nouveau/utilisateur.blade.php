@@ -119,7 +119,7 @@
                                             </div>
                                         </div>
                                         <div class="col-sm-12">
-                                            <div class="mb-3 d-flex gap-2 justify-content-start">
+                                            <div class="mb-3 d-flex gap-2 justify-content-center">
                                                 <button id="btn_eng" class="btn btn-success">
                                                     Enregistrer
                                                 </button>
@@ -138,9 +138,9 @@
                                     </a>
                                 </div>
                                 <div class="card-body">
-                                    <div class="table-outer" id="div_Table" style="display: none;">
+                                    <div class="">
                                         <div class="table-responsive">
-                                            <table class="table align-middle table-hover m-0 truncate" id="Table">
+                                            <table id="Table_day" class="table table-hover table-sm">
                                                 <thead>
                                                     <tr>
                                                         <th scope="col">N°</th>
@@ -156,17 +156,6 @@
                                                 <tbody>
                                                 </tbody>
                                             </table>
-                                        </div>
-                                    </div>
-                                    <div id="message_Table" style="display: none;">
-                                        <p class="text-center" >
-                                            Aucun Utilisateur n'a été enregistrer
-                                        </p>
-                                    </div>
-                                    <div id="div_Table_loader" style="display: none;">
-                                        <div class="d-flex justify-content-center align-items-center">
-                                            <div class="spinner-border text-warning me-2" role="status" aria-hidden="true"></div>
-                                            <strong>Chargement des données...</strong>
                                         </div>
                                     </div>
                                 </div>
@@ -219,7 +208,7 @@
                     <div class="mb-3">
                         <label class="form-label">Sexe</label>
                         <select class="form-select" id="sexeModif">
-                            <option value="M">Homme</option>
+                            <option value="Mr">Homme</option>
                             <option value="Mme">Femme</option>
                         </select>
                     </div>
@@ -276,12 +265,14 @@
 
         select();
         select_modif();
-        list();
 
         $("#btn_eng").on("click", eng);
-        $("#btn_refresh_table").on("click", list);
         $("#updateBtn").on("click", updatee);
         $("#deleteBtn").on("click", deletee);
+
+        $('#btn_refresh_table').on('click', function () {
+            $('#Table_day').DataTable().ajax.reload();
+        });
 
         var inputs = ['tel', 'tel2', 'telModif', 'tel2Modif'];
         inputs.forEach(function(id) {
@@ -360,6 +351,22 @@
             });
         }
 
+        function formatDateHeure(dateString)
+        {
+
+            const date = new Date(dateString);
+                
+            const day = String(date.getDate()).padStart(2, '0');
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const year = date.getFullYear();
+
+            const hours = String(date.getHours()).padStart(2, '0');
+            const minutes = String(date.getMinutes()).padStart(2, '0');
+            const seconds = String(date.getSeconds()).padStart(2, '0');
+
+            return `${day}/${month}/${year} à ${hours}:${minutes}:${seconds}`;
+        }
+
         // Function to handle form submission and validation
         function eng() {
             const nom = $("#nom");
@@ -432,7 +439,7 @@
                         role_id.val('').trigger('change');
                         password.val('0000');
 
-                        list(); // Refresh the list
+                        $('#Table_day').DataTable().ajax.reload();
                         showAlert('Succès', 'Opération éffectuée.', 'success');
                     } else if (response.error) {
                         showAlert('Erreur', 'Une erreur est survenue lors de l\'enregistrement.', 'error');
@@ -445,109 +452,153 @@
             });
         }
 
-        // Function to load and display the user list
-        function list() {
-            const tableBody = $('#Table tbody');
-            const messageDiv = $('#message_Table');
-            const tableDiv = $('#div_Table');
-            const loaderDiv = $('#div_Table_loader');
+        $('#Table_day').DataTable({
 
-            messageDiv.hide();
-            tableDiv.hide();
-            loaderDiv.show();
+            processing: true,
+            serverSide: false,
+            ajax: {
+                url: `/api/list_user`,
+                type: 'GET',
+                dataSrc: 'data',
+            },
+            columns: [
+                { 
+                    data: null, 
+                    render: (data, type, row, meta) => meta.row + 1,
+                    searchable: false,
+                    orderable: false,
+                },
+                { 
+                    data: 'name', 
+                    render: (data, type, row) => `
+                    <div class="d-flex align-items-center">
+                        <a class="d-flex align-items-center flex-column me-2">
+                            <img src="/assets/images/user8.png" class="img-2x rounded-circle border border-1">
+                        </a>
+                        ${row.sexe}. ${data}
+                    </div>`,
+                    searchable: true, 
+                },
+                { 
+                    data: 'email',
+                    searchable: true,
+                },
+                { 
+                    data: 'matricule',
+                    searchable: true, 
+                },
+                { 
+                    data: 'role',
+                    searchable: true, 
+                },
+                { 
+                    data: 'tel', 
+                    render: (data) => `+225 ${data}`,
+                    searchable: true, 
+                },
+                { 
+                    data: 'adresse',
+                    searchable: true, 
+                },
+                {
+                    data: null,
+                    render: (data, type, row) => `
+                        <div class="d-inline-flex gap-1" style="font-size:10px;">
+                            <a class="btn btn-outline-info btn-sm rounded-5 edit-btn" data-id="${row.id}" data-name="${row.name}" data-email="${row.email}" data-tel="${row.tel}" data-tel2="${row.tel2}" data-adresse="${row.adresse}" data-sexe="${row.sexe}" data-role_id="${row.role_id}" data-bs-toggle="modal" data-bs-target="#Mmodif" id="modif">
+                                <i class="ri-edit-box-line"></i>
+                            </a>
+                            <a class="btn btn-outline-danger btn-sm rounded-5 delete-btn" data-id="${row.id}" data-bs-toggle="modal" data-bs-target="#Mdelete" id="delete">
+                                <i class="ri-delete-bin-line"></i>
+                            </a>
+                        </div>
+                    `,
+                    searchable: false,
+                    orderable: false,
+                }
+            ],
+            language: {
+                search: "Recherche:",
+                lengthMenu: "Afficher _MENU_ entrées",
+                info: "Affichage de _START_ à _END_ sur _TOTAL_ entrées",
+                infoEmpty: "Affichage de 0 à 0 sur 0 entrée",
+                paginate: {
+                    previous: "Précédent",
+                    next: "Suivant"
+                },
+                zeroRecords: "Aucune donnée trouvée",
+                emptyTable: "Aucune donnée disponible dans le tableau",
+            },
+            // autoWidth: true,
+            // scrollX: true, 
+            initComplete: function(settings, json) {
+                initializeRowEventListeners();
+            },
+        });
 
-            // Fetch user data from API
-            $.getJSON('/api/list_user')
-                .done(function(data) {
-                    const users = data.user;
-                    tableBody.empty();
+        function initializeRowEventListeners() {
 
-                    if (users.length > 0) {
-                        loaderDiv.hide();
-                        messageDiv.hide();
-                        tableDiv.show();
+            $('#Table_day').on('click', '#modif', function() {
+                const id = $(this).data('id');
+                const name = $(this).data('name');
+                const email = $(this).data('email');
+                const tel = $(this).data('tel');
+                const tel2 = $(this).data('tel2');
+                const adresse = $(this).data('adresse');
+                const sexe = $(this).data('sexe');
+                const role_id = $(this).data('role_id');
+                // Handle the 'Modif' button click
+                $('#Id').val(id);
+                $('#nomModif').val(name);
+                $('#emailModif').val(email);
+                $('#telModif').val(tel);
+                $('#tel2Modif').val(tel2);
+                $('#adresseModif').val(adresse);
+                $('#sexeModif').val(sexe);
 
-                        users.forEach((item, index) => {
-                            const row = `
-                                <tr>
-                                    <td>${index + 1}</td>
-                                    <td>
-                                        <div class="d-flex align-items-center">
-                                            <a class="d-flex align-items-center flex-column me-2">
-                                                <img src="{{asset('assets/images/user8.png')}}" class="img-2x rounded-circle border border-1">
-                                            </a>
-                                            ${item.sexe}. ${item.name}
-                                        </div>
-                                    </td>
-                                    <td>${item.email}</td>
-                                    <td>${item.matricule}</td>
-                                    <td>${item.role}</td>
-                                    <td>+225 ${item.tel}</td>
-                                    <td>${item.adresse}</td>
-                                    <td>
-                                        <div class="d-inline-flex gap-1">
-                                            <a class="btn btn-outline-info btn-sm rounded-5 edit-btn" data-id="${item.id}" data-bs-toggle="modal" data-bs-target="#Mmodif">
-                                                <i class="ri-edit-box-line"></i>
-                                            </a>
-                                            <a class="btn btn-outline-danger btn-sm rounded-5 delete-btn" data-id="${item.id}" data-bs-toggle="modal" data-bs-target="#Mdelete">
-                                                <i class="ri-delete-bin-line"></i>
-                                            </a>
-                                        </div>
-                                    </td>
-                                </tr>
-                            `;
-                            tableBody.append(row);
-                        });
+                $('#role_idModif').val(null).trigger('change');
+                $('#role_idModif').val(role_id).trigger('change');
+            });
 
-                        // Attach event listeners to dynamically added buttons
-                        $(".edit-btn").on('click', function() {
-                            const id = $(this).data('id');
-                            const user = users.find(u => u.id === id);
-                            if (user) {
-                                $('#Id').val(user.id);
-                                $('#nomModif').val(user.name);
-                                $('#emailModif').val(user.email);
-                                $('#telModif').val(user.tel);
-                                $('#tel2Modif').val(user.tel2);
-                                $('#adresseModif').val(user.adresse);
-                                $('#sexeModif').val(user.sexe);
-
-                                $('#role_idModif').val(null).trigger('change');
-                                $('#role_idModif').val(user.role_id).trigger('change');
-                            }
-                        });
-
-                        $(".delete-btn").on('click', function() {
-                            $('#Iddelete').val($(this).data('id'));
-                        });
-
-                    } else {
-                        loaderDiv.hide();
-                        messageDiv.show();
-                        tableDiv.hide();
-                    }
-                })
-                .fail(function(error) {
-                    console.error('Erreur lors du chargement des données:', error);
-                    loaderDiv.hide();
-                    messageDiv.show();
-                    tableDiv.hide();
-                });
+            $('#Table_day').on('click', '#delete', function() {
+                const id = $(this).data('id');
+                // Handle the 'Delete' button click
+                $('#Iddelete').val(id);
+            });
         }
 
         function updatee() {
 
-            const id = $('#Id').val();
-            const nomModif = $('#nomModif').val();
-            const typesoins_id_modif = $('#typesoins_id_modif').val();
-            const prixModif = $('#prixModif').val();
+            const id = $('#Id').val().trim();
+            const nom = $('#nomModif').val().trim();
+            const email = $('#emailModif').val().trim();
+            const tel = $('#telModif').val().trim();
+            const tel2 = $('#tel2Modif').val().trim();
+            const sexe = $('#sexeModif').val().trim();
+            const adresse = $('#adresseModif').val().trim();
+            const role_id = $('#role_idModif').val().trim();
 
-            if (!nomModif.trim() || !typesoins_id_modif.trim() || !prixModif.trim()) {
-                showAlert('Alert', 'Veuillez remplir tous les champs SVP.', 'warning');
+            const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
+            // Field validation
+            if (!nom || !email || !tel || !sexe || !adresse) {
+                showAlert('Alert', 'Veuillez remplir tous les champs SVP.','warning');
                 return false;
             }
 
-            var modal = bootstrap.Modal.getInstance($('#Mmodif')[0]);
+            // Email validation
+            var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email)) {
+                showAlert('Alert', 'Email incorrect.','warning');
+                return false;
+            }
+
+            // Phone validation
+            if (tel.length !== 10 || (tel2 && tel2.length !== 10)) {
+                showAlert('Alert', 'Contact incomplet.', 'warning');
+                return false;
+            }
+
+            var modal = bootstrap.Modal.getInstance(document.getElementById('Mmodif'));
             modal.hide();
 
             var preloader_ch = `
@@ -555,30 +606,71 @@
                     <div class="spinner_preloader_ch"></div>
                 </div>
             `;
-            // Add the preloader to the body
-            $('body').append(preloader_ch);
+            document.body.insertAdjacentHTML('beforeend', preloader_ch);
 
             $.ajax({
-                url: '/api/update_soinIn/' + id,
-                method: 'GET',  // Use 'POST' for data creation
-                data: {
-                    nomModif: nomModif,
-                    typesoins_id: typesoins_id_modif,
-                    prix: prixModif
-                },
-                success: function(response) {
-                    $('#preloader_ch').remove(); // Remove preloader
+                url: '/refresh-csrf',
+                method: 'GET',
+                success: function(response_crsf) {
+                    // Met à jour la balise <meta> avec le nouveau token
+                    document.querySelector('meta[name="csrf-token"]').setAttribute('content', response_crsf.csrf_token);
+                    
+                    // console.log("Nouveau token CSRF:", response_crsf.csrf_token);
 
-                    showAlert('Succès', 'Soins Infirmier mis à jour avec succès.', 'success');
+                    $.ajax({
+                        url: '/api/update_user/' + id,
+                        method: 'PUT',
+                        headers: {
+                            'X-CSRF-TOKEN': response_crsf.csrf_token,
+                        },
+                        data: {
+                            nom: nom, 
+                            email: email, 
+                            tel: tel, 
+                            tel2: tel2 || null, 
+                            adresse: adresse || null, 
+                            sexe: sexe, 
+                            role_id: role_id,
+                        },
+                        success: function(response) {
 
-                    list();
-                    select();
-                    select_modif();
+                            document.getElementById('preloader_ch').remove();
+
+                            if (response.tel_existe) {
+
+                                showAlert('Alert', 'Veuillez saisir autre numéro de téléphone s\'il vous plaît','warning');
+
+                            }else if (response.email_existe) {
+
+                                showAlert('Alert', 'Veuillez saisir autre email s\'il vous plaît','warning');
+
+                            }else if (response.nom_existe) {
+
+                                showAlert('Alert', 'Cet Utilisateur existe déjà.','warning');
+
+                            } else if (response.success) {
+
+                                $('#Table_day').DataTable().ajax.reload();
+
+                                showAlert('Succès', 'Opération éffectuée.', 'success');
+
+                            } else if (response.error) {
+
+                                showAlert('Erreur', 'Une erreur est survenue lors de l\'enregistrement.','error');
+
+                            }
+                        },
+                        error: function() {
+                            document.getElementById('preloader_ch').remove();
+                            showAlert('Erreur', 'Erreur lors de la mise à jour.','error');
+                        }
+                    });
+
                 },
                 error: function() {
-                    $('#preloader_ch').remove(); // Remove preloader
-
-                    showAlert('Erreur', 'Erreur lors de la mise à jour.', 'error');
+                    console.log("Erreur lors du rafraîchissement du token CSRF");
+                    document.getElementById('preloader_ch').remove();
+                    showAlert('Erreur', 'Erreur lors de la mise à jour.','error');
                 }
             });
         }
@@ -599,16 +691,14 @@
             $('body').append(preloader_ch);
 
             $.ajax({
-                url: '/api/delete_soinsIn/' + id,
+                url: '/api/delete_user/' + id,
                 method: 'GET',  // Use 'POST' for data creation
                 success: function(response) {
                     $('#preloader_ch').remove(); // Remove preloader
 
-                    showAlert('Succès', 'Soins Infirmier supprimé avec succès.', 'success');
+                    $('#Table_day').DataTable().ajax.reload();
 
-                    list();
-                    select();
-                    select_modif();
+                    showAlert('Succès', 'Opération éffectuée.', 'success');
                 },
                 error: function() {
                     $('#preloader_ch').remove(); // Remove preloader
