@@ -641,9 +641,9 @@ class ApilistController extends Controller
         ]);
     }
 
-    public function list_rdv($statut)
+    public function list_rdv()
     {
-        $rdvQuery = rdvpatient::Join('patients', 'patients.id', '=', 'rdvpatients.patient_id')
+        $rdv = rdvpatient::Join('patients', 'patients.id', '=', 'rdvpatients.patient_id')
                         ->Join('users', 'users.id', '=', 'rdvpatients.user_id')
                         ->join('typemedecins', 'typemedecins.user_id', '=', 'users.id')
                         ->join('typeactes', 'typeactes.id', '=', 'typemedecins.typeacte_id')
@@ -654,15 +654,10 @@ class ApilistController extends Controller
                             'users.name as medecin',
                             'typeactes.nom as specialite'
                         )
-                        ->orderBy('rdvpatients.created_at', 'desc');
+                        ->orderBy('rdvpatients.created_at', 'desc')
+                        ->get();
 
-        if ($statut !== 'tous') {
-            $rdvQuery->where('rdvpatients.statut', '=', $statut);
-        }
-
-        $rdv = $rdvQuery->paginate(15);
-
-        foreach ($rdv->items() as $value) {
+        foreach ($rdv as $value) {
             $horaires = programmemedecin::join('joursemaines', 'joursemaines.id', '=', 'programmemedecins.jour_id')
                                     ->where('programmemedecins.user_id', '=', $value->user_id)
                                     ->where('programmemedecins.statut', '=', 'oui')
@@ -673,13 +668,7 @@ class ApilistController extends Controller
         }
 
         return response()->json([
-            'rdv' => $rdv->items(), // Paginated data
-            'pagination' => [
-                'current_page' => $rdv->currentPage(),
-                'last_page' => $rdv->lastPage(),
-                'per_page' => $rdv->perPage(),
-                'total' => $rdv->total(),
-            ]
+            'data' => $rdv,
         ]);
     }
 

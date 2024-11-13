@@ -104,28 +104,21 @@
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="tab-content" id="customTabContent">
                             <div class="tab-pane fade" id="twoAAAL" role="tabpanel" aria-labelledby="tab-twoAAAL">
                                 <div class="card-header d-flex align-items-center justify-content-between">
                                     <h5 class="card-title">
                                         Liste des Rendez-Vous
                                     </h5>
                                     <div class="d-flex">
-                                        <select class="form-select me-1" id="statut_rdv">
-                                            <option selected value="tous">Tous</option>
-                                            <option value="en cours">en cours</option>
-                                            <option value="terminer">terminer</option>
-                                        </select>
                                         <a id="btn_refresh_table_rdv" class="btn btn-outline-info ms-auto">
                                             <i class="ri-loop-left-line"></i>
                                         </a>
                                     </div>
                                 </div>
                                 <div class="card-body">
-                                    <div class="table-outer" id="div_Table_rdv" style="display: none;">
+                                    <div class="">
                                         <div class="table-responsive">
-                                            <table class="table m-0 align-middle" id="Table_rdv">
+                                            <table id="Table_day" class="table table-hover table-sm">
                                                 <thead>
                                                     <tr>
                                                         <th>N°</th>
@@ -144,18 +137,6 @@
                                             </table>
                                         </div>
                                     </div>
-                                    <div id="message_Table_rdv" style="display: none;">
-                                        <p class="text-center">
-                                            Aucun Rendez-Vous n'a été trouvée
-                                        </p>
-                                    </div>
-                                    <div id="div_Table_loader_rdv" style="display: none;">
-                                        <div class="d-flex justify-content-center align-items-center">
-                                            <div class="spinner-border text-warning me-2" role="status" aria-hidden="true"></div>
-                                            <strong>Chargement des données...</strong>
-                                        </div>
-                                    </div>
-                                    <div id="pagination-controls_rdv"></div>
                                 </div>
                             </div>
                         </div>
@@ -280,7 +261,7 @@
             </div>
             <div class="modal-body">
                 <form id="updateForm">
-                    <input type="hidden" id="medecin_id_rdvM">
+                    <input type="hidden" id="id_rdvM">
                     <div class="mb-3">
                         <label class="form-label">Médecin</label>
                         <input readonly type="text" class="form-control" id="medecin_rdvM">
@@ -359,21 +340,22 @@
     $(document).ready(function() {
 
         select_medecin();
-        list_rdv();
         rech_medecin();
         rech_specialite();
         rech_jour();
         list();
         select_patient();
 
-        document.getElementById("add_horaire").addEventListener("click", add_select);
-        document.getElementById("btn_eng").addEventListener("click", eng);
-        document.getElementById("btn_eng_rdv").addEventListener("click", eng_rdv);
-        document.getElementById("btn_update_rdv").addEventListener("click", update_rdv);
-        document.getElementById("btn_refresh").addEventListener("click", refresh);
-        document.getElementById("btn_refresh_table_rdv").addEventListener("click", list_rdv);
-        document.getElementById("statut_rdv").addEventListener("change", list_rdv);
-        document.getElementById("btn_delete_rdv").addEventListener("click", delete_rdv);
+        $("#add_horaire").on("click", add_select);
+        $("#btn_eng").on("click", eng);
+        $("#btn_eng_rdv").on("click", eng_rdv);
+        $("#btn_update_rdv").on("click", update_rdv);
+        $("#btn_refresh").on("click", refresh);
+        $("#btn_delete_rdv").on("click", delete_rdv);
+
+        $('#btn_refresh_table_rdv').on('click', function () {
+            $('#Table_day').DataTable().ajax.reload();
+        });
 
         ["rech_medecin", "rech_specialite", "rech_jour", "rech_periode"].forEach(id => document.getElementById(id).addEventListener("change", list));
 
@@ -1041,7 +1023,7 @@
                     $('#preloader_ch').remove(); // Supprimer le préchargeur
 
                     if (response.success) {
-                        list_rdv();
+                        $('#Table_day').DataTable().ajax.reload();
                         count_rdv_two_day();
                         showAlert("ALERT", 'Enregistrement éffectué', "success");
                     } else if (response.error) {
@@ -1057,247 +1039,212 @@
             });
         }
 
-        function list_rdv(page = 1) {
+        $('#Table_day').DataTable({
 
-            const tableBody = document.querySelector('#Table_rdv tbody');
-            const messageDiv = document.getElementById('message_Table_rdv');
-            const tableDiv = document.getElementById('div_Table_rdv');
-            const loaderDiv = document.getElementById('div_Table_loader_rdv');
+            processing: true,
+            serverSide: false,
+            ajax: {
+                url: `/api/list_rdv`,
+                type: 'GET',
+                dataSrc: 'data',
+            },
+            columns: [
+                { 
+                    data: null, 
+                    render: (data, type, row, meta) => meta.row + 1,
+                    searchable: false,
+                    orderable: false,
+                },
+                { 
+                    data: 'patient', 
+                    render: (data, type, row) => `
+                    <div class="d-flex align-items-center">
+                        <a class="d-flex align-items-center flex-column me-2">
+                            <img src="/assets/images/user8.png" class="img-2x rounded-circle border border-1">
+                        </a>
+                        ${data}
+                    </div>`,
+                    searchable: true, 
+                },
+                {
+                    data: 'patient_tel',
+                    render: (data, type, row) => {
+                        return data ? `+225 ${data}` : 'Néant';
+                    },
+                    searchable: true,
+                },
+                {
+                    data: 'medecin',
+                    render: (data, type, row) => {
+                        return data ? `Dr. ${data}` : 'Néant';
+                    },
+                    searchable: true,
+                },
+                { 
+                    data: 'specialite',
+                    searchable: true, 
+                },
+                { 
+                    data: 'date',
+                    render: formatDate,
+                    searchable: true, 
+                },
+                {
+                    data: 'statut',
+                    render: (data, type, row) => `
+                        <span class="badge ${data === 'en attente' ? 'bg-danger' : 'bg-success'}">
+                            ${data === 'en attente' ? 'En Attente' : 'Terminer'}
+                        </span>
+                    `,
+                    searchable: true,
+                },
+                { 
+                    data: 'created_at',
+                    render: formatDateHeure,
+                    searchable: true, 
+                },
+                {
+                    data: null,
+                    render: (data, type, row) => `
+                        <div class="d-inline-flex gap-1" style="font-size:10px;">
+                            <a class="btn btn-outline-warning btn-sm rounded-5 edit-btn" data-motif="${row.motif}" data-bs-toggle="modal" data-bs-target="#Detail_motif" id="motif">
+                                <i class="ri-eye-line"></i>
+                            </a>
+                            ${row.statut == 'en attente' ? 
+                            `<a class="btn btn-outline-info btn-sm rounded-5" data-bs-toggle="modal" data-bs-target="#Modif_Rdv_modal" id="modif"
+                                data-id="${row.id}"
+                                data-date="${row.date}"
+                                data-patient="${row.patient}"
+                                data-motif="${row.motif}"
+                                data-medecin="${row.medecin}"
+                                data-specialite="${row.specialite}"
+                                data-horaires='${JSON.stringify(row.horaires)}'>
+                               <i class="ri-edit-line"></i>
+                            </a>
+                            <a class="btn btn-outline-danger btn-sm rounded-5" data-bs-toggle="modal" data-bs-target="#Mdelete" id="delete" data-id="${row.id}">
+                                <i class="ri-delete-bin-line"></i>
+                            </a>` :
+                            `` }
+                        </div>
+                    `,
+                    searchable: false,
+                    orderable: false,
+                }
+            ],
+            language: {
+                search: "Recherche:",
+                lengthMenu: "Afficher _MENU_ entrées",
+                info: "Affichage de _START_ à _END_ sur _TOTAL_ entrées",
+                infoEmpty: "Affichage de 0 à 0 sur 0 entrée",
+                paginate: {
+                    previous: "Précédent",
+                    next: "Suivant"
+                },
+                zeroRecords: "Aucune donnée trouvée",
+                emptyTable: "Aucune donnée disponible dans le tableau",
+            },
+            // autoWidth: true,
+            // scrollX: true, 
+            initComplete: function(settings, json) {
+                initializeRowEventListeners();
+            },
+        });
 
-            messageDiv.style.display = 'none';
-            tableDiv.style.display = 'none';
-            loaderDiv.style.display = 'block';
+        function initializeRowEventListeners() {
 
-            const statut = document.getElementById('statut_rdv').value;
-            const url = `/api/list_rdv/${statut}?page=${page}`;
+            $('#Table_day').on('click', '#modif', function() {
+                const id = $(this).data('id');
+                const date = $(this).data('date');
+                const patient = $(this).data('patient');
+                const motif = $(this).data('motif');
+                const medecin = $(this).data('medecin');
+                const specialite = $(this).data('specialite');
 
-            fetch(url)
-                .then(response => response.json())
-                .then(data => {
-                    const rdvs = data.rdv || [] ;
-                    const pagination = data.pagination || {};
+                $('#id_rdvM').val(id);
 
-                    const perPage = pagination.per_page || 10;
-                    const currentPage = pagination.current_page || 1;
+                const today = new Date();
+                const formattedToday = today.toISOString().split('T')[0];
+                $('#date_rdvM').val(date).attr('min', formattedToday);
 
-                    tableBody.innerHTML = '';
+                $('#patient_rdvM').val(patient);
+                $('#motif_rdvM').val(motif);
+                $('#medecin_rdvM').val(medecin);
+                $('#specialite_rdvM').val(specialite);
 
-                    if (rdvs.length > 0) {
+                const horairesData = $(this).data('horaires');
+                const allowedDays = horairesData ? horairesData.map(horaire => horaire.jour) : [];
 
-                        loaderDiv.style.display = 'none';
-                        messageDiv.style.display = 'none';
-                        tableDiv.style.display = 'block';
+                $('#date_rdvM').on('change', function(event) {
+                    const selectedDate = new Date(event.target.value);
+                    const selectedDay = selectedDate.getDay();
 
-                            rdvs.forEach((item, index) => {
+                    const dayMapping = {
+                        'DIMANCHE': 0,
+                        'LUNDI': 1,
+                        'MARDI': 2,
+                        'MERCREDI': 3,
+                        'JEUDI': 4,
+                        'VENDREDI': 5,
+                        'SAMEDI': 6
+                    };
 
-                                let button = '';
+                    const isValidDay = allowedDays.some(day => dayMapping[day] === selectedDay);
 
-                                if (item.statut == 'en attente') {
-                                    button = `
-                                        <a class="btn btn-outline-info btn-sm rounded-5" data-bs-toggle="modal" data-bs-target="#Modif_Rdv_modal" id="modif-${item.id}">
-                                            <i class="ri-edit-line"></i>
-                                        </a>
-                                        <a class="btn btn-outline-danger btn-sm rounded-5" data-bs-toggle="modal" data-bs-target="#Mdelete" id="delete-${item.id}">
-                                            <i class="ri-delete-bin-line"></i>
-                                        </a>
-                                    `;
-                                }
+                    if (!isValidDay) {
+                        // Vérification si date_rdvM est une valeur valide
+                        let formattedDate = "";
+                        if (date_rdvM && !isNaN(new Date(date_rdvM).getTime())) {
+                            // Si date_rdvM est valide, formater la date
+                            formattedDate = new Date(date_rdvM).toISOString().split('T')[0];
+                        } else {
+                            // Si date_rdvM n'est pas valide, utilisez la date du jour comme fallback
+                            formattedDate = new Date().toISOString().split('T')[0];
+                        }
 
-                                const row = document.createElement('tr');
-                                row.innerHTML = `
-                                    <td>${((currentPage - 1) * perPage) + index + 1}</td>
-                                    <td>${item.patient}</td>
-                                    <td>+225 ${item.patient_tel}</td>
-                                    <td>Dr. ${item.medecin}</td>
-                                    <td>${item.specialite}</td>
-                                    <td>${formatDate(item.date)}</td>
-                                    <td>
-                                        <span class="badge ${item.statut === 'en attente' ? 'bg-danger' : 'bg-success'}">
-                                            ${item.statut}
-                                        </span>
-                                    </td>
-                                    <td>${formatDateHeure(item.created_at)}</td>
-                                    <td>
-                                        <div class="d-inline-flex gap-1">
-                                            <a class="btn btn-outline-warning btn-sm rounded-5" data-bs-toggle="modal" data-bs-target="#Detail_motif" id="motif-${item.id}">
-                                                <i class="ri-eye-line"></i>
-                                            </a>
-                                            ${button}
-                                        </div>
-                                    </td>
-                                `;
-                                tableBody.appendChild(row);
-
-                                const deleteButton = document.getElementById(`delete-${item.id}`);
-                                if (deleteButton) {
-                                    deleteButton.addEventListener('click', () => {
-                                        document.getElementById('Iddelete').value = item.id;
-                                    });
-                                }
-
-                                const modifButton = document.getElementById(`modif-${item.id}`);
-                                if (modifButton) {
-                                    modifButton.addEventListener('click', () => {
-                                        document.getElementById('medecin_id_rdvM').value = item.id;
-                                        document.getElementById('date_rdvM').value = item.date;
-                                        document.getElementById('date_rdvM').min = item.date; 
-                                        document.getElementById('patient_rdvM').value = item.patient;
-                                        document.getElementById('motif_rdvM').value = item.motif;
-                                        document.getElementById('medecin_rdvM').value = item.medecin;
-                                        document.getElementById('specialite_rdvM').value = item.specialite;
-
-                                        const allowedDays = item.horaires.map(horaire => horaire.jour);
-
-                                        const dateInput = document.getElementById('date_rdvM');
-                                        dateInput.addEventListener('blur', (event) => {
-
-                                            const selectedDate = new Date(event.target.value);
-                                            const selectedDay = selectedDate.getDay();
-
-                                            const dayMapping = {
-                                                'DIMANCHE': 0,
-                                                'LUNDI': 1,
-                                                'MARDI': 2,
-                                                'MERCREDI': 3,
-                                                'JEUDI': 4,
-                                                'VENDREDI': 5,
-                                                'SAMEDI': 6
-                                            };
-
-                                            const isValidDay = allowedDays.some(day => dayMapping[day] === selectedDay);
-
-                                            if (!isValidDay) {
-                                                dateInput.value = item.date;
-                                                showAlert("ALERT", 'Veuillez sélectionner un jour valide selon les horaires du médecin.', "info");
-                                            }
-                                        });
-                                    });
-                                }
-
-                                document.getElementById(`motif-${item.id}`).addEventListener('click', () =>
-                                {
-                                    const modal = document.getElementById('modal_Detail_motif');
-                                    modal.innerHTML = '';
-
-                                    const div = document.createElement('div');
-                                    div.innerHTML = `
-                                           <div class="row gx-3">
-                                                <div class="col-12">
-                                                    <div class=" mb-3">
-                                                        <div class="card-body">
-                                                            <ul class="list-group">
-                                                                <li class="list-group-item active text-center" aria-current="true">
-                                                                    Motif
-                                                                </li>
-                                                                <li class="list-group-item">
-                                                                    ${item.motif} 
-                                                                </li>
-                                                            </ul>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>     
-                                    `;
-
-                                    modal.appendChild(div);
-
-                                });
-
-                            });
-
-                        updatePaginationControls(pagination);
-
-                    } else {
-                        tableDiv.style.display = 'none';
-                        loaderDiv.style.display = 'none';
-                        messageDiv.style.display = 'block';
+                        // Remettre la date dans le champ de saisie
+                        $('#date_rdvM').val(formattedDate);
+                        
+                        // Afficher le message d'alerte
+                        showAlert("ALERT", 'Veuillez sélectionner un jour valide selon les horaires du médecin.', "info");
                     }
-                })
-                .catch(error => {
-                    console.error('Erreur lors du chargement des données:', error);
-                    loaderDiv.style.display = 'none';
-                    tableDiv.style.display = 'none';
-                    messageDiv.style.display = 'block';
                 });
-        }
 
-        function updatePaginationControls(pagination) {
-            const paginationDiv = document.getElementById('pagination-controls_rdv');
-            paginationDiv.innerHTML = '';
+            });
 
-            // Bootstrap pagination wrapper
-            const paginationWrapper = document.createElement('ul');
-            paginationWrapper.className = 'pagination justify-content-center';
+            $('#Table_day').on('click', '#motif', function() {
+                const motif = $(this).data('motif');
+                // Handle the 'Delete' button click
+                const modal = document.getElementById('modal_Detail_motif');
+                modal.innerHTML = '';
 
-            // Previous button
-            if (pagination.current_page > 1) {
-                const prevButton = document.createElement('li');
-                prevButton.className = 'page-item';
-                prevButton.innerHTML = `<a class="page-link" href="#">Precédent</a>`;
-                prevButton.onclick = () => list_rdv(pagination.current_page - 1);
-                paginationWrapper.appendChild(prevButton);
-            } else {
-                // Disable the previous button if on the first page
-                const prevButton = document.createElement('li');
-                prevButton.className = 'page-item disabled';
-                prevButton.innerHTML = `<a class="page-link" href="#">Precédent</a>`;
-                paginationWrapper.appendChild(prevButton);
-            }
+                const div = document.createElement('div');
+                div.innerHTML = `
+                       <div class="row gx-3">
+                            <div class="col-12">
+                                <div class=" mb-3">
+                                    <div class="card-body">
+                                        <ul class="list-group">
+                                            <li class="list-group-item active text-center" aria-current="true">
+                                                Motif
+                                            </li>
+                                            <li class="list-group-item">
+                                                ${motif} 
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>     
+                `;
 
-            // Page number links (show a few around the current page)
-            const totalPages = pagination.last_page;
-            const currentPage = pagination.current_page;
-            const maxVisiblePages = 5; // Max number of page links to display
+                modal.appendChild(div);
+            });
 
-            let startPage = Math.max(1, currentPage - Math.floor(maxVisiblePages / 2));
-            let endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
-
-            // Adjust start page if end page exceeds the total pages
-            if (endPage - startPage < maxVisiblePages - 1) {
-                startPage = Math.max(1, endPage - maxVisiblePages + 1);
-            }
-
-            // Loop through pages and create page links
-            for (let i = startPage; i <= endPage; i++) {
-                const pageItem = document.createElement('li');
-                pageItem.className = `page-item ${i === currentPage ? 'active' : ''}`;
-                pageItem.innerHTML = `<a class="page-link" href="#">${i}</a>`;
-                pageItem.onclick = () => list_rdv(i);
-                paginationWrapper.appendChild(pageItem);
-            }
-
-            // Ellipsis (...) if not all pages are shown
-            if (endPage < totalPages) {
-                const ellipsis = document.createElement('li');
-                ellipsis.className = 'page-item disabled';
-                ellipsis.innerHTML = `<a class="page-link" href="#">...</a>`;
-                paginationWrapper.appendChild(ellipsis);
-
-                // Add the last page link
-                const lastPageItem = document.createElement('li');
-                lastPageItem.className = `page-item`;
-                lastPageItem.innerHTML = `<a class="page-link" href="#">${totalPages}</a>`;
-                lastPageItem.onclick = () => list_rdv(totalPages);
-                paginationWrapper.appendChild(lastPageItem);
-            }
-
-            // Next button
-            if (pagination.current_page < pagination.last_page) {
-                const nextButton = document.createElement('li');
-                nextButton.className = 'page-item';
-                nextButton.innerHTML = `<a class="page-link" href="#">Suivant</a>`;
-                nextButton.onclick = () => list_rdv(pagination.current_page + 1);
-                paginationWrapper.appendChild(nextButton);
-            } else {
-                // Disable the next button if on the last page
-                const nextButton = document.createElement('li');
-                nextButton.className = 'page-item disabled';
-                nextButton.innerHTML = `<a class="page-link" href="#">Suivant</a>`;
-                paginationWrapper.appendChild(nextButton);
-            }
-
-            // Append pagination controls to the DOM
-            paginationDiv.appendChild(paginationWrapper);
+            $('#Table_day').on('click', '#delete', function() {
+                const id = $(this).data('id');
+                
+                $('#Iddelete').val(id);
+            });
         }
 
         function delete_rdv() {
@@ -1326,7 +1273,7 @@
                     }
 
                     if (response.success) {
-                        list_rdv();
+                        $('#Table_day').DataTable().ajax.reload();
                         count_rdv_two_day();
                         showAlert('Succès', 'Rendez-Vous annulé.','success');
                     } else if (response.error) {
@@ -1347,7 +1294,7 @@
 
         function update_rdv()
         {
-            const id = document.getElementById('medecin_id_rdvM').value;
+            const id = document.getElementById('id_rdvM').value;
             const date_rdv = document.getElementById('date_rdvM');
             const motif_rdv = document.getElementById('motif_rdvM');
 
@@ -1383,7 +1330,7 @@
                     
                     if (response.success) {
 
-                        list_rdv();
+                        $('#Table_day').DataTable().ajax.reload();
                         count_rdv_two_day();
                         showAlert("ALERT", 'Mise à jour éffectué', "success");
 
