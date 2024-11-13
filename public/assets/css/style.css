@@ -99,6 +99,10 @@
     background-color: #1967d2;  /* Darker blue background for selected option */
     color: #ffffff;  /* White text color */
 }
+.select2-container .select2-results__options {
+    max-height: 200px; /* Ajustez la hauteur selon votre besoin */
+    overflow-y: auto;
+}
 
 
 
@@ -234,7 +238,7 @@
 #Table_day th {
     background-color: #007bff;  /* Bleu de l'en-tête */
     color: #fff;                /* Texte en blanc */
-    text-align: center;         /* Centrer le texte */
+    text-align: left;         /* Centrer le texte */
     font-weight: bold;
     padding: 12px 15px;
 }
@@ -242,7 +246,7 @@
 /* Table rows */
 #Table_day td {
     padding: 10px 15px;
-    text-align: center;
+    text-align: left;
     vertical-align: middle;
 }
 

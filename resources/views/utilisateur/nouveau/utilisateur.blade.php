@@ -491,10 +491,12 @@
                     data: 'role',
                     searchable: true, 
                 },
-                { 
-                    data: 'tel', 
-                    render: (data) => `+225 ${data}`,
-                    searchable: true, 
+                {
+                    data: 'tel',
+                    render: (data, type, row) => {
+                        return data ? `+225 ${data}` : 'Néant';
+                    },
+                    searchable: true,
                 },
                 { 
                     data: 'adresse',

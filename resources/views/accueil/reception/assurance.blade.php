@@ -127,16 +127,15 @@
                                         Liste des Assurances
                                     </h5>
                                     <div class="d-flex">
-                                        <input type="text" id="searchInputA" placeholder="Recherche" class="form-control me-1" oninput="this.value = this.value.toUpperCase()">
                                         <a id="btn_refresh_tableP" class="btn btn-outline-info ms-auto">
                                             <i class="ri-loop-left-line"></i>
                                         </a>
                                     </div>
                                 </div>
                                 <div class="card-body">
-                                    <div class="table-outer" id="div_TableP" style="display: none;">
+                                    <div class="">
                                         <div class="table-responsive">
-                                            <table class="table align-middle table-hover m-0 truncate" id="TableP">
+                                            <table id="Table_day" class="table table-hover table-sm">
                                                 <thead>
                                                     <tr>
                                                         <th scope="col">N°</th>
@@ -155,18 +154,6 @@
                                             </table>
                                         </div>
                                     </div>
-                                    <div id="message_TableP" style="display: none;">
-                                        <p class="text-center">
-                                            Aucune Assurance n'a été trouvé
-                                        </p>
-                                    </div>
-                                    <div id="div_Table_loaderP" style="display: none;">
-                                        <div class="d-flex justify-content-center align-items-center">
-                                            <div class="spinner-border text-warning me-2" role="status" aria-hidden="true"></div>
-                                            <strong>Chargement des données...</strong>
-                                        </div>
-                                    </div>
-                                    <div id="pagination-controlsP"></div>
                                 </div>
                             </div>
                             <div class="tab-pane fade" id="twoRech" role="tabpanel" aria-labelledby="tab-twoRech">
@@ -187,7 +174,7 @@
                                                     Assurance
                                                 </label>
                                                 <div class="input-group">
-                                                    <select class="form-select" id="assurance_id">
+                                                    <select class="form-select select2" id="assurance_id">
                                                     </select>
                                                 </div>
                                             </div>
@@ -484,15 +471,19 @@
 <script src="{{asset('jsPDF-master/dist/jspdf.umd.js')}}"></script>
 <script src="{{asset('assets/vendor/apex/apexcharts.min.js')}}"></script>
 
+@include('select2')
+
 <script>
-    document.addEventListener("DOMContentLoaded", function() {
+    $(document).ready(function() {
 
         select_assurance();
-        list();
 
-        document.getElementById("btn_eng_assurance").addEventListener("click", eng_assurance);
-        document.getElementById("btn_refresh_tableP").addEventListener("click", list);
-        document.getElementById("updateBtn").addEventListener("click", updatee);
+        $("#btn_eng_assurance").on("click", eng_assurance);
+        $("#updateBtn").on("click", updatee);
+
+        $('#btn_refresh_tableP').on('click', function () {
+            $('#Table_day').DataTable().ajax.reload();
+        });
 
         var inputs = ['tel_assurance_new', 'tel2_assurance_new',]; // Array of element IDs
         inputs.forEach(function(id) {
@@ -543,6 +534,22 @@
                 text: message,
                 icon: type,
             });
+        }
+
+        function formatDateHeure(dateString)
+        {
+
+            const date = new Date(dateString);
+                
+            const day = String(date.getDate()).padStart(2, '0');
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const year = date.getFullYear();
+
+            const hours = String(date.getHours()).padStart(2, '0');
+            const minutes = String(date.getMinutes()).padStart(2, '0');
+            const seconds = String(date.getSeconds()).padStart(2, '0');
+
+            return `${day}/${month}/${year} à ${hours}:${minutes}:${seconds}`;
         }
 
         function select_assurance()
@@ -637,7 +644,7 @@
                         fax.value = '';
                         adresse.value = '';
 
-                        list();
+                        $('#Table_day').DataTable().ajax.reload();
                         select_assurance();
 
                         showAlert('Succès', 'Assurance Enregistrée.','success');
@@ -658,193 +665,115 @@
             });
         }
 
-        function list(page = 1) {
+        $('#Table_day').DataTable({
 
-            const tableBody = document.querySelector('#TableP tbody');
-            const messageDiv = document.getElementById('message_TableP');
-            const tableDiv = document.getElementById('div_TableP');
-            const loaderDiv = document.getElementById('div_Table_loaderP');
+            processing: true,
+            serverSide: false,
+            ajax: {
+                url: `/api/list_assurance_all`,
+                type: 'GET',
+                dataSrc: 'data',
+            },
+            columns: [
+                { 
+                    data: null, 
+                    render: (data, type, row, meta) => meta.row + 1,
+                    searchable: false,
+                    orderable: false,
+                },
+                { 
+                    data: 'nom', 
+                    render: (data, type, row) => `
+                    <div class="d-flex align-items-center">
+                        <a class="d-flex align-items-center flex-column me-2">
+                            <img src="/assets/images/assurance3.jpg" class="img-2x rounded-circle border border-1">
+                        </a>
+                        ${data}
+                    </div>`,
+                    searchable: true, 
+                },
+                { 
+                    data: 'email',
+                    searchable: true,
+                },
+                {
+                    data: 'tel',
+                    render: (data, type, row) => {
+                        return data ? `+225 ${data}` : 'Néant';
+                    },
+                    searchable: true,
+                },
+                {
+                    data: 'tel2',
+                    render: (data, type, row) => {
+                        return data ? `+225 ${data}` : 'Néant';
+                    },
+                    searchable: true,
+                },
+                { 
+                    data: 'fax',
+                    searchable: true,
+                },
+                { 
+                    data: 'adresse',
+                    searchable: true, 
+                },
+                { 
+                    data: 'created_at',
+                    render: formatDateHeure,
+                    searchable: true,
+                },
+                {
+                    data: null,
+                    render: (data, type, row) => `
+                        <div class="d-inline-flex gap-1" style="font-size:10px;">
+                            <a class="btn btn-outline-info btn-sm rounded-5 edit-btn" data-id="${row.id}" data-nom="${row.nom}" data-email="${row.email}" data-tel="${row.tel}" data-tel2="${row.tel2}" data-adresse="${row.adresse}" data-fax="${row.fax}" data-bs-toggle="modal" data-bs-target="#Mmodif" id="modif">
+                                <i class="ri-edit-box-line"></i>
+                            </a>
+                        </div>
+                    `,
+                    searchable: false,
+                    orderable: false,
+                }
+            ],
+            language: {
+                search: "Recherche:",
+                lengthMenu: "Afficher _MENU_ entrées",
+                info: "Affichage de _START_ à _END_ sur _TOTAL_ entrées",
+                infoEmpty: "Affichage de 0 à 0 sur 0 entrée",
+                paginate: {
+                    previous: "Précédent",
+                    next: "Suivant"
+                },
+                zeroRecords: "Aucune donnée trouvée",
+                emptyTable: "Aucune donnée disponible dans le tableau",
+            },
+            // autoWidth: true,
+            // scrollX: true, 
+            initComplete: function(settings, json) {
+                initializeRowEventListeners();
+            },
+        });
 
-            let allAssurances = [];
+        function initializeRowEventListeners() {
 
-            messageDiv.style.display = 'none';
-            tableDiv.style.display = 'none';
-            loaderDiv.style.display = 'block';
+            $('#Table_day').on('click', '#modif', function() {
+                const id = $(this).data('id');
+                const nom = $(this).data('nom');
+                const email = $(this).data('email');
+                const tel = $(this).data('tel');
+                const tel2 = $(this).data('tel2');
+                const adresse = $(this).data('adresse');
+                const fax = $(this).data('fax');
 
-            const url = `/api/list_assurance_all?page=${page}`;
-
-            fetch(url)
-                .then(response => response.json())
-                .then(data => {
-                    allAssurances = data.assurance || [] ;
-                    const pagination = data.pagination || {};
-
-                    const perPage = pagination.per_page || 10;
-                    const currentPage = pagination.current_page || 1;
-
-                    tableBody.innerHTML = '';
-
-                    if (allAssurances.length > 0) {
-
-                        loaderDiv.style.display = 'none';
-                        messageDiv.style.display = 'none';
-                        tableDiv.style.display = 'block';
-
-                        function displayRows(filteredAssurances) {
-                            tableBody.innerHTML = ''; 
-
-                            filteredAssurances.forEach((item, index) => {
-                                const row = document.createElement('tr');
-                                row.innerHTML = `
-                                    <td>${((currentPage - 1) * perPage) + index + 1}</td>
-                                    <td>
-                                        <div class="d-flex align-items-center ">
-                                            <a class="d-flex align-items-center flex-column me-2">
-                                                <img src="{{asset('assets/images/assurance3.jpg')}}" class="img-2x rounded-circle border border-1">
-                                            </a>
-                                            ${item.nom}
-                                        </div>
-                                    </td>
-                                    <td>${item.email}</td>
-                                    <td>${item.tel ? '+225 '+item.tel : 'Néant'}</td>
-                                    <td>${item.tel2 ? '+225 '+item.tel2 : 'Néant'}</td>
-                                    <td>${item.fax}</td>
-                                    <td>${item.adresse}</td>
-                                    <td>${formatDateHeure(item.created_at)}</td>
-                                    <td>
-                                        <div class="d-inline-flex gap-1">
-                                            <a class="btn btn-outline-info btn-sm rounded-5" data-bs-toggle="modal" data-bs-target="#Mmodif" id="edit-${item.id}">
-                                                <i class="ri-edit-box-line"></i>
-                                            </a>
-                                            
-                                        </div>
-                                    </td>
-                                `;
-                                tableBody.appendChild(row);
-
-                                document.getElementById(`edit-${item.id}`).addEventListener('click', () => 
-                                {
-                                    document.getElementById('Id').value = item.id;
-                                    document.getElementById('nomModif').value = item.nom;
-                                    document.getElementById('emailModif').value = item.email;
-                                    document.getElementById('adresseModif').value = item.adresse;
-                                    document.getElementById('telModif').value = item.tel;
-                                    document.getElementById('tel2Modif').value = item.tel2;
-                                    document.getElementById('faxModif').value = item.fax;
-                                });
-
-                            });
-                        };
-
-                        // Update table with filtered factures
-                        function applySearchFilter() {
-                            const searchTerm = searchInputA.value.toLowerCase();
-
-                            // Filtrer les patients en vérifiant plusieurs champs
-                            const filteredAssurances = allAssurances.filter(item =>
-                                item.nom.toLowerCase().includes(searchTerm)
-                            );
-
-                            displayRows(filteredAssurances); // Afficher seulement les patients filtrés
-                        }
-
-                        searchInputA.addEventListener('input', applySearchFilter);
-
-                        displayRows(allAssurances);
-
-                        updatePaginationControlsP(pagination);
-
-                    } else {
-                        tableDiv.style.display = 'none';
-                        loaderDiv.style.display = 'none';
-                        messageDiv.style.display = 'block';
-                    }
-                })
-                .catch(error => {
-                    console.error('Erreur lors du chargement des données:', error);
-                    loaderDiv.style.display = 'none';
-                    tableDiv.style.display = 'none';
-                    messageDiv.style.display = 'block';
-                });
-        }
-
-        function updatePaginationControlsP(pagination) {
-            const paginationDiv = document.getElementById('pagination-controlsP');
-            paginationDiv.innerHTML = '';
-
-            // Bootstrap pagination wrapper
-            const paginationWrapper = document.createElement('ul');
-            paginationWrapper.className = 'pagination justify-content-center';
-
-            // Previous button
-            if (pagination.current_page > 1) {
-                const prevButton = document.createElement('li');
-                prevButton.className = 'page-item';
-                prevButton.innerHTML = `<a class="page-link" href="#">Precédent</a>`;
-                prevButton.onclick = () => list(pagination.current_page - 1);
-                paginationWrapper.appendChild(prevButton);
-            } else {
-                // Disable the previous button if on the first page
-                const prevButton = document.createElement('li');
-                prevButton.className = 'page-item disabled';
-                prevButton.innerHTML = `<a class="page-link" href="#">Precédent</a>`;
-                paginationWrapper.appendChild(prevButton);
-            }
-
-            // Page number links (show a few around the current page)
-            const totalPages = pagination.last_page;
-            const currentPage = pagination.current_page;
-            const maxVisiblePages = 5; // Max number of page links to display
-
-            let startPage = Math.max(1, currentPage - Math.floor(maxVisiblePages / 2));
-            let endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
-
-            // Adjust start page if end page exceeds the total pages
-            if (endPage - startPage < maxVisiblePages - 1) {
-                startPage = Math.max(1, endPage - maxVisiblePages + 1);
-            }
-
-            // Loop through pages and create page links
-            for (let i = startPage; i <= endPage; i++) {
-                const pageItem = document.createElement('li');
-                pageItem.className = `page-item ${i === currentPage ? 'active' : ''}`;
-                pageItem.innerHTML = `<a class="page-link" href="#">${i}</a>`;
-                pageItem.onclick = () => list(i);
-                paginationWrapper.appendChild(pageItem);
-            }
-
-            // Ellipsis (...) if not all pages are shown
-            if (endPage < totalPages) {
-                const ellipsis = document.createElement('li');
-                ellipsis.className = 'page-item disabled';
-                ellipsis.innerHTML = `<a class="page-link" href="#">...</a>`;
-                paginationWrapper.appendChild(ellipsis);
-
-                // Add the last page link
-                const lastPageItem = document.createElement('li');
-                lastPageItem.className = `page-item`;
-                lastPageItem.innerHTML = `<a class="page-link" href="#">${totalPages}</a>`;
-                lastPageItem.onclick = () => list(totalPages);
-                paginationWrapper.appendChild(lastPageItem);
-            }
-
-            // Next button
-            if (pagination.current_page < pagination.last_page) {
-                const nextButton = document.createElement('li');
-                nextButton.className = 'page-item';
-                nextButton.innerHTML = `<a class="page-link" href="#">Suivant</a>`;
-                nextButton.onclick = () => list(pagination.current_page + 1);
-                paginationWrapper.appendChild(nextButton);
-            } else {
-                // Disable the next button if on the last page
-                const nextButton = document.createElement('li');
-                nextButton.className = 'page-item disabled';
-                nextButton.innerHTML = `<a class="page-link" href="#">Suivant</a>`;
-                paginationWrapper.appendChild(nextButton);
-            }
-
-            // Append pagination controls to the DOM
-            paginationDiv.appendChild(paginationWrapper);
+                $('#Id').val(id);
+                $('#nomModif').val(nom);
+                $('#emailModif').val(email);
+                $('#adresseModif').val(adresse);
+                $('#telModif').val(tel);
+                $('#tel2Modif').val(tel2);
+                $('#faxModif').val(fax);
+            });
         }
 
         function updatee() {
@@ -914,7 +843,7 @@
                         showAlert('Alert', 'Ce fax appartient déjà a une assurance.','warning');
                     } else if (response.success) {
                         select_assurance();
-                        list();
+                        $('#Table_day').DataTable().ajax.reload();
                         showAlert('Succès', 'Opérationn éffectué.','success');
                     } else if (response.error) {
                         showAlert('Alert', 'Une erreur est survenue.','error');
@@ -955,7 +884,7 @@
             return `${day}/${month}/${year} à ${hours}:${minutes}:${seconds}`;
         }
 
-        document.getElementById('assurance_id').addEventListener('change', function() {
+        $('#assurance_id').on('change', function() {
 
             const dynamicFields = document.getElementById("div_info_patient");
             dynamicFields.innerHTML = "";

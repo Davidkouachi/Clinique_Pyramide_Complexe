@@ -61,9 +61,6 @@
                     <h5 class="card-title">
                         Liste des Conultations
                     </h5>
-                    <div class="d-flex">
-                        <input type="text" id="searchInputC" placeholder="N° Consultation" class="form-control me-1">
-                    </div>
                 </div>
                 <div class="card-header d-flex align-items-center justify-content-between">
                     <div class="w-100">
@@ -79,9 +76,9 @@
                     </div>
                 </div>
                 <div class="card-body">
-                    <div class="table-outer" id="div_TableC" style="display: none;">
+                    <div class="">
                         <div class="table-responsive">
-                            <table class="table align-middle table-hover m-0 truncate" id="TableC">
+                            <table id="Table_day" class="table table-hover table-sm">
                                 <thead>
                                     <tr>
                                         <th scope="col">N°</th>
@@ -100,18 +97,6 @@
                             </table>
                         </div>
                     </div>
-                    <div id="message_TableC" style="display: none;">
-                        <p class="text-center">
-                            Aucune Consultation n'a été trouvée
-                        </p>
-                    </div>
-                    <div id="div_Table_loaderC" style="display: none;">
-                        <div class="d-flex justify-content-center align-items-center">
-                            <div class="spinner-border text-warning me-2" role="status" aria-hidden="true"></div>
-                            <strong>Chargement des données...</strong>
-                        </div>
-                    </div>
-                    <div id="pagination-controlsC"></div>
                 </div>
             </div>
         </div>
@@ -196,19 +181,37 @@
     </div>
 </div>
 
-{{-- <script src="{{ asset('js/app.js') }}"></script> --}}
-{{-- <script src="https://unpkg.com/jspdf-invoice-template@1.4.4/dist/index.js"></script> --}}
 <script src="{{asset('assets/js/app/js/jspdfinvoicetemplate/dist/index.js')}}" ></script>
-<script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="{{asset('jsPDF-master/dist/jspdf.umd.js')}}"></script>
 
 <script>
-    document.addEventListener("DOMContentLoaded", function() {
+    $(document).ready(function() {
 
-        list_cons_all();
+        $('#btn_search_table').on('click', function() {
+            $('#Table_day').DataTable().ajax.reload();
+        });
 
-        document.getElementById("btn_search_table").addEventListener("click", list_cons_all);
+        $('#searchDate1').on('change', function() {
+            const date1Value = document.getElementById('searchDate1').value;
+            const date2 = document.getElementById('searchDate2');
+
+            if (date2.value && new Date(date1Value) > new Date(date2.value)) {
+                showAlert('Erreur', 'La date de début ne peut pas être inférieur à la date de fin.', 'warning');
+                document.getElementById('searchDate1').value = date2.value;
+            } else {
+                date2.min = date1Value;
+            }
+        });
+
+        $('#searchDate2').on('change', function() {
+            const date1Value = document.getElementById('searchDate1').value;
+            const date2Value = document.getElementById('searchDate2').value;
+
+            if (new Date(date1Value) > new Date(date2Value)) {
+                showAlert('Erreur', 'La date de fin ne peut pas être supérieur à la date de début.', 'warning');
+                document.getElementById('searchDate2').value = date1Value;
+            }
+        });
 
         document.getElementById('btn_affiche_stat').addEventListener('click',function(){
 
@@ -390,356 +393,262 @@
             return `${day}/${month}/${year} à ${hours}:${minutes}:${seconds}`;
         }
 
-        function list_cons_all(page = 1) {
+        $('#Table_day').DataTable({
 
-            const tableBody = document.querySelector('#TableC tbody');
-            const messageDiv = document.getElementById('message_TableC');
-            const tableDiv = document.getElementById('div_TableC'); // The message div
-            const loaderDiv = document.getElementById('div_Table_loaderC');
+            processing: true,
+            serverSide: false,
+            ajax: function(data, callback) {
+                const startDate = $('#searchDate1').val();
+                const endDate = $('#searchDate2').val();
+                
+                $.ajax({
+                    url: `/api/list_cons_all/${startDate}/${endDate}`,
+                    type: 'GET',
+                    success: function(response) {
+                        callback({ data: response.data });
+                    },
+                    error: function() {
+                        console.log('Error fetching data. Please check your API or network.');
+                    }
+                });
+            },
+            columns: [
+                { 
+                    data: null, 
+                    render: (data, type, row, meta) => meta.row + 1,
+                    searchable: false,
+                    orderable: false,
+                },
+                { 
+                    data: 'code',
+                    searchable: true, 
+                },
+                { 
+                    data: 'matricule',
+                    searchable: true,
+                },
+                { 
+                    data: 'name',
+                    searchable: true, 
+                },
+                { 
+                    data: 'tel', 
+                    render: (data) => `+225 ${data}`,
+                    searchable: true, 
+                },
+                { 
+                    data: 'medecin',
+                    searchable: true, 
+                },
+                { 
+                    data: 'type_motif',
+                    searchable: true, 
+                },
+                { 
+                    data: 'montant', 
+                    render: (data) => `${data} Fcfa`,
+                    searchable: true, 
+                },
+                {
+                    data: null,
+                    render: (data, type, row) => `
+                        <div class="d-inline-flex gap-1" style="font-size:10px;">
+                            <a class="btn btn-outline-warning btn-sm" data-bs-toggle="modal" data-bs-target="#CDetail" id="Cdetail" data-id="${row.id}">
+                                    <i class="ri-eye-line"></i>
+                                </a>
+                                <a class="btn btn-outline-warning btn-sm" id="Cfacture" data-code="${row.code}">
+                                    <i class="ri-printer-line"></i>
+                                </a>
+                                <a class="btn btn-outline-info btn-sm" id="Cfiche" data-code="${row.code}">
+                                    <i class="ri-file-line"></i>
+                                </a>
+                        </div>
+                    `,
+                    searchable: false,
+                    orderable: false,
+                }
+            ],
+            language: {
+                search: "Recherche:",
+                lengthMenu: "Afficher _MENU_ entrées",
+                info: "Affichage de _START_ à _END_ sur _TOTAL_ entrées",
+                infoEmpty: "Affichage de 0 à 0 sur 0 entrée",
+                paginate: {
+                    previous: "Précédent",
+                    next: "Suivant"
+                },
+                zeroRecords: "Aucune donnée trouvée",
+                emptyTable: "Aucune donnée disponible dans le tableau",
+            },
+            // autoWidth: true,
+            // scrollX: true, 
+            initComplete: function(settings, json) {
+                initializeRowEventListeners();
+            },
+        });
 
-            const date1 = document.getElementById('searchDate1').value;
-            const date2 = document.getElementById('searchDate2').value;
+        function initializeRowEventListeners() {
 
-            messageDiv.style.display = 'none';
-            tableDiv.style.display = 'none';
-            loaderDiv.style.display = 'block';
+            $('#Table_day').on('click', '#Cdetail', function() {
+                const id = $(this).data('id');
+                
+                const tableBodyD = document.querySelector('#TableDC tbody');
+                const messageDivD = document.getElementById('message_TableDC');
+                const tableDivD = document.getElementById('div_TableDC');
+                const loaderDivD = document.getElementById('div_Table_loaderDC');
 
-            let allCons = [];
+                messageDivD.style.display = 'none';
+                tableDivD.style.display = 'none';
+                loaderDivD.style.display = 'block';
 
-            const url = `/api/list_cons_all/${date1}/${date2}?page=${page}`;
-            fetch(url) // API endpoint
-                .then(response => response.json())
-                .then(data => {
-                    // Access the 'chambre' array from the API response
-                    allCons = data.consultation || [] ;
-                    const pagination = data.pagination || {};
+                fetch(`/api/list_facture_inpayer_d/${id}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        const factureds = data.factured;
+                        const total = data.Total;
 
-                    const perPage = pagination.per_page || 10;
-                    const currentPage = pagination.current_page || 1;
+                        const id = data.ID.code_fac;
+                        const date_fac = data.ID.date_fac;
+                        const statutValue = data.ID.statut;
+                        const date_paye = data.ID.date_paye;
 
-                    // Clear any existing rows in the table body
-                    tableBody.innerHTML = '';
+                        const fac_detail = document.getElementById('fac_detail');
+                        fac_detail.innerHTML = '';
 
-                    if (allCons.length > 0) {
+                        const para = document.createElement('p');
+                        para.className = "mb-2";
+                        para.innerHTML = `N° Facture - <span class="text-primary">${id}</span>`;
+                        fac_detail.appendChild(para);
 
-                        loaderDiv.style.display = 'none';
-                        messageDiv.style.display = 'none';
-                        tableDiv.style.display = 'block';
+                        const date0 = document.createElement('p');
+                        date0.className = "mb-2";
+                        date0.innerHTML = `Date de création ${formatDateHeure(date_fac)}`;
+                        fac_detail.appendChild(date0);
 
-                        function displayRows(filteredCons) {
-                            tableBody.innerHTML = ''; 
+                        if (date_paye) {
+                            const date = document.createElement('p');
+                            date.className = "mb-2";
+                            date.innerHTML = `Date de paiement ${formatDateHeure(date_paye)}`;
+                            fac_detail.appendChild(date);
+                        }
 
-                            // Loop through each item in the chambre array
-                            filteredCons.forEach((item, index) => {
+                        const statutElement = document.createElement('span');
+                        if (statutValue === 'payer') {
+                            statutElement.className = "badge bg-success";
+                            statutElement.innerHTML = `Facture Réglée`;
+                        } else {
+                            statutElement.className = "badge bg-danger";
+                            statutElement.innerHTML = `Facture Non Réglée`;
+                        }
+                        fac_detail.appendChild(statutElement);
+
+                        tableBodyD.innerHTML = '';
+
+                        if (factureds.length > 0) {
+                            loaderDivD.style.display = 'none';
+                            messageDivD.style.display = 'none';
+                            tableDivD.style.display = 'block';
+
+                            factureds.forEach((item, index) => {
                                 // Create a new row
                                 const row = document.createElement('tr');
                                 // Create and append cells to the row based on your table's structure
                                 row.innerHTML = `
-                                    <td>${((currentPage - 1) * perPage) + index + 1}</td>
-                                    <td>${item.code}</td>
-                                    <td>${item.matricule}</td>
-                                    <td>${item.name}</td>
-                                    <td>+225 ${item.tel}</td>
-                                    <td>${item.medecin}</td>  
-                                    <td>${item.type_motif}</td>
-                                    <td>${item.montant} Fcfa</td>
+                                    <td><h6>C-${item.code}</h6></td>
+                                    <td colspan="2" >
+                                        <h6>${item.nom_acte}</h6>
+                                        <p>
+                                            ${item.nom_typeacte}
+                                        </p>
+                                    </td>
                                     <td>
-                                        <div class="d-inline-flex gap-1">
-                                            <a class="btn btn-outline-warning btn-sm" data-bs-toggle="modal" data-bs-target="#CDetail" id="Cdetail-${item.id}">
-                                                <i class="ri-eye-line"></i>
-                                            </a>
-                                            <a class="btn btn-outline-warning btn-sm" id="Cfacture-${item.code}">
-                                                <i class="ri-printer-line"></i>
-                                            </a>
-                                            <a class="btn btn-outline-info btn-sm" id="Cfiche-${item.code}">
-                                                <i class="ri-file-line"></i>
-                                            </a>
-                                        </div>
+                                        <h6 class="text-primary" >
+                                            ${item.part_assurance} Fcfa
+                                        </h6>
+                                    </td>
+                                    <td>
+                                        <h6 class="text-primary" >
+                                            ${item.taux ?? 0}%
+                                        </h6>
+                                    </td>
+                                    <td>
+                                        <h6 class="text-primary">
+                                            ${item.remise ?? 0} Fcfa
+                                        </h6>
+                                    </td>
+                                    <td>
+                                        <h6 class="text-success" >
+                                            ${item.part_patient} Fcfa
+                                        </h6>
                                     </td>
                                 `;
                                 // Append the row to the table body
-                                tableBody.appendChild(row);
-
-                                document.getElementById(`Cfiche-${item.code}`).addEventListener('click', () =>
-                                {
-                                    fetch(`/api/fiche_consultation/${item.code}`) // API endpoint
-                                        .then(response => response.json())
-                                        .then(data => {
-                                            // Access the 'chambre' array from the API response
-                                            const patient = data.patient;
-                                            const typeacte = data.typeacte;
-                                            const user = data.user;
-                                            const consultation = data.consultation;
-
-                                            generatePDFficheCons(patient, user, typeacte, consultation);
-
-                                        })
-                                        .catch(error => {
-                                            console.error('Erreur lors du chargement des données:', error);
-                                        });
-                                });
-
-                                document.getElementById(`Cfacture-${item.code}`).addEventListener('click', () =>
-                                {
-                                    fetch(`/api/fiche_consultation/${item.code}`) // API endpoint
-                                        .then(response => response.json())
-                                        .then(data => {
-                                            // Access the 'chambre' array from the API response
-                                            const patient = data.patient;
-                                            const typeacte = data.typeacte;
-                                            const user = data.user;
-                                            const consultation = data.consultation;
-
-                                            generatePDFInvoice(patient, user, typeacte, consultation);
-
-                                        })
-                                        .catch(error => {
-                                            console.error('Erreur lors du chargement des données:', error);
-                                        });
-                                });
-
-                                document.getElementById(`Cdetail-${item.id}`).addEventListener('click', () => 
-                                {
-                                    const tableBodyD = document.querySelector('#TableDC tbody');
-                                    const messageDivD = document.getElementById('message_TableDC');
-                                    const tableDivD = document.getElementById('div_TableDC');
-                                    const loaderDivD = document.getElementById('div_Table_loaderDC');
-
-                                    messageDivD.style.display = 'none';
-                                    tableDivD.style.display = 'none';
-                                    loaderDivD.style.display = 'block';
-
-                                    fetch(`/api/list_facture_inpayer_d/${item.id}`)
-                                        .then(response => response.json())
-                                        .then(data => {
-                                            const factureds = data.factured;
-                                            const total = data.Total;
-
-                                            const id = data.ID.code_fac;
-                                            const date_fac = data.ID.date_fac;
-                                            const statutValue = data.ID.statut;
-                                            const date_paye = data.ID.date_paye;
-
-                                            const fac_detail = document.getElementById('fac_detail');
-                                            fac_detail.innerHTML = '';
-
-                                            const para = document.createElement('p');
-                                            para.className = "mb-2";
-                                            para.innerHTML = `N° Facture - <span class="text-primary">${id}</span>`;
-                                            fac_detail.appendChild(para);
-
-                                            const date0 = document.createElement('p');
-                                            date0.className = "mb-2";
-                                            date0.innerHTML = `Date de création ${formatDateHeure(date_fac)}`;
-                                            fac_detail.appendChild(date0);
-
-                                            if (date_paye) {
-                                                const date = document.createElement('p');
-                                                date.className = "mb-2";
-                                                date.innerHTML = `Date de paiement ${formatDateHeure(date_paye)}`;
-                                                fac_detail.appendChild(date);
-                                            }
-
-                                            const statutElement = document.createElement('span');
-                                            if (statutValue === 'payer') {
-                                                statutElement.className = "badge bg-success";
-                                                statutElement.innerHTML = `Facture Réglée`;
-                                            } else {
-                                                statutElement.className = "badge bg-danger";
-                                                statutElement.innerHTML = `Facture Non Réglée`;
-                                            }
-                                            fac_detail.appendChild(statutElement);
-
-                                            tableBodyD.innerHTML = '';
-
-                                            if (factureds.length > 0) {
-                                                loaderDivD.style.display = 'none';
-                                                messageDivD.style.display = 'none';
-                                                tableDivD.style.display = 'block';
-
-                                                factureds.forEach((item, index) => {
-                                                    // Create a new row
-                                                    const row = document.createElement('tr');
-                                                    // Create and append cells to the row based on your table's structure
-                                                    row.innerHTML = `
-                                                        <td><h6>C-${item.code}</h6></td>
-                                                        <td colspan="2" >
-                                                            <h6>${item.nom_acte}</h6>
-                                                            <p>
-                                                                ${item.nom_typeacte}
-                                                            </p>
-                                                        </td>
-                                                        <td>
-                                                            <h6 class="text-primary" >
-                                                                ${item.part_assurance} Fcfa
-                                                            </h6>
-                                                        </td>
-                                                        <td>
-                                                            <h6 class="text-primary" >
-                                                                ${item.taux ?? 0}%
-                                                            </h6>
-                                                        </td>
-                                                        <td>
-                                                            <h6 class="text-primary">
-                                                                ${item.remise ?? 0} Fcfa
-                                                            </h6>
-                                                        </td>
-                                                        <td>
-                                                            <h6 class="text-success" >
-                                                                ${item.part_patient} Fcfa
-                                                            </h6>
-                                                        </td>
-                                                    `;
-                                                    // Append the row to the table body
-                                                    tableBodyD.appendChild(row);
-
-                                                });
-
-                                                const row2 = document.createElement('tr');
-                                                row2.innerHTML = `
-                                                    <td colspan="4">&nbsp;</td>
-                                                    <td colspan="3" >
-                                                        <h5 class="mt-1 text-success">
-                                                            Total : ${formatPriceT(total.total_sum)} Fcfa
-                                                        </h5>
-                                                    </td>
-                                                `;
-                                                tableBodyD.appendChild(row2);
-
-                                            } else {
-                                                tableDivD.style.display = 'none';
-                                                messageDivD.style.display = 'block';
-                                                loaderDivD.style.display = 'none';
-                                                messageDivD.innerHTML = '<p class="text-danger">Aucun détail trouvé.</p>';
-                                            }
-                                        })
-                                        .catch(error => {
-                                            console.error('Erreur lors du chargement des données:', error);
-                                        });
-                                });
+                                tableBodyD.appendChild(row);
 
                             });
+
+                            const row2 = document.createElement('tr');
+                            row2.innerHTML = `
+                                <td colspan="4">&nbsp;</td>
+                                <td colspan="3" >
+                                    <h5 class="mt-1 text-success">
+                                        Total : ${formatPriceT(total.total_sum)} Fcfa
+                                    </h5>
+                                </td>
+                            `;
+                            tableBodyD.appendChild(row2);
+
+                        } else {
+                            tableDivD.style.display = 'none';
+                            messageDivD.style.display = 'block';
+                            loaderDivD.style.display = 'none';
+                            messageDivD.innerHTML = '<p class="text-danger">Aucun détail trouvé.</p>';
                         }
+                    })
+                    .catch(error => {
+                        console.error('Erreur lors du chargement des données:', error);
+                    });
+            });
 
-                        // Update table with filtered factures
-                        function applySearchFilterC() {
-                            const searchTerm = searchInputC.value.toLowerCase();
-                            const filteredCons = allCons.filter(item =>
-                                item.code.toLowerCase().includes(searchTerm)
-                            );
-                            displayRows(filteredCons); // Display only filtered factures
-                        }
+            $('#Table_day').on('click', '#Cfacture', function() {
+                const code = $(this).data('code');
 
-                        searchInputC.addEventListener('input', applySearchFilterC);
+                fetch(`/api/fiche_consultation/${code}`) // API endpoint
+                .then(response => response.json())
+                .then(data => {
+                    // Access the 'chambre' array from the API response
+                    const patient = data.patient;
+                    const typeacte = data.typeacte;
+                    const user = data.user;
+                    const consultation = data.consultation;
 
-                        displayRows(allCons);
+                    generatePDFInvoice(patient, user, typeacte, consultation);
 
-                        updatePaginationControlsC(pagination);
-
-                    } else {
-                        loaderDiv.style.display = 'none';
-                        messageDiv.style.display = 'block';
-                        tableDiv.style.display = 'none';
-                    }
                 })
                 .catch(error => {
                     console.error('Erreur lors du chargement des données:', error);
-                    // Hide the table and show the error message in case of failure
-                    loaderDiv.style.display = 'none';
-                    messageDiv.style.display = 'block';
-                    tableDiv.style.display = 'none';
                 });
-        }
+            });
 
-        function updatePaginationControlsC(pagination) {
-            const paginationDiv = document.getElementById('pagination-controlsC');
-            paginationDiv.innerHTML = '';
+            $('#Table_day').on('click', '#Cfiche', function() {
+                const code = $(this).data('code');
 
-            // Bootstrap pagination wrapper
-            const paginationWrapper = document.createElement('ul');
-            paginationWrapper.className = 'pagination justify-content-center';
+                fetch(`/api/fiche_consultation/${code}`) // API endpoint
+                .then(response => response.json())
+                .then(data => {
+                    // Access the 'chambre' array from the API response
+                    const patient = data.patient;
+                    const typeacte = data.typeacte;
+                    const user = data.user;
+                    const consultation = data.consultation;
 
-            // Previous button
-            if (pagination.current_page > 1) {
-                const prevButton = document.createElement('li');
-                prevButton.className = 'page-item';
-                prevButton.innerHTML = `<a class="page-link" href="#">Precédent</a>`;
-                prevButton.onclick = (event) => {
-                    event.preventDefault(); // Empêche le défilement en haut de la page
-                    list_cons_all(pagination.current_page - 1);
-                };
-                paginationWrapper.appendChild(prevButton);
-            } else {
-                // Disable the previous button if on the first page
-                const prevButton = document.createElement('li');
-                prevButton.className = 'page-item disabled';
-                prevButton.innerHTML = `<a class="page-link" href="#">Precédent</a>`;
-                paginationWrapper.appendChild(prevButton);
-            }
+                    generatePDFficheCons(patient, user, typeacte, consultation);
 
-            // Page number links (show a few around the current page)
-            const totalPages = pagination.last_page;
-            const currentPage = pagination.current_page;
-            const maxVisiblePages = 5; // Max number of page links to display
-
-            let startPage = Math.max(1, currentPage - Math.floor(maxVisiblePages / 2));
-            let endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
-
-            // Adjust start page if end page exceeds the total pages
-            if (endPage - startPage < maxVisiblePages - 1) {
-                startPage = Math.max(1, endPage - maxVisiblePages + 1);
-            }
-
-            // Loop through pages and create page links
-            for (let i = startPage; i <= endPage; i++) {
-                const pageItem = document.createElement('li');
-                pageItem.className = `page-item ${i === currentPage ? 'active' : ''}`;
-                pageItem.innerHTML = `<a class="page-link" href="#">${i}</a>`;
-                pageItem.onclick = (event) => {
-                    event.preventDefault(); // Empêche le défilement en haut de la page
-                    list_cons_all(i);
-                };
-                paginationWrapper.appendChild(pageItem);
-            }
-
-            // Ellipsis (...) if not all pages are shown
-            if (endPage < totalPages) {
-                const ellipsis = document.createElement('li');
-                ellipsis.className = 'page-item disabled';
-                ellipsis.innerHTML = `<a class="page-link" href="#">...</a>`;
-                paginationWrapper.appendChild(ellipsis);
-
-                // Add the last page link
-                const lastPageItem = document.createElement('li');
-                lastPageItem.className = `page-item`;
-                lastPageItem.innerHTML = `<a class="page-link" href="#">${totalPages}</a>`;
-                lastPageItem.onclick = (event) => {
-                    event.preventDefault(); // Empêche le défilement en haut de la page
-                    list_cons_all(totalPages);
-                };
-                paginationWrapper.appendChild(lastPageItem);
-            }
-
-            // Next button
-            if (pagination.current_page < pagination.last_page) {
-                const nextButton = document.createElement('li');
-                nextButton.className = 'page-item';
-                nextButton.innerHTML = `<a class="page-link" href="#">Suivant</a>`;
-                nextButton.onclick = (event) => {
-                    event.preventDefault(); // Empêche le défilement en haut de la page
-                    list_cons_all(pagination.current_page + 1);
-                };
-                paginationWrapper.appendChild(nextButton);
-            } else {
-                // Disable the next button if on the last page
-                const nextButton = document.createElement('li');
-                nextButton.className = 'page-item disabled';
-                nextButton.innerHTML = `<a class="page-link" href="#">Suivant</a>`;
-                paginationWrapper.appendChild(nextButton);
-            }
-
-            // Append pagination controls to the DOM
-            paginationDiv.appendChild(paginationWrapper);
+                })
+                .catch(error => {
+                    console.error('Erreur lors du chargement des données:', error);
+                });
+            });
         }
 
         function generatePDFficheCons(patient, user, typeacte, consultation) {

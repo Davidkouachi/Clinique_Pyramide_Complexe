@@ -294,29 +294,21 @@ class ApilistController extends Controller
         return response()->json(['produit' => $produit]);
     }
 
-    public function list_patient_all($date1,$date2,$statut)
+    public function list_patient_all()
     {
-        $date1 = Carbon::parse($date1)->startOfDay();
-        $date2 = Carbon::parse($date2)->endOfDay();
 
-        $patientQuery = patient::leftJoin('assurances', 'assurances.id', '=', 'patients.assurance_id')
+        $patient = patient::leftJoin('assurances', 'assurances.id', '=', 'patients.assurance_id')
                        ->leftJoin('tauxes', 'tauxes.id', '=', 'patients.taux_id')
                        ->leftJoin('societes', 'societes.id', '=', 'patients.societe_id')
-                       ->whereBetween('patients.created_at', [$date1, $date2])
                        ->select(
                             'patients.*', 
                             'assurances.nom as assurance', 
                             'tauxes.taux as taux', 
                             'societes.nom as societe')
-                       ->orderBy('patients.created_at', 'desc');
+                       ->orderBy('patients.created_at', 'desc')
+                       ->get();
 
-        if ($statut !== 'tous') {
-            $patientQuery->where('patients.assurer', '=', $statut);
-        }
-
-        $patient = $patientQuery->paginate(15);
-
-        foreach ($patient->items() as $value) {
+        foreach ($patient as $value) {
             $value->age = $value->datenais ? Carbon::parse($value->datenais)->age : 0;
 
             $value->nbre_hos = detailhopital::where('patient_id', '=', $value->id)->count() ?: 0;
@@ -324,14 +316,7 @@ class ApilistController extends Controller
         }
 
         return response()->json([
-            'nbre' => $patient->count(),
-            'patient' => $patient->items(), // Paginated data
-            'pagination' => [
-                'current_page' => $patient->currentPage(),
-                'last_page' => $patient->lastPage(),
-                'per_page' => $patient->perPage(),
-                'total' => $patient->total(),
-            ]
+            'data' => $patient,
         ]);
     }
 
@@ -340,7 +325,7 @@ class ApilistController extends Controller
         $date1 = Carbon::parse($date1)->startOfDay();
         $date2 = Carbon::parse($date2)->endOfDay();
 
-        $consultationQuery = detailconsultation::join('consultations', 'consultations.id', '=', 'detailconsultations.consultation_id')
+        $consultation = detailconsultation::join('consultations', 'consultations.id', '=', 'detailconsultations.consultation_id')
                                     ->leftJoin('users', 'users.id', '=', 'consultations.user_id')
                                     ->join('patients', 'patients.id', '=', 'consultations.patient_id')
                                     ->whereBetween('consultations.created_at', [$date1, $date2])
@@ -353,18 +338,11 @@ class ApilistController extends Controller
                                         'users.tel2 as tel2',
                                         'patients.matricule as matricule'
                                     )
-                                    ->orderBy('detailconsultations.created_at', 'desc');
-
-        $consultation = $consultationQuery->paginate(15);
+                                    ->orderBy('detailconsultations.created_at', 'desc')
+                                    ->get();
 
         return response()->json([
-            'consultation' => $consultation->items(), // Paginated data
-            'pagination' => [
-                'current_page' => $consultation->currentPage(),
-                'last_page' => $consultation->lastPage(),
-                'per_page' => $consultation->perPage(),
-                'total' => $consultation->total(),
-            ]
+            'data' => $consultation,
         ]);
     }
 
@@ -494,18 +472,10 @@ class ApilistController extends Controller
 
     public function list_societe_all()
     {
-        $societeQuery = societe::orderBy('created_at', 'desc');
-
-        $societe = $societeQuery->paginate(15);
+        $societe = societe::orderBy('created_at', 'desc')->get();
 
         return response()->json([
-            'societe' => $societe->items(), // Paginated data
-            'pagination' => [
-                'current_page' => $societe->currentPage(),
-                'last_page' => $societe->lastPage(),
-                'per_page' => $societe->perPage(),
-                'total' => $societe->total(),
-            ]
+            'data' => $societe,
         ]);
     }
 
@@ -1052,18 +1022,10 @@ class ApilistController extends Controller
 
     public function list_assurance_all()
     {
-        $assuQuery = assurance::orderBy('created_at', 'desc');
-
-        $assurance = $assuQuery->paginate(15);
+        $assurance = assurance::orderBy('created_at', 'desc')->get();
 
         return response()->json([
-            'assurance' => $assurance->items(),
-            'pagination' => [
-                'current_page' => $assurance->currentPage(),
-                'last_page' => $assurance->lastPage(),
-                'per_page' => $assurance->perPage(),
-                'total' => $assurance->total(),
-            ]
+            'data' => $assurance,
         ]);
     }
 

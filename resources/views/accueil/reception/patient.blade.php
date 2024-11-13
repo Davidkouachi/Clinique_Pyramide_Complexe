@@ -99,7 +99,7 @@
                                                 <input type="text" class="form-control" id="patient_np_new" placeholder="Saisie Obligatoire" oninput="this.value = this.value.toUpperCase()">
                                             </div>
                                         </div>
-                                        <div class="col-sm-3 col-12">
+                                        <div class="col-xxl-3 col-lg-4 col-sm-6">
                                             <div class="mb-3">
                                                 <label class="form-label">
                                                     Date de naissance
@@ -151,6 +151,9 @@
                                             </div>
                                         </div>
                                         <div class="row gx-3" id="div_assurer" style="display: none;">
+                                            <div class="card-header">
+                                                <h5 class="card-title text-center">Informations Assurance</h5>
+                                            </div>
                                             <div class="col-xxl-3 col-lg-4 col-sm-6">
                                                 <div class="mb-3">
                                                     <label class="form-label">Filiation</label>
@@ -165,7 +168,7 @@
                                             <div class="col-xxl-3 col-lg-4 col-sm-6">
                                                 <div class="mb-3">
                                                     <label class="form-label">Assurance</label>
-                                                    <select class="form-select" id="patient_assurance_id_new">
+                                                    <select class="form-select select2" id="patient_assurance_id_new">
                                                     </select>
                                                 </div>
                                             </div>
@@ -178,7 +181,7 @@
                                             <div class="col-xxl-3 col-lg-4 col-sm-6">
                                                 <div class="mb-3">
                                                     <label class="form-label">Taux</label>
-                                                    <select class="form-select" id="patient_taux_id_new">
+                                                    <select class="form-select select2" id="patient_taux_id_new">
                                                         <option value="">Sélectionner un taux</option>
                                                     </select>
                                                 </div>
@@ -186,7 +189,7 @@
                                             <div class="col-xxl-3 col-lg-4 col-sm-6">
                                                 <div class="mb-3">
                                                     <label class="form-label">Société</label>
-                                                    <select class="form-select" id="patient_societe_id_new">
+                                                    <select class="form-select select2" id="patient_societe_id_new">
                                                     </select>
                                                 </div>
                                             </div>
@@ -206,11 +209,11 @@
                                     <h5 class="card-title">
                                         Liste des Patients
                                     </h5>
-                                    <div class="d-flex">
+                                    {{-- <div class="d-flex">
                                         <input type="text" id="searchInputP" placeholder="Recherche" class="form-control me-1">
-                                    </div>
+                                    </div> --}}
                                 </div>
-                                <div class="card-header d-flex align-items-center justify-content-between">
+                                {{-- <div class="card-header d-flex align-items-center justify-content-between">
                                     <div class="w-100">
                                         <div class="input-group">
                                             <span class="input-group-text">Du</span>
@@ -228,13 +231,13 @@
                                             </a>
                                         </div>
                                     </div>
-                                </div>
+                                </div> --}}
                                 <div class="card-body">
                                     <div id="div_alert_tableP">
                                     </div>
-                                    <div class="table-outer" id="div_TableP" style="display: none;">
+                                    <div class="">
                                         <div class="table-responsive">
-                                            <table class="table align-middle table-hover m-0 truncate" id="TableP">
+                                            <table id="Table_day" class="table table-hover table-sm">
                                                 <thead>
                                                     <tr>
                                                         <th scope="col">N°</th>
@@ -253,18 +256,6 @@
                                             </table>
                                         </div>
                                     </div>
-                                    <div id="message_TableP" style="display: none;">
-                                        <p class="text-center">
-                                            Aucun Patient n'a été trouvé
-                                        </p>
-                                    </div>
-                                    <div id="div_Table_loaderP" style="display: none;">
-                                        <div class="d-flex justify-content-center align-items-center">
-                                            <div class="spinner-border text-warning me-2" role="status" aria-hidden="true"></div>
-                                            <strong>Chargement des données...</strong>
-                                        </div>
-                                    </div>
-                                    <div id="pagination-controlsP"></div>
                                 </div>
                             </div>
                             <div class="tab-pane fade" id="twoRech" role="tabpanel" aria-labelledby="tab-twoRech">
@@ -281,15 +272,8 @@
                                                 </div>
                                             </div>
                                             <div class="mb-3 text-center">
-                                                <label class="form-label">
-                                                    Nom du Patient
-                                                </label>
-                                                <div class="input-group">
-                                                    <input type="text" class="form-control text-center" id="nameRech" placeholder="Nom du patient" autocomplete="off">
-                                                </div>
-                                                <div class="input-group">
-                                                    <div class="suggestions w-100" id="suggestions" style="display: none;"></div>
-                                                </div>
+                                                <label class="form-label">Patient</label>
+                                                <select class="form-select select2" id="patient_id"></select>
                                             </div>
                                         </div>
                                     </div>
@@ -538,19 +522,23 @@
 <script src="{{asset('jsPDF-master/dist/jspdf.umd.js')}}"></script>
 <script src="{{asset('assets/vendor/apex/apexcharts.min.js')}}"></script>
 
+@include('select2')
+
 <script>
-    document.addEventListener("DOMContentLoaded", function() {
+    $(document).ready(function() {
 
         select_taux();
         select_societe_patient();
         select_assurance_patient();
-        listP();
-        Name_atient();
+        select_patient();
 
-        document.getElementById("btn_eng_patient").addEventListener("click", eng_patient);
-        document.getElementById("btn_search_table").addEventListener("click", listP);
+        $("#btn_eng_patient").on("click", eng_patient);
 
-        document.getElementById('btn_affiche_stat').addEventListener('click',function(){
+        $('#btn_refresh_table').on('click', function () {
+            $('#Table_day').DataTable().ajax.reload();
+        });
+
+        $('#btn_affiche_stat').on('click',function(){
 
             document.getElementById('div_btn_affiche_stat').style.display = 'none';
             document.getElementById('div_btn_cache_stat').style.display = 'block';
@@ -558,13 +546,18 @@
             Statistique();
         });
 
-        document.getElementById('btn_cache_stat').addEventListener('click',function(){
+        $('btn_cache_stat').on('click',function(){
 
             document.getElementById('div_btn_affiche_stat').style.display = 'block';
             document.getElementById('div_btn_cache_stat').style.display = 'none';
 
             const stat = document.getElementById("stat");
             stat.innerHTML = '';
+        });
+
+        $('#patient_id').on('change', function() {
+            const id = $(this).val();
+            rech_dosier(id);
         });
 
         var inputs = ['patient_tel_new', 'patient_tel2_new',]; // Array of element IDs
@@ -586,12 +579,11 @@
             });
         });
 
-        document.getElementById('assurer').addEventListener('change', function() {
-
-            if (this.value == 'oui'){
-                document.getElementById("div_assurer").style.display = "flex";
-            }else{
-                document.getElementById("div_assurer").style.display = "none";
+        $('#assurer').on('change', function() {
+            if ($(this).val() === 'oui') {
+                $('#div_assurer').css('display', 'flex');
+            } else {
+                $('#div_assurer').css('display', 'none');
             }
         });
 
@@ -749,6 +741,31 @@
             }
         }
 
+        function select_patient()
+        {
+            const selectElement = document.getElementById('patient_id');
+            selectElement.innerHTML = '';
+            const defaultOption = document.createElement('option');
+            defaultOption.value = '';
+            defaultOption.textContent = 'Selectionner';
+            selectElement.appendChild(defaultOption);
+
+            if (selectElement) {
+
+                fetch('/api/name_patient_reception')
+                    .then(response => response.json())
+                    .then(data => {
+                        data.name.forEach(item => {
+                            const option = document.createElement('option');
+                            option.value = item.id; // Assure-toi que 'id' est la clé correcte
+                            option.textContent = item.np; // Assure-toi que 'nom' est la clé correcte
+                            selectElement.appendChild(option);
+                        });
+                    })
+                    .catch(error => console.error('Erreur lors du chargement des patients:', error));
+            }
+        }
+
         function select_societe_patient()
         {
             const selectElement = document.getElementById('patient_societe_id_new');
@@ -885,8 +902,8 @@
 
                         divAssurer.style.display = "none";
 
-                        listP();
-                        Name_atient();
+                        $('#Table_day').DataTable().ajax.reload();
+                        select_patient();
 
                         showAlert('Succès', 'Patient Enregistrée.','success');
                     } else if (response.error) {
@@ -906,314 +923,249 @@
             });
         }
 
-        function listP(page = 1) {
+        $('#Table_day').DataTable({
 
-            const tableBody = document.querySelector('#TableP tbody');
-            const messageDiv = document.getElementById('message_TableP');
-            const tableDiv = document.getElementById('div_TableP');
-            const loaderDiv = document.getElementById('div_Table_loaderP');
+            processing: true,
+            serverSide: false,
+            ajax: {
+                url: `/api/list_patient_all`,
+                type: 'GET',
+                dataSrc: 'data',
+            },
+            columns: [
+                { 
+                    data: null, 
+                    render: (data, type, row, meta) => meta.row + 1,
+                    searchable: false,
+                    orderable: false,
+                },
+                { 
+                    data: 'np', 
+                    render: (data, type, row) => `
+                    <div class="d-flex align-items-center">
+                        <a class="d-flex align-items-center flex-column me-2">
+                            <img src="/assets/images/user8.png" class="img-2x rounded-circle border border-1">
+                        </a>
+                        ${row.sexe}. ${data}
+                    </div>`,
+                    searchable: true, 
+                },
+                { 
+                    data: 'matricule',
+                    searchable: true, 
+                },
+                { 
+                    data: 'datenais',
+                    render: formatDate,
+                    searchable: true, 
+                },
+                { 
+                    data: 'age', 
+                    render: (data) => `${data} Ans`,
+                    searchable: true, 
+                },
+                {
+                    data: 'assurer',
+                    render: (data, type, row) => `
+                        <span class="badge ${data === 'oui' ? 'bg-success' : 'bg-danger'}">
+                            ${data === 'oui' ? 'Oui' : 'Non'}
+                        </span>
+                    `,
+                    searchable: true,
+                },
+                { 
+                    data: 'tel', 
+                    render: (data) => `+225 ${data}`,
+                    searchable: true, 
+                },
+                { 
+                    data: 'created_at',
+                    render: formatDateHeure,
+                    searchable: true, 
+                },
+                {
+                    data: null,
+                    render: (data, type, row) => `
+                        <div class="d-inline-flex gap-1" style="font-size:10px;">
+                            <a class="btn btn-outline-warning btn-sm rounded-5" 
+                               data-id="${row.id}" 
+                               data-name="${row.np}"
+                               data-matricule="${row.matricule}" 
+                               data-email="${row.email}" 
+                               data-tel="${row.tel}" 
+                               data-tel2="${row.tel2}" 
+                               data-adresse="${row.adresse}" 
+                               data-sexe="${row.sexe}" 
+                               data-role_id="${row.role_id}"
+                               data-created_at="${row.created_at}" 
+                               data-datenais="${row.datenais}" 
+                               data-bs-toggle="modal" 
+                               data-bs-target="#DetailP" 
+                               id="detailP">
+                                <i class="ri-eye-line"></i>
+                            </a>
+                        </div>
+                    `,
+                    searchable: false,
+                    orderable: false,
+                }
+            ],
+            language: {
+                search: "Recherche:",
+                lengthMenu: "Afficher _MENU_ entrées",
+                info: "Affichage de _START_ à _END_ sur _TOTAL_ entrées",
+                infoEmpty: "Affichage de 0 à 0 sur 0 entrée",
+                paginate: {
+                    previous: "Précédent",
+                    next: "Suivant"
+                },
+                zeroRecords: "Aucune donnée trouvée",
+                emptyTable: "Aucune donnée disponible dans le tableau",
+            },
+            // autoWidth: true,
+            // scrollX: true, 
+            initComplete: function(settings, json) {
+                initializeRowEventListeners();
+            },
+        });
 
-            const date1 = document.getElementById('searchDate1').value;
-            const date2 = document.getElementById('searchDate2').value;
+        function initializeRowEventListeners() {
 
-            let allPatients = [];
+            $('#Table_day').on('click', '#detailP', function() {
+                const row = {
+                    id: $(this).data('id'),
+                    name: $(this).data('name'),
+                    email: $(this).data('email'),
+                    tel: $(this).data('tel'),
+                    tel2: $(this).data('tel2'),
+                    adresse: $(this).data('adresse'),
+                    sexe: $(this).data('sexe'),
+                    role_id: $(this).data('role_id'),
+                    matricule: $(this).data('matricule'),
+                    assurer: $(this).data('assurer'),
+                    societe: $(this).data('societe'),
+                    assurance: $(this).data('assurance'),
+                    taux: $(this).data('taux'),
+                    filiation: $(this).data('filiation'),
+                    matricule_assurance: $(this).data('matricule_assurance'),
+                    nbre_cons: $(this).data('nbre_cons'),
+                    nbre_hos: $(this).data('nbre_hos'),
+                    created_at: $(this).data('created_at'),
+                    datenais: $(this).data('datenais'),
+                    age: $(this).data('age'),
+                };
 
-            messageDiv.style.display = 'none';
-            tableDiv.style.display = 'none';
-            loaderDiv.style.display = 'block';
+                const modal = document.getElementById('modal_detailP');
+                modal.innerHTML = '';
 
-            const statut = document.getElementById('statutP').value;
-            const url = `/api/list_patient_all/${date1}/${date2}/${statut}?page=${page}`;
+                const div = document.createElement('div');
+                div.innerHTML = `
+                    <div class="row gx-3">
+                        <div class="col-12">
+                            <div class=" mb-3">
+                                <div class="card-body">
+                                    <div class="text-center">
+                                        <a href="doctors-profile.html" class="d-flex align-items-center flex-column">
+                                            <img src="{{asset('assets/images/user7.png')}}" class="img-7x rounded-circle mb-3 border border-3">
+                                            <h5>${row.sexe}. ${row.name}</h5>
+                                            <h6 class="text-truncate">+225 ${row.tel}</h6>
+                                            <p>Date création : ${formatDateHeure(row.created_at)} </p>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class=" mb-3">
+                                <div class="card-body">
+                                    <ul class="list-group">
+                                        <li class="list-group-item active text-center" aria-current="true">
+                                            Informations personnelles
+                                        </li>
+                                        <li class="list-group-item">
+                                            N° Dossier : ${row.matricule}
+                                        </li>
+                                        <li class="list-group-item">
+                                            Nom et Prénoms : ${row.name}
+                                        </li>
+                                        <li class="list-group-item">
+                                            Date de naissance : ${formatDate(row.datenais)}
+                                        </li>
+                                        <li class="list-group-item">
+                                            Age : ${row.age ? row.age : '0'} an(s)
+                                        </li>
+                                        <li class="list-group-item">
+                                            Genre : ${row.sexe == 'M' ? 'Homme' : 'Femme'}
+                                        </li>
+                                        <li class="list-group-item">
+                                            Email : ${row.email ? row.email : 'Néant'}
+                                        </li>
+                                        <li class="list-group-item">
+                                            Contact 1 : ${row.tel ? '+225 '+row.tel : 'Néant'}
+                                        </li>
+                                        <li class="list-group-item">
+                                            Contact2 :  ${row.tel2 ? '+225 '+row.tel2 : 'Néant'}
+                                        </li>
+                                        <li class="list-group-item">
+                                            Adresse : ${row.adresse ? row.adresse : 'Néant'}
+                                        </li>
+                                        <li class="list-group-item">
+                                            Assurer : ${row.assurer ? row.assurer : 'Néant'}
+                                        </li>
+                                        ${row.assurer == 'oui' ? 
+                                        `<li class="list-group-item">
+                                            Société : ${row.societe ? row.societe : 'Néant'}
+                                        </li>` : ``}
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        ${row.assurer == 'oui' ?  
+                        `<div class="col-12">
+                            <div class=" mb-3">
+                                <div class="card-body">
+                                    <ul class="list-group">
+                                        <li class="list-group-item active text-center" aria-current="true">
+                                            Informations Assurance
+                                        </li>
+                                        <li class="list-group-item">
+                                            Nom de l'assurance : ${row.assurance ? row.assurance : 'Néant'}
+                                        </li>
+                                        <li class="list-group-item">
+                                            Taux de Couverture : ${row.taux ? row.taux+'%' : 'Néant'}
+                                        </li>
+                                        <li class="list-group-item">
+                                            Filiation : ${row.filiation ? row.filiation : 'Néant'}
+                                        </li>
+                                        <li class="list-group-item">
+                                            Matricule : ${row.matricule_assurance ? row.matricule_assurance : 'Néant'}
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>` : ''}
+                        <div class="col-12">
+                            <div class=" mb-3">
+                                <div class="card-body">
+                                    <ul class="list-group">
+                                        <li class="list-group-item active text-center" aria-current="true">
+                                            Statistique
+                                        </li>
+                                        <li class="list-group-item">
+                                            Consultation : ${row.nbre_cons ? row.nbre_cons : '0'}
+                                        </li>
+                                        <li class="list-group-item">
+                                            Hospitalisation : ${row.nbre_hos ? row.nbre_hos : '0'}
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
 
-            fetch(url)
-                .then(response => response.json())
-                .then(data => {
-                    allPatients = data.patient || [] ;
-                    const pagination = data.pagination || {};
-
-                    const perPage = pagination.per_page || 10;
-                    const currentPage = pagination.current_page || 1;
-
-                    tableBody.innerHTML = '';
-
-                    if (allPatients.length > 0) {
-
-                        loaderDiv.style.display = 'none';
-                        messageDiv.style.display = 'none';
-                        tableDiv.style.display = 'block';
-
-                        function displayRows(filteredPatients) {
-                            tableBody.innerHTML = ''; 
-
-                            filteredPatients.forEach((item, index) => {
-                                const row = document.createElement('tr');
-                                row.innerHTML = `
-                                    <td>${((currentPage - 1) * perPage) + index + 1}</td>
-                                    <td>
-                                        <div class="d-flex align-items-center ">
-                                            <a class="d-flex align-items-center flex-column me-2">
-                                                <img src="{{asset('assets/images/user8.png')}}" class="img-2x rounded-circle border border-1">
-                                            </a>
-                                            ${item.sexe}. ${item.np}
-                                        </div>
-                                    </td>
-                                    <td>P-${item.matricule}</td>
-                                    <td>${formatDate(item.datenais)}</td>
-                                    <td>${item.age} an(s)</td>
-                                    <td>
-                                        <span class="badge ${item.assurer === 'oui' ? 'bg-success' : 'bg-danger'}">
-                                            ${item.assurer === 'oui' ? 'Oui' : 'Non'}
-                                        </span>
-                                    </td>
-                                    <td>+225 ${item.tel}</td>
-                                    <td>${formatDateHeure(item.created_at)}</td>
-                                    <td>
-                                        <div class="d-inline-flex gap-1">
-                                            <a class="btn btn-outline-warning btn-sm rounded-5" data-bs-toggle="modal" data-bs-target="#DetailP" id="detailP-${item.id}">
-                                                <i class="ri-eye-line"></i>
-                                            </a>
-                                        </div>
-                                    </td>
-                                `;
-                                tableBody.appendChild(row);
-
-                                document.getElementById(`detailP-${item.id}`).addEventListener('click', () =>
-                                {
-                                    const modal = document.getElementById('modal_detailP');
-                                    modal.innerHTML = '';
-
-                                    const div = document.createElement('div');
-                                    div.innerHTML = `
-                                           <div class="row gx-3">
-                                                <div class="col-12">
-                                                    <div class=" mb-3">
-                                                        <div class="card-body">
-                                                            <div class="text-center">
-                                                                <a href="doctors-profile.html" class="d-flex align-items-center flex-column">
-                                                                    <img src="{{asset('assets/images/user7.png')}}" class="img-7x rounded-circle mb-3 border border-3">
-                                                                    <h5>${item.sexe}. ${item.np}</h5>
-                                                                    <h6 class="text-truncate">
-                                                                        +225 ${item.tel}
-                                                                    </h6>
-                                                                    <p>Date création : ${formatDateHeure(item.created_at)} </p>
-                                                                </a>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="col-12">
-                                                    <div class=" mb-3">
-                                                        <div class="card-body">
-                                                            <ul class="list-group">
-                                                                <li class="list-group-item active text-center" aria-current="true">
-                                                                    Informations personnelles
-                                                                </li>
-                                                                <li class="list-group-item">
-                                                                    N° Dossier : P-${item.matricule} 
-                                                                </li>
-                                                                <li class="list-group-item">
-                                                                    Nom et Prénoms : ${item.np}
-                                                                </li>
-                                                                <li class="list-group-item">
-                                                                    Date de naissance : ${formatDate(item.datenais)}
-                                                                </li>
-                                                                <li class="list-group-item">
-                                                                    Age : ${item.age ? item.age : '0'} an(s)
-                                                                </li>
-                                                                <li class="list-group-item">
-                                                                    Genre : ${item.sexe == 'M' ? 'Homme' : 'Femme'}
-                                                                </li>
-                                                                <li class="list-group-item">
-                                                                    Email : ${item.email ? item.email : 'Néant'}
-                                                                </li>
-                                                                <li class="list-group-item">
-                                                                    Contact 1 : ${item.tel ? '+225 '+item.tel : 'Néant'}
-                                                                </li>
-                                                                <li class="list-group-item">
-                                                                    Contact2 :  ${item.tel2 ? '+225 '+item.tel2 : 'Néant'}
-                                                                </li>
-                                                                <li class="list-group-item">
-                                                                    Adresse : ${item.adresse ? item.adresse : 'Néant'}
-                                                                </li>
-                                                                <li class="list-group-item">
-                                                                    Assurer : ${item.assurer ? item.assurer : 'Néant'}
-                                                                </li>
-                                                                ${item.assurer == 'oui' ? 
-                                                                `<li class="list-group-item">
-                                                                    Société : ${item.societe ? item.societe : 'Néant'}
-                                                                </li>` : ``}
-
-                                                            </ul>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                ${item.assurer == 'oui' ?  
-                                                `<div class="col-12">
-                                                    <div class=" mb-3">
-                                                        <div class="card-body">
-                                                            <ul class="list-group">
-                                                                <li class="list-group-item active text-center" aria-current="true">
-                                                                    Informations Assurance
-                                                                </li>
-                                                                <li class="list-group-item">
-                                                                    Nom de l'assurance : ${item.assurance ? item.assurance : 'Néant'}
-                                                                </li>
-                                                                <li class="list-group-item">
-                                                                    Taux de Couverture : ${item.taux ? item.taux+'%' : 'Néant'}
-                                                                </li>
-                                                                <li class="list-group-item">
-                                                                    Filiation : ${item.filiation ? item.filiation : 'Néant'}
-                                                                </li>
-                                                                <li class="list-group-item">
-                                                                    Matricule : ${item.matricule_assurance ? item.matricule_assurance : 'Néant'}
-                                                                </li>
-                                                            </ul>
-                                                        </div>
-                                                    </div>
-                                                </div>`
-                                                : ''}
-                                                <div class="col-12">
-                                                    <div class=" mb-3">
-                                                        <div class="card-body">
-                                                            <ul class="list-group">
-                                                                <li class="list-group-item active text-center" aria-current="true">
-                                                                    Statistique
-                                                                </li>
-                                                                <li class="list-group-item">
-                                                                    Consultation : ${item.nbre_cons ? item.nbre_cons : 'O'}
-                                                                </li>
-                                                                <li class="list-group-item">
-                                                                    Hospitalisation : ${item.nbre_hos ? item.nbre_hos : 'O'}
-                                                                </li>
-                                                            </ul>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>     
-                                    `;
-
-                                    modal.appendChild(div);
-
-                                });
-                            });
-                        };
-
-                        // Update table with filtered factures
-                        function applySearchFilter() {
-                            const searchTerm = searchInputP.value.toLowerCase();
-
-                            // Filtrer les patients en vérifiant plusieurs champs
-                            const filteredPatients = allPatients.filter(item =>
-                                item.matricule.toLowerCase().includes(searchTerm) ||
-                                item.np.toLowerCase().includes(searchTerm) ||
-                                item.sexe.toLowerCase().includes(searchTerm) ||
-                                item.tel.toLowerCase().includes(searchTerm) ||
-                                formatDate(item.datenais).toLowerCase().includes(searchTerm) ||
-                                item.age.toString().toLowerCase().includes(searchTerm) ||
-                                item.assurer.toLowerCase().includes(searchTerm) ||
-                                formatDateHeure(item.created_at).toLowerCase().includes(searchTerm)
-                            );
-
-                            displayRows(filteredPatients); // Afficher seulement les patients filtrés
-                        }
-
-                        searchInputP.addEventListener('input', applySearchFilter);
-
-                        displayRows(allPatients);
-
-                        updatePaginationControlsP(pagination);
-
-                    } else {
-                        tableDiv.style.display = 'none';
-                        loaderDiv.style.display = 'none';
-                        messageDiv.style.display = 'block';
-                    }
-                })
-                .catch(error => {
-                    console.error('Erreur lors du chargement des donnée:', error);
-                    loaderDiv.style.display = 'none';
-                    tableDiv.style.display = 'none';
-                    messageDiv.style.display = 'block';
-                });
-        }
-
-        function updatePaginationControlsP(pagination) {
-            const paginationDiv = document.getElementById('pagination-controlsP');
-            paginationDiv.innerHTML = '';
-
-            // Bootstrap pagination wrapper
-            const paginationWrapper = document.createElement('ul');
-            paginationWrapper.className = 'pagination justify-content-center';
-
-            // Previous button
-            if (pagination.current_page > 1) {
-                const prevButton = document.createElement('li');
-                prevButton.className = 'page-item';
-                prevButton.innerHTML = `<a class="page-link" href="#">Precédent</a>`;
-                prevButton.onclick = () => listP(pagination.current_page - 1);
-                paginationWrapper.appendChild(prevButton);
-            } else {
-                // Disable the previous button if on the first page
-                const prevButton = document.createElement('li');
-                prevButton.className = 'page-item disabled';
-                prevButton.innerHTML = `<a class="page-link" href="#">Precédent</a>`;
-                paginationWrapper.appendChild(prevButton);
-            }
-
-            // Page number links (show a few around the current page)
-            const totalPages = pagination.last_page;
-            const currentPage = pagination.current_page;
-            const maxVisiblePages = 5; // Max number of page links to display
-
-            let startPage = Math.max(1, currentPage - Math.floor(maxVisiblePages / 2));
-            let endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
-
-            // Adjust start page if end page exceeds the total pages
-            if (endPage - startPage < maxVisiblePages - 1) {
-                startPage = Math.max(1, endPage - maxVisiblePages + 1);
-            }
-
-            // Loop through pages and create page links
-            for (let i = startPage; i <= endPage; i++) {
-                const pageItem = document.createElement('li');
-                pageItem.className = `page-item ${i === currentPage ? 'active' : ''}`;
-                pageItem.innerHTML = `<a class="page-link" href="#">${i}</a>`;
-                pageItem.onclick = () => listP(i);
-                paginationWrapper.appendChild(pageItem);
-            }
-
-            // Ellipsis (...) if not all pages are shown
-            if (endPage < totalPages) {
-                const ellipsis = document.createElement('li');
-                ellipsis.className = 'page-item disabled';
-                ellipsis.innerHTML = `<a class="page-link" href="#">...</a>`;
-                paginationWrapper.appendChild(ellipsis);
-
-                // Add the last page link
-                const lastPageItem = document.createElement('li');
-                lastPageItem.className = `page-item`;
-                lastPageItem.innerHTML = `<a class="page-link" href="#">${totalPages}</a>`;
-                lastPageItem.onclick = () => listP(totalPages);
-                paginationWrapper.appendChild(lastPageItem);
-            }
-
-            // Next button
-            if (pagination.current_page < pagination.last_page) {
-                const nextButton = document.createElement('li');
-                nextButton.className = 'page-item';
-                nextButton.innerHTML = `<a class="page-link" href="#">Suivant</a>`;
-                nextButton.onclick = () => listP(pagination.current_page + 1);
-                paginationWrapper.appendChild(nextButton);
-            } else {
-                // Disable the next button if on the last page
-                const nextButton = document.createElement('li');
-                nextButton.className = 'page-item disabled';
-                nextButton.innerHTML = `<a class="page-link" href="#">Suivant</a>`;
-                paginationWrapper.appendChild(nextButton);
-            }
-
-            // Append pagination controls to the DOM
-            paginationDiv.appendChild(paginationWrapper);
+                modal.appendChild(div);
+            });
         }
 
         function formatDate(dateString) {
@@ -1358,99 +1310,22 @@
                 });
         }
 
-        function Name_atient() {
-            $.ajax({
-                url: '/api/name_patient_reception',
-                method: 'GET',
-                success: function(response) {
-                    // Récupérer les données de l'API
-                    const data = response.name;
-
-                    // Élément de l'input et autres éléments HTML
-                    const input = document.getElementById('nameRech');
-                    const suggestionsDiv = document.getElementById('suggestions');
-
-                    function displaySuggestions() {
-                        const searchTerm = input.value.toLowerCase();
-                        
-                        suggestionsDiv.style.display = 'block';
-                        suggestionsDiv.innerHTML = '';
-
-                        const filteredData = data.filter(item => item.np.toLowerCase().includes(searchTerm));
-
-                        filteredData.forEach(item => {
-                            const suggestion = document.createElement('div');
-                            suggestion.innerText = item.np;
-                            suggestion.addEventListener('click', function() {
-
-                                input.value = `${item.np}`;
-                                suggestionsDiv.innerHTML = '';
-                                suggestionsDiv.style.display = 'none';
-
-                                rech_dosier(item.id);
-
-                            });
-                            suggestionsDiv.appendChild(suggestion);
-                        });
-
-                        suggestionsDiv.style.display = filteredData.length > 0 ? 'block' : 'none';
-                    }
-
-                    input.addEventListener('focus', function() {
-                        displaySuggestions();
-                    });
-
-                    input.addEventListener('input', function() {
-                        displaySuggestions();
-                    });
-
-                    document.addEventListener('click', function(e) {
-                        if (!suggestionsDiv.contains(e.target) && e.target !== input) {
-                            suggestionsDiv.style.display = 'none';
-                        }
-                    });
-                },
-                error: function() {
-                    console.error('Erreur lors du chargement des patients');
-                }
-            });
-        }
-
         function rech_dosier(id)
         {
-            // Créer l'élément de préchargement
-            var preloader_ch = `
-                <div id="preloader_ch">
-                    <div class="spinner_preloader_ch"></div>
-                </div>
-            `;
-
-            // Ajouter le préchargeur au body
-            document.body.insertAdjacentHTML('beforeend', preloader_ch);
 
             $.ajax({
                 url: '/api/rech_patient',
                 method: 'GET',  // Use 'POST' for data creation
                 data: { id: id },
                 success: function(response) {
-                    var preloader = document.getElementById('preloader_ch');
-                    if (preloader) {
-                        preloader.remove();
-                    }
 
                     if(response.existep) {
                         showAlert('Alert', 'Ce patient n\'existe pas.', 'error');
                     } else if (response.success) {
-
                         addGroup(response.patient);
-
                     }
                 },
                 error: function() {
-                    var preloader = document.getElementById('preloader_ch');
-                    if (preloader) {
-                        preloader.remove();
-                    }
                     showAlert('Alert', 'Une erreur est survenue lors de la recherche.', 'error');
                 }
             });

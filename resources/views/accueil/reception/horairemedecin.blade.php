@@ -72,7 +72,7 @@
                                     <div class="col-xxl-3 col-lg-4 col-sm-6" id="div_medecin" >
                                         <div class="mb-3 text-center">
                                             <label class="form-label">Medecin</label>
-                                            <select class="form-select text-center" id="medecin_id"></select>
+                                            <select class="form-select text-center select2" id="medecin_id"></select>
                                         </div>
                                     </div>
                                 </div>
@@ -179,21 +179,21 @@
                         <div class="col-xxl-3 col-lg-4 col-sm-6">
                             <div class="mb-3">
                                 <label class="form-label">Médecins</label>
-                                <select class="form-select" id="rech_medecin">
+                                <select class="form-select select2" id="rech_medecin">
                                 </select>
                             </div>
                         </div>
                         <div class="col-xxl-3 col-lg-4 col-sm-6">
                             <div class="mb-3">
                                 <label class="form-label">Spécialités</label>
-                                <select class="form-select" id="rech_specialite">
+                                <select class="form-select select2" id="rech_specialite">
                                 </select>
                             </div>
                         </div>
                         <div class="col-xxl-3 col-lg-4 col-sm-6">
                             <div class="mb-3">
                                 <label class="form-label">Jours</label>
-                                <select class="form-select" id="rech_jour">
+                                <select class="form-select select2" id="rech_jour">
                                 </select>
                             </div>
                         </div>
@@ -232,7 +232,7 @@
     </div>
 </div>
 
-<div class="modal fade" id="Rdv_modal" tabindex="-1" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+<div class="modal fade" id="Rdv_modal" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -251,14 +251,7 @@
                     </div>
                     <div class="mb-3">
                         <label class="form-label">Patient</label>
-                        <div class="input-group">
-                            <input type="hidden" id="patient_id_rdv">
-                            <input type="text" class="form-control" id="patient_rdv" placeholder="Saisie Obligatoire" autocomplete="off">
-                        </div>
-                        <div class="input-group">
-                            <div class="suggestions w-100" id="suggestions_patient" style="display: none;">
-                            </div>
-                        </div>
+                        <select class="form-select select2" id="patient_id_rdv"></select>
                     </div>
                     <div class="mb-3">
                         <label class="form-label">Date</label>
@@ -344,8 +337,26 @@
 <script src="{{asset('jsPDF-master/dist/jspdf.umd.js')}}"></script>
 <script src="{{asset('jsPDF-AutoTable/dist/jspdf.plugin.autotable.min.js')}}"></script>
 
+@include('select2')
+
 <script>
-    document.addEventListener("DOMContentLoaded", function() {
+    $('#Rdv_modal').on('shown.bs.modal', function () {
+        $('#patient_id_rdv').select2({
+            theme: 'bootstrap',
+            placeholder: 'Selectionner',
+            language: {
+                noResults: function() {
+                    return "Aucun résultat trouvé";
+                }
+            },
+            width: '100%',
+            dropdownParent: $('#Rdv_modal'),
+        });
+    });
+</script>
+
+<script>
+    $(document).ready(function() {
 
         select_medecin();
         list_rdv();
@@ -353,7 +364,7 @@
         rech_specialite();
         rech_jour();
         list();
-        Name_atient();
+        select_patient();
 
         document.getElementById("add_horaire").addEventListener("click", add_select);
         document.getElementById("btn_eng").addEventListener("click", eng);
@@ -402,55 +413,84 @@
             return `${day}/${month}/${year} à ${hours}:${minutes}:${seconds}`;
         }
 
-        function select_medecin()
-        {
-            const selectElement = document.getElementById('medecin_id');
-            // Clear existing options
-            selectElement.innerHTML = '';
-            const defaultOption = document.createElement('option');
-            defaultOption.value = '';
-            defaultOption.textContent = 'Sélectionner un medecin';
-            selectElement.appendChild(defaultOption);
+        function select_patient() {
+            const selectElement = $('#patient_id_rdv');
+            selectElement.empty(); // Vider le select avant de le remplir
 
-            fetch('/api/select_list_medecin')
+            // Option par défaut
+            selectElement.append(new Option('Selectionner', '', true, true));
+
+            // Requête pour charger les patients
+            fetch('/api/name_patient_reception')
                 .then(response => response.json())
                 .then(data => {
-                    const medecins = data.medecin;
-                    medecins.forEach((item, index) => {
-                        const option = document.createElement('option');
-                        option.value = `${item.id}`; // Ensure 'id' is the correct key
-                        option.textContent = `Dr. ${item.name}`; // Ensure 'nom' is the correct key
-                        selectElement.appendChild(option);
-                    });
+                    if (data && Array.isArray(data.name)) {
+                        data.name.forEach(item => {
+                            const option = new Option(item.np, item.id);
+                            selectElement.append(option);
+                        });
+                    } else {
+                        console.error('Données inattendues :', data);
+                    }
                 })
-                .catch(error => console.error('Erreur lors du chargement des societes:', error));
+                .catch(error => console.error('Erreur lors du chargement des patients:', error));
+        }
 
-            selectElement.addEventListener('change', function() {
-                const id = this.value;
+        function select_medecin() {
+            const $selectElement = $('#medecin_id'); // Déclarez l'élément en jQuery
+            // Clear existing options
+            $selectElement.empty();
+            const defaultOption = $('<option>', {
+                value: '',
+                text: 'Sélectionner un medecin'
+            });
+            $selectElement.append(defaultOption);
+
+            $.ajax({
+                url: '/api/select_list_medecin',
+                type: 'GET',
+                dataType: 'json',
+                success: function(data) {
+                    const medecins = data.medecin;
+                    medecins.forEach((item) => {
+                        const option = $('<option>', {
+                            value: item.id, // Ensure 'id' is the correct key
+                            text: `Dr. ${item.name}` // Ensure 'name' is the correct key
+                        });
+                        $selectElement.append(option);
+                    });
+                },
+                error: function(error) {
+                    console.error('Erreur lors du chargement des medecins:', error);
+                }
+            });
+
+            $selectElement.on('change', function() {
+                const id = $(this).val();
                 if (id) {
                     const url = '/api/select_jours';
-                    fetch(url)
-                        .then(response => response.json())
-                        .then(data => {
-
+                    $.ajax({
+                        url: url,
+                        type: 'GET',
+                        dataType: 'json',
+                        success: function(data) {
                             const jours = data.jour;
+                            const $contenuDiv = $('#contenu_horaire');
+                            $contenuDiv.empty();
 
-                            const contenuDiv = document.getElementById('contenu_horaire');
-                            contenuDiv.innerHTML = '';
-                                                    
-                            addSelectHoraire(contenuDiv, jours);
+                            addSelectHoraire($contenuDiv, jours);
 
-                            document.getElementById('div_Horaire').style.display = "block";
-                        })
-                        .catch(error => {
-                            console.error('Erreur lors du chargement des données:', error);
-                        });
-                }else{
-                    const contenuDiv = document.getElementById('contenu_horaire');
-                    contenuDiv.innerHTML = '';
-                    document.getElementById('div_Horaire').style.display = "none";
+                            $('#div_Horaire').show();
+                        },
+                        error: function(error) {
+                            console.error('Erreur lors du chargement des horaires:', error);
+                        }
+                    });
+                } else {
+                    const $contenuDiv = $('#contenu_horaire');
+                    $contenuDiv.empty();
+                    $('#div_Horaire').hide();
                 }
-                
             });
         }
 
@@ -526,24 +566,21 @@
                 .catch(error => console.error('Erreur lors du chargement des societes:', error));
         }
 
-        function addSelectHoraire(contenuDiv, jours)
-        {
-
-            const div = document.createElement('div');
-            div.className = 'mb-3';
+        function addSelectHoraire($contenuDiv, jours) {
 
             // Créer le groupe de contrôle contenant le select et le bouton supprimer
-            div.innerHTML = `
+            const div = $('<div>', { class: 'mb-3' });
+
+            div.html(`
                 <div class="input-group">
-                    <select class="form-select jour-select w-25">
-                        <option value="">Selectionner le jour</option>
+                    <select class="form-select jour-select w-15">
+                        <option value="">Jour</option>
                         ${jours.map(item => 
-                            `<option value="${item.id}">
-                                ${item.jour}
-                            </option>`).join('')}
+                            `<option value="${item.id}">${item.jour}</option>`
+                        ).join('')}
                     </select>
-                    <select class="form-select periode-select w-25">
-                        <option value="">Selectionner la période</option>
+                    <select class="form-select periode-select w-15">
+                        <option value="">Période</option>
                         <option value="Matin">Matin</option>
                         <option value="Soir">Soir</option>
                     </select>
@@ -553,54 +590,55 @@
                     <input type="time" class="form-control heure-fin-input">
                     <button class="btn btn-outline-danger suppr-btn">Supprimer</button>
                 </div>
-            `;
+            `);
 
             // Ajouter l'élément dans le parent (contenu div)
-            contenuDiv.appendChild(div);
+            $contenuDiv.append(div);
 
+            // Vérifier si le contenu horaire est présent
             checkContenuHoraire();
 
             // Ajouter un event listener pour le bouton supprimer
-            div.querySelector('.suppr-btn').addEventListener('click', () => {
+            div.find('.suppr-btn').on('click', function() {
                 div.remove(); // Supprimer l'élément div parent
                 checkContenuHoraire();
             });
         }
 
-        function checkContenuHoraire()
-        {
-            const contenuDiv = document.getElementById('contenu_horaire');
-            const divBtn = document.getElementById('div_btn_horaire');
-            // Si la div #contenu a un contenu, on affiche le bouton, sinon on le cache
-            if (contenuDiv.innerHTML.trim() !== "") {
-                divBtn.style.display = "block"; // Afficher le bouton
+        function checkContenuHoraire() {
+            const $contenuDiv = $('#contenu_horaire');
+            const $divBtn = $('#div_btn_horaire');
+
+            // Afficher le bouton si #contenu_horaire contient des éléments, sinon le cacher
+            if ($contenuDiv.html().trim() !== "") {
+                $divBtn.show();
             } else {
-                divBtn.style.display = "none";  // Cacher le bouton
+                $divBtn.hide();
             }
         }
 
-        function add_select()
-        {
-            const contenuDiv = document.getElementById('contenu_horaire');
-            const id = document.getElementById('medecin_id').value;
+        function add_select() {
+            const $contenuDiv = $('#contenu_horaire');
+            const id = $('#medecin_id').val();
 
-            if (id == '') {
-                showAlert("ALERT", "Selectionner un médecin SVP.", "warning");
+            if (id === '') {
+                showAlert("ALERT", "Sélectionner un médecin SVP.", "warning");
                 return false;
             }
 
             const url = '/api/select_jours';
-                fetch(url)
-                    .then(response => response.json())
-                    .then(data => {
-
-                        const jours = data.jour;
-                                                
-                        addSelectHoraire(contenuDiv, jours); // Ajouter le premier select
-                    })
-                    .catch(error => {
-                        console.error('Erreur lors du chargement des données:', error);
-                    });
+            $.ajax({
+                url: url,
+                method: 'GET',
+                dataType: 'json',
+                success: function(data) {
+                    const jours = data.jour;
+                    addSelectHoraire($contenuDiv, jours); // Ajouter le premier select
+                },
+                error: function(error) {
+                    console.error('Erreur lors du chargement des données:', error);
+                }
+            });
         }
 
         function Verification() {
@@ -735,7 +773,7 @@
                     
                     if (response.success) {
 
-                        document.getElementById('medecin_id').value = "";
+                        $('#medecin_id').val('').trigger('change');
                         document.getElementById('div_Horaire').style.display = "none";
 
                         list();   
@@ -910,10 +948,10 @@
                                     document.getElementById('medecin_rdv').value = `Dr. ${medecin.name}`;
                                     document.getElementById('specialite_rdv').value = `${medecin.specialité}`;
 
-                                    document.getElementById('date_rdv').value = "";
-                                    document.getElementById('patient_id_rdv').value = "";
-                                    document.getElementById('patient_rdv').value = "";
-                                    document.getElementById('motif_rdv').value = "";
+                                    $('#date_rdv').val('');
+                                    $('#patient_id_rdv').val('').trigger('change');
+                                    $('#patient_rdv').val('');
+                                    $('#motif_rdv').val('');
 
                                     const allowedDays = medecin.horaires.map(horaire => horaire.jour);
 
@@ -965,129 +1003,55 @@
                 });
         }
 
-        function Name_atient() {
-            $.ajax({
-                url: '/api/name_patient',
-                method: 'GET',
-                success: function(response) {
-                    // Récupérer les données de l'API
-                    const data = response.name;
+        function eng_rdv() {
+            const medecin_id = $('#medecin_id_rdv').val();
+            const patient_id = $('#patient_id_rdv').val();
+            const date_rdv = $('#date_rdv').val();
+            const motif_rdv = $('#motif_rdv').val();
 
-                    // Élément de l'input et autres éléments HTML
-                    const input = document.getElementById('patient_rdv');
-                    const patient_id = document.getElementById('patient_id_rdv');
-                    const suggestionsDiv = document.getElementById('suggestions_patient');
-
-                    // Fonction pour afficher les suggestions
-                    function displaySuggestions() {
-                        const searchTerm = input.value.toLowerCase();
-                        
-                        // Vider les suggestions précédentes
-                        suggestionsDiv.style.display = 'block';
-                        suggestionsDiv.innerHTML = '';
-
-                        // Filtrer les données en fonction de l'input
-                        const filteredData = data.filter(item => item.np.toLowerCase().includes(searchTerm));
-
-                        // Afficher les suggestions filtrées
-                        filteredData.forEach(item => {
-                            const suggestion = document.createElement('div');
-                            suggestion.innerText = item.np;
-                            suggestion.addEventListener('click', function() {
-                                input.value = item.np;
-                                patient_id.value = item.id;
-                                suggestionsDiv.innerHTML = '';
-                                suggestionsDiv.style.display = 'none';
-                            });
-                            suggestionsDiv.appendChild(suggestion);
-                        });
-
-                        // Afficher/masquer les suggestions en fonction du résultat
-                        suggestionsDiv.style.display = filteredData.length > 0 ? 'block' : 'none';
-                    }
-
-                    // Afficher les suggestions dès que l'input est focus
-                    input.addEventListener('focus', function() {
-                        displaySuggestions(); // Afficher les suggestions dès que le curseur est sur l'input
-                    });
-
-                    // Mettre à jour les suggestions lors de la saisie
-                    input.addEventListener('input', function() {
-                        displaySuggestions(); // Afficher les suggestions pendant la saisie
-                    });
-
-                    // Masquer les suggestions quand on clique en dehors de l'input ou des suggestions
-                    document.addEventListener('click', function(e) {
-                        if (!suggestionsDiv.contains(e.target) && e.target !== input) {
-                            suggestionsDiv.style.display = 'none';
-                        }
-                    });
-                },
-                error: function() {
-                    console.error('Erreur lors du chargement des patients');
-                }
-            });
-        }
-
-        function eng_rdv()
-        {
-            const medecin_id = document.getElementById('medecin_id_rdv');
-            const patient_id = document.getElementById('patient_id_rdv');
-            const date_rdv = document.getElementById('date_rdv');
-            const motif_rdv = document.getElementById('motif_rdv');
-
-            if (!medecin_id.value.trim() || !patient_id.value.trim() || !date_rdv.value.trim() || !motif_rdv.value.trim()) {
+            // Vérifier que tous les champs sont remplis
+            if (!medecin_id.trim() || !patient_id.trim() || !date_rdv.trim() || !motif_rdv.trim()) {
                 showAlert("ALERT", 'Veuillez remplir tous les champs.', "warning");
                 return false;
             }
 
-            var modal = bootstrap.Modal.getInstance(document.getElementById('Rdv_modal'));
+            // Fermer le modal
+            const modal = bootstrap.Modal.getInstance(document.getElementById('Rdv_modal'));
             modal.hide();
 
-            var preloader_ch = `
+            // Ajouter le préchargeur
+            const preloader_ch = `
                 <div id="preloader_ch">
                     <div class="spinner_preloader_ch"></div>
                 </div>
             `;
-            // Add the preloader to the body
-            document.body.insertAdjacentHTML('beforeend', preloader_ch);
+            $('body').append(preloader_ch);
 
+            // Envoyer la requête AJAX
             $.ajax({
                 url: '/api/new_rdv',
                 method: 'GET',
-                data:{
-                    medecin_id: medecin_id.value,
-                    patient_id: patient_id.value,
-                    date: date_rdv.value,
-                    motif: motif_rdv.value,
+                data: {
+                    medecin_id: medecin_id,
+                    patient_id: patient_id,
+                    date: date_rdv,
+                    motif: motif_rdv,
                 },
                 success: function(response) {
+                    $('#preloader_ch').remove(); // Supprimer le préchargeur
 
-                    var preloader = document.getElementById('preloader_ch');
-                    if (preloader) {
-                        preloader.remove();
-                    }
-                    
                     if (response.success) {
-
                         list_rdv();
                         count_rdv_two_day();
-
                         showAlert("ALERT", 'Enregistrement éffectué', "success");
-
                     } else if (response.error) {
                         showAlert("ERREUR", 'Une erreur est survenue', "error");
                     } else if (response.json) {
-                        showAlert("ERREUR", 'Invalid selections format', "error");
+                        showAlert("ERREUR", 'Format de sélection invalide', "error");
                     }
-
                 },
                 error: function() {
-                    var preloader = document.getElementById('preloader_ch');
-                    if (preloader) {
-                        preloader.remove();
-                    }
-
+                    $('#preloader_ch').remove(); // Supprimer le préchargeur en cas d'erreur
                     showAlert("ERREUR", 'Une erreur est survenue lors de l\'enregistrement', "error");
                 }
             });
