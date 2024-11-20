@@ -63,9 +63,9 @@
                 <div class="card-body">
                     <div class="">
                         <div class="table-responsive">
-                            <table id="Table_day" class="table table-hover">
+                            <table id="Table_day" class="table truncate m-0 align-middle ">
                                 <thead>
-                                    <tr>
+                                    <tr class="bg-primary" >
                                         <th scope="col">N°</th>
                                         <th scope="col">Assurance</th>
                                         <th scope="col">Du</th>
@@ -315,6 +315,10 @@
                 url: `/api/list_depotfacture`,
                 type: 'GET',
                 dataSrc: 'data',
+                error: function(xhr, status, error) {
+                    console.error("Erreur AJAX :", error);
+                    console.error("Détails :", xhr.responseText);
+                }
             },
             columns: [
                 { 
@@ -378,33 +382,21 @@
                     data: null,
                     render: (data, type, row) => `
                         <div class="d-inline-flex gap-1">
-                            ${row.statut === 'non' ? `<a class="btn btn-outline-success btn-sm rounded-5" data-bs-toggle="modal" data-bs-target="#Paiement" id="paiement" data-date_depot="${row.date_depot}" data-id="${row.id}"><i class="ri-inbox-archive-line"></i></a>` : ''}
-                            <a class="btn btn-outline-warning btn-sm rounded-5" id="detail" data-id="${row.id}" ><i class="ri-eye-line"></i></a>
-                            ${row.statut === 'non' ? `<a class="btn btn-outline-info btn-sm rounded-5" data-bs-toggle="modal" data-bs-target="#Mmodif" id="modif" data-date_depot="${row.date_depot}" data-date1="${row.date1}" data-date2="${row.date2}" data-id="${row.id}" data-assurance_id="${row.assurance_id}" ><i class="ri-edit-line"></i></a>` : ''}
-                            ${row.statut === 'non' ? `<a class="btn btn-outline-danger btn-sm rounded-5" data-bs-toggle="modal" data-bs-target="#Mdelete" id="delete" data-id="${row.id}" ><i class="ri-delete-bin-line"></i></a>` : ''}
-                            <a class="btn btn-outline-dark btn-sm rounded-5" id="printer" data-id="${row.id}" ><i class="ri-printer-line"></i></a>
+                            ${row.statut === 'non' ? `<a class="btn btn-outline-success " data-bs-toggle="modal" data-bs-target="#Paiement" id="paiement" data-date_depot="${row.date_depot}" data-id="${row.id}"><i class="ri-inbox-archive-line"></i></a>` : ''}
+                            <a class="btn btn-outline-warning " id="detail" data-id="${row.id}" ><i class="ri-eye-line"></i></a>
+                            ${row.statut === 'non' ? `<a class="btn btn-outline-info " data-bs-toggle="modal" data-bs-target="#Mmodif" id="modif" data-date_depot="${row.date_depot}" data-date1="${row.date1}" data-date2="${row.date2}" data-id="${row.id}" data-assurance_id="${row.assurance_id}" ><i class="ri-edit-line"></i></a>` : ''}
+                            ${row.statut === 'non' ? `<a class="btn btn-outline-danger " data-bs-toggle="modal" data-bs-target="#Mdelete" id="delete" data-id="${row.id}" ><i class="ri-delete-bin-line"></i></a>` : ''}
+                            <a class="btn btn-outline-dark " id="printer" data-id="${row.id}" ><i class="ri-printer-line"></i></a>
                         </div>
                     `,
                     searchable: false,
                     orderable: false,
                 }
             ],
-            language: {
-                search: "Recherche:",
-                lengthMenu: "Afficher _MENU_ entrées",
-                info: "Affichage de _START_ à _END_ sur _TOTAL_ entrées",
-                infoEmpty: "Affichage de 0 à 0 sur 0 entrée",
-                paginate: {
-                    previous: "Précédent",
-                    next: "Suivant"
-                },
-                zeroRecords: "Aucun produit trouvé",
-                emptyTable: "Aucune donnée disponible dans le tableau",
-            },
-            // autoWidth: true,
-            // scrollX: true, 
+            ...dataTableConfig, 
             initComplete: function(settings, json) {
                 initializeRowEventListeners();
+                dataTableConfigInit.call(this);
             },
         });
 

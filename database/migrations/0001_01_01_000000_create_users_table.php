@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
-            $table->string('api_token', 80)->after('password')->nullable()->unique();
+            $table->string('api_token', 80)->nullable()->unique();
             $table->string('name')->index();
             $table->string('email')->unique()->index();
             $table->timestamp('email_verified_at')->nullable();

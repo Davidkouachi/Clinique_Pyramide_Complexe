@@ -168,16 +168,7 @@
                                                 <label class="form-label">
                                                     Nom du patient
                                                 </label>
-                                                <div class="input-group">
-                                                    <input type="hidden" class="form-control" id="id_patient" autocomplete="off">
-                                                    <input type="text" class="form-control text-center" id="name_rech" placeholder="Selectionner un Patient" autocomplete="off">
-                                                    <button hidden id="btn_rech_num_dossier" class="btn btn-outline-success">
-                                                        <i class="ri-search-line"></i>
-                                                    </button>
-                                                </div>
-                                                <div class="input-group">
-                                                    <div class="suggestions w-100" id="suggestions" style="display: none;"></div>
-                                                </div>
+                                                <select class="form-select select2" id="id_patient"></select>
                                             </div>
                                         </div>
                                     </div>
@@ -219,14 +210,14 @@
                                             <div class="col-xxl-3 col-lg-4 col-sm-6" id="div_typeacteS" style="display: block;">
                                                 <div class="mb-3">
                                                     <label class="form-label">Spécialité</label>
-                                                    <select class="form-select" id="typeacte_idS">
+                                                    <select class="form-select select2" id="typeacte_idS">
                                                     </select>
                                                 </div>
                                             </div>
                                             <div class="col-xxl-3 col-lg-4 col-sm-6" id="div_medecin" style="display: none;">
                                                 <div class="mb-3">
                                                     <label class="form-label">Medecin</label>
-                                                    <select class="form-select" id="medecin_id">
+                                                    <select class="form-select select2" id="medecin_id">
                                                     </select>
                                                 </div>
                                             </div>
@@ -405,7 +396,7 @@
                                         <div class="col-xxl-3 col-lg-4 col-sm-6">
                                             <div class="mb-3">
                                                 <label class="form-label">Assurance</label>
-                                                <select class="form-select" id="patient_assurance_id_new">
+                                                <select class="form-select select2" id="patient_assurance_id_new">
                                                 </select>
                                             </div>
                                         </div>
@@ -418,7 +409,7 @@
                                         <div class="col-xxl-3 col-lg-4 col-sm-6">
                                             <div class="mb-3">
                                                 <label class="form-label">Taux</label>
-                                                <select class="form-select" id="patient_taux_id_new">
+                                                <select class="form-select select2" id="patient_taux_id_new">
                                                     <option value="">Sélectionner un taux</option>
                                                 </select>
                                             </div>
@@ -426,7 +417,7 @@
                                         <div class="col-xxl-3 col-lg-4 col-sm-6">
                                             <div class="mb-3">
                                                 <label class="form-label">Société</label>
-                                                <select class="form-select" id="patient_societe_id_new">
+                                                <select class="form-select select2" id="patient_societe_id_new">
                                                 </select>
                                             </div>
                                         </div>
@@ -450,9 +441,9 @@
                                     </div>
                                 </div>
                                 <div class="card-body">
-                                    <div class="table-outer" id="div_Table_rdv" style="display: none;">
+                                    <div class="">
                                         <div class="table-responsive">
-                                            <table class="table m-0 align-middle" id="Table_rdv">
+                                            <table id="Table_day" class="table table-hover table-sm Table_day_rdv">
                                                 <thead>
                                                     <tr>
                                                         <th>N°</th>
@@ -471,18 +462,6 @@
                                             </table>
                                         </div>
                                     </div>
-                                    <div id="message_Table_rdv" style="display: none;">
-                                        <p class="text-center">
-                                            Aucun Rendez-Vous n'est prévu aujourd'hui
-                                        </p>
-                                    </div>
-                                    <div id="div_Table_loader_rdv" style="display: none;">
-                                        <div class="d-flex justify-content-center align-items-center">
-                                            <div class="spinner-border text-warning me-2" role="status" aria-hidden="true"></div>
-                                            <strong>Chargement des données...</strong>
-                                        </div>
-                                    </div>
-                                    <div id="pagination-controls_rdv"></div>
                                 </div>
                             </div>
                             <div class="tab-pane fade" id="threeAAA" role="tabpanel" aria-labelledby="tab-threeAAA">
@@ -630,9 +609,9 @@
                     </div>
                 </div>
                 <div class="card-body">
-                    <div class="table-outer" id="div_Table" style="display: none;">
+                    <div class="">
                         <div class="table-responsive">
-                            <table class="table align-middle table-hover m-0 truncate" id="Table">
+                            <table id="Table_day" class="table table-hover table-sm Table_day_cons">
                                 <thead>
                                     <tr>
                                         <th scope="col">N°</th>
@@ -651,18 +630,6 @@
                             </table>
                         </div>
                     </div>
-                    <div id="message_Table" style="display: none;">
-                        <p class="text-center" >
-                            Aucun patient recu aujourd'hui
-                        </p>
-                    </div>
-                    <div id="div_Table_loader" style="display: none;">
-                        <div class="d-flex justify-content-center align-items-center">
-                            <div class="spinner-border text-warning me-2" role="status" aria-hidden="true"></div>
-                            <strong>Chargement des données...</strong>
-                        </div>
-                    </div>
-                    <div id="pagination-controls"></div>
                 </div>
             </div>
         </div>
@@ -685,7 +652,7 @@
             </div>
             <div class="modal-body">
                 <form id="updateForm">
-                    <input type="hidden" id="medecin_id_rdvM">
+                    <input type="hidden" id="id_rdvM">
                     <div class="mb-3">
                         <label class="form-label">Médecin</label>
                         <input readonly type="text" class="form-control" id="medecin_rdvM">
@@ -766,48 +733,46 @@
 <script src="{{asset('assets/js/app/js/jspdfinvoicetemplate/dist/index.js')}}" ></script>
 <script src="{{asset('jsPDF-master/dist/jspdf.umd.js')}}"></script>
 
+@include('select2')
+
 <script>
     document.addEventListener("DOMContentLoaded", function() {
 
         Statistique();
         Activity_cons();
         Activity_cons_count();
-        Name_atient();
+        select_patient();
         select_taux();
         select_societe_patient();
         select_assurance_patient();
-        list_cons();
-        list_rdv();
 
         // ------------------------------------------------------------------
 
-        document.getElementById("btn_eng_consultation").addEventListener("click", eng_consultation);
-        document.getElementById("btn_refresh_table").addEventListener("click", list_cons);
-        document.getElementById("acte_id").addEventListener("change", select_list_typeacte);
-        document.getElementById("btn_eng_societe").addEventListener("click", eng_societe);
-        document.getElementById("btn_eng_assurance").addEventListener("click", eng_assurance);
-        document.getElementById("btn_eng_patient").addEventListener("click", eng_patient);
+        $("#btn_eng_consultation").on("click", eng_consultation);
+        $("#acte_id").on("change", select_list_typeacte);
+        $("#btn_eng_societe").on("click", eng_societe);
+        $("#btn_eng_assurance").on("click", eng_assurance);
+        $("#btn_eng_patient").on("click", eng_patient);
+        $("#btn_update_rdv").on("click", update_rdv);
+        $("#btn_delete_rdv").on("click", delete_rdv);
+        $("#deleteBtnCons").on("click", delete_cons);
 
-        document.getElementById("btn_update_rdv").addEventListener("click", update_rdv);
-        document.getElementById("btn_refresh_table_rdv").addEventListener("click", list_rdv);
-        document.getElementById("btn_delete_rdv").addEventListener("click", delete_rdv);
-        document.getElementById("deleteBtnCons").addEventListener("click", delete_cons);
-
-        document.getElementById('btn_affiche_stat').addEventListener('click',function(){
-
-            document.getElementById('div_btn_affiche_stat').style.display = 'none';
-            document.getElementById('div_btn_cache_stat').style.display = 'block';
+        $('#btn_affiche_stat').on('click', function() {
+            $('#div_btn_affiche_stat').hide();
+            $('#div_btn_cache_stat').show();
 
             Statistique_cons();
         });
 
-        document.getElementById('btn_cache_stat').addEventListener('click',function(){
+        $('#btn_cache_stat').on('click', function() {
+            $('#div_btn_affiche_stat').show();
+            $('#div_btn_cache_stat').hide();
 
-            document.getElementById('div_btn_affiche_stat').style.display = 'block';
-            document.getElementById('div_btn_cache_stat').style.display = 'none';
+            $('#stat_consultation').empty();
+        });
 
-            const stat_consultation = document.getElementById("stat_consultation");
-            stat_consultation.innerHTML = '';
+        $('#id_patient').on('change',function(){
+            rech_dosier(); 
         });
 
         // ------------------------------------------------------------------
@@ -960,64 +925,29 @@
 
         // ------------------------------------------------------------------
 
-        function Name_atient() {
+        function select_patient()
+        {
+            const selectElement = $('#id_patient');
+            selectElement.empty();
+
+            // Ajouter l'option par défaut
+            const defaultOption = $('<option>', {
+                value: '',
+                text: 'Selectionner'
+            });
+            selectElement.append(defaultOption);
+
             $.ajax({
                 url: '/api/name_patient_reception',
                 method: 'GET',
-                success: function(response) {
-                    // Récupérer les données de l'API
-                    const data = response.name;
-
-                    // Élément de l'input et autres éléments HTML
-                    const input = document.getElementById('name_rech');
-                    const id_patient = document.getElementById('id_patient');
-                    const suggestionsDiv = document.getElementById('suggestions');
-
-                    // Fonction pour afficher les suggestions
-                    function displaySuggestions() {
-                        const searchTerm = input.value.toLowerCase();
-                        
-                        // Vider les suggestions précédentes
-                        suggestionsDiv.style.display = 'block';
-                        suggestionsDiv.innerHTML = '';
-
-                        // Filtrer les données en fonction de l'input
-                        const filteredData = data.filter(item => item.np.toLowerCase().includes(searchTerm));
-
-                        // Afficher les suggestions filtrées
-                        filteredData.forEach(item => {
-                            const suggestion = document.createElement('div');
-                            suggestion.innerText = item.np;
-                            suggestion.addEventListener('click', function() {
-                                // Remplir l'input avec la suggestion sélectionnée
-                                input.value = `${item.np}`;
-                                id_patient.value = `${item.id}`;
-                                suggestionsDiv.innerHTML = ''; // Vider les suggestions
-                                suggestionsDiv.style.display = 'none'; // Masquer les suggestions
-                                rech_dosier(); // Appeler la fonction de recherche de dossier
-                            });
-                            suggestionsDiv.appendChild(suggestion);
+                dataType: 'json',
+                success: function(data) {
+                    data.name.forEach(item => {
+                        const option = $('<option>', {
+                            value: item.id,
+                            text: item.np
                         });
-
-                        // Afficher/masquer les suggestions en fonction du résultat
-                        suggestionsDiv.style.display = filteredData.length > 0 ? 'block' : 'none';
-                    }
-
-                    // Afficher les suggestions dès que l'input est focus
-                    input.addEventListener('focus', function() {
-                        displaySuggestions(); // Afficher les suggestions dès que le curseur est sur l'input
-                    });
-
-                    // Mettre à jour les suggestions lors de la saisie
-                    input.addEventListener('input', function() {
-                        displaySuggestions(); // Afficher les suggestions pendant la saisie
-                    });
-
-                    // Masquer les suggestions quand on clique en dehors de l'input ou des suggestions
-                    document.addEventListener('click', function(e) {
-                        if (!suggestionsDiv.contains(e.target) && e.target !== input) {
-                            suggestionsDiv.style.display = 'none';
-                        }
+                        selectElement.append(option);
                     });
                 },
                 error: function() {
@@ -1217,15 +1147,13 @@
         }
 
         function Reset() {
-
-            var dynamicFields = document.getElementById("div_info_patient");
-            // Remove existing content
-            while (dynamicFields.firstChild) {
-                dynamicFields.removeChild(dynamicFields.firstChild);
-            }
-
-            document.getElementById("div_info_consul").style.display = 'none';
-            document.getElementById("id_patient").value = '';
+            const dynamicFields = $('#div_info_patient');
+            
+            // Supprimer le contenu existant
+            dynamicFields.empty();
+            
+            $('#div_info_consul').hide();
+            select_patient();
         }
 
         // ------------------------------------------------------------------
@@ -1358,115 +1286,105 @@
         }
 
         function select_list_typeacte() {
-            const divTypeActe = document.getElementById('div_typeacteS'); // The whole div
-            const divMedecin = document.getElementById('div_medecin');
-            const typeActeSelect = document.getElementById('typeacte_idS');
-            // const acteId = document.getElementById("acte_id").value;
+            const divTypeActe = $('#div_typeacteS'); // Le div principal
+            const divMedecin = $('#div_medecin');
+            const typeActeSelect = $('#typeacte_idS');
             const acteId = '1';
 
-            const montant_assurance = document.getElementById('montant_assurance');
-            const taux_remise = document.getElementById('taux_remise');
-            const montant_total = document.getElementById('montant_total');
-            const montant_patient = document.getElementById('montant_patient');
+            const montant_assurance = $('#montant_assurance');
+            const taux_remise = $('#taux_remise');
+            const montant_total = $('#montant_total');
+            const montant_patient = $('#montant_patient');
 
-            const montant_patient_hidden = document.getElementById('montant_patient_hidden');
-            const montant_assurance_hidden = document.getElementById('montant_assurance_hidden');
+            const montant_patient_hidden = $('#montant_patient_hidden');
+            const montant_assurance_hidden = $('#montant_assurance_hidden');
 
-            montant_assurance.value = '';
-            montant_total.value = '';
-            montant_patient.value = '';
+            montant_assurance.val('');
+            montant_total.val('');
+            montant_patient.val('');
 
-            const patient_taux = document.getElementById('patient_taux');
+            const patient_taux = $('#patient_taux');
 
-            // Reset the select and hide the div initially
-            typeActeSelect.innerHTML = '';
-            divTypeActe.style.display = 'none';  // Hide div initially
-            divMedecin.style.display = 'none'; 
+            typeActeSelect.empty();
+            divTypeActe.hide();  // Masquer le div au départ
+            divMedecin.hide();
 
-            // Create a default option
-            const defaultOption = document.createElement('option');
-            defaultOption.value = '';
-            defaultOption.textContent = 'Sélectionner';
-            typeActeSelect.appendChild(defaultOption);
+            // Ajouter une option par défaut
+            typeActeSelect.append($('<option>', { value: '', text: 'Sélectionner' }));
 
-            // Validate if acteId is valid before making the AJAX request
-             if (acteId) {
+            // Valider si acteId est valide avant de faire la requête AJAX
+            if (acteId) {
                 $.ajax({
                     url: '/api/select_typeacte/' + acteId,
                     method: 'GET',
                     success: function(response) {
-                        const data = response.typeacte; 
+                        const data = response.typeacte;
 
                         if (data && data.length > 0) {
-
-                            // Populate the select with the response data
-                            data.forEach(typeacte => {
-                                const option = document.createElement('option');
-                                option.value = typeacte.id; // Ensure 'id' is the correct key
-                                option.textContent = typeacte.nom;
-                                option.setAttribute('data-prix', typeacte.prix); // Ensure 'nom' is the correct key
-                                typeActeSelect.appendChild(option);
+                            // Remplir le select avec les données de la réponse
+                            $.each(data, function(_, typeacte) {
+                                typeActeSelect.append($('<option>', {
+                                    value: typeacte.id,
+                                    text: typeacte.nom,
+                                    'data-prix': typeacte.prix
+                                }));
                             });
 
-                            divTypeActe.style.display = 'block';
-                            divMedecin.style.display = 'block';
+                            divTypeActe.show();
+                            divMedecin.show();
 
-                            // Call the select_list_medecin() function to load the list of doctors
+                            // Appeler la fonction pour charger la liste des médecins
                             select_list_medecin();
 
                         } else {
-                            // If no data, append a "No data available" option and hide the div
-                            const noDataOption = document.createElement('option');
-                            noDataOption.value = '';
-                            noDataOption.textContent = 'Aucun données disponible';
-                            typeActeSelect.appendChild(noDataOption);
-                            divTypeActe.style.display = 'none';
+                            // Ajouter une option "Aucun données disponible" si aucune donnée
+                            typeActeSelect.append($('<option>', {
+                                value: '',
+                                text: 'Aucun données disponible'
+                            }));
+                            divTypeActe.hide();
                         }
                     },
                     error: function() {
-                        console.error('Erreur lors du chargement des types d\'actes');
-                        // Handle error case
+                        console.error("Erreur lors du chargement des types d'actes");
                     }
                 });
 
-                typeActeSelect.addEventListener('change', function() {
-                    const selectedOption = typeActeSelect.options[typeActeSelect.selectedIndex];
-                    const prix = selectedOption.getAttribute('data-prix');
+                typeActeSelect.on('change', function() {
+                    const selectedOption = $(this).find('option:selected');
+                    const prix = selectedOption.data('prix');
 
                     if (prix) {
-
-                        calculateAndFormatAmounts(prix,patient_taux.value);
-
+                        calculateAndFormatAmounts(prix, patient_taux.val());
                     } else {
-                        montant_total.value = '';
-                        montant_assurance.value = '';
-                        montant_patient.value = '';// Clear the field if no valid price
+                        montant_total.val('');
+                        montant_assurance.val('');
+                        montant_patient.val(''); // Vider le champ si aucun prix valide
                     }
-
                 });
 
-                const appliq_remise = document.getElementById('appliq_remise');
-                const auS = document.getElementById('assurance_utiliser');
-                auS.addEventListener('change', function() {
-                    const selectedOption = typeActeSelect.options[typeActeSelect.selectedIndex];
-                    const prix = selectedOption.getAttribute('data-prix');
+                const appliq_remise = $('#appliq_remise');
+                const auS = $('#assurance_utiliser');
 
-                    taux_remise.value = 0;
+                auS.on('change', function() {
+                    const selectedOption = typeActeSelect.find('option:selected');
+                    const prix = selectedOption.data('prix');
+
+                    taux_remise.val(0);
 
                     if (prix) {
-                        if (this.value == 'oui') {
-                            appliq_remise.querySelector('option[value="assurance"]').style.display = 'block';
-                            calculateAndFormatAmounts(prix, patient_taux.value);
+                        if (this.value === 'oui') {
+                            appliq_remise.find('option[value="assurance"]').show();
+                            calculateAndFormatAmounts(prix, patient_taux.val());
                         } else {
-                            appliq_remise.value = 'patient'; // Sélectionner l'option "patient"
-                            appliq_remise.querySelector('option[value="assurance"]').style.display = 'none'; // Cacher l'option "Assurance"
+                            appliq_remise.val('patient');
+                            appliq_remise.find('option[value="assurance"]').hide();
                             calculateAndFormatAmounts(prix, 0); // Calculer sans taux d'assurance
                         }
                     } else {
-                        // Réinitialiser les champs si aucun prix valide n'est trouvé
-                        montant_total.value = '';
-                        montant_assurance.value = '';
-                        montant_patient.value = '';
+                        montant_total.val('');
+                        montant_assurance.val('');
+                        montant_patient.val('');
                     }
                 });
             }
@@ -1474,48 +1392,42 @@
 
         function calculateAndFormatAmounts(prix, patient_taux) {
             if (prix) {
-                // Remove all dots and commas from price and convert to number
                 let prixFloat = parseFloat(prix.replace(/[.,]/g, ''));
                 if (isNaN(prixFloat)) {
                     console.error('Invalid price value');
-                    montant_total.value = ''; // Clear the field if the price is invalid
+                    $('#montant_total').val(''); // Vider le champ si le prix est invalide
                     return;
                 }
 
-                // Assign the total price
-                montant_total.value = formatPrice(prix);
+                $('#montant_total').val(formatPrice(prix));
 
-                // Ensure patient_taux is a valid number
-                const au = document.getElementById('assurance_utiliser');
+                const au = $('#assurance_utiliser');
                 let tauxFloat = parseFloat(patient_taux);
 
-                if (au.value == 'non') {
+                if (au.val() === 'non') {
                     tauxFloat = 0;
-                }else{
-                   if (isNaN(tauxFloat)) {
-                        tauxFloat = 0; // Set to 0 if patient_taux is not a number
-                    } 
-                } 
+                } else if (isNaN(tauxFloat)) {
+                    tauxFloat = 0;
+                }
 
                 if (tauxFloat === 0) {
-                    montant_assurance.value = '0'; // No insurance coverage
-                    montant_patient.value = formatPrice(prixFloat.toString());
-                    montant_patient_hidden.value = formatPrice(prixFloat.toString());
-                    montant_assurance_hidden.value = '0';
+                    $('#montant_assurance').val('0');
+                    $('#montant_patient').val(formatPrice(prixFloat.toString()));
+                    $('#montant_patient_hidden').val(formatPrice(prixFloat.toString()));
+                    $('#montant_assurance_hidden').val('0');
                 } else {
-                    // Calculate insurance amount and patient's amount
-                    let montantAssurance = (tauxFloat / 100) * prixFloat;
-                    let montantPatient = prixFloat - montantAssurance;
+                    let montantAssurance = Math.round((tauxFloat / 100) * prixFloat);
+                    let montantPatient = Math.round(prixFloat - montantAssurance);
 
-                    // Format the results and assign them
-                    montant_assurance.value = formatPrice(montantAssurance.toString());
-                    montant_patient.value = formatPrice(montantPatient.toString());
 
-                    montant_patient_hidden.value = formatPrice(montantPatient.toString());
-                    montant_assurance_hidden.value = formatPrice(montantAssurance.toString());
+                    $('#montant_assurance').val(formatPrice(montantAssurance.toString()));
+                    $('#montant_patient').val(formatPrice(montantPatient.toString()));
+
+                    $('#montant_patient_hidden').val(formatPrice(montantPatient.toString()));
+                    $('#montant_assurance_hidden').val(formatPrice(montantAssurance.toString()));
                 }
             } else {
-                montant_total.value = ''; // Clear the field if no valid price
+                $('#montant_total').val('');
             }
         }
 
@@ -1693,475 +1605,359 @@
 
         // ------------------------------------------------------------------
 
-        function eng_patient()
-        {
-            const divAssurer = document.getElementById("div_assurer");
+        function eng_patient() {
+            const divAssurer = $("#div_assurer");
 
-            var nom = document.getElementById("patient_np_new");
-            var email = document.getElementById("patient_email_new");
-            var phone = document.getElementById("patient_tel_new");
-            var phone2 = document.getElementById("patient_tel2_new");
-            var adresse = document.getElementById("patient_adresse_new");
-            var assurer = document.getElementById('assurer');
+            const nom = $("#patient_np_new").val().trim();
+            const email = $("#patient_email_new").val().trim();
+            const phone = $("#patient_tel_new").val().trim();
+            const phone2 = $("#patient_tel2_new").val().trim();
+            const adresse = $("#patient_adresse_new").val().trim();
+            const assurer = $('#assurer').val();
+            const datenais = $("#patient_datenaiss_new").val().trim();
+            const sexe = $("#patient_sexe_new").val().trim();
+            const filiation = $("#patient_filiation_new").val().trim();
+            const matricule_assurance = $("#patient_matriculeA_new").val().trim();
+            const assurance_id = $("#patient_assurance_id_new").val().trim();
+            const taux_id = $("#patient_taux_id_new").val().trim();
+            const societe_id = $("#patient_societe_id_new").val().trim();
 
-            var datenais = document.getElementById("patient_datenaiss_new");
-            var sexe = document.getElementById("patient_sexe_new");
-            var filiation = document.getElementById("patient_filiation_new");
-            var matricule_assurance = document.getElementById("patient_matriculeA_new");
-
-            var assurance_id = document.getElementById("patient_assurance_id_new");
-            var taux_id = document.getElementById("patient_taux_id_new");
-            var societe_id = document.getElementById("patient_societe_id_new");
-
-            if (!nom.value.trim() || !phone.value.trim() || !datenais.value.trim() || !sexe.value.trim()) {
-                showAlert('Alert', 'Tous les champs sont obligatoires.','warning');
-                return false; 
-            }
-
-            var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            if (email.value.trim() && !emailRegex.test(email.value.trim())) {  // Use email.value.trim() to check the actual input
-                showAlert('Alert', 'Email incorrect.','warning');
+            // Validation des champs obligatoires
+            if (!nom || !phone || !datenais || !sexe) {
+                showAlert('Alert', 'Tous les champs sont obligatoires.', 'warning');
                 return false;
             }
 
-            if (phone.value.length !== 10 || (phone2.value !== '' && phone2.value.length !== 10)) {
-                showAlert('Alert', 'Contact incomplet.','warning');
+            // Validation de l'email
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (email && !emailRegex.test(email)) {
+                showAlert('Alert', 'Email incorrect.', 'warning');
                 return false;
             }
 
-            if (assurer.value == 'oui') {
-                if (assurance_id.value !== '' && taux_id.value !== '' && societe_id.value !== '' || filiation.value !== '' || matricule_assurance.value !== '') {
-                    // Do something when all the fields have values
-                } else {
-                    showAlert('Alert', 'Veuillez remplir tous les champs relatifs à l\'assurance','warning');
-                    return false; // Prevent form submission
-                }
+            // Validation des numéros de téléphone
+            if (phone.length !== 10 || (phone2 && phone2.length !== 10)) {
+                showAlert('Alert', 'Contact incomplet.', 'warning');
+                return false;
             }
 
-            var preloader_ch = `
+            // Validation des champs d'assurance
+            if (assurer === 'oui' && (!assurance_id || !taux_id || !societe_id || !filiation || !matricule_assurance)) {
+                showAlert('Alert', 'Veuillez remplir tous les champs relatifs à l\'assurance', 'warning');
+                return false;
+            }
+
+            // Afficher le préchargeur
+            const preloader_ch = `
                 <div id="preloader_ch">
                     <div class="spinner_preloader_ch"></div>
                 </div>
             `;
-            // Add the preloader to the body
-            document.body.insertAdjacentHTML('beforeend', preloader_ch);
+            $('body').append(preloader_ch);
 
             $.ajax({
                 url: '/api/patient_new',
-                method: 'GET',  // Use 'POST' for data creation
-                data: { 
-                    nom: nom.value,
-                    email: email.value || null ,
-                    tel: phone.value,
-                    tel2: phone2.value || null,
-                    adresse: adresse.value || null,
-                    assurer: assurer.value,
-                    assurance_id: assurance_id.value || null,
-                    taux_id: taux_id.value || null,
-                    societe_id: societe_id.value || null,
-                    datenais: datenais.value,
-                    sexe: sexe.value,
-                    filiation: filiation.value || null,
-                    matricule_assurance: matricule_assurance.value || null,
+                method: 'GET', // Utiliser 'POST' pour la création de données
+                data: {
+                    nom: nom,
+                    email: email || null,
+                    tel: phone,
+                    tel2: phone2 || null,
+                    adresse: adresse || null,
+                    assurer: assurer,
+                    assurance_id: assurance_id || null,
+                    taux_id: taux_id || null,
+                    societe_id: societe_id || null,
+                    datenais: datenais,
+                    sexe: sexe,
+                    filiation: filiation || null,
+                    matricule_assurance: matricule_assurance || null,
                 },
                 success: function(response) {
-                    var preloader = document.getElementById('preloader_ch');
-                    if (preloader) {
-                        preloader.remove();
-                    }
-                    
+                    $('#preloader_ch').remove();
+
                     if (response.tel_existe) {
-                        showAlert('Alert', 'Ce numéro de téléphone appartient déjà a un patient.','warning');
-                    }else if (response.email_existe) {
-                        showAlert('Alert', 'Cet email appartient déjà a un patient.','warning');
-                    }else if (response.nom_existe) {
-                        showAlert('Alert', 'Cet patient existe déjà.','warning');
+                        showAlert('Alert', 'Ce numéro de téléphone appartient déjà à un patient.', 'warning');
+                    } else if (response.email_existe) {
+                        showAlert('Alert', 'Cet email appartient déjà à un patient.', 'warning');
+                    } else if (response.nom_existe) {
+                        showAlert('Alert', 'Ce patient existe déjà.', 'warning');
                     } else if (response.success) {
+                        // Réinitialiser les champs de saisie
+                        $('#patient_np_new, #patient_email_new, #patient_tel_new, #patient_tel2_new, #patient_adresse_new, #patient_datenaiss_new, #patient_sexe_new, #patient_filiation_new, #patient_matriculeA_new').val('');
+                        $('#patient_assurance_id_new, #patient_taux_id_new, #patient_societe_id_new').val('');
+                        $('#assurer').val('non').trigger('change');
+                        divAssurer.hide();
 
-                        nom.value = '';
-                        email.value = '';
-                        phone.value = '';
-                        phone2.value = '';
-                        adresse.value = '';
-                        datenais.value = '';
-                        sexe.value = '';
-                        filiation.value = '';
-                        matricule_assurance.value = '';
-                        assurance_id.value = "";
-                        taux_id.value = "";
-                        societe_id.value = "";
+                        const selectElement = $('#id_patient');
+                        selectElement.empty();
 
-                        assurer.value = 'non';
+                        // Ajouter l'option par défaut
+                        const defaultOption = $('<option>', {
+                            value: '',
+                            text: 'Selectionner'
+                        });
+                        selectElement.append(defaultOption);
 
-                        divAssurer.style.display = "none";
+                        $.ajax({
+                            url: '/api/name_patient_reception',
+                            method: 'GET',
+                            dataType: 'json',
+                            success: function(data) {
+                                data.name.forEach(item => {
+                                    const option = $('<option>', {
+                                        value: item.id,
+                                        text: item.np
+                                    });
+                                    selectElement.append(option);
 
-                        document.getElementById('name_rech').value = `${response.name}`;
-                        document.getElementById('id_patient').value = `${response.id}`;
+                                    if (item.id == response.id) {
+                                        selectElement.val(response.id).trigger('change');
+                                    }
+                                });
+                            },
+                            error: function() {
+                                console.error('Erreur lors du chargement des patients');
+                            }
+                        });
 
-                        rech_dosier();
-                        Name_atient();
-
-                        var newConsultationTab = new bootstrap.Tab(document.getElementById('tab-oneAAA'));
+                        // Afficher le nouvel onglet de consultation
+                        const newConsultationTab = new bootstrap.Tab(document.getElementById('tab-oneAAA'));
                         newConsultationTab.show();
-
                     } else if (response.error) {
-                        showAlert('Alert', 'Une erreur est survenue lors de l\'enregistrement.','error');
+                        showAlert('Alert', 'Une erreur est survenue lors de l\'enregistrement.', 'error');
                     }
-
                 },
                 error: function() {
-
-                    var preloader = document.getElementById('preloader_ch');
-                    if (preloader) {
-                        preloader.remove();
-                    }
-
-                    showAlert('Alert', 'Une erreur est survenue lors de l\'enregistrement.','error');
+                    $('#preloader_ch').remove();
+                    showAlert('Alert', 'Une erreur est survenue lors de l\'enregistrement.', 'error');
                 }
             });
         }
 
         // ------------------------------------------------------------------
 
-        function eng_consultation()
-        {
+        const table_cons = $('.Table_day_cons').DataTable({
+
+            processing: true,
+            serverSide: false,
+            ajax: {
+                url: `/api/list_cons_day`,
+                type: 'GET',
+                dataSrc: 'data',
+            },
+            columns: [
+                { 
+                    data: null, 
+                    render: (data, type, row, meta) => meta.row + 1,
+                    searchable: false,
+                    orderable: false,
+                },
+                { 
+                    data: 'code',
+                    searchable: true,
+                },
+                { 
+                    data: 'matricule',
+                    searchable: true,
+                },
+                { 
+                    data: 'name',
+                    searchable: true, 
+                },
+                {
+                    data: 'tel',
+                    render: (data, type, row) => {
+                        return data ? `+225 ${data}` : 'Néant';
+                    },
+                    searchable: true,
+                },
+                { 
+                    data: 'motif',
+                    searchable: true, 
+                },
+                { 
+                    data: 'type_motif',
+                    searchable: true, 
+                },
+                {
+                    data: 'montant',
+                    render: (data, type, row) => {
+                        return data ? `${data} Fcfa` : '0 Fcfa';
+                    },
+                    searchable: true,
+                },
+                {
+                    data: null,
+                    render: (data, type, row) => `
+                        <div class="d-inline-flex gap-1" style="font-size:10px;">
+                            <a class="btn btn-outline-warning btn-sm rounded-5" id="facture" data-code="${row.code}">
+                                <i class="ri-printer-line"></i>
+                            </a>
+                            <a class="btn btn-outline-info btn-sm rounded-5" id="fiche" data-code="${row.code}">
+                                <i class="ri-file-line"></i>
+                            </a>
+                            ${row.statut_fac == 'impayer' ?  
+                            `<a class="btn btn-outline-danger btn-sm rounded-5" data-bs-toggle="modal" data-bs-target="#MdeleteCons" id="deleteCons" data-id="${row.id}">
+                                <i class="ri-delete-bin-line"></i>
+                            </a>` : ``}
+                        </div>
+                    `,
+                    searchable: false,
+                    orderable: false,
+                }
+            ],
+            ...dataTableConfig,
+            initComplete: function(settings, json) {
+                initializeRowEventListenersCons();
+            },
+        });
+
+        function initializeRowEventListenersCons() {
+
+            $('.Table_day_cons').on('click', '#facture', function() {
+                const code = $(this).data('code');
+                
+                fetch(`/api/fiche_consultation/${code}`) // API endpoint
+                .then(response => response.json())
+                .then(data => {
+                    // Access the 'chambre' array from the API response
+                    const patient = data.patient;
+                    const typeacte = data.typeacte;
+                    const user = data.user;
+                    const consultation = data.consultation;
+
+                    generatePDFInvoice(patient, user, typeacte, consultation);
+
+                })
+                .catch(error => {
+                    console.error('Erreur lors du chargement des données:', error);
+                });
+            });
+
+            $('.Table_day_cons').on('click', '#fiche', function() {
+                const code = $(this).data('code');
+                
+                fetch(`/api/fiche_consultation/${code}`) // API endpoint
+                .then(response => response.json())
+                .then(data => {
+                    // Access the 'chambre' array from the API response
+                    const patient = data.patient;
+                    const typeacte = data.typeacte;
+                    const user = data.user;
+                    const consultation = data.consultation;
+
+                    generatePDFficheCons(patient, user, typeacte, consultation);
+
+                })
+                .catch(error => {
+                    console.error('Erreur lors du chargement des données:', error);
+                });
+            });
+
+            $('.Table_day_cons').on('click', '#deleteCons', function() {
+                const id = $(this).data('id');
+
+                $('#IddeleteCons').val(id);
+            });
+        }
+
+        $('#btn_refresh_table').on('click', function () {
+            table_cons.ajax.reload(null, false); 
+        });
+
+        function eng_consultation() {
             const auth_id = {{ Auth::user()->id }};
-            var id_patient = document.getElementById("id_patient");
-            var assurance_utiliser = document.getElementById("assurance_utiliser");
-            var acte_id = '1';
-            var typeacte_idS = document.getElementById("typeacte_idS");
-            var medecin_id = document.getElementById("medecin_id");
-            var periode = document.querySelector('input[name="periode_consul"]:checked');
-            var montant_assurance = document.getElementById("montant_assurance");
-            var montant_patient = document.getElementById("montant_patient");
-            var taux_remise = document.getElementById("taux_remise");
-            var montant_total = document.getElementById("montant_total");
+            const id_patient = $('#id_patient').val();
+            const assurance_utiliser = $('#assurance_utiliser').val();
+            const acte_id = '1';
+            const typeacte_idS = $('#typeacte_idS').val();
+            const medecin_id = $('#medecin_id').val();
+            const periode = $('input[name="periode_consul"]:checked').val();
+            const montant_assurance = $('#montant_assurance').val();
+            const montant_patient = $('#montant_patient').val();
+            const taux_remise = $('#taux_remise').val() || '0';
+            const montant_total = $('#montant_total').val();
+            const mumcode = $('#mumcode').val() || null;
 
-            var jourO = document.getElementById('jourO');
-            var jourF = document.getElementById('jourF');
-            var nuit = document.getElementById('Nuit');
+            const jourO = $('#jourO');
+            const jourF = $('#jourF');
+            const nuit = $('#Nuit');
 
-            var mumcode = document.getElementById('mumcode');
-
-            if (taux_remise.value == '') {
-                taux_remise.value = '0';
+            // Validation des champs obligatoires
+            if (!typeacte_idS || !medecin_id || !taux_remise.trim()) {
+                showAlert('Alert', 'Tous les champs sont obligatoires.', 'warning');
+                return false;
             }
 
-            if (typeacte_idS.value =='' || medecin_id.value =='' || !taux_remise.value.trim()) {
-                showAlert('Alert', 'Tous les champs sont obligatoires.','warning');
-                return false; 
+            if (montant_assurance < 0 || montant_patient < 0 || taux_remise < 0) {
+                showAlert('Alert', 'Veuillez vérifier le montant de la remise.', 'warning');
+                return false;
             }
 
-            if (montant_assurance.value < 0 || montant_patient.value < 0 || taux_remise.value < 0) {
-                showAlert('Alert', 'Veullez vérifier le montant de la remise.','warning');
-                return false; 
-            }
-
-            var preloader_ch = `
+            // Afficher le préchargeur
+            const preloader_ch = `
                 <div id="preloader_ch">
                     <div class="spinner_preloader_ch"></div>
                 </div>
             `;
-            // Add the preloader to the body
-            document.body.insertAdjacentHTML('beforeend', preloader_ch);
+            $('body').append(preloader_ch);
 
             $.ajax({
                 url: '/api/new_consultation',
-                method: 'GET',  // Use 'POST' for data creation
+                method: 'GET', // Utiliser 'POST' pour créer des données
                 data: {
-                    id_patient: id_patient.value, 
-                    acte_id: acte_id, 
-                    typeacte_id: typeacte_idS.value, 
-                    user_id: medecin_id.value, 
-                    periode: periode.value, 
-                    montant_assurance: montant_assurance.value, 
-                    montant_patient: montant_patient.value, 
-                    taux_remise: taux_remise.value, 
-                    total: montant_total.value, 
-                    appliq_remise: appliq_remise.value, 
-                    mumcode: mumcode.value || null,
-                    assurance_utiliser: assurance_utiliser.value,
+                    id_patient: id_patient,
+                    acte_id: acte_id,
+                    typeacte_id: typeacte_idS,
+                    user_id: medecin_id,
+                    periode: periode,
+                    montant_assurance: montant_assurance,
+                    montant_patient: montant_patient,
+                    taux_remise: taux_remise,
+                    total: montant_total,
+                    appliq_remise: $('#appliq_remise').val(),
+                    mumcode: mumcode,
+                    assurance_utiliser: assurance_utiliser,
                     auth_id: auth_id,
                 },
                 success: function(response) {
-                    var preloader = document.getElementById('preloader_ch');
-                    if (preloader) {
-                        preloader.remove();
-                    }
+                    $('#preloader_ch').remove();
                     
                     if (response.success) {
+                        jourO.prop('checked', true);
+                        jourF.prop('checked', false);
+                        nuit.prop('checked', false);
 
-                        jourO.checked = true;
-                        jourF.checked = false;
-                        nuit.checked = false;
+                        $('#div_info_patient').empty();
+                        $('#div_info_consul').hide();
+                        $('#mumcode').val('');
 
-                        var dynamicFields = document.getElementById("div_info_patient");
-                        // Remove existing content
-                        while (dynamicFields.firstChild) {
-                            dynamicFields.removeChild(dynamicFields.firstChild);
-                        }
+                        const { patient, typeacte, user, consultation } = response;
 
-                        document.getElementById("div_info_consul").style.display = 'none';
-                        document.getElementById("name_rech").value = "";
-
-                        mumcode.value = "";
-
-                        showAlert('Succès', 'Patient Enregistrée.', 'success');
-
-                        const patient = response.patient;
-                        const typeacte = response.typeacte;
-                        const user = response.user;
-                        const consultation = response.consultation;
-
-                        const stat_consultation = document.getElementById("stat_consultation");
-
-                        if (stat_consultation && stat_consultation.innerHTML.trim() !== "") {
+                        if ($('#stat_consultation').html().trim() !== "") {
                             Statistique_cons();
                         }
 
-                        list_cons();
+                        table_cons.ajax.reload(null, false);
                         Statistique();
                         Reset();
                         Activity_cons();
                         Activity_cons_count();
-
+                        
                         generatePDFficheCons(patient, user, typeacte, consultation);
 
-                    } else if (response.error) {
-                        showAlert('Alert', 'Une erreur est survenue lors de l\'enregistrement.','error');
-                    }
+                        showAlert('Succès', 'Patient Enregistrée.', 'success');
 
+                    } else if (response.error) {
+                        showAlert('Alert', 'Une erreur est survenue lors de l\'enregistrement.', 'error');
+                    }
                 },
                 error: function() {
-
-                    var preloader = document.getElementById('preloader_ch');
-                    if (preloader) {
-                        preloader.remove();
-                    }
-
-                    showAlert('Alert', ' Une erreur est survenue lors de l\'enregistrement.','error');
+                    $('#preloader_ch').remove();
+                    showAlert('Alert', 'Une erreur est survenue lors de l\'enregistrement.', 'error');
                 }
             });
-        }
-
-        // ------------------------------------------------------------------
-
-        function list_cons(page = 1) {
-
-            const tableBody = document.querySelector('#Table tbody');
-            const messageDiv = document.getElementById('message_Table');
-            const tableDiv = document.getElementById('div_Table'); // The message div
-            const loaderDiv = document.getElementById('div_Table_loader');
-
-            messageDiv.style.display = 'none';
-            tableDiv.style.display = 'none';
-            loaderDiv.style.display = 'block';
-
-            // Fetch data from the API
-            const url = `/api/list_cons_day?page=${page}`;
-            fetch(url) // API endpoint
-                .then(response => response.json())
-                .then(data => {
-                    // Access the 'chambre' array from the API response
-                    const consultations = data.consultation || [] ;
-                    const pagination = data.pagination || {};
-
-                    const perPage = pagination.per_page || 10;
-                    const currentPage = pagination.current_page || 1;
-
-                    // Clear any existing rows in the table body
-                    tableBody.innerHTML = '';
-
-                    if (consultations.length > 0) {
-
-                        loaderDiv.style.display = 'none';
-                        messageDiv.style.display = 'none';
-                        tableDiv.style.display = 'block';
-
-                        // Loop through each item in the chambre array
-                        consultations.forEach((item, index) => {
-                            // Create a new row
-                            const row = document.createElement('tr');
-                            // Create and append cells to the row based on your table's structure
-                            row.innerHTML = `
-                                <td>${((currentPage - 1) * perPage) + index + 1}</td>
-                                <td>${item.code}</td>
-                                <td>${item.matricule}</td>
-                                <td>${item.name}</td>
-                                <td>+225 ${item.tel}</td>
-                                <td>${item.motif}</td>
-                                <td>${item.type_motif}</td>
-                                <td>${item.montant} Fcfa</td>
-                                <td>
-                                    <div class="d-inline-flex gap-1">
-                                        <a class="btn btn-outline-warning btn-sm rounded-5" id="facture-${item.code}">
-                                            <i class="ri-printer-line"></i>
-                                        </a>
-                                        <a class="btn btn-outline-info btn-sm rounded-5" id="fiche-${item.code}">
-                                            <i class="ri-file-line"></i>
-                                        </a>
-                                        ${item.statut_fac == 'impayer' ?  
-                                            `<a class="btn btn-outline-danger btn-sm rounded-5" data-bs-toggle="modal" data-bs-target="#MdeleteCons" id="deleteCons-${item.id}">
-                                                <i class="ri-delete-bin-line"></i>
-                                            </a>` : ``}
-                                    </div>
-                                </td>
-                            `;
-                            // Append the row to the table body
-                            tableBody.appendChild(row);
-
-                            const deleteButton = document.getElementById(`deleteCons-${item.id}`);
-                                if (deleteButton) {
-                                    deleteButton.addEventListener('click', () => {
-                                        document.getElementById('IddeleteCons').value = item.id;
-                                    });
-                                }
-
-                            document.getElementById(`fiche-${item.code}`).addEventListener('click', () =>
-                            {
-                                fetch(`/api/fiche_consultation/${item.code}`) // API endpoint
-                                    .then(response => response.json())
-                                    .then(data => {
-                                        // Access the 'chambre' array from the API response
-                                        const patient = data.patient;
-                                        const typeacte = data.typeacte;
-                                        const user = data.user;
-                                        const consultation = data.consultation;
-
-                                        generatePDFficheCons(patient, user, typeacte, consultation);
-
-                                    })
-                                    .catch(error => {
-                                        console.error('Erreur lors du chargement des données:', error);
-                                    });
-                            });
-
-                            document.getElementById(`facture-${item.code}`).addEventListener('click', () =>
-                            {
-                                fetch(`/api/fiche_consultation/${item.code}`) // API endpoint
-                                    .then(response => response.json())
-                                    .then(data => {
-                                        // Access the 'chambre' array from the API response
-                                        const patient = data.patient;
-                                        const typeacte = data.typeacte;
-                                        const user = data.user;
-                                        const consultation = data.consultation;
-
-                                        generatePDFInvoice(patient, user, typeacte, consultation);
-
-                                    })
-                                    .catch(error => {
-                                        console.error('Erreur lors du chargement des données:', error);
-                                    });
-                            });
-
-                        });
-
-                        updatePaginationControls(pagination);
-
-                    } else {
-                        loaderDiv.style.display = 'none';
-                        messageDiv.style.display = 'block';
-                        tableDiv.style.display = 'none';
-                    }
-                })
-                .catch(error => {
-                    console.error('Erreur lors du chargement des donnée:', error);
-                    loaderDiv.style.display = 'none';
-                    messageDiv.style.display = 'block';
-                    tableDiv.style.display = 'none';
-                });
-        }
-
-        function updatePaginationControls(pagination) {
-            const paginationDiv = document.getElementById('pagination-controls');
-            paginationDiv.innerHTML = '';
-
-            // Bootstrap pagination wrapper
-            const paginationWrapper = document.createElement('ul');
-            paginationWrapper.className = 'pagination justify-content-center';
-
-            // Previous button
-            if (pagination.current_page > 1) {
-                const prevButton = document.createElement('li');
-                prevButton.className = 'page-item';
-                prevButton.innerHTML = `<a class="page-link" href="#">Precédent</a>`;
-                prevButton.onclick = (event) => {
-                    event.preventDefault(); // Empêche le défilement en haut de la page
-                    list_cons(pagination.current_page - 1);
-                };
-                paginationWrapper.appendChild(prevButton);
-            } else {
-                // Disable the previous button if on the first page
-                const prevButton = document.createElement('li');
-                prevButton.className = 'page-item disabled';
-                prevButton.innerHTML = `<a class="page-link" href="#">Precédent</a>`;
-                paginationWrapper.appendChild(prevButton);
-            }
-
-            // Page number links (show a few around the current page)
-            const totalPages = pagination.last_page;
-            const currentPage = pagination.current_page;
-            const maxVisiblePages = 5; // Max number of page links to display
-
-            let startPage = Math.max(1, currentPage - Math.floor(maxVisiblePages / 2));
-            let endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
-
-            // Adjust start page if end page exceeds the total pages
-            if (endPage - startPage < maxVisiblePages - 1) {
-                startPage = Math.max(1, endPage - maxVisiblePages + 1);
-            }
-
-            // Loop through pages and create page links
-            for (let i = startPage; i <= endPage; i++) {
-                const pageItem = document.createElement('li');
-                pageItem.className = `page-item ${i === currentPage ? 'active' : ''}`;
-                pageItem.innerHTML = `<a class="page-link" href="#">${i}</a>`;
-                pageItem.onclick = (event) => {
-                    event.preventDefault(); // Empêche le défilement en haut de la page
-                    list_cons(i);
-                };
-                paginationWrapper.appendChild(pageItem);
-            }
-
-            // Ellipsis (...) if not all pages are shown
-            if (endPage < totalPages) {
-                const ellipsis = document.createElement('li');
-                ellipsis.className = 'page-item disabled';
-                ellipsis.innerHTML = `<a class="page-link" href="#">...</a>`;
-                paginationWrapper.appendChild(ellipsis);
-
-                // Add the last page link
-                const lastPageItem = document.createElement('li');
-                lastPageItem.className = `page-item`;
-                lastPageItem.innerHTML = `<a class="page-link" href="#">${totalPages}</a>`;
-                lastPageItem.onclick = (event) => {
-                    event.preventDefault(); // Empêche le défilement en haut de la page
-                    list_cons(totalPages);
-                };
-                paginationWrapper.appendChild(lastPageItem);
-            }
-
-            // Next button
-            if (pagination.current_page < pagination.last_page) {
-                const nextButton = document.createElement('li');
-                nextButton.className = 'page-item';
-                nextButton.innerHTML = `<a class="page-link" href="#">Suivant</a>`;
-                nextButton.onclick = (event) => {
-                    event.preventDefault(); // Empêche le défilement en haut de la page
-                    list_cons(pagination.current_page + 1);
-                };
-                paginationWrapper.appendChild(nextButton);
-            } else {
-                // Disable the next button if on the last page
-                const nextButton = document.createElement('li');
-                nextButton.className = 'page-item disabled';
-                nextButton.innerHTML = `<a class="page-link" href="#">Suivant</a>`;
-                paginationWrapper.appendChild(nextButton);
-            }
-
-            // Append pagination controls to the DOM
-            paginationDiv.appendChild(paginationWrapper);
         }
 
         function delete_cons() {
@@ -2190,7 +1986,7 @@
                     }
 
                     if (response.success) {
-                        list_cons();
+                        table_cons.ajax.reload(null, false);
                         showAlert('Succès', 'Opération éffectuée.','success');
                     } else if (response.error) {
                         showAlert("ERREUR", 'Echec de l\'opération', "error");
@@ -2883,246 +2679,203 @@
 
         // -----------------------------------------------------------------
 
-        function list_rdv(page = 1) {
+        const table_rdv = $('.Table_day_rdv').DataTable({
 
-            const tableBody = document.querySelector('#Table_rdv tbody');
-            const messageDiv = document.getElementById('message_Table_rdv');
-            const tableDiv = document.getElementById('div_Table_rdv');
-            const loaderDiv = document.getElementById('div_Table_loader_rdv');
+            processing: true,
+            serverSide: false,
+            ajax: {
+                url: `/api/list_rdv`,
+                type: 'GET',
+                dataSrc: 'data',
+            },
+            columns: [
+                { 
+                    data: null, 
+                    render: (data, type, row, meta) => meta.row + 1,
+                    searchable: false,
+                    orderable: false,
+                },
+                { 
+                    data: 'patient', 
+                    render: (data, type, row) => `
+                    <div class="d-flex align-items-center">
+                        <a class="d-flex align-items-center flex-column me-2">
+                            <img src="/assets/images/rdv1.png" class="img-2x rounded-circle border border-1">
+                        </a>
+                        ${data}
+                    </div>`,
+                    searchable: true, 
+                },
+                {
+                    data: 'patient_tel',
+                    render: (data, type, row) => {
+                        return data ? `+225 ${data}` : 'Néant';
+                    },
+                    searchable: true,
+                },
+                {
+                    data: 'medecin',
+                    render: (data, type, row) => {
+                        return data ? `Dr. ${data}` : 'Néant';
+                    },
+                    searchable: true,
+                },
+                { 
+                    data: 'specialite',
+                    searchable: true, 
+                },
+                { 
+                    data: 'date',
+                    render: formatDate,
+                    searchable: true, 
+                },
+                {
+                    data: 'statut',
+                    render: (data, type, row) => `
+                        <span class="badge ${data === 'en attente' ? 'bg-danger' : 'bg-success'}">
+                            ${data === 'en attente' ? 'En Attente' : 'Terminer'}
+                        </span>
+                    `,
+                    searchable: true,
+                },
+                { 
+                    data: 'created_at',
+                    render: formatDateHeure,
+                    searchable: true, 
+                },
+                {
+                    data: null,
+                    render: (data, type, row) => `
+                        <div class="d-inline-flex gap-1" style="font-size:10px;">
+                            <a class="btn btn-outline-warning btn-sm rounded-5 edit-btn" data-motif="${row.motif}" data-bs-toggle="modal" data-bs-target="#Detail_motif" id="motif">
+                                <i class="ri-eye-line"></i>
+                            </a>
+                            ${row.statut == 'en attente' ? 
+                            `<a class="btn btn-outline-info btn-sm rounded-5" data-bs-toggle="modal" data-bs-target="#Modif_Rdv_modal" id="modif"
+                                data-id="${row.id}"
+                                data-date="${row.date}"
+                                data-patient="${row.patient}"
+                                data-motif="${row.motif}"
+                                data-medecin="${row.medecin}"
+                                data-specialite="${row.specialite}"
+                                data-horaires='${JSON.stringify(row.horaires)}'>
+                               <i class="ri-edit-line"></i>
+                            </a>
+                            <a class="btn btn-outline-danger btn-sm rounded-5" data-bs-toggle="modal" data-bs-target="#Mdelete" id="delete" data-id="${row.id}">
+                                <i class="ri-delete-bin-line"></i>
+                            </a>` :
+                            `` }
+                        </div>
+                    `,
+                    searchable: false,
+                    orderable: false,
+                }
+            ],
+            ...dataTableConfig, 
+            initComplete: function(settings, json) {
+                initializeRowEventListenersRdv();
+            },
+        });
 
-            messageDiv.style.display = 'none';
-            tableDiv.style.display = 'none';
-            loaderDiv.style.display = 'block';
+        function initializeRowEventListenersRdv() {
 
-            const url = `/api/list_rdv_day?page=${page}`;
+            $('.Table_day_rdv').on('click', '#modif', function() {
+                const id = $(this).data('id');
+                const date = $(this).data('date');
+                const patient = $(this).data('patient');
+                const motif = $(this).data('motif');
+                const medecin = $(this).data('medecin');
+                const specialite = $(this).data('specialite');
 
-            fetch(url)
-                .then(response => response.json())
-                .then(data => {
-                    const rdvs = data.rdv || [];
-                    const pagination = data.pagination || {};
-                    const perPage = pagination.per_page || 10;
-                    const currentPage = pagination.current_page || 1;
+                $('#id_rdvM').val(id);
 
-                    tableBody.innerHTML = '';
+                const today = new Date();
+                const formattedToday = today.toISOString().split('T')[0];
+                $('#date_rdvM').val(date).attr('min', formattedToday);
 
-                    if (rdvs.length > 0) {
+                $('#patient_rdvM').val(patient);
+                $('#motif_rdvM').val(motif);
+                $('#medecin_rdvM').val(medecin);
+                $('#specialite_rdvM').val(specialite);
 
-                        loaderDiv.style.display = 'none';
-                        messageDiv.style.display = 'none';
-                        tableDiv.style.display = 'block';
+                const horairesData = $(this).data('horaires');
+                const allowedDays = horairesData ? horairesData.map(horaire => horaire.jour) : [];
 
-                            rdvs.forEach((item, index) => {
+                $('#date_rdvM').on('change', function(event) {
+                    const selectedDate = new Date(event.target.value);
+                    const selectedDay = selectedDate.getDay();
 
-                                let button = '';
+                    const dayMapping = {
+                        'DIMANCHE': 0,
+                        'LUNDI': 1,
+                        'MARDI': 2,
+                        'MERCREDI': 3,
+                        'JEUDI': 4,
+                        'VENDREDI': 5,
+                        'SAMEDI': 6
+                    };
 
-                                if (item.statut == 'en attente') {
-                                    button = `
-                                        <a class="btn btn-outline-info btn-sm rounded-5" data-bs-toggle="modal" data-bs-target="#Modif_Rdv_modal" id="modif-${item.id}">
-                                            <i class="ri-edit-line"></i>
-                                        </a>
-                                        <a class="btn btn-outline-danger btn-sm rounded-5" data-bs-toggle="modal" data-bs-target="#Mdelete" id="delete-${item.id}">
-                                            <i class="ri-delete-bin-line"></i>
-                                        </a>
-                                    `;
-                                }
+                    const isValidDay = allowedDays.some(day => dayMapping[day] === selectedDay);
 
-                                const row = document.createElement('tr');
-                                row.innerHTML = `
-                                    <td>${((currentPage - 1) * perPage) + index + 1}</td>
-                                    <td>${item.patient}</td>
-                                    <td>+225 ${item.patient_tel}</td>
-                                    <td>Dr. ${item.medecin}</td>
-                                    <td>${item.specialite}</td>
-                                    <td>${formatDate(item.date)}</td>
-                                    <td>
-                                        <span class="badge ${item.statut === 'en attente' ? 'bg-warning' : 'bg-success'}">
-                                            ${item.statut}
-                                        </span>
-                                    </td>
-                                    <td>${formatDateHeure(item.created_at)}</td>
-                                    <td>
-                                        <div class="d-inline-flex gap-1">
-                                            <a class="btn btn-outline-warning btn-sm rounded-5" data-bs-toggle="modal" data-bs-target="#Detail_motif" id="motif-${item.id}">
-                                                <i class="ri-eye-line"></i>
-                                            </a>
-                                            ${button}
-                                        </div>
-                                    </td>
-                                `;
-                                tableBody.appendChild(row);
+                    if (!isValidDay) {
+                        // Vérification si date_rdvM est une valeur valide
+                        let formattedDate = "";
+                        if (date_rdvM && !isNaN(new Date(date_rdvM).getTime())) {
+                            // Si date_rdvM est valide, formater la date
+                            formattedDate = new Date(date_rdvM).toISOString().split('T')[0];
+                        } else {
+                            // Si date_rdvM n'est pas valide, utilisez la date du jour comme fallback
+                            formattedDate = new Date().toISOString().split('T')[0];
+                        }
 
-                                const deleteButton = document.getElementById(`delete-${item.id}`);
-                                if (deleteButton) {
-                                    deleteButton.addEventListener('click', () => {
-                                        document.getElementById('Iddelete').value = item.id;
-                                    });
-                                }
-
-                                const modifButton = document.getElementById(`modif-${item.id}`);
-                                if (modifButton) {
-                                    modifButton.addEventListener('click', () => {
-                                        document.getElementById('medecin_id_rdvM').value = item.id;
-                                        document.getElementById('date_rdvM').value = item.date;
-                                        document.getElementById('date_rdvM').min = item.date; 
-                                        document.getElementById('patient_rdvM').value = item.patient;
-                                        document.getElementById('motif_rdvM').value = item.motif;
-                                        document.getElementById('medecin_rdvM').value = item.medecin;
-                                        document.getElementById('specialite_rdvM').value = item.specialite;
-
-                                        const allowedDays = item.horaires.map(horaire => horaire.jour);
-
-                                        const dateInput = document.getElementById('date_rdvM');
-                                        dateInput.addEventListener('blur', (event) => {
-
-                                            const selectedDate = new Date(event.target.value);
-                                            const selectedDay = selectedDate.getDay();
-
-                                            const dayMapping = {
-                                                'DIMANCHE': 0,
-                                                'LUNDI': 1,
-                                                'MARDI': 2,
-                                                'MERCREDI': 3,
-                                                'JEUDI': 4,
-                                                'VENDREDI': 5,
-                                                'SAMEDI': 6
-                                            };
-
-                                            const isValidDay = allowedDays.some(day => dayMapping[day] === selectedDay);
-
-                                            if (!isValidDay) {
-                                                dateInput.value = item.date;
-                                                showAlert("ALERT", 'Veuillez sélectionner un jour valide selon les horaires du médecin.', "info");
-                                            }
-                                        });
-                                    });
-                                }
-
-                                document.getElementById(`motif-${item.id}`).addEventListener('click', () =>
-                                {
-                                    const modal = document.getElementById('modal_Detail_motif');
-                                    modal.innerHTML = '';
-
-                                    const div = document.createElement('div');
-                                    div.innerHTML = `
-                                           <div class="row gx-3">
-                                                <div class="col-12">
-                                                    <div class=" mb-3">
-                                                        <div class="card-body">
-                                                            <ul class="list-group">
-                                                                <li class="list-group-item active text-center" aria-current="true">
-                                                                    Motif
-                                                                </li>
-                                                                <li class="list-group-item">
-                                                                    ${item.motif} 
-                                                                </li>
-                                                            </ul>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>     
-                                    `;
-
-                                    modal.appendChild(div);
-
-                                });
-
-                            });
-
-                        updatePaginationControlsRdv(pagination);
-
-                    } else {
-                        tableDiv.style.display = 'none';
-                        loaderDiv.style.display = 'none';
-                        messageDiv.style.display = 'block';
+                        // Remettre la date dans le champ de saisie
+                        $('#date_rdvM').val(formattedDate);
+                        
+                        // Afficher le message d'alerte
+                        showAlert("ALERT", 'Veuillez sélectionner un jour valide selon les horaires du médecin.', "info");
                     }
-                })
-                .catch(error => {
-                    console.error('Erreur lors du chargement des données:', error);
-                    loaderDiv.style.display = 'none';
-                    tableDiv.style.display = 'none';
-                    messageDiv.style.display = 'block';
                 });
+            });
+
+            $('.Table_day_rdv').on('click', '#motif', function() {
+                const motif = $(this).data('motif');
+                // Handle the 'Delete' button click
+                const modal = document.getElementById('modal_Detail_motif');
+                modal.innerHTML = '';
+
+                const div = document.createElement('div');
+                div.innerHTML = `
+                       <div class="row gx-3">
+                            <div class="col-12">
+                                <div class=" mb-3">
+                                    <div class="card-body">
+                                        <ul class="list-group">
+                                            <li class="list-group-item active text-center" aria-current="true">
+                                                Motif
+                                            </li>
+                                            <li class="list-group-item">
+                                                ${motif} 
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>     
+                `;
+
+                modal.appendChild(div);
+            });
+
+            $('.Table_day_rdv').on('click', '#delete', function() {
+                const id = $(this).data('id');
+                
+                $('#Iddelete').val(id);
+            });
         }
 
-        function updatePaginationControlsRdv(pagination) {
-            const paginationDiv = document.getElementById('pagination-controls_rdv');
-            paginationDiv.innerHTML = '';
-
-            // Bootstrap pagination wrapper
-            const paginationWrapper = document.createElement('ul');
-            paginationWrapper.className = 'pagination justify-content-center';
-
-            // Previous button
-            if (pagination.current_page > 1) {
-                const prevButton = document.createElement('li');
-                prevButton.className = 'page-item';
-                prevButton.innerHTML = `<a class="page-link" href="#">Precédent</a>`;
-                prevButton.onclick = () => list_rdv(pagination.current_page - 1);
-                paginationWrapper.appendChild(prevButton);
-            } else {
-                // Disable the previous button if on the first page
-                const prevButton = document.createElement('li');
-                prevButton.className = 'page-item disabled';
-                prevButton.innerHTML = `<a class="page-link" href="#">Precédent</a>`;
-                paginationWrapper.appendChild(prevButton);
-            }
-
-            // Page number links (show a few around the current page)
-            const totalPages = pagination.last_page;
-            const currentPage = pagination.current_page;
-            const maxVisiblePages = 5; // Max number of page links to display
-
-            let startPage = Math.max(1, currentPage - Math.floor(maxVisiblePages / 2));
-            let endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
-
-            // Adjust start page if end page exceeds the total pages
-            if (endPage - startPage < maxVisiblePages - 1) {
-                startPage = Math.max(1, endPage - maxVisiblePages + 1);
-            }
-
-            // Loop through pages and create page links
-            for (let i = startPage; i <= endPage; i++) {
-                const pageItem = document.createElement('li');
-                pageItem.className = `page-item ${i === currentPage ? 'active' : ''}`;
-                pageItem.innerHTML = `<a class="page-link" href="#">${i}</a>`;
-                pageItem.onclick = () => list_rdv(i);
-                paginationWrapper.appendChild(pageItem);
-            }
-
-            // Ellipsis (...) if not all pages are shown
-            if (endPage < totalPages) {
-                const ellipsis = document.createElement('li');
-                ellipsis.className = 'page-item disabled';
-                ellipsis.innerHTML = `<a class="page-link" href="#">...</a>`;
-                paginationWrapper.appendChild(ellipsis);
-
-                // Add the last page link
-                const lastPageItem = document.createElement('li');
-                lastPageItem.className = `page-item`;
-                lastPageItem.innerHTML = `<a class="page-link" href="#">${totalPages}</a>`;
-                lastPageItem.onclick = () => list_rdv(totalPages);
-                paginationWrapper.appendChild(lastPageItem);
-            }
-
-            // Next button
-            if (pagination.current_page < pagination.last_page) {
-                const nextButton = document.createElement('li');
-                nextButton.className = 'page-item';
-                nextButton.innerHTML = `<a class="page-link" href="#">Suivant</a>`;
-                nextButton.onclick = () => list_rdv(pagination.current_page + 1);
-                paginationWrapper.appendChild(nextButton);
-            } else {
-                // Disable the next button if on the last page
-                const nextButton = document.createElement('li');
-                nextButton.className = 'page-item disabled';
-                nextButton.innerHTML = `<a class="page-link" href="#">Suivant</a>`;
-                paginationWrapper.appendChild(nextButton);
-            }
-
-            // Append pagination controls to the DOM
-            paginationDiv.appendChild(paginationWrapper);
-        }
+        $('#btn_refresh_table_rdv').on('click', function () {
+            table_rdv.ajax.reload(null, false);
+        });
 
         function delete_rdv() {
 
@@ -3150,7 +2903,7 @@
                     }
 
                     if (response.success) {
-                        list_rdv();
+                        $('.Table_day_rdv').DataTable().ajax.reload();
                         count_rdv_two_day();
                         showAlert('Succès', 'Rendez-Vous annulé.','success');
                     } else if (response.error) {
@@ -3171,7 +2924,7 @@
 
         function update_rdv()
         {
-            const id = document.getElementById('medecin_id_rdvM').value;
+            const id = document.getElementById('id_rdvM').value;
             const date_rdv = document.getElementById('date_rdvM');
             const motif_rdv = document.getElementById('motif_rdvM');
 
@@ -3207,7 +2960,7 @@
                     
                     if (response.success) {
 
-                        list_rdv();
+                        $('.Table_day_rdv').DataTable().ajax.reload();
                         count_rdv_two_day();
                         showAlert("ALERT", 'Mise à jour éffectué', "success");
 

@@ -236,38 +236,27 @@
 
 /* Table headers */
 #Table_day th {
-    background-color: #007bff;  /* Bleu de l'en-tête */
-    color: #fff;                /* Texte en blanc */
-    text-align: left;         /* Centrer le texte */
+    background-color: #007bff;
+    color: #fff;
+    text-align: center;
     font-weight: bold;
     padding: 12px 15px;
 }
 
-/* Table rows */
 #Table_day td {
     padding: 10px 15px;
-    text-align: left;
+    text-align: center;
     vertical-align: middle;
 }
 
-/* Row hover effect */
 #Table_day tbody tr:hover {
     background-color: #f8f9fa;
 }
 
-/* Zebra striping */
 #Table_day tbody tr:nth-child(odd) {
     background-color: #f2f2f2;
 }
 
-/* Styling buttons */
-#Table_day .btn {
-    padding: 6px 12px;
-    font-size: 14px;
-    border-radius: 5px;
-}
-
-/* Action buttons */
 #Table_day .btn-outline-info {
     color: #0d6efd;
     border-color: #0d6efd;
@@ -278,7 +267,6 @@
     color: white;
 }
 
-/* Responsive table */
 #Table_day_wrapper {
     overflow-x: auto;
 }
@@ -292,12 +280,6 @@
     overflow-x: auto;
 }
 
-
-
-
-
-
-
 #Table_day {
     font-size: 13px;
 }
@@ -305,33 +287,22 @@
 #Table_day td,
 #Table_day th {
     padding: 4px 8px;
-    /* Adjust cell padding */
-}
-
-.dataTables_wrapper .dataTables_filter input,
-.dataTables_wrapper .dataTables_length select {
-    font-size: 12px;
-    /* Adjust search box and dropdown font size */
 }
 
 #Table_day .btn {
     font-size: 12px;
-    /* Reduce the font size inside the buttons */
     padding: 4px 6px;
-    /* Adjust the padding for smaller buttons */
-}
-
-#Table_day .btn-sm {
-    font-size: 12px;
-    /* Make small buttons even smaller */
-    padding: 3px 6px;
-    /* Adjust padding for btn-sm size */
 }
 
 #Table_day .d-inline-flex {
     gap: 2px;
-    /* Reduce the space between buttons */
 }
 
-
-
+#Table_day th.sorting:before,
+#Table_day th.sorting:after,
+#Table_day th.sorting_asc:before,
+#Table_day th.sorting_asc:after,
+#Table_day th.sorting_desc:before,
+#Table_day th.sorting_desc:after {
+    display: none;
+}

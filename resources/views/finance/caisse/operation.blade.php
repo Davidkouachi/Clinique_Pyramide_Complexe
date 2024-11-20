@@ -178,23 +178,18 @@
                                                 <option value="Sortie de Caisse">Sortie</option>
                                             </select>
                                             <span class="input-group-text">Cassier(ère)</span>
-                                            <select class="form-select me-1" id="userTrace">
+                                            <select class="form-select me-1 select2" id="userTrace">
                                             </select>
                                             <a id="btn_search_trace" class="btn btn-outline-success ms-auto">
                                                 <i class="ri-search-2-line"></i>
                                             </a>
                                         </div>
                                     </div>
-                                    {{-- <div class="d-flex">
-                                        <a id="btn_refresh_trace" class="btn btn-outline-info ms-auto">
-                                            <i class="ri-loop-left-line"></i>
-                                        </a>
-                                    </div> --}}
                                 </div>
                                 <div class="card-body mb-3">
-                                    <div class="table-outer" id="div_Table" style="display: none;">
+                                    <div class="">
                                         <div class="table-responsive">
-                                            <table class="table align-middle table-hover m-0 truncate" id="Table">
+                                            <table id="Table_day" class="table table-hover table-sm Table_OpC">
                                                 <thead>
                                                     <tr>
                                                         <th scope="col">N°</th>
@@ -212,18 +207,6 @@
                                             </table>
                                         </div>
                                     </div>
-                                    <div id="message_Table" style="display: none;">
-                                        <p class="text-center">
-                                            Aucune n'a été trouvé
-                                        </p>
-                                    </div>
-                                    <div id="div_Table_loader" style="display: none;">
-                                        <div class="d-flex justify-content-center align-items-center">
-                                            <div class="spinner-border text-warning me-2" role="status" aria-hidden="true"></div>
-                                            <strong>Chargement des données...</strong>
-                                        </div>
-                                    </div>
-                                    <div id="pagination-controls"></div>
                                 </div>
                                 <div class="card-header">
                                     <h5 class="card-title">Liste des ouvertures et fermetures de Caisse</h5>
@@ -242,9 +225,9 @@
                                     </div>
                                 </div>
                                 <div class="card-body mb-3">
-                                    <div class="table-outer" id="div_Table_ofc" style="display: none;">
+                                    <div class="">
                                         <div class="table-responsive">
-                                            <table class="table align-middle table-hover m-0 truncate" id="Table_ofc">
+                                            <table id="Table_day" class="table table-hover table-sm Table_Ofc">
                                                 <thead>
                                                     <tr>
                                                         <th scope="col">N°</th>
@@ -259,18 +242,6 @@
                                             </table>
                                         </div>
                                     </div>
-                                    <div id="message_Table_ofc" style="display: none;">
-                                        <p class="text-center">
-                                            Aucune n'a été trouvé
-                                        </p>
-                                    </div>
-                                    <div id="div_Table_loader_ofc" style="display: none;">
-                                        <div class="d-flex justify-content-center align-items-center">
-                                            <div class="spinner-border text-warning me-2" role="status" aria-hidden="true"></div>
-                                            <strong>Chargement des données...</strong>
-                                        </div>
-                                    </div>
-                                    <div id="pagination-controls_ofc"></div>
                                 </div>
                             </div>
                             <div class="tab-pane fade" id="tAAA" role="tabpanel" aria-labelledby="tab-tAAA">
@@ -321,25 +292,22 @@
 <script src="{{asset('assets/js/app/js/jspdfinvoicetemplate/dist/index.js')}}" ></script>
 <script src="{{asset('jsPDF-master/dist/jspdf.umd.js')}}"></script>
 
+@include('select2')
+
 <script>
-    document.addEventListener("DOMContentLoaded", function() {
+    $(document).ready(function() {
 
         caisse_verf();
         solde();
         select_user();
-        list();
-        list_ofc();
         historique();
 
-        document.getElementById("btn_eng_ope").addEventListener("click", eng_ope);
-        // document.getElementById("btn_refresh_trace").addEventListener("click", list);
-        document.getElementById("btn_search_trace").addEventListener("click", list);
-        document.getElementById("btn_search_trace_ofc").addEventListener("click", list_ofc);
+        $("#btn_eng_ope").on("click", eng_ope);
 
-        document.getElementById("btn_ouvert_C").addEventListener("click", caisse_ouvert);
-        document.getElementById("btn_fermer_C").addEventListener("click", caisse_fermer);
+        $("#btn_ouvert_C").on("click", caisse_ouvert);
+        $("#btn_fermer_C").on("click", caisse_fermer);
 
-        document.getElementById("btn_search_trace_bj").addEventListener("click", historique);
+        $("#btn_search_trace_bj").on("click", historique);
 
         function caisse_verf()
         {
@@ -352,7 +320,7 @@
                         document.getElementById('div_caisse_verf').style.display = 'block';
                         document.getElementById('btn_ouvert').style.display = 'none';
                         document.getElementById('btn_fermer').style.display = 'block';
-                        list();
+                        table_OpC.ajax.reload(null, false);
                     }else{
                         document.getElementById('div_caisse').style.display = 'none';
                         document.getElementById('div_caisse_verf').style.display = 'block';
@@ -396,8 +364,8 @@
                         document.getElementById('btn_ouvert').style.display = 'none';
                         document.getElementById('btn_fermer').style.display = 'block';
 
-                        list();
-                        list_ofc();
+                        table_OpC.ajax.reload(null, false);
+                        table_Ofc.ajax.reload(null, false);
 
                     } else if (response.error) {
                         showAlert('Alert', 'Une erreur est survenue lors de l\'ouverture de la caisse.', 'error');
@@ -449,8 +417,8 @@
                         document.getElementById('btn_ouvert').style.display = 'block';
                         document.getElementById('btn_fermer').style.display = 'none';
 
-                        list();
-                        list_ofc();
+                        table_OpC.ajax.reload(null, false);
+                        table_Ofc.ajax.reload(null, false);
 
                     } else if (response.error) {
                         showAlert('Alert','Une erreur est survenue lors de la fermeture de la caisse.','error');
@@ -534,28 +502,28 @@
             return `${day}/${month}/${year} à ${hours}:${minutes}:${seconds}`;
         }
 
-        function select_user()
-        {
-            const selectElement = document.getElementById('userTrace');
+        function select_user() {
+            const selectElement = $('#userTrace');
 
-            selectElement.innerHTML = '';
-            const defaultOption = document.createElement('option');
-            defaultOption.value = 'tous';
-            defaultOption.textContent = 'Tout';
-            selectElement.appendChild(defaultOption);
+            selectElement.empty();
+            selectElement.append('<option selected value="tous">Tout</option>');
 
-            fetch('/api/list_caissier')
-                .then(response => response.json())
-                .then(data => {
+            $.ajax({
+                url: '/api/list_caissier',
+                type: 'GET',
+                dataType: 'json',
+                success: function (data) {
                     const caissiers = data.caissier;
-                    caissiers.forEach((item, index) => {
-                        const option = document.createElement('option');
-                        option.value = `${item.id}`;
-                        option.textContent = `${item.sexe}. ${item.name}`;
-                        selectElement.appendChild(option);
+
+                    $.each(caissiers, function (index, item) {
+                        const option = `<option value="${item.id}">${item.sexe}. ${item.name}</option>`;
+                        selectElement.append(option);
                     });
-                })
-                .catch(error => console.error('Erreur lors du chargement des societes:', error));
+                },
+                error: function (xhr, status, error) {
+                    console.error('Erreur lors du chargement des caissiers:', error);
+                }
+            });
         }
 
         function solde() 
@@ -626,8 +594,8 @@
                         date_ope.value = '{{ date('Y-m-d') }}';
 
                         solde();
-                        list();
-                        list_ofc();
+                        table_OpC.ajax.reload(null, false);
+                        table_Ofc.ajax.reload(null, false);
 
                         showAlert('Succès', 'Opération éffectuée.', 'success');
                     } else if (response.error) {
@@ -651,444 +619,284 @@
             });
         }
 
-        function list(page = 1) 
-        {
+        const table_OpC = $('.Table_OpC').DataTable({
 
-            const tableBody = document.querySelector('#Table tbody');
-            const messageDiv = document.getElementById('message_Table');
-            const tableDiv = document.getElementById('div_Table');
-            const loaderDiv = document.getElementById('div_Table_loader');
+            processing: false,
+            serverSide: false,
+            ajax: function(data, callback) {
 
-            messageDiv.style.display = 'none';
-            tableDiv.style.display = 'none';
-            loaderDiv.style.display = 'block';
+                const date1 = $('#searchDate1').val();
+                const date2 = $('#searchDate2').val();
+                const typemvt = $('#statutTrace').val();
+                const user_id = $('#userTrace').val();
 
-            const date1 = document.getElementById('searchDate1').value;
-            const date2 = document.getElementById('searchDate2').value;
-            const typemvt = document.getElementById('statutTrace').value;
-            const user_id = document.getElementById('userTrace').value;
+                if (!date1.trim() || !date2.trim()) {
+                    showAlert('Alert', 'Tous les champs sont obligatoires.','warning');
+                    return false; 
+                }
 
-            if (!date1.trim() || !date2.trim()) {
-                showAlert('Alert', 'Tous les champs sont obligatoires.','warning');
-                return false; 
-            }
+                const startDate = new Date(date1);
+                const endDate = new Date(date2);
 
-            const startDate = new Date(date1);
-            const endDate = new Date(date2);
+                if (startDate > endDate) {
+                    showAlert('Erreur', 'La date de début ne peut pas être supérieur à la date de fin.', 'error');
+                    return false;
+                }
 
-            if (startDate > endDate) {
-                showAlert('Erreur', 'La date de début ne peut pas être supérieur à la date de fin.', 'error');
-                return false;
-            }
+                const oneYearInMs = 365 * 24 * 60 * 60 * 1000;
+                if (endDate - startDate > oneYearInMs) {
+                    showAlert('Erreur', 'La plage de dates ne peut pas dépasser un an.', 'error');
+                    return false;
+                }
+                
+                $.ajax({
+                    url: `/api/trace_operation/${date1}/${date2}/${typemvt}/${user_id}`,
+                    type: 'GET',
+                    success: function(response) {
+                        callback({ data: response.data });
+                    },
+                    error: function() {
+                        console.log('Error fetching data. Please check your API or network trace_operation.');
+                    }
+                });
+            },
+            columns: [
+                { 
+                    data: null, 
+                    render: (data, type, row, meta) => meta.row + 1,
+                    searchable: false,
+                    orderable: false,
+                },
+                { 
+                    data: 'user',
+                    render: function (data, type, row) { return `${row.user_sexe}. ${row.user}` },
+                    searchable: true, 
+                },
+                { 
+                    data: 'motif',
+                    searchable: true,
+                },
+                { 
+                    data: 'typemvt',
+                    searchable: true, 
+                },
+                {
+                    data: 'typemvt',
+                    searchable: true,
+                    render: function (data, type, row) {
+                        if (data === 'Entrer de Caisse') {
+                            return `<span class="fs-6 badge bg-success-subtle text-success">
+                                        + ${row.montant} Fcfa
+                                    </span>`;
+                        } else {
+                            return `<span class="fs-6 badge bg-danger-subtle text-danger">
+                                        - ${row.montant} Fcfa
+                                    </span>`;
+                        }
+                    }
+                },
+                {
+                    data: 'date_ope',
+                    searchable: false,
+                    render: function (data, type, row) {
+                        const date = data === '' ? row.created_at : data;
+                        return `<td>${formatDate(date)}</td>`;
+                    }
+                },
+                { 
+                    data: 'created_at', 
+                    render: formatDateHeure,
+                    searchable: true, 
+                },
+                {
+                    data: null,
+                    render: (data, type, row) => `
+                        <div class="d-inline-flex gap-1" style="font-size:10px;">
+                            <a class="btn btn-outline-warning btn-sm rounded-5" 
+                                data-bs-toggle="modal" 
+                                data-bs-target="#Detail" 
+                                id="detail"
+                                data-typemvt="${row.typemvt}"
+                                data-montant="${row.montant}"
+                                data-motif="${row.motif}"
+                                data-solde_avant="${row.solde_avant}"
+                                data-solde_apres="${row.solde_apres}"
+                                data-user_sexe="${row.user_sexe}"
+                                data-user="${row.user}"
+                                data-date_ope="${row.date_ope}"
+                                data-created_at="${row.created_at}"
+                                data-libelle="${row.libelle}">
+                                <i class="ri-eye-line"></i>
+                            </a>
+                        </div>
+                    `,
+                    searchable: false,
+                    orderable: false,
+                }
+            ],
+            ...dataTableConfig,
+            initComplete: function(settings, json) {
+                initializeRowEventListenersTable_OpC();
+            },
+        });
 
-            const oneYearInMs = 365 * 24 * 60 * 60 * 1000;
-            if (endDate - startDate > oneYearInMs) {
-                showAlert('Erreur', 'La plage de dates ne peut pas dépasser un an.', 'error');
-                return false;
-            }
+        function initializeRowEventListenersTable_OpC() {
 
-            const url = `/api/trace_operation/${date1}/${date2}/${typemvt}/${user_id}?page=${page}`;
-            fetch(url)
-                .then(response => response.json())
-                .then(data => {
+            $('.Table_OpC').on('click', '#detail', function() {
+                const id = $(this).data('id');
+                const typemvt = $(this).data('typemvt');
+                const montant = $(this).data('montant');
+                const motif = $(this).data('motif');
+                const solde_avant = $(this).data('solde_avant');
+                const solde_apres = $(this).data('solde_apres');
+                const user_sexe = $(this).data('user_sexe');
+                const user = $(this).data('user');
 
-                    const traces = data.trace || [] ;
-                    const pagination = data.pagination || {};
+                const date_ope = $(this).data('date_ope');
+                const created_at = $(this).data('created_at');
+                const libelle = $(this).data('libelle');
+                
+                const modal = document.getElementById('modal_detail');
+                modal.innerHTML = '';
 
-                    const perPage = pagination.per_page || 10;
-                    const currentPage = pagination.current_page || 1;
-
-                    tableBody.innerHTML = '';
-
-                    if (traces.length > 0) {
-
-                        loaderDiv.style.display = 'none';
-                        messageDiv.style.display = 'none';
-                        tableDiv.style.display = 'block';
-
-                        traces.forEach((item, index) => {
-                            const row = document.createElement('tr');
-                            row.innerHTML = `
-                                <td>${((currentPage - 1) * perPage) + index + 1}</td>
-                                <td>${item.user_sexe}. ${item.user}</td>
-                                <td>${item.motif}</td>
-                                <td>${item.typemvt}</td>
-                                ${item.typemvt == 'Entrer de Caisse' ? 
-                                `<td> 
-                                    <span class="fs-6 badge bg-success-subtle text-success" >
-                                        + ${item.montant} Fcfa
-                                    </span>
-                                </td>` : 
-                                `<td>
-                                    <span class="fs-6 badge bg-danger-subtle text-danger" >
-                                        - ${item.montant} Fcfa
-                                    </span>
-                                </td>`
-                                }
-                                ${item.date_ope == '' ? 
-                                `<td>${formatDate(item.created_at)}</td>` : 
-                                `<td>${formatDate(item.date_ope)}</td>`
-                                }
-                                <td>${formatDateHeure(item.created_at)}</td>
-                                <td>
-                                    <div class="d-inline-flex gap-1">
-                                        <a class="btn btn-outline-warning btn-sm rounded-5" data-bs-toggle="modal" data-bs-target="#Detail" id="detail-${item.id}">
-                                            <i class="ri-eye-line"></i>
-                                        </a>
+                const div = document.createElement('div');
+                div.innerHTML = `
+                       <div class="row gx-3">
+                            <div class="col-12">
+                                <div class=" mb-3">
+                                    <div class="card-body">
+                                        <ul class="list-group">
+                                            <li class="list-group-item active text-center" aria-current="true">
+                                                Informations de l'operation
+                                            </li>
+                                            <li class="list-group-item">
+                                                Type de Mouvement : ${typemvt}
+                                            </li>
+                                            <li class="list-group-item ${typemvt == 'Entrer de Caisse' ? 'text-success' : 'text-danger' }">
+                                                Montant : ${typemvt == 'Entrer de Caisse' ? '+ '+montant : '- '+montant } Fcfa
+                                            </li>
+                                            <li class="list-group-item">
+                                                Motif : ${motif}
+                                            </li>
+                                            <li class="list-group-item text-primary">
+                                                Solde avant opération : ${solde_avant} Fcfa
+                                            </li>
+                                            <li class="list-group-item text-primary">
+                                                Solde après opération : ${solde_apres} Fcfa
+                                            </li>
+                                            <li class="list-group-item">
+                                                Créer par : ${user_sexe}. ${user} 
+                                            </li>
+                                            <li class="list-group-item">
+                                                Date de l'opération : ${date_ope == `` ? `${formatDate(created_at)}` : `${formatDate(date_ope)}` }
+                                            </li>
+                                            <li class="list-group-item">
+                                                Date de création : ${formatDateHeure(created_at)}
+                                            </li>
+                                            <li class="list-group-item">
+                                                Libelle : ${libelle}
+                                            </li>
+                                        </ul>
                                     </div>
-                                </td>
-                            `;
-                            // Append the row to the table body
-                            tableBody.appendChild(row);
+                                </div>
+                            </div>
+                        </div>     
+                `;
 
-                            document.getElementById(`detail-${item.id}`).addEventListener('click', () =>
-                                {
-                                    const modal = document.getElementById('modal_detail');
-                                    modal.innerHTML = '';
+                modal.appendChild(div);
+            });
 
-                                    const div = document.createElement('div');
-                                    div.innerHTML = `
-                                           <div class="row gx-3">
-                                                <div class="col-12">
-                                                    <div class=" mb-3">
-                                                        <div class="card-body">
-                                                            <ul class="list-group">
-                                                                <li class="list-group-item active text-center" aria-current="true">
-                                                                    Informations de l'operation
-                                                                </li>
-                                                                <li class="list-group-item">
-                                                                    Type de Mouvement : ${item.typemvt}
-                                                                </li>
-                                                                <li class="list-group-item ${item.typemvt == 'Entrer de Caisse' ? 'text-success' : 'text-danger' }">
-                                                                    Montant : ${item.typemvt == 'Entrer de Caisse' ? '+ '+item.montant : '- '+item.montant } Fcfa
-                                                                </li>
-                                                                <li class="list-group-item">
-                                                                    Motif : ${item.motif}
-                                                                </li>
-                                                                <li class="list-group-item text-primary">
-                                                                    Solde avant opération : ${item.solde_avant} Fcfa
-                                                                </li>
-                                                                <li class="list-group-item text-primary">
-                                                                    Solde après opération : ${item.solde_apres} Fcfa
-                                                                </li>
-                                                                <li class="list-group-item">
-                                                                    Créer par : ${item.user_sexe}. ${item.user} 
-                                                                </li>
-                                                                <li class="list-group-item">
-                                                                    Date de l'opération : ${item.date_ope == `` ? `${formatDate(item.created_at)}` : `${formatDate(item.date_ope)}` }
-                                                                </li>
-                                                                <li class="list-group-item">
-                                                                    Date de création : ${formatDateHeure(item.created_at)}
-                                                                </li>
-                                                                <li class="list-group-item">
-                                                                    Libelle : ${item.libelle}
-                                                                </li>
-                                                            </ul>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>     
-                                    `;
+        }
 
-                                    modal.appendChild(div);
+        $('#btn_search_trace').on('click', function() {
+            table_OpC.ajax.reload(null, false); 
+        });
 
-                                });
+        const table_Ofc = $('.Table_Ofc').DataTable({
 
-                        });
+            processing: false,
+            serverSide: false,
+            ajax: function(data, callback) {
 
-                        updatePaginationControls(pagination);
+                const date1 = $('#searchDate1_ofc').val();
+                const date2 = $('#searchDate2_ofc').val();
 
-                    } else {
-                        loaderDiv.style.display = 'none';
-                        messageDiv.style.display = 'block';
-                        tableDiv.style.display = 'none';
+                if (!date1.trim() || !date2.trim()) {
+                    showAlert('Alert', 'Tous les champs sont obligatoires.','warning');
+                    return false; 
+                }
+
+                const startDate = new Date(date1);
+                const endDate = new Date(date2);
+
+                if (startDate > endDate) {
+                    showAlert('Erreur', 'La date de début ne peut pas être supérieur à la date de fin.', 'error');
+                    return false;
+                }
+
+                const oneYearInMs = 365 * 24 * 60 * 60 * 1000;
+                if (endDate - startDate > oneYearInMs) {
+                    showAlert('Erreur', 'La plage de dates ne peut pas dépasser un an.', 'error');
+                    return false;
+                }
+                
+                $.ajax({
+                    url: `/api/trace_ouvert_fermer/${date1}/${date2}`,
+                    type: 'GET',
+                    success: function(response) {
+                        callback({ data: response.data });
+                    },
+                    error: function() {
+                        console.log('Error fetching data. Please check your API or network trace_ouvert_fermer.');
                     }
-                })
-                .catch(error => {
-                    console.error('Erreur lors du chargement des données:', error);
-                    loaderDiv.style.display = 'none';
-                    messageDiv.style.display = 'block';
-                    tableDiv.style.display = 'none';
                 });
-        }
+            },
+            columns: [
+                { 
+                    data: null, 
+                    render: (data, type, row, meta) => meta.row + 1,
+                    searchable: false,
+                    orderable: false,
+                },
+                {
+                    data: 'motif',
+                    render: function(data, type, row) {
+                        if (data === 'OUVERTURE DE CAISSE') {
+                            return `<span class="fs-6 badge bg-success-subtle text-success">${data}</span>`;
+                        } else {
+                            return `<span class="fs-6 badge bg-danger-subtle text-danger">${data}</span>`;
+                        }
+                    },
+                    searchable: true
+                },
+                {
+                    data: 'montant',
+                    render: function(data, type, row) {
+                        return `${data} Fcfa`;
+                    },
+                    searchable: true
+                },
+                {
+                    data: null, // Combine `user_sexe` and `user` fields
+                    render: function(data, type, row) {
+                        return `${row.user_sexe}. ${row.user}`;
+                    },
+                    searchable: false
+                },
+                {
+                    data: 'created_at',
+                    render: function(data, type, row) {
+                        return formatDateHeure(data); // Utilise votre fonction de formatage
+                    },
+                    searchable: false
+                }
+            ],
+            ...dataTableConfig,
+        });
 
-        function updatePaginationControls(pagination) 
-        {
-            const paginationDiv = document.getElementById('pagination-controls');
-            paginationDiv.innerHTML = '';
-
-            // Bootstrap pagination wrapper
-            const paginationWrapper = document.createElement('ul');
-            paginationWrapper.className = 'pagination justify-content-center';
-
-            // Previous button
-            if (pagination.current_page > 1) {
-                const prevButton = document.createElement('li');
-                prevButton.className = 'page-item';
-                prevButton.innerHTML = `<a class="page-link" href="#">Precédent</a>`;
-                prevButton.onclick = (event) => {
-                    event.preventDefault(); // Empêche le défilement en haut de la page
-                    list(pagination.current_page - 1);
-                };
-                paginationWrapper.appendChild(prevButton);
-            } else {
-                // Disable the previous button if on the first page
-                const prevButton = document.createElement('li');
-                prevButton.className = 'page-item disabled';
-                prevButton.innerHTML = `<a class="page-link" href="#">Precédent</a>`;
-                paginationWrapper.appendChild(prevButton);
-            }
-
-            // Page number links (show a few around the current page)
-            const totalPages = pagination.last_page;
-            const currentPage = pagination.current_page;
-            const maxVisiblePages = 5; // Max number of page links to display
-
-            let startPage = Math.max(1, currentPage - Math.floor(maxVisiblePages / 2));
-            let endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
-
-            // Adjust start page if end page exceeds the total pages
-            if (endPage - startPage < maxVisiblePages - 1) {
-                startPage = Math.max(1, endPage - maxVisiblePages + 1);
-            }
-
-            // Loop through pages and create page links
-            for (let i = startPage; i <= endPage; i++) {
-                const pageItem = document.createElement('li');
-                pageItem.className = `page-item ${i === currentPage ? 'active' : ''}`;
-                pageItem.innerHTML = `<a class="page-link" href="#">${i}</a>`;
-                pageItem.onclick = (event) => {
-                    event.preventDefault(); // Empêche le défilement en haut de la page
-                    list(i);
-                };
-                paginationWrapper.appendChild(pageItem);
-            }
-
-            // Ellipsis (...) if not all pages are shown
-            if (endPage < totalPages) {
-                const ellipsis = document.createElement('li');
-                ellipsis.className = 'page-item disabled';
-                ellipsis.innerHTML = `<a class="page-link" href="#">...</a>`;
-                paginationWrapper.appendChild(ellipsis);
-
-                // Add the last page link
-                const lastPageItem = document.createElement('li');
-                lastPageItem.className = `page-item`;
-                lastPageItem.innerHTML = `<a class="page-link" href="#">${totalPages}</a>`;
-                lastPageItem.onclick = (event) => {
-                    event.preventDefault(); // Empêche le défilement en haut de la page
-                    list(totalPages);
-                };
-                paginationWrapper.appendChild(lastPageItem);
-            }
-
-            // Next button
-            if (pagination.current_page < pagination.last_page) {
-                const nextButton = document.createElement('li');
-                nextButton.className = 'page-item';
-                nextButton.innerHTML = `<a class="page-link" href="#">Suivant</a>`;
-                nextButton.onclick = (event) => {
-                    event.preventDefault(); // Empêche le défilement en haut de la page
-                    list(pagination.current_page + 1);
-                };
-                paginationWrapper.appendChild(nextButton);
-            } else {
-                // Disable the next button if on the last page
-                const nextButton = document.createElement('li');
-                nextButton.className = 'page-item disabled';
-                nextButton.innerHTML = `<a class="page-link" href="#">Suivant</a>`;
-                paginationWrapper.appendChild(nextButton);
-            }
-
-            // Append pagination controls to the DOM
-            paginationDiv.appendChild(paginationWrapper);
-        }
-
-        function list_ofc(page = 1) 
-        {
-
-            const tableBody = document.querySelector('#Table_ofc tbody');
-            const messageDiv = document.getElementById('message_Table_ofc');
-            const tableDiv = document.getElementById('div_Table_ofc');
-            const loaderDiv = document.getElementById('div_Table_loader_ofc');
-
-            messageDiv.style.display = 'none';
-            tableDiv.style.display = 'none';
-            loaderDiv.style.display = 'block';
-
-            const date1 = document.getElementById('searchDate1_ofc').value;
-            const date2 = document.getElementById('searchDate2_ofc').value;
-
-            if (!date1.trim() || !date2.trim()) {
-                showAlert('Alert', 'Tous les champs sont obligatoires.','warning');
-                return false; 
-            }
-
-            const startDate = new Date(date1);
-            const endDate = new Date(date2);
-
-            if (startDate > endDate) {
-                showAlert('Erreur', 'La date de début ne peut pas être supérieur à la date de fin.', 'error');
-                return false;
-            }
-
-            const oneYearInMs = 365 * 24 * 60 * 60 * 1000;
-            if (endDate - startDate > oneYearInMs) {
-                showAlert('Erreur', 'La plage de dates ne peut pas dépasser un an.', 'error');
-                return false;
-            }
-
-            const url = `/api/trace_ouvert_fermer/${date1}/${date2}?page=${page}`;
-            fetch(url)
-                .then(response => response.json())
-                .then(data => {
-
-                    const traces = data.trace || [] ;
-                    const pagination = data.pagination || {};
-
-                    const perPage = pagination.per_page || 10;
-                    const currentPage = pagination.current_page || 1;
-
-                    tableBody.innerHTML = '';
-
-                    if (traces.length > 0) {
-
-                        loaderDiv.style.display = 'none';
-                        messageDiv.style.display = 'none';
-                        tableDiv.style.display = 'block';
-
-                        traces.forEach((item, index) => {
-                            const row = document.createElement('tr');
-                            row.innerHTML = `
-                                <td>${((currentPage - 1) * perPage) + index + 1}</td>
-                                ${item.motif == 'OUVERTURE DE CAISSE' ? 
-                                `<td> 
-                                    <span class="fs-6 badge bg-success-subtle text-success" >
-                                        ${item.motif}
-                                    </span>
-                                </td>` : 
-                                `<td>
-                                    <span class="fs-6 badge bg-danger-subtle text-danger" >
-                                        ${item.motif}
-                                    </span>
-                                </td>`
-                                }
-                                <td>${item.montant} Fcfa</td>
-                                <td>${item.user_sexe}. ${item.user}</td>
-                                <td>${formatDateHeure(item.created_at)}</td>
-                            `;
-                            // Append the row to the table body
-                            tableBody.appendChild(row);
-
-                        });
-
-                        updatePaginationControls_ofc(pagination);
-
-                    } else {
-                        loaderDiv.style.display = 'none';
-                        messageDiv.style.display = 'block';
-                        tableDiv.style.display = 'none';
-                    }
-                })
-                .catch(error => {
-                    console.error('Erreur lors du chargement des données:', error);
-                    loaderDiv.style.display = 'none';
-                    messageDiv.style.display = 'block';
-                    tableDiv.style.display = 'none';
-                });
-        }
-
-        function updatePaginationControls_ofc(pagination) 
-        {
-            const paginationDiv = document.getElementById('pagination-controls_ofc');
-            paginationDiv.innerHTML = '';
-
-            // Bootstrap pagination wrapper
-            const paginationWrapper = document.createElement('ul');
-            paginationWrapper.className = 'pagination justify-content-center';
-
-            // Previous button
-            if (pagination.current_page > 1) {
-                const prevButton = document.createElement('li');
-                prevButton.className = 'page-item';
-                prevButton.innerHTML = `<a class="page-link" href="#">Precédent</a>`;
-                prevButton.onclick = (event) => {
-                    event.preventDefault(); // Empêche le défilement en haut de la page
-                    list_ofc(pagination.current_page - 1);
-                };
-                paginationWrapper.appendChild(prevButton);
-            } else {
-                // Disable the previous button if on the first page
-                const prevButton = document.createElement('li');
-                prevButton.className = 'page-item disabled';
-                prevButton.innerHTML = `<a class="page-link" href="#">Precédent</a>`;
-                paginationWrapper.appendChild(prevButton);
-            }
-
-            // Page number links (show a few around the current page)
-            const totalPages = pagination.last_page;
-            const currentPage = pagination.current_page;
-            const maxVisiblePages = 5; // Max number of page links to display
-
-            let startPage = Math.max(1, currentPage - Math.floor(maxVisiblePages / 2));
-            let endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
-
-            // Adjust start page if end page exceeds the total pages
-            if (endPage - startPage < maxVisiblePages - 1) {
-                startPage = Math.max(1, endPage - maxVisiblePages + 1);
-            }
-
-            // Loop through pages and create page links
-            for (let i = startPage; i <= endPage; i++) {
-                const pageItem = document.createElement('li');
-                pageItem.className = `page-item ${i === currentPage ? 'active' : ''}`;
-                pageItem.innerHTML = `<a class="page-link" href="#">${i}</a>`;
-                pageItem.onclick = (event) => {
-                    event.preventDefault(); // Empêche le défilement en haut de la page
-                    list_ofc(i);
-                };
-                paginationWrapper.appendChild(pageItem);
-            }
-
-            // Ellipsis (...) if not all pages are shown
-            if (endPage < totalPages) {
-                const ellipsis = document.createElement('li');
-                ellipsis.className = 'page-item disabled';
-                ellipsis.innerHTML = `<a class="page-link" href="#">...</a>`;
-                paginationWrapper.appendChild(ellipsis);
-
-                // Add the last page link
-                const lastPageItem = document.createElement('li');
-                lastPageItem.className = `page-item`;
-                lastPageItem.innerHTML = `<a class="page-link" href="#">${totalPages}</a>`;
-                lastPageItem.onclick = (event) => {
-                    event.preventDefault(); // Empêche le défilement en haut de la page
-                    list_ofc(totalPages);
-                };
-                paginationWrapper.appendChild(lastPageItem);
-            }
-
-            // Next button
-            if (pagination.current_page < pagination.last_page) {
-                const nextButton = document.createElement('li');
-                nextButton.className = 'page-item';
-                nextButton.innerHTML = `<a class="page-link" href="#">Suivant</a>`;
-                nextButton.onclick = (event) => {
-                    event.preventDefault(); // Empêche le défilement en haut de la page
-                    list_ofc(pagination.current_page + 1);
-                };
-                paginationWrapper.appendChild(nextButton);
-            } else {
-                // Disable the next button if on the last page
-                const nextButton = document.createElement('li');
-                nextButton.className = 'page-item disabled';
-                nextButton.innerHTML = `<a class="page-link" href="#">Suivant</a>`;
-                paginationWrapper.appendChild(nextButton);
-            }
-
-            // Append pagination controls to the DOM
-            paginationDiv.appendChild(paginationWrapper);
-        }
+        $('#btn_search_trace_ofc').on('click', function() {
+            table_Ofc.ajax.reload(null, false); 
+        });
 
         function historique() {
 

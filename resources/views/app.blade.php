@@ -19,10 +19,12 @@
 
     <link rel="stylesheet" href="{{asset('assets/vendor/dataTable2/datatables.css')}}" />
     <script src="{{asset('assets/vendor/dataTable2/datatables.js')}}"></script>
+    <script src="{{asset('assets/vendor/dataTable2/datatables_lang_config.js')}}"></script>
+    <script src="{{asset('assets/vendor/dataTable2/datatables_lang_config_init.js')}}"></script>
 
-    <link rel="stylesheet" href="assets/vendor/datatables/dataTables.bs5.css">
-    <link rel="stylesheet" href="assets/vendor/datatables/dataTables.bs5-custom.css">
-    <link rel="stylesheet" href="assets/vendor/datatables/buttons/dataTables.bs5-custom.css">
+    <link rel="stylesheet" href="{{ asset('assets/vendor/datatables/dataTables.bs5.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/vendor/datatables/dataTables.bs5-custom.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/vendor/datatables/buttons/dataTables.bs5-custom.css') }}">
 
 </head>
 
@@ -555,6 +557,10 @@
     <script src="{{asset('assets/vendor/overlay-scroll/custom-scrollbar.js')}}"></script>
     <script src="{{asset('assets/vendor/apex/apexcharts.min.js')}}"></script>
     <script src="{{asset('assets/js/custom.js')}}"></script>
+
+    <script src="{{ asset('assets/vendor/datatables/dataTables.min.js') }}"></script>
+    <script src="{{ asset('assets/vendor/datatables/dataTables.bootstrap.min.js') }}"></script>
+    <script src="{{ asset('assets/vendor/datatables/custom/custom-datatables.js') }}"></script>
 
     {{-- <script>
         const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');

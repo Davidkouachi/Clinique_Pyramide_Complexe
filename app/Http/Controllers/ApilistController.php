@@ -110,7 +110,7 @@ class ApilistController extends Controller
     {
         $today = Carbon::today();
 
-        $consultationQuery = detailconsultation::join('consultations', 'consultations.id', '=', 'detailconsultations.consultation_id')
+        $consultation = detailconsultation::join('consultations', 'consultations.id', '=', 'detailconsultations.consultation_id')
                                     ->leftJoin('users', 'users.id', '=', 'consultations.user_id')
                                     ->join('patients', 'patients.id', '=', 'consultations.patient_id')
                                     ->join('factures', 'factures.id', '=', 'consultations.facture_id')
@@ -124,18 +124,11 @@ class ApilistController extends Controller
                                         'patients.matricule as matricule'
                                     )
                                     ->whereDate('detailconsultations.created_at', '=', $today)
-                                    ->orderBy('detailconsultations.created_at', 'desc');
-
-        $consultation = $consultationQuery->paginate(15);
+                                    ->orderBy('detailconsultations.created_at', 'desc')
+                                    ->get();
 
         return response()->json([
-            'consultation' => $consultation->items(), // Paginated data
-            'pagination' => [
-                'current_page' => $consultation->currentPage(),
-                'last_page' => $consultation->lastPage(),
-                'per_page' => $consultation->perPage(),
-                'total' => $consultation->total(),
-            ]
+            'data' => $consultation,
         ]);
     }
 
@@ -676,7 +669,7 @@ class ApilistController extends Controller
     {
         $today = Carbon::today();
 
-        $rdvQuery = rdvpatient::Join('patients', 'patients.id', '=', 'rdvpatients.patient_id')
+        $rdv = rdvpatient::Join('patients', 'patients.id', '=', 'rdvpatients.patient_id')
                         ->Join('users', 'users.id', '=', 'rdvpatients.user_id')
                         ->join('typemedecins', 'typemedecins.user_id', '=', 'users.id')
                         ->join('typeactes', 'typeactes.id', '=', 'typemedecins.typeacte_id')
@@ -688,11 +681,10 @@ class ApilistController extends Controller
                             'users.name as medecin',
                             'typeactes.nom as specialite'
                         )
-                        ->orderBy('rdvpatients.created_at', 'desc');
+                        ->orderBy('rdvpatients.created_at', 'desc')
+                        ->get();
 
-        $rdv = $rdvQuery->paginate(15);
-
-        foreach ($rdv->items() as $value) {
+        foreach ($rdv as $value) {
             $horaires = programmemedecin::join('joursemaines', 'joursemaines.id', '=', 'programmemedecins.jour_id')
                                     ->where('programmemedecins.user_id', '=', $value->user_id)
                                     ->where('programmemedecins.statut', '=', 'oui')
@@ -703,13 +695,7 @@ class ApilistController extends Controller
         }
 
         return response()->json([
-            'rdv' => $rdv->items(), // Paginated data
-            'pagination' => [
-                'current_page' => $rdv->currentPage(),
-                'last_page' => $rdv->lastPage(),
-                'per_page' => $rdv->perPage(),
-                'total' => $rdv->total(),
-            ]
+            'data' => $rdv,
         ]);
     }
 
@@ -1023,33 +1009,26 @@ class ApilistController extends Controller
         $date1 = Carbon::parse($date1)->startOfDay();
         $date2 = Carbon::parse($date2)->endOfDay();
 
-        $traceQuery = historiquecaisse::whereBetween('created_at', [$date1, $date2])
-                                            ->orderBy('created_at', 'desc');
+        $query = historiquecaisse::whereBetween('created_at', [$date1, $date2]);
 
         if ($typemvt !== 'tous') {
-            $traceQuery->where('typemvt', '=', $typemvt);
+            $query->where('typemvt', '=', $typemvt);
         }
 
         if ($user_id !== 'tous') {
-            $traceQuery->where('creer_id', '=', $user_id);
+            $query->where('creer_id', '=', $user_id);
         }
 
-        $trace = $traceQuery->paginate(15);
+        $trace = $query->orderBy('created_at', 'desc')->get();
 
-        foreach ($trace->items() as $value) {
+        foreach ($trace as $value) {
             $user = user::find($value->creer_id);
             $value->user = $user->name;
             $value->user_sexe = $user->sexe;
         }
 
         return response()->json([
-            'trace' => $trace->items(),
-            'pagination' => [
-                'current_page' => $trace->currentPage(),
-                'last_page' => $trace->lastPage(),
-                'per_page' => $trace->perPage(),
-                'total' => $trace->total(),
-            ]
+            'data' => $trace,
         ]);
     }
 
@@ -1114,25 +1093,18 @@ class ApilistController extends Controller
         $date1 = Carbon::parse($date1)->startOfDay();
         $date2 = Carbon::parse($date2)->endOfDay();
 
-        $traceQuery = portecaisse::whereBetween('created_at', [$date1, $date2])
-                                            ->orderBy('created_at', 'desc');
+        $trace = portecaisse::whereBetween('created_at', [$date1, $date2])
+                                            ->orderBy('created_at', 'desc')
+                                            ->get();
 
-        $trace = $traceQuery->paginate(15);
-
-        foreach ($trace->items() as $value) {
+        foreach ($trace as $value) {
             $user = user::find($value->creer_id);
             $value->user = $user->name;
             $value->user_sexe = $user->sexe;
         }
 
         return response()->json([
-            'trace' => $trace->items(),
-            'pagination' => [
-                'current_page' => $trace->currentPage(),
-                'last_page' => $trace->lastPage(),
-                'per_page' => $trace->perPage(),
-                'total' => $trace->total(),
-            ]
+            'data' => $trace,
         ]);
     }
 

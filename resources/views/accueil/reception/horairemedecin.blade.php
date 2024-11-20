@@ -115,8 +115,19 @@
                                         </a>
                                     </div>
                                 </div>
-                                <div class="card-body">
-                                    <div class="">
+                                <div class="card-body row gx-3">
+                                    {{-- <div class="col-12">
+                                        <div class=" mb-0">
+                                            <div class="card-body">
+                                                <div class="text-center">
+                                                    <a class="d-flex align-items-center flex-column">
+                                                        <img src="{{asset('assets/images/rdv1.png')}}" class="img-7x rounded-circle border border-2">
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div> --}}
+                                    <div class="col-12">
                                         <div class="table-responsive">
                                             <table id="Table_day" class="table table-hover table-sm">
                                                 <thead>
@@ -1060,7 +1071,7 @@
                     render: (data, type, row) => `
                     <div class="d-flex align-items-center">
                         <a class="d-flex align-items-center flex-column me-2">
-                            <img src="/assets/images/user8.png" class="img-2x rounded-circle border border-1">
+                            <img src="/assets/images/rdv1.png" class="img-2x rounded-circle border border-1">
                         </a>
                         ${data}
                     </div>`,
@@ -1131,20 +1142,7 @@
                     orderable: false,
                 }
             ],
-            language: {
-                search: "Recherche:",
-                lengthMenu: "Afficher _MENU_ entrées",
-                info: "Affichage de _START_ à _END_ sur _TOTAL_ entrées",
-                infoEmpty: "Affichage de 0 à 0 sur 0 entrée",
-                paginate: {
-                    previous: "Précédent",
-                    next: "Suivant"
-                },
-                zeroRecords: "Aucune donnée trouvée",
-                emptyTable: "Aucune donnée disponible dans le tableau",
-            },
-            // autoWidth: true,
-            // scrollX: true, 
+            ...dataTableConfig, 
             initComplete: function(settings, json) {
                 initializeRowEventListeners();
             },
@@ -1208,7 +1206,6 @@
                         showAlert("ALERT", 'Veuillez sélectionner un jour valide selon les horaires du médecin.', "info");
                     }
                 });
-
             });
 
             $('#Table_day').on('click', '#motif', function() {
