@@ -987,7 +987,7 @@
                     data: null,
                     render: (data, type, row) => `
                         <div class="d-inline-flex gap-1" style="font-size:10px;">
-                            <a class="btn btn-outline-warning btn-sm rounded-5" 
+                            <a class="btn btn-outline-warning btn-sm" 
                                data-id="${row.id}" 
                                data-name="${row.np}"
                                data-matricule="${row.matricule}" 

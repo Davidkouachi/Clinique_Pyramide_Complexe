@@ -74,7 +74,6 @@ Route::middleware(['statutchambre','dateRdv'])->group(function () {
 	Route::get('/new_user', [ApiinsertController::class, 'new_user']);
 	Route::get('/caisse_ouvert', [ApiinsertController::class, 'caisse_ouvert']);
 	Route::get('/caisse_fermer', [ApiinsertController::class, 'caisse_fermer']);
-	Route::get('/update_date_hos/{id}', [ApiinsertController::class, 'update_date_hos']);
 	// insert debut
 
 	// search debut
@@ -131,6 +130,7 @@ Route::middleware(['statutchambre','dateRdv'])->group(function () {
 	Route::get('/update_specialite/{id}', [ApiupdateController::class, 'update_specialite']);
 	Route::get('/update_depot_fac/{id}', [ApiupdateController::class, 'update_depot_fac']);
 	Route::get('/update_assurance/{id}', [ApiupdateController::class, 'update_assurance']);
+	Route::get('/update_date_hos/{id}', [ApiupdateController::class, 'update_date_hos']);
 	// update debut
 
 	// delete debut

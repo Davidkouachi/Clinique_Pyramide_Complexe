@@ -51,6 +51,10 @@ use App\Models\depotfacture;
 
 class ApiupdateController extends Controller
 {
+    private function formatWithPeriods($number) {
+        return number_format($number, 0, '', '.');
+    }
+
     public function update_chambre(Request $request, $id)
     {
         $put = chambre::find($id);
@@ -354,11 +358,6 @@ class ApiupdateController extends Controller
 
     public function examen_Modif(Request $request, $id)
     {
-        // Log to check the values of nom and acte_id
-        \Log::info('Nom: ' . $request->nom);
-        \Log::info('Acte ID: ' . $request->acte_id);
-        \Log::info('ID: ' . $id);
-        
         // Check if there's another typeacte with the same name and acte_id but a different ID
         $verf = typeacte::where('nom', '=', $request->nom)
                         ->where('acte_id', '=', $request->acte_id)  // Ensure you're using acte_id correctly
@@ -629,6 +628,36 @@ class ApiupdateController extends Controller
         }
 
         return response()->json(['error' => true]);
+    }
+
+    public function update_date_hos(Request $request, $id)
+    {
+        $add = detailhopital::find($id);
+
+        $nbre_j_ancien = floor(Carbon::parse($add->date_debut)->diffInRealDays($add->date_fin));
+        $montant_chambre = str_replace('.', '', $add->montant_chambre);
+        $prix_chambre = ((int)$montant_chambre / (int)$nbre_j_ancien);
+
+        $nbre_j_new = floor(Carbon::parse($request->date1)->diffInRealDays($request->date2));
+        $montant_chambre_new = ((int)$prix_chambre * (int)$nbre_j_new);
+
+        $montant_new = str_replace('.', '', $add->montant_chambre) + str_replace('.', '', $add->montant_soins);
+
+        $taux = (str_replace('.', '', $add->part_assurance)/str_replace('.', '', $add->montant));
+
+        $part_assurance = $taux * $montant_new;
+        $part_patient = $montant_new -$part_assurance; 
+
+        $add->date_debut = $request->date1;
+        $add->date_fin = $request->date2;
+        $add->montant_chambre = $this->formatWithPeriods($montant_chambre_new);
+        $add->montant = $this->formatWithPeriods($montant_new);
+
+        if($add->save()){
+            return response()->json(['success' => true]);
+        } else {
+            return response()->json(['error' => true]);
+        }
     }
 
 }

@@ -1118,11 +1118,11 @@
                     data: null,
                     render: (data, type, row) => `
                         <div class="d-inline-flex gap-1" style="font-size:10px;">
-                            <a class="btn btn-outline-warning btn-sm rounded-5 edit-btn" data-motif="${row.motif}" data-bs-toggle="modal" data-bs-target="#Detail_motif" id="motif">
+                            <a class="btn btn-outline-warning btn-sm edit-btn" data-motif="${row.motif}" data-bs-toggle="modal" data-bs-target="#Detail_motif" id="motif">
                                 <i class="ri-eye-line"></i>
                             </a>
                             ${row.statut == 'en attente' ? 
-                            `<a class="btn btn-outline-info btn-sm rounded-5" data-bs-toggle="modal" data-bs-target="#Modif_Rdv_modal" id="modif"
+                            `<a class="btn btn-outline-info btn-sm" data-bs-toggle="modal" data-bs-target="#Modif_Rdv_modal" id="modif"
                                 data-id="${row.id}"
                                 data-date="${row.date}"
                                 data-patient="${row.patient}"
@@ -1132,7 +1132,7 @@
                                 data-horaires='${JSON.stringify(row.horaires)}'>
                                <i class="ri-edit-line"></i>
                             </a>
-                            <a class="btn btn-outline-danger btn-sm rounded-5" data-bs-toggle="modal" data-bs-target="#Mdelete" id="delete" data-id="${row.id}">
+                            <a class="btn btn-outline-danger btn-sm" data-bs-toggle="modal" data-bs-target="#Mdelete" id="delete" data-id="${row.id}">
                                 <i class="ri-delete-bin-line"></i>
                             </a>` :
                             `` }

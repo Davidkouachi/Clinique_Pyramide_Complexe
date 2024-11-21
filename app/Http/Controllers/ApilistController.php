@@ -207,16 +207,10 @@ class ApilistController extends Controller
             $hopitalQuery->where('detailhopitals.statut', '=', $statut);
         }
 
-        $hopital = $hopitalQuery->paginate(15);
+        $hopital = $hopitalQuery->get();
 
         return response()->json([
-            'hopital' => $hopital->items(), // Paginated data
-            'pagination' => [
-                'current_page' => $hopital->currentPage(),
-                'last_page' => $hopital->lastPage(),
-                'per_page' => $hopital->perPage(),
-                'total' => $hopital->total(),
-            ]
+            'data' => $hopital,
         ]);
     }
 

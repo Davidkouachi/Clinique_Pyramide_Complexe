@@ -88,13 +88,7 @@
                                     <div class="col-xxl-3 col-lg-4 col-sm-6">
                                         <div class="mb-3">
                                             <label class="form-label">Patient</label>
-                                            <div class="input-group">
-                                                <input type="hidden" class="form-control" id="matricule_patient" autocomplete="off">
-                                                <input type="text" class="form-control" id="patient" placeholder="Selectionner un Patient" autocomplete="off">
-                                            </div>
-                                            <div class="input-group">
-                                                <div class="suggestions w-100" id="suggestions_patient" style="display: none;"></div>
-                                            </div>
+                                            <select class="form-select select2" id="patient_id"></select>
                                         </div>
                                     </div>
                                     <div class="col-xxl-3 col-lg-4 col-sm-6" id="div_numcode" style="display: none;">
@@ -109,19 +103,19 @@
                                     <div class="col-xxl-3 col-lg-4 col-sm-6">
                                         <div class="mb-3">
                                             <label class="form-label">Medecin</label>
-                                            <select class="form-select" id="medecin_id"></select>
+                                            <select class="form-select select2" id="medecin_id"></select>
                                         </div>
                                     </div>
                                     <div class="col-xxl-3 col-lg-4 col-sm-6">
                                         <div class="mb-3">
                                             <label class="form-label">Type admission</label>
-                                            <select class="form-select" id="id_typeadmission"></select>
+                                            <select class="form-select select2" id="id_typeadmission"></select>
                                         </div>
                                     </div>
                                     <div class="col-xxl-3 col-lg-4 col-sm-6">
                                         <div class="mb-3">
                                             <label class="form-label">Nature Admission</label>
-                                            <select class="form-select" id="id_natureadmission">
+                                            <select class="form-select select2" id="id_natureadmission">
                                                 <option value="">Selectioner</option>
                                             </select>
                                         </div>
@@ -129,13 +123,13 @@
                                     <div class="col-xxl-3 col-lg-4 col-sm-6">
                                         <div class="mb-3">
                                             <label class="form-label">Chambre à occuper</label>
-                                            <select class="form-select" id="id_chambre"></select>
+                                            <select class="form-select select2" id="id_chambre"></select>
                                         </div>
                                     </div>
                                     <div class="col-xxl-3 col-lg-4 col-sm-6">
                                         <div class="mb-3">
                                             <label class="form-label">Lit à occuper</label>
-                                            <select class="form-select" id="id_lit">
+                                            <select class="form-select select2" id="id_lit">
                                                 <option value="">Selectioner</option>
                                             </select>
                                         </div>
@@ -145,7 +139,7 @@
                                             <label class="form-label">
                                                 Date d'entrée
                                             </label>
-                                            <input type="date" class="form-control" id="date_entrer" min="{{ date('Y-m-d') }}" max="{{ date('Y-m-d') }}" value="{{ date('Y-m-d') }}">
+                                            <input type="date" class="form-control" id="date_entrer" max="{{ date('Y-m-d') }}" value="{{ date('Y-m-d') }}">
                                         </div>
                                     </div>
                                     <div class="col-xxl-3 col-lg-4 col-sm-6">
@@ -153,7 +147,7 @@
                                             <label class="form-label">
                                                 Date de sortie probable
                                             </label>
-                                            <input type="date" class="form-control" id="date_sortie" min="{{ date('Y-m-d')}}" value="{{ date('Y-m-d') }}">
+                                            <input type="date" class="form-control" id="date_sortie" min="{{ date('Y-m-d') }}" value="{{ date('Y-m-d') }}">
                                         </div>
                                     </div>
                                     <div class="col-xxl-3 col-lg-4 col-sm-6">
@@ -285,9 +279,9 @@
                                                 </div>
                                             </div>
                                             <div class="card-body">
-                                                <div class="table-outer" id="div_Table_hos" style="display: none;">
+                                                <div class="">
                                                     <div class="table-responsive">
-                                                        <table class="table align-middle table-hover m-0 truncate" id="Table_hos">
+                                                        <table id="Table_day" class="table table-hover table-sm Table_hos">
                                                             <thead>
                                                                 <tr>
                                                                     <th scope="col">N°</th>
@@ -309,18 +303,6 @@
                                                         </table>
                                                     </div>
                                                 </div>
-                                                <div id="message_Table_hos" style="display: none;">
-                                                    <p class="text-center" >
-                                                        Aucune hospitalisation pour le moment
-                                                    </p>
-                                                </div>
-                                                <div id="div_Table_loader_hos" style="display: none;">
-                                                    <div class="d-flex justify-content-center align-items-center">
-                                                        <div class="spinner-border text-warning me-2" role="status" aria-hidden="true"></div>
-                                                        <strong>Chargement des données...</strong>
-                                                    </div>
-                                                </div>
-                                                <div id="pagination-controls-hos" ></div>
                                             </div>
                                         </div>
                                     </div>
@@ -381,7 +363,7 @@
     </div>
 </div>
 
-<div class="modal fade" id="Detail" tabindex="-1" aria-labelledby="exampleModalCenteredScrollableTitle" aria-modal="true" role="dialog">
+<div class="modal fade" id="Detail" tabindex="-1" role="dialog">
     <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
         <div class="modal-content">
             <div class="modal-header">
@@ -395,7 +377,7 @@
     </div>
 </div>
 
-<div class="modal fade" id="Add" tabindex="-1" aria-modal="true" role="dialog">
+<div class="modal fade" id="Add" tabindex="-1" role="dialog">
     <div class="modal-dialog modal-dialog modal-dialog-scrollable modal-lg">
         <div class="modal-content">
             <div class="modal-header">
@@ -432,7 +414,7 @@
     </div>
 </div>
 
-<div class="modal fade" id="Detail_produit" tabindex="-1" aria-modal="true" role="dialog">
+<div class="modal fade" id="Detail_produit" tabindex="-1" role="dialog">
     <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
         <div class="modal-content">
             <div class="modal-header">
@@ -484,7 +466,7 @@
     </div>
 </div>
 
-<div class="modal fade" id="Mmodif" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="Mmodif" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -519,152 +501,142 @@
 <script src="{{asset('jsPDF-master/dist/jspdf.umd.js')}}"></script>
 <script src="{{asset('jsPDF-AutoTable/dist/jspdf.plugin.autotable.min.js')}}"></script>
 
+@include('select2')
+
 <script>
-    document.addEventListener("DOMContentLoaded", function() {
+    $(document).ready(function() {
 
         Statistique();
-        Name_atient();
+        select_patient();
         select_medecin();
         select_chambre();
         select_typeadmission();
         list_lit();
-        list_hos();
 
-        document.getElementById("id_chambre").addEventListener("change", select_lit);
-        document.getElementById("id_typeadmission").addEventListener("change", select_natureadmission);
-        document.getElementById("btn_refresh_table").addEventListener("click", list_lit);
-        document.getElementById('date_entrer').addEventListener('change', calculerJours);
-        document.getElementById('date_sortie').addEventListener('change', calculerJours);
-        document.getElementById('btn_calcul').addEventListener('click', calculAmounts);
-        document.getElementById('btn_eng_hosp').addEventListener('click', eng_hosp);
-        document.getElementById("btn_search_table").addEventListener("click", list_hos);
-        document.getElementById("updateBtn").addEventListener("click", updatee);
+        $("#id_chambre").on("change", select_lit);
+        $("#id_typeadmission").on("change", select_natureadmission);
+        $("#btn_refresh_table").on("click", list_lit);
+        $('#btn_calcul').on('click', calculAmounts);
+        $('#btn_eng_hosp').on('click', eng_hosp);
+        $("#updateBtn").on("click", updatee);
 
-        function Name_atient() {
+        $('#btn_search_table').on('click', function() {
+            $('.Table_hos').DataTable().ajax.reload(null, false);
+        });
+
+        $('#patient_id').on('change', function() {
+            $('#div_calcul').hide();
+            rech_dosier($(this).val()); 
+        });
+
+        $('#date_entrer').on('change', function() {
+            const date1 = $(this).val(); // Récupérer la valeur de date_entrer
+            
+            if (date1) {
+                // Mettre à jour la valeur et le min de date_sortie
+                $('#date_sortie').val(date1);
+                $('#date_sortie').attr('min', date1);
+            }
+
+            calculerJours();
+        });
+
+        // Quand la date de sortie est modifiée
+        $('#date_sortie').on('change', function() {
+            const date2 = $(this).val(); // Récupérer la valeur de date_sortie
+            const date1 = $('#date_entrer').val(); // Récupérer la valeur de date_entrer
+
+            if (date2 && date1 && new Date(date2) < new Date(date1)) {
+                alert('La date de sortie probable ne peut pas être antérieure à la date d\'entrée.');
+                $(this).val(date1); // Réinitialiser la date_sortie à date_entrer
+            }
+
+            calculerJours();
+        });
+
+        function select_patient()
+        {
+            const selectElement = $('#patient_id');
+            selectElement.empty();
+
+            // Ajouter l'option par défaut
+            const defaultOption = $('<option>', {
+                value: '',
+                text: 'Selectionner'
+            });
+            selectElement.append(defaultOption);
+
             $.ajax({
                 url: '/api/name_patient_reception',
                 method: 'GET',
-                success: function(response) {
-                    const data = response.name;
-
-                    // Elements
-                    const input = document.getElementById('patient');
-                    const matricule_patient = document.getElementById('matricule_patient');
-                    const suggestionsDiv = document.getElementById('suggestions_patient');
-                    const patient_taux = document.getElementById('patient_taux');
-                    const appliq_remise = document.getElementById('appliq_remise');
-
-                    // Event listener for input typing
-                    function displaySuggestions() {
-                        const searchTerm = input.value.toLowerCase();
-                        
-                        // Clear previous suggestions
-                        suggestionsDiv.style.display = 'block';
-                        suggestionsDiv.innerHTML = '';
-
-                        // Filter data based on input
-                        const filteredData = data.filter(item => item.np.toLowerCase().includes(searchTerm));
-
-                        // Display filtered data
-                        filteredData.forEach(item => {
-                            const suggestion = document.createElement('div');
-                            suggestion.innerText = item.np;
-                            suggestion.addEventListener('click', function() {
-
-                                rech_dosier(item.id);
-                            });
-                            suggestionsDiv.appendChild(suggestion);
+                dataType: 'json',
+                success: function(data) {
+                    data.name.forEach(item => {
+                        const option = $('<option>', {
+                            value: item.id,
+                            text: item.np
                         });
-
-                        // Show/hide suggestions based on results
-                        suggestionsDiv.style.display = filteredData.length > 0 ? 'block' : 'none';
-                    }
-
-                    input.addEventListener('focus', function() {
-                        displaySuggestions();
-                    });
-
-                    input.addEventListener('input', function() {
-                        displaySuggestions();
-                    });
-
-                    document.addEventListener('click', function(e) {
-                        if (!suggestionsDiv.contains(e.target) && e.target !== input) {
-                            suggestionsDiv.style.display = 'none';
-                        }
+                        selectElement.append(option);
                     });
                 },
                 error: function() {
-                    // Gérer l'erreur
+                    console.error('Erreur lors du chargement des patients');
                 }
             });
         }
 
-        function rech_dosier(id)
-        {
+        function rech_dosier(id) {
             $.ajax({
                 url: '/api/rech_patient',
-                method: 'GET',  // Use 'POST' for data creation
+                method: 'GET',
                 data: { id: id },
                 success: function(response) {
 
-                    if(response.existep) {
+                    if (response.existep) {
                         showAlert('Alert', 'Ce patient n\'existe pas.', 'error');
                     } else if (response.success) {
 
                         const item = response.patient;
 
-                        const input = document.getElementById('patient');
-                        const matricule_patient = document.getElementById('matricule_patient');
-                        const suggestionsDiv = document.getElementById('suggestions_patient');
-                        const patient_taux = document.getElementById('patient_taux');
-                        const appliq_remise = document.getElementById('appliq_remise');
+                        const $patient_taux = $('#patient_taux');
+                        const $appliq_remise = $('#appliq_remise');
+                        const $btn_eng_hosp = $('#btn_eng_hosp');
+                        const $div_numcode = $('#div_numcode');
+                        const $numcode = $('#numcode');
 
                         const url = '/api/rech_hos_patient/' + item.id;
-                        fetch(url)
-                            .then(response => response.json())
-                            .then(data => {
+
+                        $.ajax({
+                            url: url,
+                            method: 'GET',
+                            success: function(data) {
 
                                 if (data.hos >= 1) {
-
-                                    showAlert('Alert', 'Ce patient est déjà hospitalisation.','info');
-                                    document.getElementById('btn_eng_hosp').style.display='none';
-
+                                    showAlert('Alert', 'Ce patient est déjà hospitalisé.', 'info');
+                                    select_patient();
                                     return false;
                                 }
 
-                                input.value = item.np;
-                                matricule_patient.value = item.matricule;
-                                suggestionsDiv.innerHTML = ''; // Clear suggestions
-                                suggestionsDiv.style.display = 'none';
+                                $patient_taux.val(item.taux ? item.taux : 0);
 
-                                patient_taux.value = item.taux ? item.taux : 0;
-
-                                document.getElementById('numcode').value = '';
-                                if (item.assurer == 'oui') {
-                                    document.getElementById('div_numcode').style.display = 'block';
-                                }else{
-                                    document.getElementById('div_numcode').style.display = 'none';
-                                }
-
-                                if (patient_taux.value == 0) {
-                                    for (let i = 0; i < appliq_remise.options.length; i++) {
-                                        if (appliq_remise.options[i].value === 'assurance') {
-                                            appliq_remise.options[i].style.display = 'none';
-                                        }
-                                    }
+                                $numcode.val('');
+                                if (item.assurer === 'oui') {
+                                    $div_numcode.show(); // Afficher la section pour numéro d'assurance
                                 } else {
-                                    for (let i = 0; i < appliq_remise.options.length; i++) {
-                                        if (appliq_remise.options[i].value === 'assurance') {
-                                            appliq_remise.options[i].style.display = 'block';
-                                        }
-                                    }
+                                    $div_numcode.hide(); // Masquer la section pour numéro d'assurance
                                 }
-                                
 
-                            })
-                            .catch(error => console.error('Erreur Recherche Patient:', error));
-
+                                // Gestion des options de remise
+                                if ($patient_taux.val() == 0) {
+                                    $appliq_remise.find('option[value="assurance"]').hide();
+                                } else {
+                                    $appliq_remise.find('option[value="assurance"]').show();
+                                }
+                            },
+                            error: function() {
+                                console.error('Erreur lors de la recherche d\'hospitalisation.');
+                            }
+                        });
                     }
                 },
                 error: function() {
@@ -681,172 +653,146 @@
             });
         }
 
-        function select_medecin()
-        {
-            const selectElement = document.getElementById('medecin_id');
-            // Clear existing options
-            selectElement.innerHTML = '';
-            const defaultOption = document.createElement('option');
-            defaultOption.value = '';
-            defaultOption.textContent = 'Selectionner';
-            selectElement.appendChild(defaultOption);
+        function select_medecin() {
+            const $selectElement = $('#medecin_id');
+            $selectElement.empty(); // Clear existing options
 
-            fetch('/api/select_medecin')
-                .then(response => response.json())
-                .then(data => {
-                    
-                    data.forEach((item) => {
-                        const option = document.createElement('option');
-                        option.value = `${item.id}`; // Ensure 'id' is the correct key
-                        option.textContent = `Dr. ${item.name}`; // Ensure 'nom' is the correct key
-                        selectElement.appendChild(option);
+            const defaultOption = $('<option>', { value: '', text: 'Selectionner' });
+            $selectElement.append(defaultOption);
+
+            $.ajax({
+                url: '/api/select_medecin',
+                method: 'GET',
+                success: function(data) {
+                    data.forEach(item => {
+                        const option = $('<option>', {
+                            value: item.id,
+                            text: `Dr. ${item.name}`
+                        });
+                        $selectElement.append(option);
                     });
-                })
-                .catch(error => console.error('Erreur lors du chargement des societes:', error));
+                },
+                error: function() {
+                    console.error('Erreur lors du chargement des médecins');
+                }
+            });
         }
 
-        function select_typeadmission()
-        {
-            const selectElement = document.getElementById('id_typeadmission');
-            selectElement.innerHTML = '';
+        function select_typeadmission() {
+            const $selectElement = $('#id_typeadmission');
+            $selectElement.empty();
 
-            const defaultOption = document.createElement('option');
-            defaultOption.value = '';
-            defaultOption.textContent = 'Sélectionner';
-            selectElement.appendChild(defaultOption);
-            // Vérifie que l'élément select existe
-            if (selectElement) {
-                // Effectuer une requête pour récupérer les taux
-                fetch('/api/select_typeadmission')
-                    .then(response => response.json())
-                    .then(data => {
-                        const typeadmissions = data.typeadmission;
-                        typeadmissions.forEach(item => {
-                            const option = document.createElement('option');
-                            option.value = item.id;
-                            option.textContent = item.nom;
-                            selectElement.appendChild(option);
+            const defaultOption = $('<option>', { value: '', text: 'Selectionner' });
+            $selectElement.append(defaultOption);
+
+            $.ajax({
+                url: '/api/select_typeadmission',
+                method: 'GET',
+                success: function(data) {
+                    data.typeadmission.forEach(item => {
+                        const option = $('<option>', {
+                            value: item.id,
+                            text: item.nom
                         });
-                    })
-                    .catch(error => console.error('Erreur lors du chargement des taux:', error));
-            }
+                        $selectElement.append(option);
+                    });
+                },
+                error: function() {
+                    console.error('Erreur lors du chargement des types d\'admission');
+                }
+            });
         }
 
-        function select_chambre()
-        {
-            const selectElement = document.getElementById('id_chambre');
-            selectElement.innerHTML = '';
+        function select_chambre() {
+            const $selectElement = $('#id_chambre');
+            $selectElement.empty();
 
-            const defaultOption = document.createElement('option');
-            defaultOption.value = '';
-            defaultOption.textContent = 'Sélectionner';
-            selectElement.appendChild(defaultOption);
-            // Vérifie que l'élément select existe
+            const defaultOption = $('<option>', { value: '', text: 'Selectionner' });
+            $selectElement.append(defaultOption);
 
-            if (selectElement) {
-                // Effectuer une requête pour récupérer les taux
-                fetch('/api/select_chambre')
-                    .then(response => response.json())
-                    .then(data => {
-                        const chambres = data.chambre;
-                        chambres.forEach(item => {
-                            const option = document.createElement('option');
-                            option.value = item.id;
-                            option.textContent = "CH-"+item.code;
-                            selectElement.appendChild(option);
+            $.ajax({
+                url: '/api/select_chambre',
+                method: 'GET',
+                success: function(data) {
+                    data.chambre.forEach(item => {
+                        const option = $('<option>', {
+                            value: item.id,
+                            text: `CH-${item.code}`
                         });
-                    })
-                    .catch(error => console.error('Erreur lors du chargement des taux:', error));
-            }
+                        $selectElement.append(option);
+                    });
+                },
+                error: function() {
+                    console.error('Erreur lors du chargement des chambres');
+                }
+            });
         }
 
         function select_lit() {
-            const typeSelect = document.getElementById('id_lit');
+            const $selectElement = $('#id_lit');
+            $selectElement.empty();
 
-            typeSelect.innerHTML = '';
-            const defaultOption = document.createElement('option');
-            defaultOption.value = '';
-            defaultOption.textContent = 'Sélectionner';
-            typeSelect.appendChild(defaultOption);
+            const defaultOption = $('<option>', { value: '', text: 'Selectionner' });
+            $selectElement.append(defaultOption);
 
-            const Id = document.getElementById('id_chambre').value;
-
-            // Validate if acteId is valid before making the AJAX request
-             if (Id) {
+            const chambreId = $('#id_chambre').val();
+            if (chambreId) {
                 $.ajax({
-                    url: '/api/lit_select/' + Id,
+                    url: '/api/lit_select/' + chambreId,
                     method: 'GET',
                     success: function(response) {
-                        const data = response.lit; 
-
+                        const data = response.lit;
                         if (data && data.length > 0) {
-
-                            // Populate the select with the response data
                             data.forEach(item => {
-                                const option = document.createElement('option');
-                                option.value = item.id; // Ensure 'id' is the correct key
-                                option.textContent = 'Lit-'+item.code+'/'+item.type;
-                                option.setAttribute('data-prix', item.prix);
-                                typeSelect.appendChild(option);
+                                const option = $('<option>', {
+                                    value: item.id,
+                                    text: `Lit-${item.code}/${item.type}`,
+                                    'data-prix': item.prix
+                                });
+                                $selectElement.append(option);
                             });
 
+                            // Mettre à jour le montant de la chambre lors de la sélection
+                            $selectElement.on('change', function() {
+                                const selectedOption = $(this).find('option:selected');
+                                const prix = selectedOption.data('prix');
+                                $('#montant_chambre').val(prix || 0);
+                            });
                         }
                     },
                     error: function() {
-                        console.error('Erreur lors du chargement des types d\'actes');
+                        console.error('Erreur lors du chargement des lits');
                     }
-                });
-
-                typeSelect.addEventListener('change', function() {
-                    const selectedOption = typeSelect.options[typeSelect.selectedIndex];
-                    const prix = selectedOption.getAttribute('data-prix');
-
-                    if (prix) {
-
-                        document.getElementById('montant_chambre').value = prix;
-
-
-                    } else {
-                        document.getElementById('montant_chambre').value = 0;
-                    }
-
                 });
             }
         }
 
         function select_natureadmission() {
-            const typeSelect = document.getElementById('id_natureadmission');
+            const $selectElement = $('#id_natureadmission');
+            $selectElement.empty();
 
-            typeSelect.innerHTML = '';
-            const defaultOption = document.createElement('option');
-            defaultOption.value = '';
-            defaultOption.textContent = 'Sélectionner';
-            typeSelect.appendChild(defaultOption);
+            const defaultOption = $('<option>', { value: '', text: 'Selectionner' });
+            $selectElement.append(defaultOption);
 
-            const Id = document.getElementById('id_typeadmission').value;
-
-            // Validate if acteId is valid before making the AJAX request
-             if (Id) {
+            const typeAdmissionId = $('#id_typeadmission').val();
+            if (typeAdmissionId) {
                 $.ajax({
-                    url: '/api/natureadmission_select/' + Id,
+                    url: '/api/natureadmission_select/' + typeAdmissionId,
                     method: 'GET',
                     success: function(response) {
-                        const data = response.natureadmission; 
-
+                        const data = response.natureadmission;
                         if (data && data.length > 0) {
-
-                            // Populate the select with the response data
                             data.forEach(item => {
-                                const option = document.createElement('option');
-                                option.value = item.id; // Ensure 'id' is the correct key
-                                option.textContent =item.nom;
-                                typeSelect.appendChild(option);
+                                const option = $('<option>', {
+                                    value: item.id,
+                                    text: item.nom
+                                });
+                                $selectElement.append(option);
                             });
-
                         }
                     },
                     error: function() {
-                        console.error('Erreur lors du chargement des types d\'actes');
+                        console.error('Erreur lors du chargement des natures d\'admission');
                     }
                 });
             }
@@ -1115,554 +1061,556 @@
 
         function calculerJours() {
             // Sélectionner les éléments des champs date
-            const dateEntree = document.getElementById('date_entrer');
-            const dateSortie = document.getElementById('date_sortie');
-            const joursInput = document.getElementById('nbre_jour');
+            const dateEntree = $('#date_entrer').val();
+            const dateSortie = $('#date_sortie').val();
+            const joursInput = $('#nbre_jour');
 
-            const entreeValue = new Date(dateEntree.value);
-            const sortieValue = new Date(dateSortie.value);
+            const entreeValue = new Date(dateEntree);
+            const sortieValue = new Date(dateSortie);
 
             // Vérifier si les deux dates sont valides
-            if (entreeValue && sortieValue) {
+            if (!isNaN(entreeValue) && !isNaN(sortieValue)) {
                 // Calcul de la différence en millisecondes
                 const difference = sortieValue - entreeValue;
                 // Convertir en jours (1 jour = 24*60*60*1000 millisecondes)
                 let jours = difference / (1000 * 60 * 60 * 24);
-                // jours = jours = 0 ? jours + 1 : 0;
                 
                 // Si jours est égal à 0, alors définir jours à 1
                 jours = jours === 0 ? 1 : jours;
-                
+
                 // Mise à jour de la valeur du champ input
-                joursInput.value = jours;
+                joursInput.val(jours);
             }
+
+            $('#div_calcul').hide();
+            calculAmounts();
         }
 
-        function eng_hosp()
-        {
+        function eng_hosp() {
             const auth_id = {{ Auth::user()->id }};
-            var matricule_patient = document.getElementById("matricule_patient").value;
-            var medecin_id = document.getElementById("medecin_id").value;
-            var id_typeadmission = document.getElementById("id_typeadmission").value;
-            var id_natureadmission = document.getElementById("id_natureadmission").value;
-            var id_chambre = document.getElementById("id_chambre").value;
-            var id_lit = document.getElementById('id_lit').value;
-            var date_entrer = document.getElementById('date_entrer').value;
-            var date_sortie = document.getElementById('date_sortie').value;
-            var numcode = document.getElementById('numcode').value;
 
-            if (!matricule_patient.trim() || 
-                !medecin_id.trim() || 
-                !id_typeadmission.trim() || 
-                !id_natureadmission.trim() || 
-                !id_chambre.trim() || 
-                !id_lit.trim() || 
-                !date_entrer.trim() || 
-                !date_sortie.trim()) {
-                showAlert('Alert', 'Tous les champs sont obligatoires.','warning');
-                return false; 
-            }
+            // Récupérer les valeurs des champs via jQuery
+            const patient_id = $('#patient_id').val()?.trim();
+            const medecin_id = $('#medecin_id').val()?.trim();
+            const id_typeadmission = $('#id_typeadmission').val()?.trim();
+            const id_natureadmission = $('#id_natureadmission').val()?.trim();
+            const id_chambre = $('#id_chambre').val()?.trim();
+            const id_lit = $('#id_lit').val()?.trim();
+            const date_entrer = $('#date_entrer').val()?.trim();
+            const date_sortie = $('#date_sortie').val()?.trim();
+            const numcode = $('#numcode').val()?.trim();
 
-            var montant_assurance = document.getElementById('montant_assurance').value;
-            var taux_remise = document.getElementById('taux_remise').value;
-            var montant_total = document.getElementById('montant_total').value;
-            var montant_patient = document.getElementById('montant_patient').value;
-            var patient_taux = document.getElementById('patient_taux').value;
-            var nbre_jour = document.getElementById('nbre_jour').value;
-            var montant_chambre = document.getElementById('montant_chambre').value;
-
-            // Validate monetary fields
-            if (!montant_assurance || 
-                !montant_total || 
-                !montant_patient || 
-                !patient_taux || 
-                !nbre_jour || 
-                !montant_chambre) {
-                
-                showAlert('Alert', 'Vérifier les montants SVP.','warning');
-                return false; 
-            }
-
-            var montantAssuranceValue = parseFloat(montant_assurance);
-            var montantTotalValue = parseFloat(montant_total);
-            var montantPatientValue = parseFloat(montant_patient);
-            var montantChambreValue = parseFloat(montant_chambre);
-
-            if (isNaN(montantAssuranceValue) || 
-                isNaN(montantTotalValue) || 
-                isNaN(montantPatientValue) || 
-                isNaN(montantChambreValue) || 
-                montantAssuranceValue < 0 || 
-                montantTotalValue < 0 || 
-                montantPatientValue < 0 || 
-                montantChambreValue < 0) {
-                
-                showAlert('Alert', 'Vérifier les montants SVP (les montants ne doivent pas être négatifs).','warning');
+            // Validation des champs obligatoires
+            if (!patient_id || 
+                !medecin_id || 
+                !id_typeadmission || 
+                !id_natureadmission || 
+                !id_chambre || 
+                !id_lit || 
+                !date_entrer || 
+                !date_sortie) {
+                showAlert('Alert', 'Tous les champs sont obligatoires.', 'warning');
                 return false;
             }
 
-            if (!nbre_jour || isNaN(nbre_jour) || nbre_jour < 0) {
+            // Validation des champs monétaires
+            const montant_assurance = $('#montant_assurance').val()?.trim() || 0;
+            const taux_remise = $('#taux_remise').val()?.trim() || 0;
+            const montant_total = $('#montant_total').val()?.trim() || 0;
+            const montant_patient = $('#montant_patient').val()?.trim() || 0;
+            const patient_taux = $('#patient_taux').val()?.trim() || 0;
+            const nbre_jour = $('#nbre_jour').val()?.trim() || 0;
+            const montant_chambre = $('#montant_chambre').val()?.trim() || 0;
 
-                showAlert('Alert', 'Veuillez vérifier les dates saisies.','warning');
+            if (montant_assurance < 0 || montant_total < 0 || montant_patient < 0 || montant_chambre < 0) {
+                showAlert('Alert', 'Vérifier les montants SVP (les montants ne doivent pas être négatifs).', 'warning');
                 return false;
             }
 
-            var preloader_ch = `
+            if (nbre_jour <= 0 || isNaN(nbre_jour)) {
+                showAlert('Alert', 'Veuillez vérifier les dates saisies.', 'warning');
+                return false;
+            }
+
+            // Ajouter un préchargeur
+            const preloader_ch = `
                 <div id="preloader_ch">
                     <div class="spinner_preloader_ch"></div>
-                </div>
-            `;
-            // Add the preloader to the body
-            document.body.insertAdjacentHTML('beforeend', preloader_ch);
+                </div>`;
+            $('body').append(preloader_ch);
 
+            // Requête AJAX
             $.ajax({
                 url: '/api/hosp_new',
-                method: 'GET',  // Use 'POST' for data creation
+                method: 'GET', // Changer selon l'API
                 data: {
-                    matricule_patient: matricule_patient,
-                    medecin_id: medecin_id,
-                    id_typeadmission: id_typeadmission,
-                    id_natureadmission: id_natureadmission,
-                    id_chambre: id_chambre,
-                    id_lit: id_lit,
-                    date_entrer: date_entrer,
-                    date_sortie: date_sortie,
-                    montant_assurance: montant_assurance,
-                    taux_remise: taux_remise,
-                    montant_total: montant_total,
-                    montant_patient: montant_patient,
-                    patient_taux: patient_taux,
-                    nbre_jour: nbre_jour,
-                    montant_chambre: montant_chambre,
-                    numcode: numcode,
-                    auth_id: auth_id,
+                    patient_id,
+                    medecin_id,
+                    id_typeadmission,
+                    id_natureadmission,
+                    id_chambre,
+                    id_lit,
+                    date_entrer,
+                    date_sortie,
+                    montant_assurance,
+                    taux_remise,
+                    montant_total,
+                    montant_patient,
+                    patient_taux,
+                    nbre_jour,
+                    montant_chambre,
+                    numcode,
+                    auth_id,
                 },
                 success: function(response) {
-                    var preloader = document.getElementById('preloader_ch');
-                    if (preloader) {
-                        preloader.remove();
-                    }
-                    
+                    // Supprimer le préchargeur
+                    $('#preloader_ch').remove();
+
                     if (response.success) {
-
-                        showAlert('Succès', 'Patient Hospitaliser.', 'success');
-
-                        reset();
-
-                        var newConsultationTab = new bootstrap.Tab(document.getElementById('tab-oneAAA'));
+                        showAlert('Succès', 'Patient hospitalisé avec succès.', 'success');
+                        reset(); // Réinitialiser les champs
+                        const newConsultationTab = new bootstrap.Tab($('#tab-oneAAA')[0]);
                         newConsultationTab.show();
-
-                        list_hos();
-
+                        $('.Table_hos').DataTable().ajax.reload(null, false); // Actualiser la liste des hospitalisations
                     } else if (response.error) {
-
-                        showAlert('Alert', 'Une erreur est survenue lors de l\'hospitalisation.','error');
-
+                        showAlert('Alert', response.error || 'Une erreur est survenue.', 'error');
                     }
-
                 },
                 error: function() {
-
-                    var preloader = document.getElementById('preloader_ch');
-                    if (preloader) {
-                        preloader.remove();
-                    }
-
-                    showAlert('Alert', 'Une erreur est survenue lors de l\'hospitalisation.','error');                    
+                    // Supprimer le préchargeur en cas d'erreur
+                    $('#preloader_ch').remove();
+                    showAlert('Alert', 'Une erreur est survenue lors de l\'hospitalisation.', 'error');
                 }
             });
         }
 
-        function reset()
-        {
-            document.getElementById("patient").value = '';
-            document.getElementById("matricule_patient").value = '';
-            document.getElementById("medecin_id").value = '';
-            document.getElementById("id_typeadmission").value = '';
-            document.getElementById("id_natureadmission").value = '';
-            document.getElementById("id_chambre").value = '';
-            document.getElementById('id_lit').value = '';
+        function reset() {
+            // Réinitialiser les champs texte et numériques
+            select_patient();
+            $('#medecin_id').val('').trigger('change');
+            $('#id_typeadmission').val('').trigger('change');
+            $('#id_natureadmission').val('').trigger('change');
+            $('#id_chambre').val('').trigger('change');
+            $('#id_lit').val('').trigger('change');
 
+            // Réinitialiser les dates à aujourd'hui
             const today = new Date().toISOString().split('T')[0];
-            document.getElementById('date_entrer').value = today;
-            document.getElementById('date_sortie').value = today;
+            $('#date_entrer').val(today);
+            $('#date_sortie').val(today);
 
-            document.getElementById('montant_assurance').value = '';
-            document.getElementById('taux_remise').value = '';
-            document.getElementById('montant_total').value = '';
-            document.getElementById('montant_patient').value = '';
-            document.getElementById('patient_taux').value = '';
-            document.getElementById('nbre_jour').value = '';
-            document.getElementById('montant_chambre').value = '';
-            document.getElementById('numcode').value = '';
+            // Réinitialiser les champs numériques et de montants
+            $('#montant_assurance').val('');
+            $('#taux_remise').val('');
+            $('#montant_total').val('');
+            $('#montant_patient').val('');
+            $('#patient_taux').val('');
+            $('#nbre_jour').val('');
+            $('#montant_chambre').val('');
+            $('#numcode').val('');
 
-            document.getElementById('div_loader').style.display = 'none';
-            document.getElementById('div_calcul').style.display = 'none';
-            document.getElementById('btn_calcul').style.display = 'block';
-            document.getElementById('div_numcode').style.display = 'none';
+            // Réinitialiser la visibilité des divs et boutons
+            $('#div_loader').hide();
+            $('#div_calcul').hide();
+            $('#btn_calcul').show();
+            $('#div_numcode').hide();
 
-            calculerJours();
+            $('#nbre_jour').val('1');
+
             Statistique();
         }
 
-        function list_hos(page = 1) {
+        $('.Table_hos').DataTable({
 
-            const tableBody = document.querySelector('#Table_hos tbody');
-            const messageDiv = document.getElementById('message_Table_hos');
-            const tableDiv = document.getElementById('div_Table_hos'); // The message div
-            const loaderDiv = document.getElementById('div_Table_loader_hos');
+            processing: true,
+            serverSide: false,
+            ajax: function(data, callback) {
+                const date1 = $('#searchDate1').val();
+                const date2 = $('#searchDate2').val();
+                const statut = $('#statut').val();
+                
+                $.ajax({
+                    url: `/api/list_hopital/${date1}/${date2}/${statut}`,
+                    type: 'GET',
+                    success: function(response) {
+                        callback({ data: response.data });
+                    },
+                    error: function() {
+                        console.log('Error fetching data. Please check your API or network list_hopital.');
+                    }
+                });
+            },
+            columns: [
+                { 
+                    data: null, 
+                    render: (data, type, row, meta) => meta.row + 1,
+                    searchable: false,
+                    orderable: false,
+                },
+                { 
+                    data: 'type', 
+                    render: (data, type, row) => `
+                    <div class="d-flex align-items-center">
+                        <a class="d-flex align-items-center flex-column me-2">
+                            <img src="/assets/images/hospitalisation.jpg" class="img-2x rounded-circle border border-1">
+                        </a>
+                        ${data}
+                    </div>`,
+                    searchable: true, 
+                },
+                { 
+                    data: 'nature',
+                    searchable: true, 
+                },
+                { 
+                    data: 'patient',
+                    searchable: true,
+                },
+                { 
+                    data: 'date_debut', 
+                    render: (data) => `${formatDate(data)}`,
+                    searchable: true, 
+                },
+                { 
+                    data: 'date_fin', 
+                    render: (data) => `${formatDate(data)}`,
+                    searchable: true, 
+                },
+                { 
+                    data: 'medecin',
+                    searchable: true, 
+                },
+                { 
+                    data: 'statut',
+                    render: function(data) {
+                        return data === 'Hospitaliser' 
+                            ? `<span class="badge bg-danger">${data}</span>` 
+                            : `<span class="badge bg-success">${data}</span>`;
+                    },
+                    searchable: true
+                },
+                { 
+                    data: 'montant_chambre', 
+                    render: (data) => `${data} Fcfa`,
+                    searchable: true, 
+                },
+                { 
+                    data: 'montant_soins', 
+                    render: (data) => `${data} Fcfa`,
+                    searchable: true, 
+                },
+                { 
+                    data: 'montant', 
+                    render: (data) => `${data} Fcfa`,
+                    searchable: true, 
+                },
+                {
+                    data: null,
+                    render: (data, type, row) => `
+                        <div class="d-inline-flex gap-1" style="font-size:10px;">
+                            ${row.statut === 'Hospitaliser' 
+                            ? ` <a class="btn btn-outline-success btn-sm" id="add" data-bs-toggle="modal" data-bs-target="#Add"
+                                    data-id="${row.id}"
+                                >
+                                    <i class="ri-dossier-line"></i>
+                                </a>
+                                <a class="btn btn-outline-info btn-sm" id="modif" data-bs-toggle="modal" data-bs-target="#Mmodif"
+                                    data-id="${row.id}"
+                                    data-date_debut="${row.date_debut}"
+                                    data-date_fin="${row.date_fin}"
+                                >
+                                    <i class="ri-edit-line"></i>
+                                </a>` 
+                            : ''}
+                            <a class="btn btn-outline-danger btn-sm" id="detail_produit" data-bs-toggle="modal" data-bs-target="#Detail_produit"
+                                data-id="${row.id}"
+                                data-montant_soins="${row.montant_soins}"
+                            >
+                                <i class="ri-archive-2-fill"></i>
+                            </a>
+                            <a class="btn btn-outline-warning btn-sm" id="detail" data-bs-toggle="modal" data-bs-target="#Detail"
+                                data-id="${row.id}"
+                            >
+                                <i class="ri-eye-line"></i>
+                            </a>
+                            <a class="btn btn-outline-info btn-sm" id="fiche"
+                                data-id="${row.id}"
+                            >
+                                <i class="ri-file-line"></i>
+                            </a>
+                        </div>
+                    `,
+                    searchable: false,
+                    orderable: false,
+                }
+            ],
+            ...dataTableConfig,
+            initComplete: function(settings, json) {
+                initializeRowEventListeners();
+            },
+        });
 
-            const date1 = document.getElementById('searchDate1').value;
-            const date2 = document.getElementById('searchDate2').value;
+        function initializeRowEventListeners() {
 
-            messageDiv.style.display = 'none';
-            tableDiv.style.display = 'none';
-            loaderDiv.style.display = 'block';
+            $('.Table_hos').on('click', '#add', function() {
+                const id = $(this).data('id');
+                
+                fetch(`/api/list_produit_all`) // API endpoint pour récupérer la liste des produits
+                    .then(response => response.json())
+                    .then(data => {
+                        
+                        document.getElementById('id_hos_produit').value = id;
+                        document.getElementById('montant_total_produit').value = "";
 
-            // Fetch data from the API
-            const statut = document.getElementById('statut').value;
-            const url = `/api/list_hopital/${date1}/${date2}/${statut}?page=${page}`;
-            fetch(url) // API endpoint
-                .then(response => response.json())
-                .then(data => {
+                        const produits = data.produit;
 
-                    const hopitals = data.hopital || [] ;
-                    const pagination = data.pagination || {};
+                        const contenuDiv = document.getElementById('contenu');
+                        contenuDiv.innerHTML = '';
+                        
+                        addSelect(contenuDiv, produits);
+                    })
+                    .catch(error => {
+                        console.error('Erreur lors du chargement des données:', error);
+                    });
+            });
 
-                    const perPage = pagination.per_page || 10;
-                    const currentPage = pagination.current_page || 1;
+            $('.Table_hos').on('click', '#modif', function() {
+                const id = $(this).data('id');
+                const date_debut = $(this).data('date_debut');
+                const date_fin = $(this).data('date_fin');
 
-                    // Clear any existing rows in the table body
-                    tableBody.innerHTML = '';
+                document.getElementById('IdModif').value = `${id}`;
+                document.getElementById('date1M').value = `${date_debut}`;
+                document.getElementById('date2M').value = `${date_fin}`;
+            });
 
-                    if (hopitals.length > 0) {
+            $('.Table_hos').on('click', '#detail_produit', function() {
+                const id = $(this).data('id');
+                const montant_soins = $(this).data('montant_soins');
 
-                        loaderDiv.style.display = 'none';
-                        messageDiv.style.display = 'none';
-                        tableDiv.style.display = 'block';
+                const tableBodyP = document.querySelector('#TableP tbody');
+                const messageDivP = document.getElementById('message_TableP');
+                const tableDivP = document.getElementById('div_TableP');
+                const loaderDivP = document.getElementById('div_Table_loaderP');
 
-                        // Loop through each item in the chambre array
-                        hopitals.forEach((item, index) => {
-                            // Create a new row
-                            const row = document.createElement('tr');
-                            // Create and append cells to the row based on your table's structure
-                            let addButton = '';
-                            if (item.statut === 'Hospitaliser') {
-                                addButton = `
-                                    <a class="btn btn-outline-success btn-sm" id="add-${item.id}" data-bs-toggle="modal" data-bs-target="#Add">
-                                        <i class="ri-dossier-line"></i>
-                                    </a>
-                                    <a class="btn btn-outline-info btn-sm" id="modif-${item.id}" data-bs-toggle="modal" data-bs-target="#Mmodif">
-                                        <i class="ri-edit-line"></i>
-                                    </a>
+                messageDivP.style.display = 'none';
+                tableDivP.style.display = 'none';
+                loaderDivP.style.display = 'block';
+
+                fetch(`/api/list_facture_hos_d/${id}`) // API endpoint
+                    .then(response => response.json())
+                    .then(data => {
+                        // Access the 'chambre' array from the API response
+                        const factureds = data.factured;
+
+                        // Clear any existing rows in the table body
+                        tableBodyP.innerHTML = '';
+
+                        if (factureds.length > 0) {
+
+                            loaderDivP.style.display = 'none';
+                            messageDivP.style.display = 'none';
+                            tableDivP.style.display = 'block';
+
+                            // Loop through each item in the chambre array
+                            factureds.forEach((item, index) => {
+                                // Create a new row
+                                const row = document.createElement('tr');
+                                // Create and append cells to the row based on your table's structure
+                                row.innerHTML = `
+                                    <td>
+                                        <h6>${item.nom_produit}</h6>
+                                    </td>
+                                    <td>
+                                        <h6>${item.prix_produit} Fcfa</h6>
+                                    </td>
+                                    <td>
+                                        <h6>${item.quantite}</h6>
+                                    </td>
+                                    <td>
+                                        <h6>${item.montant} Fcfa</h6>
+                                    </td>
                                 `;
-                            }
-                            row.innerHTML = `
-                                <td>${((currentPage - 1) * perPage) + index + 1}</td>
-                                <td>
-                                    <div class="d-flex align-items-center ">
-                                        <a class="d-flex align-items-center flex-column me-2">
-                                            <img src="{{asset('assets/images/hospitalisation.jpg')}}" class="img-2x rounded-circle border border-1">
-                                        </a>
-                                        ${item.type}
-                                    </div>
+                                // Append the row to the table body
+                                tableBodyP.appendChild(row);
+
+                            });
+
+                            const row2 = document.createElement('tr');
+                            row2.innerHTML = `
+                                <td colspan="2">&nbsp;</td>
+                                <td colspan="2" >
+                                    <h5 class="mt-4 text-success">
+                                        Total : ${montant_soins} Fcfa
+                                    </h5>
                                 </td>
-                                <td>${item.nature}</td>
-                                <td>${item.patient}</td>
-                                <td>${formatDate(item.date_debut)}</td>
-                                <td>${formatDate(item.date_fin)}</td>
-                                <td>${item.medecin}</td>
-                                <td>
-                                    ${item.statut === 'Hospitaliser' ? 
-                                        `<span class="badge bg-danger">${item.statut}</span>` : 
-                                        `<span class="badge bg-success">${item.statut}</span>`}
-                                </td>
-                                <td>${item.montant_chambre} Fcfa</td>
-                                <td>${item.montant_soins} Fcfa</td>
-                                <td>${item.montant} Fcfa</td>
-                                <td>
-                                    <div class="d-inline-flex gap-1">
-                                        ${addButton}
-                                        <a class="btn btn-outline-danger btn-sm" id="detail_produit-${item.id}" data-bs-toggle="modal" data-bs-target="#Detail_produit">
-                                            <i class="ri-archive-2-fill"></i>
-                                        </a>
-                                        <a class="btn btn-outline-warning btn-sm" id="detail-${item.id}" data-bs-toggle="modal" data-bs-target="#Detail">
-                                            <i class="ri-eye-line"></i>
-                                        </a>
-                                        <a class="btn btn-outline-info btn-sm" id="fiche-${item.id}">
-                                            <i class="ri-file-line"></i>
-                                        </a>
-                                    </div>
-                                </td>
-                                
                             `;
-                            // Append the row to the table body
-                            tableBody.appendChild(row);
+                            tableBodyP.appendChild(row2);
 
-                            document.getElementById(`detail-${item.id}`).addEventListener('click', () =>
-                            {
-                                fetch(`/api/detail_hos/${item.id}`) // API endpoint
-                                    .then(response => response.json())
-                                    .then(data => {
-                                        // Access the 'chambre' array from the API response
-                                        const modal = document.getElementById('modal_detail');
-                                        modal.innerHTML = '';
+                            const row3 = document.createElement('tr');
+                            row3.innerHTML = `
+                                <td colspan="4">
+                                    <h6 class="text-danger">NOTE</h6>
+                                    <p class="small m-0">
+                                        Le Montant Total des produits utilisés
+                                        seront ajouter au montant total de la
+                                        chambre occupé par le patient.
+                                    </p>
+                                </td>
+                            `;
 
-                                        const hopital = data.hopital;
-                                        const facture = data.facture;
-                                        const patient = data.patient;
-                                        const nature = data.natureadmission;
-                                        const type = data.typeadmission;
-                                        const lit = data.lit;
-                                        const chambre = data.chambre;
-                                        const user = data.user;
+                            tableBodyP.appendChild(row3);
 
-                                        const div = document.createElement('div');
-                                        div.innerHTML = `
-                                            <div class="row">
-                                                <div class="col-xl-12">
-                                                    <div class="">
-                                                        <div class="card-body">
-                                                            <div class="row justify-content-between">
-                                                                <div class="col-12 text-center">                  
-                                                                    <h6 class="fw-semibold">Docteur :</h6>
-                                                                    <p>${user.name}</p>
-                                                                    <h6 class="fw-semibold">Spécialité :</h6>
-                                                                    <p>${user.typeacte}</p>
-                                                                    <h6 class="fw-semibold">Chambre Occupé :</h6>
-                                                                    <p>CH-${chambre.code}</p>
-                                                                    <h6 class="fw-semibold">Lit Occupé :</h6>
-                                                                    <p>LIT-${lit.code}/${lit.type}</p>
-                                                                    <h6 class="fw-semibold">Prix :</h6>
-                                                                    <p>${chambre.prix} Fcfa</p>
-                                                                </div>
-                                                                <div class="col-12 text-center mt-4">
-                                                                    ${hopital.num_bon != null ? `
-                                                                        <h6 class="fw-semibold">Numéro de prise en charge :</h6>
-                                                                        <p>${hopital.num_bon}</p>
-                                                                    ` : ''}
-                                                                    <h6 class="fw-semibold">Type d'admission :</h6>
-                                                                    <p>${type.nom}</p>
-                                                                    <h6 class="fw-semibold">Nature d'admission :</h6>
-                                                                    <p>${nature.nom}</p>
-                                                                    <h6 class="fw-semibold">Date d'entrer :</h6>
-                                                                    <p>${formatDate(hopital.date_debut)}</p>
-                                                                    <h6 class="fw-semibold">Date de sortie Probable :</h6>
-                                                                    <p>${formatDate(hopital.date_fin)}</p>
-                                                                    <h6 class="fw-semibold">Nombre de jours :</h6>
-                                                                    <p>${calculateDaysBetween(hopital.date_debut, hopital.date_fin)}</p>
-                                                                </div>
-                                                                <div class="col-12 text-center mt-4">
-                                                                    <h6 class="fw-semibold">N° Dossier :</h6>
-                                                                    <p>${patient.matricule}</p>
-                                                                    <h6 class="fw-semibold">Nom du patient :</h6>
-                                                                    <p>${patient.np}</p>
-                                                                    <h6 class="fw-semibold">contact :</h6>
-                                                                    <p>${patient.tel}</p>
-                                                                    <h6 class="fw-semibold">Assurer :</h6>
-                                                                    <p>${patient.assurer}</p>
-                                                                    ${patient.assurer === 'oui' ? `
-                                                                        <h6 class="fw-semibold">Taux :</h6>
-                                                                        <p>${patient.taux}%</p>
+                        } else {
+                            loaderDivP.style.display = 'none';
+                            messageDivP.style.display = 'block';
+                            tableDivP.style.display = 'none';
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Erreur lors du chargement des données:', error);
+                        loaderDivD.style.display = 'none';
+                        messageDivD.style.display = 'block';
+                        tableDivD.style.display = 'none';
+                    });
+            });
 
-                                                                        <h6 class="fw-semibold">Assurance :</h6>
-                                                                        <p>${patient.assurance}</p> 
+            $('.Table_hos').on('click', '#detail', function() {
+                const id = $(this).data('id');
 
-                                                                        <h6 class="fw-semibold">Matricule :</h6>
-                                                                        <p>${patient.matricule_assurance}</p>
-                                                                    ` : ''}
-                                                                </div>
-                                                                <div class="col-12 text-center mt-4">
-                                                                    <h6 class="fw-semibold">Part Patient :</h6>
-                                                                    <p>${hopital.part_patient} Fcfa</p>
-                                                                    <h6 class="fw-semibold">Part Assurance :</h6>
-                                                                    <p>${hopital.part_assurance} Fcfa</p>
-                                                                    <h6 class="fw-semibold">Remise :</h6>
-                                                                    <p>${hopital.remise ? hopital.remise : '0'} Fcfa</p>
-                                                                    <h6 class="fw-semibold">Montant Total :</h6>
-                                                                    <p>${hopital.montant} Fcfa</p>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
+                fetch(`/api/detail_hos/${id}`) // API endpoint
+                    .then(response => response.json())
+                    .then(data => {
+                        // Access the 'chambre' array from the API response
+                        const modal = document.getElementById('modal_detail');
+                        modal.innerHTML = '';
+
+                        const hopital = data.hopital;
+                        const facture = data.facture;
+                        const patient = data.patient;
+                        const nature = data.natureadmission;
+                        const type = data.typeadmission;
+                        const lit = data.lit;
+                        const chambre = data.chambre;
+                        const user = data.user;
+
+                        const div = document.createElement('div');
+                        div.innerHTML = `
+                            <div class="row">
+                                <div class="col-xl-12">
+                                    <div class="">
+                                        <div class="card-body">
+                                            <div class="row justify-content-between">
+                                                <div class="col-12 text-center">                  
+                                                    <h6 class="fw-semibold">Docteur :</h6>
+                                                    <p>${user.name}</p>
+                                                    <h6 class="fw-semibold">Spécialité :</h6>
+                                                    <p>${user.typeacte}</p>
+                                                    <h6 class="fw-semibold">Chambre Occupé :</h6>
+                                                    <p>CH-${chambre.code}</p>
+                                                    <h6 class="fw-semibold">Lit Occupé :</h6>
+                                                    <p>LIT-${lit.code}/${lit.type}</p>
+                                                    <h6 class="fw-semibold">Prix :</h6>
+                                                    <p>${chambre.prix} Fcfa</p>
+                                                </div>
+                                                <div class="col-12 text-center mt-4">
+                                                    ${hopital.num_bon != null ? `
+                                                        <h6 class="fw-semibold">Numéro de prise en charge :</h6>
+                                                        <p>${hopital.num_bon}</p>
+                                                    ` : ''}
+                                                    <h6 class="fw-semibold">Type d'admission :</h6>
+                                                    <p>${type.nom}</p>
+                                                    <h6 class="fw-semibold">Nature d'admission :</h6>
+                                                    <p>${nature.nom}</p>
+                                                    <h6 class="fw-semibold">Date d'entrer :</h6>
+                                                    <p>${formatDate(hopital.date_debut)}</p>
+                                                    <h6 class="fw-semibold">Date de sortie Probable :</h6>
+                                                    <p>${formatDate(hopital.date_fin)}</p>
+                                                    <h6 class="fw-semibold">Nombre de jours :</h6>
+                                                    <p>${calculateDaysBetween(hopital.date_debut, hopital.date_fin)}</p>
+                                                </div>
+                                                <div class="col-12 text-center mt-4">
+                                                    <h6 class="fw-semibold">N° Dossier :</h6>
+                                                    <p>${patient.matricule}</p>
+                                                    <h6 class="fw-semibold">Nom du patient :</h6>
+                                                    <p>${patient.np}</p>
+                                                    <h6 class="fw-semibold">contact :</h6>
+                                                    <p>${patient.tel}</p>
+                                                    <h6 class="fw-semibold">Assurer :</h6>
+                                                    <p>${patient.assurer}</p>
+                                                    ${patient.assurer === 'oui' ? `
+                                                        <h6 class="fw-semibold">Taux :</h6>
+                                                        <p>${patient.taux}%</p>
+
+                                                        <h6 class="fw-semibold">Assurance :</h6>
+                                                        <p>${patient.assurance}</p> 
+
+                                                        <h6 class="fw-semibold">Matricule :</h6>
+                                                        <p>${patient.matricule_assurance}</p>
+                                                    ` : ''}
+                                                </div>
+                                                <div class="col-12 text-center mt-4">
+                                                    <h6 class="fw-semibold">Part Patient :</h6>
+                                                    <p>${hopital.part_patient} Fcfa</p>
+                                                    <h6 class="fw-semibold">Part Assurance :</h6>
+                                                    <p>${hopital.part_assurance} Fcfa</p>
+                                                    <h6 class="fw-semibold">Remise :</h6>
+                                                    <p>${hopital.remise ? hopital.remise : '0'} Fcfa</p>
+                                                    <h6 class="fw-semibold">Montant Total :</h6>
+                                                    <p>${hopital.montant} Fcfa</p>
                                                 </div>
                                             </div>
-                                        `;
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
 
-                                        modal.appendChild(div);
+                        modal.appendChild(div);
 
-                                    })
-                                    .catch(error => {
-                                        console.error('Erreur lors du chargement des données:', error);
-                                    });
-                            });
+                    })
+                    .catch(error => {
+                        console.error('Erreur lors du chargement des données:', error);
+                    });
+                
+            });
 
-                            document.getElementById(`fiche-${item.id}`).addEventListener('click', () =>
-                            {
-                                fetch(`/api/detail_hos/${item.id}`) // API endpoint
-                                    .then(response => response.json())
-                                    .then(data => {
-                                        // Access the 'chambre' array from the API response
-                                        const hopital = data.hopital;
-                                        const facture = data.facture;
-                                        const patient = data.patient;
-                                        const nature = data.natureadmission;
-                                        const type = data.typeadmission;
-                                        const lit = data.lit;
-                                        const chambre = data.chambre;
-                                        const user = data.user;
-                                        const produit = data.produit;
+            $('.Table_hos').on('click', '#fiche', function() {
+                var preloader_ch = `
+                    <div id="preloader_ch">
+                        <div class="spinner_preloader_ch"></div>
+                    </div>
+                `;
+                // Add the preloader to the body
+                document.body.insertAdjacentHTML('beforeend', preloader_ch);
 
-                                        generatePDFInvoice(hopital, facture, patient, nature, type, lit, chambre, user, produit);
+                const id = $(this).data('id');
 
-                                    })
-                                    .catch(error => {
-                                        console.error('Erreur lors du chargement des données:', error);
-                                    });
-                            });
+                fetch(`/api/detail_hos/${id}`) // API endpoint
+                    .then(response => response.json())
+                    .then(data => {
+                        // Access the 'chambre' array from the API response
+                        const hopital = data.hopital;
+                        const facture = data.facture;
+                        const patient = data.patient;
+                        const nature = data.natureadmission;
+                        const type = data.typeadmission;
+                        const lit = data.lit;
+                        const chambre = data.chambre;
+                        const user = data.user;
+                        const produit = data.produit;
 
-                            const deleteButton = document.getElementById(`add-${item.id}`);
-                            if (deleteButton) {
-                                deleteButton.addEventListener('click', () => {
-                                    fetch(`/api/list_produit_all`) // API endpoint pour récupérer la liste des produits
-                                        .then(response => response.json())
-                                        .then(data => {
-                                            
-                                            document.getElementById('id_hos_produit').value = item.id;
-                                            document.getElementById('montant_total_produit').value = "";
+                        var preloader = document.getElementById('preloader_ch');
+                        if (preloader) {
+                            preloader.remove();
+                        }
 
-                                            const produits = data.produit;
+                        generatePDFInvoice(hopital, facture, patient, nature, type, lit, chambre, user, produit);
 
-                                            // Affichage initial des produits dans le premier select
-                                            const contenuDiv = document.getElementById('contenu');
-                                            contenuDiv.innerHTML = '';
-                                            
-                                            addSelect(contenuDiv, produits); // Ajouter le premier select
-                                        })
-                                        .catch(error => {
-                                            console.error('Erreur lors du chargement des données:', error);
-                                        });
-                                });
-                            }
-
-                            const updateButton = document.getElementById(`modif-${item.id}`);
-                            if (updateButton) {
-                                updateButton.addEventListener('click', () => {
-
-                                    document.getElementById('IdModif').value = `${item.id}`;
-                                    document.getElementById('date1M').value = `${item.date_debut}`;
-                                    document.getElementById('date2M').value = `${item.date_fin}`;
-
-                                });
-                            }
-
-                            document.getElementById(`detail_produit-${item.id}`).addEventListener('click',()=>
-                                {
-                                    const tableBodyP = document.querySelector('#TableP tbody');
-                                    const messageDivP = document.getElementById('message_TableP');
-                                    const tableDivP = document.getElementById('div_TableP');
-                                    const loaderDivP = document.getElementById('div_Table_loaderP');
-
-                                    messageDivP.style.display = 'none';
-                                    tableDivP.style.display = 'none';
-                                    loaderDivP.style.display = 'block';
-
-                                    fetch(`/api/list_facture_hos_d/${item.id}`) // API endpoint
-                                        .then(response => response.json())
-                                        .then(data => {
-                                            // Access the 'chambre' array from the API response
-                                            const factureds = data.factured;
-
-                                            // Clear any existing rows in the table body
-                                            tableBodyP.innerHTML = '';
-
-                                            if (factureds.length > 0) {
-
-                                                loaderDivP.style.display = 'none';
-                                                messageDivP.style.display = 'none';
-                                                tableDivP.style.display = 'block';
-
-                                                // Loop through each item in the chambre array
-                                                factureds.forEach((item, index) => {
-                                                    // Create a new row
-                                                    const row = document.createElement('tr');
-                                                    // Create and append cells to the row based on your table's structure
-                                                    row.innerHTML = `
-                                                        <td>
-                                                            <h6>${item.nom_produit}</h6>
-                                                        </td>
-                                                        <td>
-                                                            <h6>${item.prix_produit} Fcfa</h6>
-                                                        </td>
-                                                        <td>
-                                                            <h6>${item.quantite}</h6>
-                                                        </td>
-                                                        <td>
-                                                            <h6>${item.montant} Fcfa</h6>
-                                                        </td>
-                                                    `;
-                                                    // Append the row to the table body
-                                                    tableBodyP.appendChild(row);
-
-                                                });
-
-                                                const row2 = document.createElement('tr');
-                                                row2.innerHTML = `
-                                                    <td colspan="2">&nbsp;</td>
-                                                    <td colspan="2" >
-                                                        <h5 class="mt-4 text-success">
-                                                            Total : ${item.montant_soins} Fcfa
-                                                        </h5>
-                                                    </td>
-                                                `;
-                                                tableBodyP.appendChild(row2);
-
-                                                const row3 = document.createElement('tr');
-                                                row3.innerHTML = `
-                                                    <td colspan="4">
-                                                        <h6 class="text-danger">NOTE</h6>
-                                                        <p class="small m-0">
-                                                            Le Montant Total des produits utilisés
-                                                            seront ajouter au montant total de la
-                                                            chambre occupé par le patient.
-                                                        </p>
-                                                    </td>
-                                                `;
-
-                                                tableBodyP.appendChild(row3);
-
-                                            } else {
-                                                loaderDivP.style.display = 'none';
-                                                messageDivP.style.display = 'block';
-                                                tableDivP.style.display = 'none';
-                                            }
-                                        })
-                                        .catch(error => {
-                                            console.error('Erreur lors du chargement des données:', error);
-                                            loaderDivD.style.display = 'none';
-                                            messageDivD.style.display = 'block';
-                                            tableDivD.style.display = 'none';
-                                        });
-                                    
-                                });
-
-                        });
-
-                        updatePaginationControls(pagination);
-
-                    } else {
-                        loaderDiv.style.display = 'none';
-                        messageDiv.style.display = 'block';
-                        tableDiv.style.display = 'none';
-                    }
-                })
-                .catch(error => {
-                    console.error('Erreur lors du chargement des données:', error);
-                    // Hide the table and show the error message in case of failure
-                    loaderDiv.style.display = 'none';
-                    messageDiv.style.display = 'block';
-                    tableDiv.style.display = 'none';
-                });
+                    })
+                    .catch(error => {
+                        console.error('Erreur lors du chargement des données:', error);
+                    });
+            });
         }
 
         function updatee()
@@ -1711,7 +1659,7 @@
 
                     if (response.success) {
 
-                        list_hos();
+                        $('.Table_hos').DataTable().ajax.reload(null, false);
 
                         showAlert('Succès', 'Opération éffectuée','success');
 
@@ -1851,7 +1799,6 @@
             }
         }
 
-        // Assurez-vous que ce code soit exécuté après l'ajout du bouton "Enregistrer"
         document.getElementById('btn_eng_produit').addEventListener('click', () => {
             const selections = [];
             const selects = document.querySelectorAll('.produit-select');
@@ -1931,7 +1878,7 @@
                         showAlert('Alert', 'Invalid selections format','error');
                     }
 
-                    list_hos();
+                    $('.Table_hos').DataTable().ajax.reload(null, false);
                 },
                 error: function() {
                     
@@ -2357,19 +2304,18 @@
         }
 
         function Statistique() {
-
-            const nbre_day = document.getElementById("nbre_hos");
+            const $nbreDay = $('#nbre_hos');
 
             $.ajax({
                 url: '/api/statistique_hos',
                 method: 'GET',
                 success: function(response) {
-                    // Set the text content of each element
-                    nbre_day.textContent = response.stat_hos_day;
+                    // Mettre à jour le contenu texte de l'élément
+                    $nbreDay.text(response.stat_hos_day);
                 },
                 error: function() {
-                    // Set default values in case of an error
-                    nbre_day.textContent = '0';
+                    // Mettre une valeur par défaut en cas d'erreur
+                    $nbreDay.text('0');
                 }
             });
         }
