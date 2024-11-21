@@ -19,6 +19,8 @@ use Illuminate\Support\Facades\DB;
 use App\Models\assurance;
 use App\Models\taux;
 use App\Models\societe;
+use App\Models\user;
+use App\Models\role;
 
 class ApiController extends Controller
 {
@@ -38,5 +40,14 @@ class ApiController extends Controller
     {
        $assurance = assurance::select('id','nom')->get(); // Récupère toutes les assurances
         return response()->json($assurance); 
+    }
+
+    public function select_medecin()
+    {
+        $role = role::where('nom', '=', 'MEDECIN')->first();
+
+        $medecin = user::where('users.role_id', '=', $role->id)->select('id','name')->get();
+
+        return response()->json($medecin);
     }
 }

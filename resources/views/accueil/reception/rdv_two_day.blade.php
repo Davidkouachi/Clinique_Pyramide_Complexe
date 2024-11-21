@@ -72,7 +72,6 @@
                                                         <th>Médecin</th>
                                                         <th>Spécialité</th>
                                                         <th>Rdv prévu</th>
-                                                        <th>Statut</th>
                                                         <th>Date de création</th>
                                                         <th>Actions</th>
                                                     </tr>
@@ -297,16 +296,18 @@
                                 const row = document.createElement('tr');
                                 row.innerHTML = `
                                     <td>${((currentPage - 1) * perPage) + index + 1}</td>
-                                    <td>${item.patient}</td>
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            <a class="d-flex align-items-center flex-column me-2">
+                                                <img src="/assets/images/rdv1.png" class="img-2x rounded-circle border border-1">
+                                            </a>
+                                            ${item.patient}
+                                        </div>
+                                    </td>
                                     <td>+225 ${item.patient_tel}</td>
                                     <td>Dr. ${item.medecin}</td>
                                     <td>${item.specialite}</td>
                                     <td>${formatDate(item.date)}</td>
-                                    <td>
-                                        <span class="badge ${item.statut === 'en attente' ? 'bg-warning' : 'bg-success'}">
-                                            ${item.statut}
-                                        </span>
-                                    </td>
                                     <td>${formatDateHeure(item.created_at)}</td>
                                     <td>
                                         <div class="d-inline-flex gap-1">

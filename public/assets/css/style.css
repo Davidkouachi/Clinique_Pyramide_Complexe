@@ -230,7 +230,6 @@
 
 /* Table Styles */
 #Table_day {
-    width: 100%;
     border-collapse: collapse;
 }
 
@@ -267,18 +266,14 @@
     color: white;
 }
 
-#Table_day_wrapper {
-    overflow-x: auto;
-}
-
-.dataTables_wrapper {
+/*.dataTables_wrapper {
     width: 100%;
 }
 
 .dataTables_scrollBody {
     width: 100% !important;
     overflow-x: auto;
-}
+}*/
 
 #Table_day {
     font-size: 13px;
@@ -294,9 +289,9 @@
     padding: 4px 6px;
 }
 
-#Table_day .d-inline-flex {
+/*#Table_day .d-inline-flex {
     gap: 2px;
-}
+}*/
 
 #Table_day th.sorting:before,
 #Table_day th.sorting:after,

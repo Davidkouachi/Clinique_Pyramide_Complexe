@@ -688,14 +688,14 @@
             selectElement.innerHTML = '';
             const defaultOption = document.createElement('option');
             defaultOption.value = '';
-            defaultOption.textContent = 'Sélectionner un medecin';
+            defaultOption.textContent = 'Selectionner';
             selectElement.appendChild(defaultOption);
 
-            fetch('/api/list_medecin')
+            fetch('/api/select_medecin')
                 .then(response => response.json())
                 .then(data => {
-                    const medecins = data.medecin;
-                    medecins.forEach((item, index) => {
+                    
+                    data.forEach((item) => {
                         const option = document.createElement('option');
                         option.value = `${item.id}`; // Ensure 'id' is the correct key
                         option.textContent = `Dr. ${item.name}`; // Ensure 'nom' is the correct key

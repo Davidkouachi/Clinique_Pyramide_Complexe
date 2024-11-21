@@ -21,7 +21,7 @@
 
 <div class="app-body">
     <div class="row gx-3">
-        <div class="col-xxl-9 col-sm-12">
+        <div class="col-xxl-9 col-xl-12 col-lg-12 col-md-12 col-sm-12">
             <div class="card mb-3 bg-2 rounded-2">
                 <div class="card-body rounded-2" style="background: rgba(0, 0, 0, 0.7);">
                     <div class="mh-230">
@@ -30,36 +30,36 @@
                             <h2>{{Auth::user()->sexe.'. '.Auth::user()->name}}</h2>
                             <h5>Les statistiques d'aujourd'hui.</h5>
                             <div class="mt-4 row gx-3">
-                                <div class="d-flex align-items-center col-xxl-3 col-lg-4 col-sm-6 col-12 mb-3 ">
-                                    <div class="icon-box lg bg-info rounded-5 me-3">
-                                        <i class="ri-walk-line fs-1"></i>
+                                <div class="d-flex align-items-center col-xxl-3 col-lg-3 col-md-6 col-sm-6 col-12 mb-3 ">
+                                    <div class="icon-box md bg-info rounded-5 me-3">
+                                        <i class="ri-walk-line fs-4"></i>
                                     </div>
                                     <div class="d-flex flex-column">
                                         <h4 id="nbre_patient_day" class="m-0 lh-1"></h4>
                                         <p class="m-0">Patients</p>
                                     </div>
                                 </div>
-                                <div class="d-flex align-items-center col-xxl-3 col-lg-4 col-sm-6 col-12 mb-3">
-                                    <div class="icon-box lg bg-success rounded-5 me-3">
-                                        <i class="ri-walk-line fs-1"></i>
+                                <div class="d-flex align-items-center col-xxl-3 col-lg-3 col-md-6 col-sm-6 col-12 mb-3">
+                                    <div class="icon-box md bg-success rounded-5 me-3">
+                                        <i class="ri-walk-line fs-4"></i>
                                     </div>
                                     <div class="d-flex flex-column">
                                         <h4 id="nbre_patient_assurer_day" class="m-0 lh-1"></h4>
                                         <p class="m-0">assurer</p>
                                     </div>
                                 </div>
-                                <div class="d-flex align-items-center col-xxl-3 col-lg-4 col-sm-6 col-12 mb-3">
-                                    <div class="icon-box lg bg-danger rounded-5 me-3">
-                                        <i class="ri-walk-line fs-1"></i>
+                                <div class="d-flex align-items-center col-xxl-3 col-lg-3 col-md-6 col-sm-6 col-12 mb-3">
+                                    <div class="icon-box md bg-danger rounded-5 me-3">
+                                        <i class="ri-walk-line fs-4"></i>
                                     </div>
                                     <div class="d-flex flex-column">
                                         <h4 id="nbre_patient_nassurer_day" class="m-0 lh-1"></h4>
                                         <p class="m-0">non-assurer</p>
                                     </div>
                                 </div>
-                                <div class="d-flex align-items-center col-xxl-3 col-lg-4 col-sm-6 col-12 mb-3">
-                                    <div class="icon-box lg bg-warning rounded-5 me-3">
-                                        <i class="ri-cash-line fs-1"></i>
+                                <div class="d-flex align-items-center col-xxl-3 col-lg-3 col-md-6 col-sm-6 col-12 mb-3">
+                                    <div class="icon-box md bg-warning rounded-5 me-3">
+                                        <i class="ri-cash-line fs-4"></i>
                                     </div>
                                     <div class="d-flex flex-column">
                                         <h4 id="prix_cons_day" class="m-0 lh-1"></h4>
@@ -72,7 +72,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-xxl-3 col-sm-12">
+        <div class="col-xxl-3 col-xl-12 col-lg-12 col-md-12 col-sm-12">
             <div class="card mb-3 bg-lime">
                 <div class="card-body">
                     <div class="mh-230 text-white">
@@ -503,19 +503,19 @@
                                     <div class="col-xxl-3 col-lg-4 col-sm-6">
                                         <div class="mb-3">
                                             <label class="form-label">Adresse</label>
-                                            <input type="text" class="form-control" id="adresse_societe" placeholder="facultatif">
+                                            <input type="text" class="form-control" id="adresse_societe" placeholder="Saisie Obligatoire">
                                         </div>
                                     </div>
                                     <div class="col-xxl-3 col-lg-4 col-sm-6">
                                         <div class="mb-3">
                                             <label class="form-label">Fax</label>
-                                            <input type="text" class="form-control" id="fax_societe" placeholder="facultatif">
+                                            <input type="text" class="form-control" id="fax_societe" placeholder="Saisie Obligatoire">
                                         </div>
                                     </div>
                                     <div class="col-xxl-3 col-lg-4 col-sm-6">
                                         <div class="mb-3">
                                             <label class="form-label">Situation Géographique</label>
-                                            <input type="text" class="form-control" id="sgeo_societe" placeholder="facultatif">
+                                            <input type="text" class="form-control" id="sgeo_societe" placeholder="Saisie Obligatoire">
                                         </div>
                                     </div>
                                     <div class="col-sm-12 mb-3">
@@ -1791,14 +1791,14 @@
                     data: null,
                     render: (data, type, row) => `
                         <div class="d-inline-flex gap-1" style="font-size:10px;">
-                            <a class="btn btn-outline-warning btn-sm rounded-5" id="facture" data-code="${row.code}">
+                            <a class="btn btn-outline-warning btn-sm" id="facture" data-code="${row.code}">
                                 <i class="ri-printer-line"></i>
                             </a>
-                            <a class="btn btn-outline-info btn-sm rounded-5" id="fiche" data-code="${row.code}">
+                            <a class="btn btn-outline-info btn-sm" id="fiche" data-code="${row.code}">
                                 <i class="ri-file-line"></i>
                             </a>
                             ${row.statut_fac == 'impayer' ?  
-                            `<a class="btn btn-outline-danger btn-sm rounded-5" data-bs-toggle="modal" data-bs-target="#MdeleteCons" id="deleteCons" data-id="${row.id}">
+                            `<a class="btn btn-outline-danger btn-sm" data-bs-toggle="modal" data-bs-target="#MdeleteCons" id="deleteCons" data-id="${row.id}">
                                 <i class="ri-delete-bin-line"></i>
                             </a>` : ``}
                         </div>
@@ -1816,6 +1816,15 @@
         function initializeRowEventListenersCons() {
 
             $('.Table_day_cons').on('click', '#facture', function() {
+
+                var preloader_ch = `
+                    <div id="preloader_ch">
+                        <div class="spinner_preloader_ch"></div>
+                    </div>
+                `;
+                // Add the preloader to the body
+                document.body.insertAdjacentHTML('beforeend', preloader_ch);
+
                 const code = $(this).data('code');
                 
                 fetch(`/api/fiche_consultation/${code}`) // API endpoint
@@ -1826,6 +1835,11 @@
                     const typeacte = data.typeacte;
                     const user = data.user;
                     const consultation = data.consultation;
+
+                    var preloader = document.getElementById('preloader_ch');
+                    if (preloader) {
+                        preloader.remove();
+                    }
 
                     generatePDFInvoice(patient, user, typeacte, consultation);
 
@@ -1836,6 +1850,15 @@
             });
 
             $('.Table_day_cons').on('click', '#fiche', function() {
+
+                var preloader_ch = `
+                    <div id="preloader_ch">
+                        <div class="spinner_preloader_ch"></div>
+                    </div>
+                `;
+                // Add the preloader to the body
+                document.body.insertAdjacentHTML('beforeend', preloader_ch);
+
                 const code = $(this).data('code');
                 
                 fetch(`/api/fiche_consultation/${code}`) // API endpoint
@@ -1846,6 +1869,11 @@
                     const typeacte = data.typeacte;
                     const user = data.user;
                     const consultation = data.consultation;
+
+                    var preloader = document.getElementById('preloader_ch');
+                    if (preloader) {
+                        preloader.remove();
+                    }
 
                     generatePDFficheCons(patient, user, typeacte, consultation);
 
@@ -2327,7 +2355,7 @@
                 doc.setLineWidth(0.5);
                 doc.setTextColor(255, 0, 0);
                 // doc.line(10, 35, 200, 35); 
-                const titleR = "FACTURE DE CONSULTATION";
+                const titleR = "FICHE DE CONSULTATION";
                 const titleRWidth = doc.getTextWidth(titleR);
                 const titleRX = (doc.internal.pageSize.getWidth() - titleRWidth) / 2;
                 // Définir le padding
@@ -2464,18 +2492,18 @@
 
                 doc.setFontSize(15);
                 doc.setFont("Helvetica", "bold");
-                doc.setTextColor(0, 0, 0);
+                doc.setTextColor(225, 0, 0);
                 const motif = "Motif";
                 const titleRm = doc.getTextWidth(motif);
                 const titlemotif = (doc.internal.pageSize.getWidth() - titleRm) / 2;
                 doc.text(motif, titlemotif, hPoss);
                 // Dessiner une ligne sous le texte pour le souligner
                 const underlineYm = hPoss + 2; // Ajustez cette valeur selon vos besoins
-                doc.setDrawColor(0, 0, 0);
+                doc.setDrawColor(225, 0, 0);
                 doc.setLineWidth(0.5); // Épaisseur de la ligne
                 doc.line(titlemotif, underlineYm, titlemotif + titleRm, underlineYm);
 
-                doc.setFontSize(10);
+                doc.setFontSize(8);
                 doc.setFont("Helvetica", "bold");
                 doc.setTextColor(0, 0, 0);
                 doc.text("Imprimer le "+new Date().toLocaleDateString()+" à "+new Date().toLocaleTimeString() , 5, 295);
@@ -2618,7 +2646,7 @@
                     doc.setFont("Helvetica", "bold");
                     doc.text(info.label, leftMargin + 100, yPoss);
                     doc.setFont("Helvetica", "normal");
-                    doc.text(": " + info.value, leftMargin + 130, yPoss);
+                    doc.text(": " + info.value, leftMargin + 135, yPoss);
                     yPoss += 7;
                 });
 
@@ -2641,9 +2669,9 @@
                     doc.setFontSize(9);
                     doc.setFont("Helvetica", "bold");
                     doc.setTextColor(0, 0, 0);
-                    doc.text(info.label, leftMargin + 110, yPoss);
+                    doc.text(info.label, leftMargin + 100, yPoss);
                     doc.setFont("Helvetica", "normal");
-                    doc.text(": " + info.value, leftMargin + 140, yPoss);
+                    doc.text(": " + info.value, leftMargin + 135, yPoss);
                     yPoss += 7;
                 });
 
@@ -2652,14 +2680,21 @@
                 doc.setFontSize(11);
                 doc.setTextColor(0, 0, 0);
                 doc.setFont("Helvetica", "bold");
-                doc.text('Montant à payer', leftMargin + 110, yPoss);
+                doc.text('Montant à payer', leftMargin + 100, yPoss);
                 doc.setFont("Helvetica", "bold");
-                doc.text(": "+consultation.part_patient+" Fcfa", leftMargin + 140, yPoss);
+                doc.text(": "+consultation.part_patient+" Fcfa", leftMargin + 135, yPoss);
 
-                // doc.setFontSize(10);
-                // doc.setFont("Helvetica", "bold");
-                // doc.setTextColor(0, 0, 0);
-                // doc.text("Imprimer le "+new Date().toLocaleDateString()+" à "+new Date().toLocaleTimeString() , 5, yPoss + 20);
+                if (patient.taux !== null) {
+                    doc.setFontSize(8);
+                    doc.setFont("Helvetica", "bold");
+                    doc.setTextColor(0, 0, 0);
+                    doc.text("Imprimer le "+new Date().toLocaleDateString()+" à "+new Date().toLocaleTimeString() , 5, yPoss + 16);
+                }else{
+                    doc.setFontSize(8);
+                    doc.setFont("Helvetica", "bold");
+                    doc.setTextColor(0, 0, 0);
+                    doc.text("Imprimer le "+new Date().toLocaleDateString()+" à "+new Date().toLocaleTimeString() , 5, yPoss + 28);
+                }
 
             }
 
@@ -2668,7 +2703,7 @@
             doc.setFontSize(30);
             doc.setLineWidth(0.5);
             doc.setLineDashPattern([3, 3], 0);
-            doc.line(0, (yPos + 135), 300, (yPos + 135));
+            doc.line(0, (yPos + 137), 300, (yPos + 137));
             doc.setLineDashPattern([], 0);
 
             drawConsultationSection(yPos + 150);
@@ -2684,7 +2719,7 @@
             processing: true,
             serverSide: false,
             ajax: {
-                url: `/api/list_rdv`,
+                url: `/api/list_rdv_day`,
                 type: 'GET',
                 dataSrc: 'data',
             },
@@ -2903,7 +2938,7 @@
                     }
 
                     if (response.success) {
-                        $('.Table_day_rdv').DataTable().ajax.reload();
+                        $('.Table_day_rdv').DataTable().ajax.reload(null, false);
                         count_rdv_two_day();
                         showAlert('Succès', 'Rendez-Vous annulé.','success');
                     } else if (response.error) {
@@ -2960,7 +2995,7 @@
                     
                     if (response.success) {
 
-                        $('.Table_day_rdv').DataTable().ajax.reload();
+                        $('.Table_day_rdv').DataTable().ajax.reload(null, false);
                         count_rdv_two_day();
                         showAlert("ALERT", 'Mise à jour éffectué', "success");
 

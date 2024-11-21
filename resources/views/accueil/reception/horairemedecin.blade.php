@@ -365,7 +365,7 @@
         $("#btn_delete_rdv").on("click", delete_rdv);
 
         $('#btn_refresh_table_rdv').on('click', function () {
-            $('#Table_day').DataTable().ajax.reload();
+            $('#Table_day').DataTable().ajax.reload(null, false);
         });
 
         ["rech_medecin", "rech_specialite", "rech_jour", "rech_periode"].forEach(id => document.getElementById(id).addEventListener("change", list));
@@ -1034,7 +1034,7 @@
                     $('#preloader_ch').remove(); // Supprimer le préchargeur
 
                     if (response.success) {
-                        $('#Table_day').DataTable().ajax.reload();
+                        $('#Table_day').DataTable().ajax.reload(null, false);
                         count_rdv_two_day();
                         showAlert("ALERT", 'Enregistrement éffectué', "success");
                     } else if (response.error) {
@@ -1196,7 +1196,7 @@
                             formattedDate = new Date(date_rdvM).toISOString().split('T')[0];
                         } else {
                             // Si date_rdvM n'est pas valide, utilisez la date du jour comme fallback
-                            formattedDate = new Date().toISOString().split('T')[0];
+                            formattedDate = date;
                         }
 
                         // Remettre la date dans le champ de saisie
@@ -1270,7 +1270,7 @@
                     }
 
                     if (response.success) {
-                        $('#Table_day').DataTable().ajax.reload();
+                        $('#Table_day').DataTable().ajax.reload(null, false);
                         count_rdv_two_day();
                         showAlert('Succès', 'Rendez-Vous annulé.','success');
                     } else if (response.error) {
@@ -1327,7 +1327,7 @@
                     
                     if (response.success) {
 
-                        $('#Table_day').DataTable().ajax.reload();
+                        $('#Table_day').DataTable().ajax.reload(null, false);
                         count_rdv_two_day();
                         showAlert("ALERT", 'Mise à jour éffectué', "success");
 

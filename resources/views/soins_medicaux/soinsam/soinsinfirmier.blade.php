@@ -413,7 +413,7 @@
                     data: null,
                     render: (data, type, row) => `
                         <div class="d-inline-flex gap-1" style="font-size:10px;">
-                            <a class="btn btn-outline-info btn-sm rounded-5 edit-btn" data-id="${row.id}" data-nom="${row.nom}" data-prix="${row.prix}" data-typesoins_id="${row.typesoins_id}" data-bs-toggle="modal" data-bs-target="#Mmodif" id="modif">
+                            <a class="btn btn-outline-info btn-sm edit-btn" data-id="${row.id}" data-nom="${row.nom}" data-prix="${row.prix}" data-typesoins_id="${row.typesoins_id}" data-bs-toggle="modal" data-bs-target="#Mmodif" id="modif">
                                 <i class="ri-edit-box-line"></i>
                             </a>
                         </div>

@@ -701,7 +701,7 @@
                 doc.setLineWidth(0.5);
                 doc.setTextColor(255, 0, 0);
                 // doc.line(10, 35, 200, 35); 
-                const titleR = "FACTURE DE CONSULTATION";
+                const titleR = "FICHE DE CONSULTATION";
                 const titleRWidth = doc.getTextWidth(titleR);
                 const titleRX = (doc.internal.pageSize.getWidth() - titleRWidth) / 2;
                 // Définir le padding
@@ -838,18 +838,18 @@
 
                 doc.setFontSize(15);
                 doc.setFont("Helvetica", "bold");
-                doc.setTextColor(0, 0, 0);
+                doc.setTextColor(225, 0, 0);
                 const motif = "Motif";
                 const titleRm = doc.getTextWidth(motif);
                 const titlemotif = (doc.internal.pageSize.getWidth() - titleRm) / 2;
                 doc.text(motif, titlemotif, hPoss);
                 // Dessiner une ligne sous le texte pour le souligner
                 const underlineYm = hPoss + 2; // Ajustez cette valeur selon vos besoins
-                doc.setDrawColor(0, 0, 0);
+                doc.setDrawColor(225, 0, 0);
                 doc.setLineWidth(0.5); // Épaisseur de la ligne
                 doc.line(titlemotif, underlineYm, titlemotif + titleRm, underlineYm);
 
-                doc.setFontSize(10);
+                doc.setFontSize(8);
                 doc.setFont("Helvetica", "bold");
                 doc.setTextColor(0, 0, 0);
                 doc.text("Imprimer le "+new Date().toLocaleDateString()+" à "+new Date().toLocaleTimeString() , 5, 295);
@@ -992,7 +992,7 @@
                     doc.setFont("Helvetica", "bold");
                     doc.text(info.label, leftMargin + 100, yPoss);
                     doc.setFont("Helvetica", "normal");
-                    doc.text(": " + info.value, leftMargin + 130, yPoss);
+                    doc.text(": " + info.value, leftMargin + 135, yPoss);
                     yPoss += 7;
                 });
 
@@ -1015,9 +1015,9 @@
                     doc.setFontSize(9);
                     doc.setFont("Helvetica", "bold");
                     doc.setTextColor(0, 0, 0);
-                    doc.text(info.label, leftMargin + 110, yPoss);
+                    doc.text(info.label, leftMargin + 100, yPoss);
                     doc.setFont("Helvetica", "normal");
-                    doc.text(": " + info.value, leftMargin + 140, yPoss);
+                    doc.text(": " + info.value, leftMargin + 135, yPoss);
                     yPoss += 7;
                 });
 
@@ -1026,14 +1026,21 @@
                 doc.setFontSize(11);
                 doc.setTextColor(0, 0, 0);
                 doc.setFont("Helvetica", "bold");
-                doc.text('Montant à payer', leftMargin + 110, yPoss);
+                doc.text('Montant à payer', leftMargin + 100, yPoss);
                 doc.setFont("Helvetica", "bold");
-                doc.text(": "+consultation.part_patient+" Fcfa", leftMargin + 140, yPoss);
+                doc.text(": "+consultation.part_patient+" Fcfa", leftMargin + 135, yPoss);
 
-                // doc.setFontSize(10);
-                // doc.setFont("Helvetica", "bold");
-                // doc.setTextColor(0, 0, 0);
-                // doc.text("Imprimer le "+new Date().toLocaleDateString()+" à "+new Date().toLocaleTimeString() , 5, yPoss + 20);
+                if (patient.taux !== null) {
+                    doc.setFontSize(8);
+                    doc.setFont("Helvetica", "bold");
+                    doc.setTextColor(0, 0, 0);
+                    doc.text("Imprimer le "+new Date().toLocaleDateString()+" à "+new Date().toLocaleTimeString() , 5, yPoss + 16);
+                }else{
+                    doc.setFontSize(8);
+                    doc.setFont("Helvetica", "bold");
+                    doc.setTextColor(0, 0, 0);
+                    doc.text("Imprimer le "+new Date().toLocaleDateString()+" à "+new Date().toLocaleTimeString() , 5, yPoss + 28);
+                }
 
             }
 
@@ -1042,7 +1049,7 @@
             doc.setFontSize(30);
             doc.setLineWidth(0.5);
             doc.setLineDashPattern([3, 3], 0);
-            doc.line(0, (yPos + 135), 300, (yPos + 135));
+            doc.line(0, (yPos + 137), 300, (yPos + 137));
             doc.setLineDashPattern([], 0);
 
             drawConsultationSection(yPos + 150);

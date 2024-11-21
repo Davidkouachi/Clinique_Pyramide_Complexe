@@ -115,7 +115,7 @@
                                                 <thead>
                                                     <tr>
                                                         <th scope="col">N°</th>
-                                                        <th scope="col">Type</th>
+                                                        <th scope="col" colspan="2">Type</th>
                                                         <th scope="col">Acte</th>
                                                         <th scope="col">Actions</th>
                                                     </tr>
@@ -327,14 +327,16 @@
                     orderable: false,
                 },
                 { 
-                    data: 'nom', 
+                    data: null, 
                     render: (data, type, row) => `
                     <div class="d-flex align-items-center">
                         <a class="d-flex align-items-center flex-column me-2">
                             <img src="/assets/images/type_admission.jpg" class="img-2x rounded-circle border border-1">
                         </a>
-                        ${data}
-                    </div>`,
+                    </div>`, 
+                },
+                { 
+                    data: 'nom',
                     searchable: true, 
                 },
                 { 
@@ -345,11 +347,11 @@
                     data: null,
                     render: (data, type, row) => `
                         <div class="d-inline-flex gap-1" style="font-size:10px;">
-                            <a class="btn btn-outline-info btn-sm rounded-5 edit-btn" data-id="${row.id}" data-nom="${row.nom}" data-typeadmission_id="${row.typeadmission_id}" data-bs-toggle="modal" data-bs-target="#Mmodif" id="modif">
+                            <a class="btn btn-outline-info btn-sm edit-btn" data-id="${row.id}" data-nom="${row.nom}" data-typeadmission_id="${row.typeadmission_id}" data-bs-toggle="modal" data-bs-target="#Mmodif" id="modif">
                                 <i class="ri-edit-box-line"></i>
                             </a>
                             ${row.nbre == 0 ? 
-                                `<a class="btn btn-outline-danger btn-sm rounded-5" data-bs-toggle="modal" data-bs-target="#Mdelete" id="delete" data-id="${row.id}">
+                                `<a class="btn btn-outline-danger btn-sm" data-bs-toggle="modal" data-bs-target="#Mdelete" id="delete" data-id="${row.id}">
                                     <i class="ri-delete-bin-line"></i>
                                 </a>` : `` 
                             }

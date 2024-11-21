@@ -52,7 +52,7 @@
                             <li class="nav-item" role="presentation">
                                 <a class="nav-link active text-white" id="tab-twoAAAN" data-bs-toggle="tab" href="#twoAAAN" role="tab" aria-controls="twoAAAN" aria-selected="false" tabindex="-1">
                                     <i class="ri-swap-3-line me-2"></i>
-                                    Nouveau Opération
+                                    Nouvelle Opération
                                 </a>
                             </li>
                             <li class="nav-item" role="presentation">
@@ -164,25 +164,48 @@
                                 <div class="card-header">
                                     <h5 class="card-title">Liste des Opérations de Caisse</h5>
                                 </div>
-                                <div class="card-header d-flex align-items-center justify-content-between">
-                                    <div class="w-100">
-                                        <div class="input-group">
-                                            <span class="input-group-text">Du</span>
-                                            <input type="date" id="searchDate1" placeholder="Recherche" class="form-control me-1" value="{{ date('Y-m-d') }}" max="{{ date('Y-m-d') }}">
-                                            <span class="input-group-text">au</span>
-                                            <input type="date" id="searchDate2" placeholder="Recherche" class="form-control me-1" value="{{ date('Y-m-d') }}" max="{{ date('Y-m-d') }}">
-                                            <span class="input-group-text">Type Mvt</span>
-                                            <select class="form-select me-1" id="statutTrace">
-                                                <option selected value="tous">Tout</option>
-                                                <option value="Entrer de Caisse">Entrer</option>
-                                                <option value="Sortie de Caisse">Sortie</option>
-                                            </select>
-                                            <span class="input-group-text">Cassier(ère)</span>
-                                            <select class="form-select me-1 select2" id="userTrace">
-                                            </select>
-                                            <a id="btn_search_trace" class="btn btn-outline-success ms-auto">
-                                                <i class="ri-search-2-line"></i>
-                                            </a>
+                                <div class="card-header">
+                                    <div class="row gx-3 mb-3">
+                                        <div class="col-12">
+                                            <div class=" mb-3">
+                                                <div class="card-body">
+                                                    <div class="row gx-3">
+                                                        <div class="col-xxl-3 col-lg-3 col-md-6 col-sm-6">
+                                                            <div class="mb-3">
+                                                                <label class="form-label">Du</label>
+                                                                <input type="date" id="searchDate1" placeholder="Recherche" class="form-control me-1" value="{{ date('Y-m-d') }}" max="{{ date('Y-m-d') }}">
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-xxl-3 col-lg-3 col-md-6 col-sm-6">
+                                                            <div class="mb-3">
+                                                                <label class="form-label">Au</label>
+                                                                <input type="date" id="searchDate2" placeholder="Recherche" class="form-control me-1" value="{{ date('Y-m-d') }}" max="{{ date('Y-m-d') }}">
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-xxl-3 col-lg-3 col-md-6 col-sm-6">
+                                                            <div class="mb-3">
+                                                                <label class="form-label">Type Mvt</label>
+                                                                <select class="form-select me-1" id="statutTrace">
+                                                                    <option selected value="tous">Tout</option>
+                                                                    <option value="Entrer de Caisse">Entrer</option>
+                                                                    <option value="Sortie de Caisse">Sortie</option>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-xxl-3 col-lg-3 col-md-6 col-sm-6">
+                                                            <div class="mb-3">
+                                                                <label class="form-label">Cassier(ère)</label>
+                                                                <select class="form-select me-1 select2" id="userTrace"></select>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-12 text-center" >
+                                                            <a id="btn_search_trace" class="btn btn-outline-success ms-auto">
+                                                                <i class="ri-search-2-line"></i>
+                                                            </a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>

@@ -535,7 +535,7 @@
         $("#btn_eng_patient").on("click", eng_patient);
 
         $('#btn_refresh_table').on('click', function () {
-            $('#Table_day').DataTable().ajax.reload();
+            $('#Table_day').DataTable().ajax.reload(null, false);
         });
 
         $('#btn_affiche_stat').on('click',function(){
@@ -902,7 +902,7 @@
 
                         divAssurer.style.display = "none";
 
-                        $('#Table_day').DataTable().ajax.reload();
+                        $('#Table_day').DataTable().ajax.reload(null, false);
                         select_patient();
 
                         showAlert('Succès', 'Patient Enregistrée.','success');
@@ -999,6 +999,15 @@
                                data-role_id="${row.role_id}"
                                data-created_at="${row.created_at}" 
                                data-datenais="${row.datenais}" 
+                               data-age="${row.age}" 
+                               data-assurer="${row.assurer}"
+                               data-assurance="${row.assurance}"
+                               data-societe="${row.societe}" 
+                               data-taux="${row.taux}"
+                               data-filiation="${row.filiation}"
+                               data-matricule_assurance="${row.matricule_assurance}"
+                               data-nbre_cons="${row.nbre_cons}"
+                               data-nbre_hos="${row.nbre_hos}"
                                data-bs-toggle="modal" 
                                data-bs-target="#DetailP" 
                                id="detailP">
@@ -1091,7 +1100,7 @@
                                             Contact 1 : ${row.tel ? '+225 '+row.tel : 'Néant'}
                                         </li>
                                         <li class="list-group-item">
-                                            Contact2 :  ${row.tel2 ? '+225 '+row.tel2 : 'Néant'}
+                                            Contact 2 :  ${row.tel2 ? '+225 '+row.tel2 : 'Néant'}
                                         </li>
                                         <li class="list-group-item">
                                             Adresse : ${row.adresse ? row.adresse : 'Néant'}

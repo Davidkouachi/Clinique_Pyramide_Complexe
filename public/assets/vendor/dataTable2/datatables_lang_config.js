@@ -4,17 +4,21 @@ const languageConfig = {
     info: "Affichage de _START_ à _END_ sur _TOTAL_ entrées",
     infoEmpty: "Affichage de 0 à 0 sur 0 entrée",
     paginate: {
-        previous: "Précédent",
-        next: "Suivant"
+        first: "Première",
+        last: "Dernière",
+        next: "Suivante",
+        previous: "Précédente",
     },
     zeroRecords: "Aucune donnée trouvée",
     emptyTable: "Aucune donnée disponible dans le tableau",
-    loadingRecords: "Chargement..."
+    loadingRecords: "Chargement des données...",
+    processing: "Chargement des données..."
 };
 
 const dataTableConfig = {
     //autoWidth: true,
     //scrollX: true,
+    autoWidth: false,
     paging: true,
     language: languageConfig,
     lengthMenu: [

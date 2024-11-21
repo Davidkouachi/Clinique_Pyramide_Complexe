@@ -303,11 +303,11 @@
                                 </td>
                                 <td>
                                     <div class="d-inline-flex gap-1">
-                                        <a class="btn btn-outline-info btn-sm rounded-5" data-bs-toggle="modal" data-bs-target="#Mmodif" id="edit-${item.id}">
+                                        <a class="btn btn-outline-info btn-sm " data-bs-toggle="modal" data-bs-target="#Mmodif" id="edit-${item.id}">
                                             <i class="ri-edit-box-line"></i>
                                         </a>
                                         ${item.nbre == '0' ? 
-                                            `<a class="btn btn-outline-danger btn-sm rounded-5" data-bs-toggle="modal" data-bs-target="#Mdelete" id="delete-${item.id}">
+                                            `<a class="btn btn-outline-danger btn-sm " data-bs-toggle="modal" data-bs-target="#Mdelete" id="delete-${item.id}">
                                                 <i class="ri-delete-bin-line"></i>
                                             </a>` : `` }
                                     </div>

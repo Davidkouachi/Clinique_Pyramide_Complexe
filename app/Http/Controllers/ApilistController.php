@@ -1051,11 +1051,15 @@ class ApilistController extends Controller
     {
         $twoDaysLater = Carbon::today()->addDays(2);
 
+        // $today = Carbon::today();
+        // $twoDaysLater = Carbon::today()->addDays(2);
+
         $rdvQuery = rdvpatient::Join('patients', 'patients.id', '=', 'rdvpatients.patient_id')
                         ->Join('users', 'users.id', '=', 'rdvpatients.user_id')
                         ->join('typemedecins', 'typemedecins.user_id', '=', 'users.id')
                         ->join('typeactes', 'typeactes.id', '=', 'typemedecins.typeacte_id')
                         ->whereDate('rdvpatients.date', '=', $twoDaysLater)
+                        // ->whereBetween('rdvpatients.date', [$today, $twoDaysLater])
                         ->select(
                             'rdvpatients.*', 
                             'patients.np as patient',

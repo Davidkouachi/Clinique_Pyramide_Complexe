@@ -117,7 +117,7 @@
                                                 <thead>
                                                     <tr>
                                                         <th scope="col">N°</th>
-                                                        <th scope="col">Nom du medicament</th>
+                                                        <th scope="col" colspan="2">Nom du medicament</th>
                                                         <th scope="col">Prix</th>
                                                         <th scope="col">Qté Restante</th>
                                                         <th scope="col">Actions</th>
@@ -343,20 +343,23 @@
                                 <a class="d-flex align-items-center flex-column me-2">
                                     <img src="{{asset('assets/images/produit1.png')}}" class="img-2x rounded-circle border border-1">
                                 </a>
-                                ${data}
                             </div>
                         `;
                     },
                     searchable: false,
                 },
+                {
+                    data: 'nom',
+                    searchable: true,
+                },
                 {   
                     data: 'prix', 
                     render: function(data) { return `${data} Fcfa`; },
-                    searchable: false,
+                    searchable: true,
                 },
                 { 
                     data: 'quantite', 
-                    searchable: false, 
+                    searchable: true, 
                 },
                 {
                     data: 'id',
