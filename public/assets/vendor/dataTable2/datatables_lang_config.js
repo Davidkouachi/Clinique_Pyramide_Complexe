@@ -7,7 +7,7 @@ const languageConfig = {
         first: "Première",
         last: "Dernière",
         next: "Suivante",
-        previous: "Précédente",
+        previous: "Précédent",
     },
     zeroRecords: "Aucune donnée trouvée",
     emptyTable: "Aucune donnée disponible dans le tableau",

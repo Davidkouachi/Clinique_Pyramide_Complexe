@@ -263,7 +263,7 @@
                                                 <div class="w-100">
                                                     <div class="input-group">
                                                         <span class="input-group-text">Du</span>
-                                                        <input type="date" id="searchDate1" placeholder="Recherche" class="form-control me-1" value="{{ date('Y-m-d') }}" max="{{ date('Y-m-d') }}">
+                                                        <input type="date" id="searchDate1" placeholder="Recherche" class="form-control me-1" value="{{ date('Y-m-d', strtotime('-2 months')) }}" max="{{ date('Y-m-d') }}">
                                                         <span class="input-group-text">au</span>
                                                         <input type="date" id="searchDate2" placeholder="Recherche" class="form-control me-1" value="{{ date('Y-m-d') }}" max="{{ date('Y-m-d') }}">
                                                         <span class="input-group-text">Statut</span>
@@ -286,10 +286,10 @@
                                                                 <tr>
                                                                     <th scope="col">N°</th>
                                                                     <th scope="col">Type</th>
-                                                                    <th scope="col">Nature</th>
+                                                                    {{-- <th scope="col">Nature</th> --}}
                                                                     <th scope="col">Patient</th>
-                                                                    <th scope="col">Du</th>
-                                                                    <th scope="col">Au</th>
+                                                                    {{-- <th scope="col">Du</th> --}}
+                                                                    {{-- <th scope="col">Au</th> --}}
                                                                     <th scope="col">Médecin</th>
                                                                     <th scope="col">Statut</th>
                                                                     <th scope="col">Montant Chambre</th>
@@ -321,9 +321,9 @@
                                                 </a>
                                             </div>
                                             <div class="card-body">
-                                                <div class="table-outer" id="div_Table_lit" style="display: none;">
+                                                <div class="">
                                                     <div class="table-responsive">
-                                                        <table class="table align-middle table-hover m-0 truncate" id="Table_lit">
+                                                        <table id="Table_day" class="table table-hover table-sm Table_lit">
                                                             <thead>
                                                                 <tr>
                                                                     <th scope="col">N°</th>
@@ -337,17 +337,6 @@
                                                             <tbody>
                                                             </tbody>
                                                         </table>
-                                                    </div>
-                                                </div>
-                                                <div id="message_Table_lit" style="display: none;">
-                                                    <p class="text-center" >
-                                                        Aucune donnée n'a été trouvé
-                                                    </p>
-                                                </div>
-                                                <div id="div_Table_loader" style="display: none;">
-                                                    <div class="d-flex justify-content-center align-items-center">
-                                                        <div class="spinner-border text-warning me-2" role="status" aria-hidden="true"></div>
-                                                        <strong>Chargement des données...</strong>
                                                     </div>
                                                 </div>
                                             </div>
@@ -372,7 +361,18 @@
                 </h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="modal-body" id="modal_detail"></div>
+            <div class="modal-body" id="modal_detail" style="display: none;"></div>
+            <div id="message_detail" style="display: none;">
+                <p class="text-center" >
+                    Aucune données n'a été trouvé
+                </p>
+            </div>
+            <div id="div_detail_loader" class="mt-3 mb-3" style="display: none;">
+                <div class="d-flex justify-content-center align-items-center">
+                    <div class="spinner-border text-warning me-2" role="status" aria-hidden="true"></div>
+                    <strong>Chargement des données...</strong>
+                </div>
+            </div>
         </div>
     </div>
 </div>
@@ -511,18 +511,12 @@
         select_medecin();
         select_chambre();
         select_typeadmission();
-        list_lit();
 
         $("#id_chambre").on("change", select_lit);
         $("#id_typeadmission").on("change", select_natureadmission);
-        $("#btn_refresh_table").on("click", list_lit);
         $('#btn_calcul').on('click', calculAmounts);
         $('#btn_eng_hosp').on('click', eng_hosp);
         $("#updateBtn").on("click", updatee);
-
-        $('#btn_search_table').on('click', function() {
-            $('.Table_hos').DataTable().ajax.reload(null, false);
-        });
 
         $('#patient_id').on('change', function() {
             $('#div_calcul').hide();
@@ -541,7 +535,6 @@
             calculerJours();
         });
 
-        // Quand la date de sortie est modifiée
         $('#date_sortie').on('change', function() {
             const date2 = $(this).val(); // Récupérer la valeur de date_sortie
             const date1 = $('#date_entrer').val(); // Récupérer la valeur de date_entrer
@@ -552,6 +545,514 @@
             }
 
             calculerJours();
+        });
+
+        $('#searchDate1').on('change', function() {
+            const date1 = $(this).val(); // Récupérer la valeur de date_entrer
+            
+            if (date1) {
+                // Mettre à jour la valeur et le min de date_sortie
+                $('#searchDate2').val(date1);
+                $('#searchDate2').attr('min', date1);
+            }
+
+        });
+
+        $('#searchDate2').on('change', function() {
+            const date2 = $(this).val(); // Récupérer la valeur de date_sortie
+            const date1 = $('#searchDate1').val(); // Récupérer la valeur de date_entrer
+
+            if (date2 && date1 && new Date(date2) < new Date(date1)) {
+                alert('La date de sortie probable ne peut pas être antérieure à la date d\'entrée.');
+                $(this).val(date1); // Réinitialiser la date_sortie à date_entrer
+            }
+
+        });
+
+        const table_lit = $('.Table_lit').DataTable({
+
+            processing: true,
+            serverSide: false,
+            ajax: function(data, callback) {
+                
+                $.ajax({
+                    url: `/api/list_lit`,
+                    type: 'GET',
+                    success: function(response) {
+                        callback({ data: response.data });
+                    },
+                    error: function() {
+                        console.log('Error fetching data. Please check your API or network lit_hopital.');
+                    }
+                });
+            },
+            columns: [
+                { 
+                    data: null, 
+                    render: (data, type, row, meta) => meta.row + 1,
+                    searchable: false,
+                    orderable: false,
+                },
+                { 
+                    data: 'code', 
+                    render: (data, type, row) => `
+                    <div class="d-flex align-items-center">
+                        <a class="d-flex align-items-center flex-column me-2">
+                            <img src="{{ asset('/assets/images/lit.avif') }}"  class="img-2x rounded-circle border border-1">
+                        </a>
+                        ${data}
+                    </div>`,
+                    searchable: true, 
+                },
+                { 
+                    data: 'statut',
+                    render: function(data) {
+                        return data === 'indisponible' 
+                            ? `<span class="badge bg-danger">${data}</span>` 
+                            : `<span class="badge bg-success">${data}</span>`;
+                    },
+                    searchable: true
+                },
+                { 
+                    data: 'code_ch', 
+                    render: (data) => `CH-${data}`,
+                    searchable: true, 
+                },
+                { 
+                    data: 'type',
+                    searchable: true, 
+                },
+                { 
+                    data: 'prix', 
+                    render: (data) => `${data} Fcfa`,
+                    searchable: true, 
+                },
+            ],
+            ...dataTableConfig,
+        });
+
+        $('#btn_refresh_table').on('click', function() {
+            table_lit.ajax.reload(null, false);
+        });
+
+        const table_hos = $('.Table_hos').DataTable({
+
+            processing: true,
+            serverSide: false,
+            ajax: function(data, callback) {
+                const date1 = $('#searchDate1').val();
+                const date2 = $('#searchDate2').val();
+                const statut = $('#statut').val();
+                
+                $.ajax({
+                    url: `/api/list_hopital/${date1}/${date2}/${statut}`,
+                    type: 'GET',
+                    success: function(response) {
+                        callback({ data: response.data });
+                    },
+                    error: function() {
+                        console.log('Error fetching data. Please check your API or network list_hopital.');
+                    }
+                });
+            },
+            columns: [
+                { 
+                    data: null, 
+                    render: (data, type, row, meta) => meta.row + 1,
+                    searchable: false,
+                    orderable: false,
+                },
+                { 
+                    data: 'type', 
+                    render: (data, type, row) => `
+                    <div class="d-flex align-items-center">
+                        <a class="d-flex align-items-center flex-column me-2">
+                            <img src="{{ asset('/assets/images/hospitalisation.jpg') }}" class="img-2x rounded-circle border border-1">
+                        </a>
+                        ${data}
+                    </div>`,
+                    searchable: true, 
+                },
+                // { 
+                //     data: 'nature',
+                //     searchable: true, 
+                // },
+                { 
+                    data: 'patient',
+                    searchable: true,
+                },
+                // { 
+                //     data: 'date_debut', 
+                //     render: (data) => `${formatDate(data)}`,
+                //     searchable: true, 
+                // },
+                // { 
+                //     data: 'date_fin', 
+                //     render: (data) => `${formatDate(data)}`,
+                //     searchable: true, 
+                // },
+                { 
+                    data: 'medecin',
+                    render: (data) => {
+                        if (data) {
+                            // Diviser les mots et récupérer les deux premiers
+                            const words = data.split(' ');
+                            return `Dr. ${words.slice(0, 1).join(' ')}`;
+                        }
+                        return ''; // Si `data` est vide ou invalide
+                    },
+                    searchable: true, 
+                },
+                { 
+                    data: 'statut',
+                    render: function(data) {
+                        return data === 'Hospitaliser' 
+                            ? `<span class="badge bg-danger">en cours</span>` 
+                            : `<span class="badge bg-success">libéré</span>`;
+                    },
+                    searchable: true
+                },
+                { 
+                    data: 'montant_chambre', 
+                    render: (data) => `${data} Fcfa`,
+                    searchable: true, 
+                },
+                { 
+                    data: 'montant_soins', 
+                    render: (data) => `${data} Fcfa`,
+                    searchable: true, 
+                },
+                { 
+                    data: 'montant', 
+                    render: (data) => `${data} Fcfa`,
+                    searchable: true, 
+                },
+                {
+                    data: null,
+                    render: (data, type, row) => `
+                        <div class="d-inline-flex gap-1" style="font-size:10px;">
+                            ${row.statut === 'Hospitaliser' 
+                            ? ` <a class="btn btn-outline-success btn-sm" id="add" data-bs-toggle="modal" data-bs-target="#Add"
+                                    data-id="${row.id}"
+                                >
+                                    <i class="ri-dossier-line"></i>
+                                </a>
+                                <a class="btn btn-outline-info btn-sm" id="modif" data-bs-toggle="modal" data-bs-target="#Mmodif"
+                                    data-id="${row.id}"
+                                    data-date_debut="${row.date_debut}"
+                                    data-date_fin="${row.date_fin}"
+                                >
+                                    <i class="ri-edit-line"></i>
+                                </a>` 
+                            : ''}
+                            <a class="btn btn-outline-danger btn-sm" id="detail_produit" data-bs-toggle="modal" data-bs-target="#Detail_produit"
+                                data-id="${row.id}"
+                                data-montant_soins="${row.montant_soins}"
+                            >
+                                <i class="ri-archive-2-fill"></i>
+                            </a>
+                            <a class="btn btn-outline-warning btn-sm" id="detail" data-bs-toggle="modal" data-bs-target="#Detail"
+                                data-id="${row.id}"
+                            >
+                                <i class="ri-eye-line"></i>
+                            </a>
+                            <a class="btn btn-outline-info btn-sm" id="fiche"
+                                data-id="${row.id}"
+                            >
+                                <i class="ri-file-line"></i>
+                            </a>
+                        </div>
+                    `,
+                    searchable: false,
+                    orderable: false,
+                }
+            ],
+            ...dataTableConfig,
+            initComplete: function(settings, json) {
+                initializeRowEventListeners();
+            },
+        });
+
+        function initializeRowEventListeners() {
+
+            $('.Table_hos').on('click', '#add', function() {
+                const id = $(this).data('id');
+                
+                fetch(`/api/list_produit_all`) // API endpoint pour récupérer la liste des produits
+                    .then(response => response.json())
+                    .then(data => {
+                        
+                        document.getElementById('id_hos_produit').value = id;
+                        document.getElementById('montant_total_produit').value = "";
+
+                        const produits = data.produit;
+
+                        const contenuDiv = document.getElementById('contenu');
+                        contenuDiv.innerHTML = '';
+                        
+                        addSelect(contenuDiv, produits);
+                    })
+                    .catch(error => {
+                        console.error('Erreur lors du chargement des données:', error);
+                    });
+            });
+
+            $('.Table_hos').on('click', '#modif', function() {
+                const id = $(this).data('id');
+                const date_debut = $(this).data('date_debut');
+                const date_fin = $(this).data('date_fin');
+
+                document.getElementById('IdModif').value = `${id}`;
+                document.getElementById('date1M').value = `${date_debut}`;
+                document.getElementById('date2M').value = `${date_fin}`;
+            });
+
+            $('.Table_hos').on('click', '#detail_produit', function() {
+                const id = $(this).data('id');
+                const montant_soins = $(this).data('montant_soins');
+
+                const tableBodyP = document.querySelector('#TableP tbody');
+                const messageDivP = document.getElementById('message_TableP');
+                const tableDivP = document.getElementById('div_TableP');
+                const loaderDivP = document.getElementById('div_Table_loaderP');
+
+                messageDivP.style.display = 'none';
+                tableDivP.style.display = 'none';
+                loaderDivP.style.display = 'block';
+
+                fetch(`/api/list_facture_hos_d/${id}`) // API endpoint
+                    .then(response => response.json())
+                    .then(data => {
+
+                        const factureds = data.factured;
+
+                        tableBodyP.innerHTML = '';
+
+                        if (factureds.length > 0) {
+
+                            loaderDivP.style.display = 'none';
+                            messageDivP.style.display = 'none';
+                            tableDivP.style.display = 'block';
+
+                            // Loop through each item in the chambre array
+                            factureds.forEach((item, index) => {
+                                // Create a new row
+                                const row = document.createElement('tr');
+                                // Create and append cells to the row based on your table's structure
+                                row.innerHTML = `
+                                    <td>
+                                        <h6>${item.nom_produit}</h6>
+                                    </td>
+                                    <td>
+                                        <h6>${item.prix_produit} Fcfa</h6>
+                                    </td>
+                                    <td>
+                                        <h6>${item.quantite}</h6>
+                                    </td>
+                                    <td>
+                                        <h6>${item.montant} Fcfa</h6>
+                                    </td>
+                                `;
+                                // Append the row to the table body
+                                tableBodyP.appendChild(row);
+
+                            });
+
+                            const row2 = document.createElement('tr');
+                            row2.innerHTML = `
+                                <td colspan="2">&nbsp;</td>
+                                <td colspan="2" >
+                                    <h5 class="mt-4 text-success">
+                                        Total : ${montant_soins} Fcfa
+                                    </h5>
+                                </td>
+                            `;
+                            tableBodyP.appendChild(row2);
+
+                            const row3 = document.createElement('tr');
+                            row3.innerHTML = `
+                                <td colspan="4">
+                                    <h6 class="text-danger">NOTE</h6>
+                                    <p class="small m-0">
+                                        Le Montant Total des produits utilisés
+                                        seront ajouter au montant total de la
+                                        chambre occupé par le patient.
+                                    </p>
+                                </td>
+                            `;
+
+                            tableBodyP.appendChild(row3);
+
+                        } else {
+                            loaderDivP.style.display = 'none';
+                            messageDivP.style.display = 'block';
+                            tableDivP.style.display = 'none';
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Erreur lors du chargement des données:', error);
+                        loaderDivD.style.display = 'none';
+                        messageDivD.style.display = 'block';
+                        tableDivD.style.display = 'none';
+                    });
+            });
+
+            $('.Table_hos').on('click', '#detail', function() {
+                const id = $(this).data('id');
+
+                const modal = document.getElementById('modal_detail');
+                const message = document.getElementById('message_detail');
+                const loader = document.getElementById('div_detail_loader');
+
+                modal.style.display = 'none';
+                message.style.display = 'none';
+                loader.style.display = 'block';
+
+                fetch(`/api/detail_hos/${id}`) // API endpoint
+                    .then(response => response.json())
+                    .then(data => {
+                        // Access the 'chambre' array from the API response
+                        loader.style.display = 'none';
+                        message.style.display = 'none';
+                        modal.style.display = 'block';
+
+                        modal.innerHTML = '';
+
+                        const hopital = data.hopital;
+                        const facture = data.facture;
+                        const patient = data.patient;
+                        const nature = data.natureadmission;
+                        const type = data.typeadmission;
+                        const lit = data.lit;
+                        const chambre = data.chambre;
+                        const user = data.user;
+
+                        const div = document.createElement('div');
+                        div.innerHTML = `
+                            <div class="row">
+                                <div class="col-xl-12">
+                                    <div class="">
+                                        <div class="card-body">
+                                            <div class="row justify-content-between">
+                                                <div class="col-12 text-center">                  
+                                                    <h6 class="fw-semibold">Docteur :</h6>
+                                                    <p>${user.name}</p>
+                                                    <h6 class="fw-semibold">Spécialité :</h6>
+                                                    <p>${user.typeacte}</p>
+                                                    <h6 class="fw-semibold">Chambre Occupé :</h6>
+                                                    <p>CH-${chambre.code}</p>
+                                                    <h6 class="fw-semibold">Lit Occupé :</h6>
+                                                    <p>LIT-${lit.code}/${lit.type}</p>
+                                                    <h6 class="fw-semibold">Prix :</h6>
+                                                    <p>${chambre.prix} Fcfa</p>
+                                                </div>
+                                                <div class="col-12 text-center mt-4">
+                                                    ${hopital.num_bon != null ? `
+                                                        <h6 class="fw-semibold">Numéro de prise en charge :</h6>
+                                                        <p>${hopital.num_bon}</p>
+                                                    ` : ''}
+                                                    <h6 class="fw-semibold">Type d'admission :</h6>
+                                                    <p>${type.nom}</p>
+                                                    <h6 class="fw-semibold">Nature d'admission :</h6>
+                                                    <p>${nature.nom}</p>
+                                                    <h6 class="fw-semibold">Date d'entrer :</h6>
+                                                    <p>${formatDate(hopital.date_debut)}</p>
+                                                    <h6 class="fw-semibold">Date de sortie Probable :</h6>
+                                                    <p>${formatDate(hopital.date_fin)}</p>
+                                                    <h6 class="fw-semibold">Nombre de jours :</h6>
+                                                    <p>${calculateDaysBetween(hopital.date_debut, hopital.date_fin)}</p>
+                                                </div>
+                                                <div class="col-12 text-center mt-4">
+                                                    <h6 class="fw-semibold">N° Dossier :</h6>
+                                                    <p>${patient.matricule}</p>
+                                                    <h6 class="fw-semibold">Nom du patient :</h6>
+                                                    <p>${patient.np}</p>
+                                                    <h6 class="fw-semibold">contact :</h6>
+                                                    <p>${patient.tel}</p>
+                                                    <h6 class="fw-semibold">Assurer :</h6>
+                                                    <p>${patient.assurer}</p>
+                                                    ${patient.assurer === 'oui' ? `
+                                                        <h6 class="fw-semibold">Taux :</h6>
+                                                        <p>${patient.taux}%</p>
+
+                                                        <h6 class="fw-semibold">Assurance :</h6>
+                                                        <p>${patient.assurance}</p> 
+
+                                                        <h6 class="fw-semibold">Matricule :</h6>
+                                                        <p>${patient.matricule_assurance}</p>
+                                                    ` : ''}
+                                                </div>
+                                                <div class="col-12 text-center mt-4">
+                                                    <h6 class="fw-semibold">Part Patient :</h6>
+                                                    <p>${hopital.part_patient} Fcfa</p>
+                                                    <h6 class="fw-semibold">Part Assurance :</h6>
+                                                    <p>${hopital.part_assurance} Fcfa</p>
+                                                    <h6 class="fw-semibold">Remise :</h6>
+                                                    <p>${hopital.remise ? hopital.remise : '0'} Fcfa</p>
+                                                    <h6 class="fw-semibold">Montant Total :</h6>
+                                                    <p>${hopital.montant} Fcfa</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+
+                        modal.appendChild(div);
+
+                    })
+                    .catch(error => {
+
+                        loader.style.display = 'none';
+                        message.style.display = 'block';
+                        modal.style.display = 'none';
+
+                        console.error('Erreur lors du chargement des données:', error);
+                    });  
+            });
+
+            $('.Table_hos').on('click', '#fiche', function() {
+                var preloader_ch = `
+                    <div id="preloader_ch">
+                        <div class="spinner_preloader_ch"></div>
+                    </div>
+                `;
+                // Add the preloader to the body
+                document.body.insertAdjacentHTML('beforeend', preloader_ch);
+
+                const id = $(this).data('id');
+
+                fetch(`/api/detail_hos/${id}`) // API endpoint
+                    .then(response => response.json())
+                    .then(data => {
+                        // Access the 'chambre' array from the API response
+                        const hopital = data.hopital;
+                        const facture = data.facture;
+                        const patient = data.patient;
+                        const nature = data.natureadmission;
+                        const type = data.typeadmission;
+                        const lit = data.lit;
+                        const chambre = data.chambre;
+                        const user = data.user;
+                        const produit = data.produit;
+
+                        var preloader = document.getElementById('preloader_ch');
+                        if (preloader) {
+                            preloader.remove();
+                        }
+
+                        generatePDFInvoice(hopital, facture, patient, nature, type, lit, chambre, user, produit);
+
+                    })
+                    .catch(error => {
+                        console.error('Erreur lors du chargement des données:', error);
+                    });
+            });
+        }
+
+        $('#btn_search_table').on('click', function() {
+            table_hos.ajax.reload(null, false);
         });
 
         function select_patient()
@@ -989,76 +1490,6 @@
             return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
         }
 
-        function list_lit() {
-
-            const tableBody = document.querySelector('#Table_lit tbody');
-            const messageDiv = document.getElementById('message_Table_lit');
-            const tableDiv = document.getElementById('div_Table_lit'); // The message div
-            const loaderDiv = document.getElementById('div_Table_loader');
-
-            messageDiv.style.display = 'none';
-            tableDiv.style.display = 'none';
-            loaderDiv.style.display = 'block';
-
-            // Fetch data from the API
-            fetch('/api/list_lit') // API endpoint
-                .then(response => response.json())
-                .then(data => {
-                    // Access the 'chambre' array from the API response
-                    const lits = data.lit;
-
-                    // Clear any existing rows in the table body
-                    tableBody.innerHTML = '';
-
-                    if (lits.length > 0) {
-
-                        loaderDiv.style.display = 'none';
-                        messageDiv.style.display = 'none';
-                        tableDiv.style.display = 'block';
-
-                        // Loop through each item in the chambre array
-                        lits.forEach((item, index) => {
-                            // Create a new row
-                            const row = document.createElement('tr');
-                            // Create and append cells to the row based on your table's structure
-                            row.innerHTML = `
-                                <td>${index + 1}</td>
-                                <td>
-                                    <div class="d-flex align-items-center ">
-                                        <a class="d-flex align-items-center flex-column me-2">
-                                            <img src="{{asset('assets/images/lit.avif')}}" class="img-2x rounded-circle border border-1">
-                                        </a>
-                                        ${item.code}
-                                    </div>
-                                </td>
-                                <td>
-                                    ${item.statut === 'indisponible' ? 
-                                        `<span class="badge bg-danger">${item.statut}</span>` : 
-                                        `<span class="badge bg-success">${item.statut}</span>`}
-                                </td>
-                                <td>CH-${item.code_ch}</td>
-                                <td>${item.type}</td>
-                                <td>${item.prix} Fcfa</td>
-                            `;
-                            // Append the row to the table body
-                            tableBody.appendChild(row);
-
-                        });
-                    } else {
-                        loaderDiv.style.display = 'none';
-                        messageDiv.style.display = 'block';
-                        tableDiv.style.display = 'none';
-                    }
-                })
-                .catch(error => {
-                    console.error('Erreur lors du chargement des données:', error);
-                    // Hide the table and show the error message in case of failure
-                    loaderDiv.style.display = 'none';
-                    messageDiv.style.display = 'block';
-                    tableDiv.style.display = 'none';
-                });
-        }
-
         function calculerJours() {
             // Sélectionner les éléments des champs date
             const dateEntree = $('#date_entrer').val();
@@ -1171,7 +1602,8 @@
                         reset(); // Réinitialiser les champs
                         const newConsultationTab = new bootstrap.Tab($('#tab-oneAAA')[0]);
                         newConsultationTab.show();
-                        $('.Table_hos').DataTable().ajax.reload(null, false); // Actualiser la liste des hospitalisations
+                        $('.Table_hos').DataTable().ajax.reload(null, false);
+                        $('.Table_lit').DataTable().ajax.reload(null, false);
                     } else if (response.error) {
                         showAlert('Alert', response.error || 'Une erreur est survenue.', 'error');
                     }
@@ -1217,400 +1649,6 @@
             $('#nbre_jour').val('1');
 
             Statistique();
-        }
-
-        $('.Table_hos').DataTable({
-
-            processing: true,
-            serverSide: false,
-            ajax: function(data, callback) {
-                const date1 = $('#searchDate1').val();
-                const date2 = $('#searchDate2').val();
-                const statut = $('#statut').val();
-                
-                $.ajax({
-                    url: `/api/list_hopital/${date1}/${date2}/${statut}`,
-                    type: 'GET',
-                    success: function(response) {
-                        callback({ data: response.data });
-                    },
-                    error: function() {
-                        console.log('Error fetching data. Please check your API or network list_hopital.');
-                    }
-                });
-            },
-            columns: [
-                { 
-                    data: null, 
-                    render: (data, type, row, meta) => meta.row + 1,
-                    searchable: false,
-                    orderable: false,
-                },
-                { 
-                    data: 'type', 
-                    render: (data, type, row) => `
-                    <div class="d-flex align-items-center">
-                        <a class="d-flex align-items-center flex-column me-2">
-                            <img src="/assets/images/hospitalisation.jpg" class="img-2x rounded-circle border border-1">
-                        </a>
-                        ${data}
-                    </div>`,
-                    searchable: true, 
-                },
-                { 
-                    data: 'nature',
-                    searchable: true, 
-                },
-                { 
-                    data: 'patient',
-                    searchable: true,
-                },
-                { 
-                    data: 'date_debut', 
-                    render: (data) => `${formatDate(data)}`,
-                    searchable: true, 
-                },
-                { 
-                    data: 'date_fin', 
-                    render: (data) => `${formatDate(data)}`,
-                    searchable: true, 
-                },
-                { 
-                    data: 'medecin',
-                    searchable: true, 
-                },
-                { 
-                    data: 'statut',
-                    render: function(data) {
-                        return data === 'Hospitaliser' 
-                            ? `<span class="badge bg-danger">${data}</span>` 
-                            : `<span class="badge bg-success">${data}</span>`;
-                    },
-                    searchable: true
-                },
-                { 
-                    data: 'montant_chambre', 
-                    render: (data) => `${data} Fcfa`,
-                    searchable: true, 
-                },
-                { 
-                    data: 'montant_soins', 
-                    render: (data) => `${data} Fcfa`,
-                    searchable: true, 
-                },
-                { 
-                    data: 'montant', 
-                    render: (data) => `${data} Fcfa`,
-                    searchable: true, 
-                },
-                {
-                    data: null,
-                    render: (data, type, row) => `
-                        <div class="d-inline-flex gap-1" style="font-size:10px;">
-                            ${row.statut === 'Hospitaliser' 
-                            ? ` <a class="btn btn-outline-success btn-sm" id="add" data-bs-toggle="modal" data-bs-target="#Add"
-                                    data-id="${row.id}"
-                                >
-                                    <i class="ri-dossier-line"></i>
-                                </a>
-                                <a class="btn btn-outline-info btn-sm" id="modif" data-bs-toggle="modal" data-bs-target="#Mmodif"
-                                    data-id="${row.id}"
-                                    data-date_debut="${row.date_debut}"
-                                    data-date_fin="${row.date_fin}"
-                                >
-                                    <i class="ri-edit-line"></i>
-                                </a>` 
-                            : ''}
-                            <a class="btn btn-outline-danger btn-sm" id="detail_produit" data-bs-toggle="modal" data-bs-target="#Detail_produit"
-                                data-id="${row.id}"
-                                data-montant_soins="${row.montant_soins}"
-                            >
-                                <i class="ri-archive-2-fill"></i>
-                            </a>
-                            <a class="btn btn-outline-warning btn-sm" id="detail" data-bs-toggle="modal" data-bs-target="#Detail"
-                                data-id="${row.id}"
-                            >
-                                <i class="ri-eye-line"></i>
-                            </a>
-                            <a class="btn btn-outline-info btn-sm" id="fiche"
-                                data-id="${row.id}"
-                            >
-                                <i class="ri-file-line"></i>
-                            </a>
-                        </div>
-                    `,
-                    searchable: false,
-                    orderable: false,
-                }
-            ],
-            ...dataTableConfig,
-            initComplete: function(settings, json) {
-                initializeRowEventListeners();
-            },
-        });
-
-        function initializeRowEventListeners() {
-
-            $('.Table_hos').on('click', '#add', function() {
-                const id = $(this).data('id');
-                
-                fetch(`/api/list_produit_all`) // API endpoint pour récupérer la liste des produits
-                    .then(response => response.json())
-                    .then(data => {
-                        
-                        document.getElementById('id_hos_produit').value = id;
-                        document.getElementById('montant_total_produit').value = "";
-
-                        const produits = data.produit;
-
-                        const contenuDiv = document.getElementById('contenu');
-                        contenuDiv.innerHTML = '';
-                        
-                        addSelect(contenuDiv, produits);
-                    })
-                    .catch(error => {
-                        console.error('Erreur lors du chargement des données:', error);
-                    });
-            });
-
-            $('.Table_hos').on('click', '#modif', function() {
-                const id = $(this).data('id');
-                const date_debut = $(this).data('date_debut');
-                const date_fin = $(this).data('date_fin');
-
-                document.getElementById('IdModif').value = `${id}`;
-                document.getElementById('date1M').value = `${date_debut}`;
-                document.getElementById('date2M').value = `${date_fin}`;
-            });
-
-            $('.Table_hos').on('click', '#detail_produit', function() {
-                const id = $(this).data('id');
-                const montant_soins = $(this).data('montant_soins');
-
-                const tableBodyP = document.querySelector('#TableP tbody');
-                const messageDivP = document.getElementById('message_TableP');
-                const tableDivP = document.getElementById('div_TableP');
-                const loaderDivP = document.getElementById('div_Table_loaderP');
-
-                messageDivP.style.display = 'none';
-                tableDivP.style.display = 'none';
-                loaderDivP.style.display = 'block';
-
-                fetch(`/api/list_facture_hos_d/${id}`) // API endpoint
-                    .then(response => response.json())
-                    .then(data => {
-                        // Access the 'chambre' array from the API response
-                        const factureds = data.factured;
-
-                        // Clear any existing rows in the table body
-                        tableBodyP.innerHTML = '';
-
-                        if (factureds.length > 0) {
-
-                            loaderDivP.style.display = 'none';
-                            messageDivP.style.display = 'none';
-                            tableDivP.style.display = 'block';
-
-                            // Loop through each item in the chambre array
-                            factureds.forEach((item, index) => {
-                                // Create a new row
-                                const row = document.createElement('tr');
-                                // Create and append cells to the row based on your table's structure
-                                row.innerHTML = `
-                                    <td>
-                                        <h6>${item.nom_produit}</h6>
-                                    </td>
-                                    <td>
-                                        <h6>${item.prix_produit} Fcfa</h6>
-                                    </td>
-                                    <td>
-                                        <h6>${item.quantite}</h6>
-                                    </td>
-                                    <td>
-                                        <h6>${item.montant} Fcfa</h6>
-                                    </td>
-                                `;
-                                // Append the row to the table body
-                                tableBodyP.appendChild(row);
-
-                            });
-
-                            const row2 = document.createElement('tr');
-                            row2.innerHTML = `
-                                <td colspan="2">&nbsp;</td>
-                                <td colspan="2" >
-                                    <h5 class="mt-4 text-success">
-                                        Total : ${montant_soins} Fcfa
-                                    </h5>
-                                </td>
-                            `;
-                            tableBodyP.appendChild(row2);
-
-                            const row3 = document.createElement('tr');
-                            row3.innerHTML = `
-                                <td colspan="4">
-                                    <h6 class="text-danger">NOTE</h6>
-                                    <p class="small m-0">
-                                        Le Montant Total des produits utilisés
-                                        seront ajouter au montant total de la
-                                        chambre occupé par le patient.
-                                    </p>
-                                </td>
-                            `;
-
-                            tableBodyP.appendChild(row3);
-
-                        } else {
-                            loaderDivP.style.display = 'none';
-                            messageDivP.style.display = 'block';
-                            tableDivP.style.display = 'none';
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Erreur lors du chargement des données:', error);
-                        loaderDivD.style.display = 'none';
-                        messageDivD.style.display = 'block';
-                        tableDivD.style.display = 'none';
-                    });
-            });
-
-            $('.Table_hos').on('click', '#detail', function() {
-                const id = $(this).data('id');
-
-                fetch(`/api/detail_hos/${id}`) // API endpoint
-                    .then(response => response.json())
-                    .then(data => {
-                        // Access the 'chambre' array from the API response
-                        const modal = document.getElementById('modal_detail');
-                        modal.innerHTML = '';
-
-                        const hopital = data.hopital;
-                        const facture = data.facture;
-                        const patient = data.patient;
-                        const nature = data.natureadmission;
-                        const type = data.typeadmission;
-                        const lit = data.lit;
-                        const chambre = data.chambre;
-                        const user = data.user;
-
-                        const div = document.createElement('div');
-                        div.innerHTML = `
-                            <div class="row">
-                                <div class="col-xl-12">
-                                    <div class="">
-                                        <div class="card-body">
-                                            <div class="row justify-content-between">
-                                                <div class="col-12 text-center">                  
-                                                    <h6 class="fw-semibold">Docteur :</h6>
-                                                    <p>${user.name}</p>
-                                                    <h6 class="fw-semibold">Spécialité :</h6>
-                                                    <p>${user.typeacte}</p>
-                                                    <h6 class="fw-semibold">Chambre Occupé :</h6>
-                                                    <p>CH-${chambre.code}</p>
-                                                    <h6 class="fw-semibold">Lit Occupé :</h6>
-                                                    <p>LIT-${lit.code}/${lit.type}</p>
-                                                    <h6 class="fw-semibold">Prix :</h6>
-                                                    <p>${chambre.prix} Fcfa</p>
-                                                </div>
-                                                <div class="col-12 text-center mt-4">
-                                                    ${hopital.num_bon != null ? `
-                                                        <h6 class="fw-semibold">Numéro de prise en charge :</h6>
-                                                        <p>${hopital.num_bon}</p>
-                                                    ` : ''}
-                                                    <h6 class="fw-semibold">Type d'admission :</h6>
-                                                    <p>${type.nom}</p>
-                                                    <h6 class="fw-semibold">Nature d'admission :</h6>
-                                                    <p>${nature.nom}</p>
-                                                    <h6 class="fw-semibold">Date d'entrer :</h6>
-                                                    <p>${formatDate(hopital.date_debut)}</p>
-                                                    <h6 class="fw-semibold">Date de sortie Probable :</h6>
-                                                    <p>${formatDate(hopital.date_fin)}</p>
-                                                    <h6 class="fw-semibold">Nombre de jours :</h6>
-                                                    <p>${calculateDaysBetween(hopital.date_debut, hopital.date_fin)}</p>
-                                                </div>
-                                                <div class="col-12 text-center mt-4">
-                                                    <h6 class="fw-semibold">N° Dossier :</h6>
-                                                    <p>${patient.matricule}</p>
-                                                    <h6 class="fw-semibold">Nom du patient :</h6>
-                                                    <p>${patient.np}</p>
-                                                    <h6 class="fw-semibold">contact :</h6>
-                                                    <p>${patient.tel}</p>
-                                                    <h6 class="fw-semibold">Assurer :</h6>
-                                                    <p>${patient.assurer}</p>
-                                                    ${patient.assurer === 'oui' ? `
-                                                        <h6 class="fw-semibold">Taux :</h6>
-                                                        <p>${patient.taux}%</p>
-
-                                                        <h6 class="fw-semibold">Assurance :</h6>
-                                                        <p>${patient.assurance}</p> 
-
-                                                        <h6 class="fw-semibold">Matricule :</h6>
-                                                        <p>${patient.matricule_assurance}</p>
-                                                    ` : ''}
-                                                </div>
-                                                <div class="col-12 text-center mt-4">
-                                                    <h6 class="fw-semibold">Part Patient :</h6>
-                                                    <p>${hopital.part_patient} Fcfa</p>
-                                                    <h6 class="fw-semibold">Part Assurance :</h6>
-                                                    <p>${hopital.part_assurance} Fcfa</p>
-                                                    <h6 class="fw-semibold">Remise :</h6>
-                                                    <p>${hopital.remise ? hopital.remise : '0'} Fcfa</p>
-                                                    <h6 class="fw-semibold">Montant Total :</h6>
-                                                    <p>${hopital.montant} Fcfa</p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        `;
-
-                        modal.appendChild(div);
-
-                    })
-                    .catch(error => {
-                        console.error('Erreur lors du chargement des données:', error);
-                    });
-                
-            });
-
-            $('.Table_hos').on('click', '#fiche', function() {
-                var preloader_ch = `
-                    <div id="preloader_ch">
-                        <div class="spinner_preloader_ch"></div>
-                    </div>
-                `;
-                // Add the preloader to the body
-                document.body.insertAdjacentHTML('beforeend', preloader_ch);
-
-                const id = $(this).data('id');
-
-                fetch(`/api/detail_hos/${id}`) // API endpoint
-                    .then(response => response.json())
-                    .then(data => {
-                        // Access the 'chambre' array from the API response
-                        const hopital = data.hopital;
-                        const facture = data.facture;
-                        const patient = data.patient;
-                        const nature = data.natureadmission;
-                        const type = data.typeadmission;
-                        const lit = data.lit;
-                        const chambre = data.chambre;
-                        const user = data.user;
-                        const produit = data.produit;
-
-                        var preloader = document.getElementById('preloader_ch');
-                        if (preloader) {
-                            preloader.remove();
-                        }
-
-                        generatePDFInvoice(hopital, facture, patient, nature, type, lit, chambre, user, produit);
-
-                    })
-                    .catch(error => {
-                        console.error('Erreur lors du chargement des données:', error);
-                    });
-            });
         }
 
         function updatee()

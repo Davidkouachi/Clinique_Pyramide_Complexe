@@ -68,7 +68,7 @@ class ApilistController extends Controller
                         ->select('lits.*', 'chambres.prix as prix', 'chambres.code as code_ch')
                         ->get();
 
-        return response()->json(['lit' => $lit]);
+        return response()->json(['data' => $lit]);
     }
 
     public function list_acte()
@@ -371,21 +371,15 @@ class ApilistController extends Controller
             $spatientQuery->where('soinspatients.statut', '=', $statut);
         }
 
-        $spatient = $spatientQuery->paginate(15);
+        $spatient = $spatientQuery->get();
 
-        foreach ($spatient->items() as $value) {
+        foreach ($spatient as $value) {
             $value->nbre_soins = sp_soins::where('soinspatient_id', '=', $value->id)->count() ?: 0;
             $value->nbre_produit = sp_produit::where('soinspatient_id', '=', $value->id)->count() ?: 0;
         }
 
         return response()->json([
-            'spatient' => $spatient->items(), // Paginated data
-            'pagination' => [
-                'current_page' => $spatient->currentPage(),
-                'last_page' => $spatient->lastPage(),
-                'per_page' => $spatient->perPage(),
-                'total' => $spatient->total(),
-            ]
+            'data' => $spatient,
         ]);
     }
 

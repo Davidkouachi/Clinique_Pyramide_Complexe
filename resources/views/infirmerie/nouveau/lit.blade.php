@@ -367,7 +367,7 @@
                 method: 'GET',
                 dataType: 'json',
                 success: function(data) {
-                    const lits = data.lit;
+                    const lits = data.data;
                     tableBody.empty();
 
                     if (lits.length > 0) {
