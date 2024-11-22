@@ -988,7 +988,7 @@ class ApiinsertController extends Controller
         }
 
         $patient = patient::leftjoin('assurances', 'assurances.id', '=', 'patients.assurance_id')
-        ->where('patients.matricule', '=', $request->matricule)
+        ->where('patients.id', '=', $request->patient_id)
         ->select('patients.*', 'assurances.nom as assurance')
         ->first();
 

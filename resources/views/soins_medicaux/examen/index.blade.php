@@ -107,14 +107,7 @@
                                 <div class="row gx-3 justify-content-center align-items-center mb-5">
                                     <div class="col-xxl-4 col-lg-4 col-sm-6">
                                         <div class="mb-3 text-center">
-                                            <label class="form-label">Patient</label>
-                                            <div class="input-group">
-                                                <input type="hidden" class="form-control" id="matricule_patient" autocomplete="off">
-                                                <input type="text" class="form-control text-center" id="patient" placeholder="Selectionner un Patient" autocomplete="off">
-                                            </div>
-                                            <div class="input-group">
-                                                <div class="suggestions w-100" id="suggestions_patient" style="display: none;"></div>
-                                            </div>
+                                            <label class="form-label">Patient</label>                                            <select class="form-select select2" id="patient_id"></select>
                                         </div>
                                     </div>
                                 </div>
@@ -311,7 +304,7 @@
                                                 <div class="w-100">
                                                     <div class="input-group">
                                                         <span class="input-group-text">Du</span>
-                                                        <input type="date" id="searchDate1" placeholder="Recherche" class="form-control me-1" value="{{ date('Y-m-d') }}" max="{{ date('Y-m-d') }}">
+                                                        <input type="date" id="searchDate1" placeholder="Recherche" class="form-control me-1" value="{{ date('Y-m-d', strtotime('-2 months')) }}" max="{{ date('Y-m-d') }}">
                                                         <span class="input-group-text">au</span>
                                                         <input type="date" id="searchDate2" placeholder="Recherche" class="form-control me-1" value="{{ date('Y-m-d') }}" max="{{ date('Y-m-d') }}">
                                                         <a id="btn_search_table" class="btn btn-outline-success ms-auto">
@@ -368,23 +361,21 @@
                                                     Liste des Examens
                                                 </h5>
                                                 <div class="d-flex" >
-                                                    <input type="text" id="searchInpute" placeholder="Recherche" class="form-control me-1">
                                                     <a id="btn_refresh_tableE" class="btn btn-outline-info ms-auto">
                                                         <i class="ri-loop-left-line"></i>
                                                     </a>
                                                 </div>
                                             </div>
                                             <div class="card-body">
-                                                <div class="table-outer" id="div_TableE" style="display: none;">
+                                                <div class="">
                                                     <div class="table-responsive">
-                                                        <table class="table align-middle table-hover m-0 truncate" id="TableE">
+                                                        <table id="Table_day" class="table table-hover table-sm Table_examen">
                                                             <thead>
                                                                 <tr>
                                                                     <th scope="col">N°</th>
                                                                     <th scope="col">Type</th>
                                                                     <th scope="col">Examen</th>
-                                                                    <th scope="col">Cotation</th>
-                                                                    <th scope="col">Valeur</th>
+                                                                    <th scope="col">Cotation & Valeur</th>
                                                                     <th scope="col">Prix</th>
                                                                     <th scope="col">Montant Total</th>
                                                                     <th scope="col">Date de création</th>
@@ -396,18 +387,6 @@
                                                         </table>
                                                     </div>
                                                 </div>
-                                                <div id="message_TableE" style="display: none;">
-                                                    <p class="text-center" >
-                                                        Aucun Examen n'a été trouvée
-                                                    </p>
-                                                </div>
-                                                <div id="div_Table_loaderE" style="display: none;">
-                                                    <div class="d-flex justify-content-center align-items-center">
-                                                        <div class="spinner-border text-warning me-2" role="status" aria-hidden="true"></div>
-                                                        <strong>Chargement des données...</strong>
-                                                    </div>
-                                                </div>
-                                                <div id="pagination-controlsE" ></div>
                                             </div>
                                         </div>
                                     </div>
@@ -581,24 +560,43 @@
 <script src="{{asset('jsPDF-master/dist/jspdf.umd.js')}}"></script>
 <script src="{{asset('jsPDF-AutoTable/dist/jspdf.plugin.autotable.min.js')}}"></script>
 
+@include('select2')
+
 <script>
-    document.addEventListener("DOMContentLoaded", function() {
+    $(document).ready(function() {
 
         Statistique();
-        Name_atient();
+        select_patient();
         select_acte();
-        listE();
         listED();
         montant_prelevement();
         Statistique();
 
-        document.getElementById("btn_eng_ex").addEventListener("click", eng_ex);
-        document.getElementById("updateBtnE").addEventListener("click", eng_exM);
-        document.getElementById("btn_refresh_tableE").addEventListener("click", listE);
-        document.getElementById("btn_eng_pre").addEventListener("click", eng_pre);
-        document.getElementById("add_select_examen").addEventListener("click", add_select);
-        document.getElementById("btn_eng_exd").addEventListener("click", eng_exd);
-        document.getElementById("btn_search_table").addEventListener("click", listED);
+        $("#btn_eng_ex").on("click", eng_ex);
+        $("#updateBtnE").on("click", eng_exM);
+        $("#btn_eng_pre").on("click", eng_pre);
+        $("#add_select_examen").on("click", add_select);
+        $("#btn_eng_exd").on("click", eng_exd);
+        $("#btn_search_table").on("click", listED);
+
+        $('#searchDate1').on('change', function() {
+            const date1 = $(this).val();
+            
+            if (date1) {
+                $('#searchDate2').val(date1);
+                $('#searchDate2').attr('min', date1);
+            }
+        });
+
+        $('#searchDate2').on('change', function() {
+            const date2 = $(this).val();
+            const date1 = $('#searchDate1').val();
+
+            if (date2 && date1 && new Date(date2) < new Date(date1)) {
+                alert('La date de sortie probable ne peut pas être antérieure à la date d\'entrée.');
+                $(this).val(date1);
+            }
+        });
 
         function allowOnlyLetters(event) {
             const key = event.key;
@@ -618,7 +616,6 @@
             this.value = formatPrice(this.value);
         }
 
-        // Attach event listeners
         ['cotation_ex', 'cotation_exM'].forEach(id => {
             document.getElementById(id).addEventListener('keypress', allowOnlyLetters);
         });
@@ -648,6 +645,126 @@
             inputElement.addEventListener('input', function() {
                 calcul_montant_exM();
             });
+        });
+
+        const table_examen = $('.Table_examen').DataTable({
+
+            processing: true,
+            serverSide: false,
+            ajax: function(data, callback) {
+                
+                $.ajax({
+                    url: `/api/list_examen_all`,
+                    type: 'GET',
+                    success: function(response) {
+                        callback({ data: response.data });
+                    },
+                    error: function() {
+                        console.log('Error fetching data. Please check your API or network list_hopital.');
+                    }
+                });
+            },
+            columns: [
+                { 
+                    data: null, 
+                    render: (data, type, row, meta) => meta.row + 1,
+                    searchable: false,
+                    orderable: false,
+                },
+                { 
+                    data: 'acte', 
+                    render: (data, type, row) => `
+                    <div class="d-flex align-items-center">
+                        <a class="d-flex align-items-center flex-column me-2">
+                            <img src="{{ asset('/assets/images/examen.jpg') }}" class="img-2x rounded-circle border border-1">
+                        </a>
+                        ${data}
+                    </div>`,
+                    searchable: true, 
+                },
+                { 
+                    data: 'nom',
+                    searchable: true,
+                },
+                { 
+                    data: null, 
+                    render: (data, type, row) => `${row.cotation} ${row.valeur}`,
+                    searchable: true, 
+                },
+                { 
+                    data: 'prix', 
+                    render: (data) => `${data} Fcfa`,
+                    searchable: true, 
+                },
+                { 
+                    data: 'montant', 
+                    render: (data) => `${data} Fcfa`,
+                    searchable: true, 
+                },
+                { 
+                    data: 'created_at', 
+                    render: (data) => `${formatDateHeure(data)}`,
+                    searchable: true, 
+                },
+                {
+                    data: null,
+                    render: (data, type, row) => `
+                        <div class="d-inline-flex gap-1" style="font-size:10px;">
+                            <a class="btn btn-outline-info btn-sm rounded-5" data-bs-toggle="modal" data-bs-target="#MmodifE" id="modif"
+                                data-id = ${row.id}
+                                data-nom = ${row.nom}
+                                data-cotation = ${row.cotation}
+                                data-valeur = ${row.valeur}
+                                data-prix = ${row.prix}
+                                data-montant = ${row.montant}
+                                data-acte_id = ${row.acte_id}
+                            >
+                                <i class="ri-edit-line"></i>
+                            </a>
+                        </div>
+                    `,
+                    searchable: false,
+                    orderable: false,
+                }
+            ],
+            ...dataTableConfig,
+            initComplete: function(settings, json) {
+                initializeRowEventListeners();
+            },
+        });
+
+        function initializeRowEventListeners() {
+
+            $('.Table_examen').on('click', '#modif', function() {
+                const id = $(this).data('id');
+                const nom = $(this).data('nom');
+                const cotation = $(this).data('cotation');
+                const valeur = $(this).data('valeur');
+                const prix = $(this).data('prix');
+                const montant = $(this).data('montant');
+                const acte_id = $(this).data('acte_id');
+
+                document.getElementById('Id_exM').value = id;
+                document.getElementById("nom_exM").value = nom;
+                document.getElementById("cotation_exM").value = cotation;
+                document.getElementById("valeur_exM").value = valeur;
+                document.getElementById("prix_exM").value = prix;
+                document.getElementById("montant_exM").value = montant;
+
+                const modifActeSelect = document.getElementById("acte_id_exM");
+                const typeeOptions = modifActeSelect.options;
+
+                for (let i = 0; i < typeeOptions.length; i++) {
+                    if (String(typeeOptions[i].value) === String(acte_id)) {
+                        typeeOptions[i].selected = true; 
+                        break;
+                    }
+                }
+            });
+        }
+
+        $('#btn_refresh_tableE').on('click', function() {
+            table_examen.ajax.reload(null, false);
         });
 
         function formatPrice(input) {
@@ -794,7 +911,6 @@
         }
 
         function montant_prelevement() {
-
             $.ajax({
                 url: '/api/montant_prelevement',
                 method: 'GET',
@@ -802,7 +918,6 @@
                     data = response.prelevement;
                     document.getElementById('prix_preleve').value = data.prix;
                     document.getElementById('montant_pre_examen').value = data.prix;
-                    montant_prelevement();
                 },
                 error: function() {
                     // showAlert('danger', 'Impossible de generer le code automatiquement');
@@ -881,7 +996,7 @@
                         valeur.value = '';
                         montant.value = '';
 
-                        listE();
+                        table_examen.ajax.reload(null, false);
 
                         showAlert('Succès', 'Opération éffectuée.','success');
                     } else if (response.error) {
@@ -950,7 +1065,7 @@
 
                     }else if (response.success) {
 
-                        listE();
+                        table_examen.ajax.reload(null, false);
 
                         showAlert('Succès', 'Mise à jour éffectuée.','success');
                     } else if (response.error) {
@@ -1024,268 +1139,41 @@
             });
         }
 
-        function listE(page = 1) {
-
-            const tableBody = document.querySelector('#TableE tbody');
-            const messageDiv = document.getElementById('message_TableE');
-            const tableDiv = document.getElementById('div_TableE');
-            const loaderDiv = document.getElementById('div_Table_loaderE');
-
-            let allExamens = [];
-
-            messageDiv.style.display = 'none';
-            tableDiv.style.display = 'none';
-            loaderDiv.style.display = 'block';
-
-            const url = `/api/list_examen_all?page=${page}`;
-
-            fetch(url)
-                .then(response => response.json())
-                .then(data => {
-                    allExamens = data.examen || [] ;
-                    const pagination = data.pagination || {};
-
-                    const perPage = pagination.per_page || 10;
-                    const currentPage = pagination.current_page || 1;
-
-                    tableBody.innerHTML = '';
-
-                    if (allExamens.length > 0) {
-
-                        loaderDiv.style.display = 'none';
-                        messageDiv.style.display = 'none';
-                        tableDiv.style.display = 'block';
-
-                        function displayRows(filteredExamens) {
-                            tableBody.innerHTML = ''; 
-
-                            filteredExamens.forEach((item, index) => {
-                                const row = document.createElement('tr');
-                                row.innerHTML = `
-                                    <td>${((currentPage - 1) * perPage) + index + 1}</td>
-                                    <td>
-                                        <div class="d-flex align-items-center ">
-                                            <a class="d-flex align-items-center flex-column me-2">
-                                                <img src="{{asset('assets/images/examen.jpg')}}" class="img-2x rounded-circle border border-1">
-                                            </a>
-                                            ${item.acte}
-                                        </div>
-                                    </td>
-                                    <td>${item.nom}</td>
-                                    <td>${item.cotation}</td>
-                                    <td>${item.valeur}</td>
-                                    <td>${item.prix} Fcfa</td>
-                                    <td>${item.montant} Fcfa</td>
-                                    <td>${formatDateHeure(item.created_at)}</td>
-                                    <td>
-                                        <div class="d-inline-flex gap-1">
-                                            <a class="btn btn-outline-info btn-sm rounded-5" data-bs-toggle="modal" data-bs-target="#MmodifE" id="modif-${item.id}">
-                                                <i class="ri-edit-line"></i>
-                                            </a>
-                                        </div>
-                                    </td>
-                                `;
-                                tableBody.appendChild(row);
-
-                                document.getElementById(`modif-${item.id}`).addEventListener('click', () =>
-                                {
-                                    document.getElementById('Id_exM').value = item.id;
-                                    document.getElementById("nom_exM").value = item.nom;
-                                    document.getElementById("cotation_exM").value = item.cotation;
-                                    document.getElementById("valeur_exM").value = item.valeur;
-                                    document.getElementById("prix_exM").value = item.prix;
-                                    document.getElementById("montant_exM").value = item.montant;
-
-                                    const modifActeSelect = document.getElementById("acte_id_exM");
-                                    const typeeOptions = modifActeSelect.options;
-
-                                    for (let i = 0; i < typeeOptions.length; i++) {
-                                        if (String(typeeOptions[i].value) === String(item.acte_id)) {
-                                            typeeOptions[i].selected = true; 
-                                            break;
-                                        }
-                                    }
-                                });
-                            });
-                        };
-
-                        function applySearchFilter() {
-                            const searchTerm = searchInpute.value.toLowerCase();
-                            const filteredExamens = allExamens.filter(item =>
-                                item.acte.toLowerCase().includes(searchTerm) ||
-                                item.nom.toLowerCase().includes(searchTerm) ||
-                                item.cotation.toLowerCase().includes(searchTerm) ||
-                                item.valeur.toLowerCase().includes(searchTerm)
-                            );
-                            displayRows(filteredExamens);
-                        }
-
-                        searchInpute.addEventListener('input', applySearchFilter);
-
-                        displayRows(allExamens);
-
-                        updatePaginationControlsE(pagination);
-
-                    } else {
-                        tableDiv.style.display = 'none';
-                        loaderDiv.style.display = 'none';
-                        messageDiv.style.display = 'block';
-                    }
-                })
-                .catch(error => {
-                    console.error('Erreur lors du chargement des données:', error);
-                    loaderDiv.style.display = 'none';
-                    tableDiv.style.display = 'none';
-                    messageDiv.style.display = 'block';
-                });
-        }
-
-        function updatePaginationControlsE(pagination)
+        function select_patient()
         {
-            const paginationDiv = document.getElementById('pagination-controlsE');
-            paginationDiv.innerHTML = '';
+            const selectElement = $('#patient_id');
+            selectElement.empty();
 
-            // Bootstrap pagination wrapper
-            const paginationWrapper = document.createElement('ul');
-            paginationWrapper.className = 'pagination justify-content-center';
+            // Ajouter l'option par défaut
+            const defaultOption = $('<option>', {
+                value: '',
+                text: 'Selectionner'
+            });
+            selectElement.append(defaultOption);
 
-            // Previous button
-            if (pagination.current_page > 1) {
-                const prevButton = document.createElement('li');
-                prevButton.className = 'page-item';
-                prevButton.innerHTML = `<a class="page-link" href="#">Precédent</a>`;
-                prevButton.onclick = () => listE(pagination.current_page - 1);
-                paginationWrapper.appendChild(prevButton);
-            } else {
-                // Disable the previous button if on the first page
-                const prevButton = document.createElement('li');
-                prevButton.className = 'page-item disabled';
-                prevButton.innerHTML = `<a class="page-link" href="#">Precédent</a>`;
-                paginationWrapper.appendChild(prevButton);
-            }
-
-            // Page number links (show a few around the current page)
-            const totalPages = pagination.last_page;
-            const currentPage = pagination.current_page;
-            const maxVisiblePages = 5; // Max number of page links to display
-
-            let startPage = Math.max(1, currentPage - Math.floor(maxVisiblePages / 2));
-            let endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
-
-            // Adjust start page if end page exceeds the total pages
-            if (endPage - startPage < maxVisiblePages - 1) {
-                startPage = Math.max(1, endPage - maxVisiblePages + 1);
-            }
-
-            // Loop through pages and create page links
-            for (let i = startPage; i <= endPage; i++) {
-                const pageItem = document.createElement('li');
-                pageItem.className = `page-item ${i === currentPage ? 'active' : ''}`;
-                pageItem.innerHTML = `<a class="page-link" href="#">${i}</a>`;
-                pageItem.onclick = () => listE(i);
-                paginationWrapper.appendChild(pageItem);
-            }
-
-            // Ellipsis (...) if not all pages are shown
-            if (endPage < totalPages) {
-                const ellipsis = document.createElement('li');
-                ellipsis.className = 'page-item disabled';
-                ellipsis.innerHTML = `<a class="page-link" href="#">...</a>`;
-                paginationWrapper.appendChild(ellipsis);
-
-                // Add the last page link
-                const lastPageItem = document.createElement('li');
-                lastPageItem.className = `page-item`;
-                lastPageItem.innerHTML = `<a class="page-link" href="#">${totalPages}</a>`;
-                lastPageItem.onclick = () => listE(totalPages);
-                paginationWrapper.appendChild(lastPageItem);
-            }
-
-            // Next button
-            if (pagination.current_page < pagination.last_page) {
-                const nextButton = document.createElement('li');
-                nextButton.className = 'page-item';
-                nextButton.innerHTML = `<a class="page-link" href="#">Suivant</a>`;
-                nextButton.onclick = () => listE(pagination.current_page + 1);
-                paginationWrapper.appendChild(nextButton);
-            } else {
-                // Disable the next button if on the last page
-                const nextButton = document.createElement('li');
-                nextButton.className = 'page-item disabled';
-                nextButton.innerHTML = `<a class="page-link" href="#">Suivant</a>`;
-                paginationWrapper.appendChild(nextButton);
-            }
-
-            // Append pagination controls to the DOM
-            paginationDiv.appendChild(paginationWrapper);
-        }
-
-        function Name_atient() {
             $.ajax({
                 url: '/api/name_patient_reception',
                 method: 'GET',
-                success: function(response) {
-                    const data = response.name;
-
-                    // Elements
-                    const input = document.getElementById('patient');
-                    const matricule_patient = document.getElementById('matricule_patient');
-                    const suggestionsDiv = document.getElementById('suggestions_patient');
-                    const patient_taux = document.getElementById('patient_taux');
-
-                    // Event listener for input typing
-                    function displaySuggestions() {
-
-                        const searchTerm = input.value.toLowerCase();
-                        
-                        // Clear previous suggestions
-                        suggestionsDiv.style.display = 'block';
-                        suggestionsDiv.innerHTML = '';
-
-                        // Filter data based on input
-                        const filteredData = data.filter(item => item.np.toLowerCase().includes(searchTerm));
-
-                        // Display filtered data
-                        filteredData.forEach(item => {
-                            const suggestion = document.createElement('div');
-                            suggestion.innerText = item.np;
-                            suggestion.addEventListener('click', function() {
-                                document.getElementById('select_examen_div').style.display = "block";
-                                // Set selected data in the input field
-                                input.value = item.np;
-                                suggestionsDiv.innerHTML = ''; // Clear suggestions
-                                suggestionsDiv.style.display = 'none';
-
-                                rech_dosier(item.id);
-
-                            });
-                            suggestionsDiv.appendChild(suggestion);
+                dataType: 'json',
+                success: function(data) {
+                    data.name.forEach(item => {
+                        const option = $('<option>', {
+                            value: item.id,
+                            text: item.np
                         });
-
-                        // Show/hide suggestions based on results
-                        suggestionsDiv.style.display = filteredData.length > 0 ? 'block' : 'none';
-
-                    }
-
-                    input.addEventListener('focus', function() {
-                        displaySuggestions();
-                    });
-
-                    input.addEventListener('input', function() {
-                        displaySuggestions();
-                    });
-
-                    document.addEventListener('click', function(e) {
-                        if (!suggestionsDiv.contains(e.target) && e.target !== input) {
-                            suggestionsDiv.style.display = 'none';
-                        }
+                        selectElement.append(option);
                     });
                 },
                 error: function() {
-                    // Handle error
+                    console.error('Erreur lors du chargement des patients');
                 }
             });
         }
+
+        $('#patient_id').on('change', function() {
+            document.getElementById('select_examen_div').style.display = "block";
+            rech_dosier($(this).val()); 
+        });
 
         function rech_dosier(id)
         {
@@ -1315,11 +1203,8 @@
 
                         const item = response.patient;
 
-                        const matricule_patient = document.getElementById('matricule_patient');
                         const patient_taux = document.getElementById('patient_taux');
 
-                        // Assign patient rate (taux)
-                        matricule_patient.value = item.matricule;
                         patient_taux.value = item.taux ? item.taux : 0;
 
                         document.getElementById('numcode').value = '';
@@ -1353,37 +1238,73 @@
             const patientTaux = document.getElementById('patient_taux').value;
 
             const div = document.createElement('div');
-            div.className = 'mb-3';
+            div.className = 'mt-3 mb-3 border border-1 p-3 rounded-2';
 
             // Créer le groupe de contrôle contenant le select et le bouton supprimer
             div.innerHTML = `
-                <div class="input-group">
-                    <select class="form-select examen-select-assurer">
-                        ${patientTaux == 0 ? `
-                            <option selected value="oui">Oui</option>
-                        ` : `
-                            <option selected value="oui">Oui</option>
-                            <option value="non">Non</option>
-                        `}
-                    </select>
-                    <select class="form-select examen-select w-50">
-                        <option value="">Selectionner</option>
-                        ${examens.map(item => 
-                            `<option value="${item.id}" 
-                                     data-cotation="${item.cotation}" 
-                                     data-valeur="${item.valeur}" 
-                                     data-prix="${item.prix}" 
-                                     data-montant="${item.montant}"
-                                     data-assurer="oui"
-                                     data-montantr="${item.montant.replace(/\./g, '')}">
-                                ${item.nom}
-                            </option>`).join('')}
-                    </select>
-                    <input readonly type="tel" class="form-control cotation-field" placeholder="Cotation">
-                    <input readonly type="tel" class="form-control valeur-field" placeholder="Valeur">
-                    <input readonly type="tel" class="form-control prix-field" placeholder="Prix">
-                    <input readonly type="tel" class="form-control montant-field" placeholder="Montant">
-                    <button class="btn btn-outline-danger suppr-btn">Supprimer</button>
+                <div class="row gx-3 mb-3 text-center input_group">
+                    <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-4">
+                        <div class="mb-3">
+                            <label class="form-label">Prise en Charge</label>
+                            <select class="form-select examen-select-assurer">
+                                ${patientTaux == 0 ? `
+                                    <option selected value="oui">Non</option>
+                                ` : `
+                                    <option selected value="oui">Oui</option>
+                                    <option value="non">Non</option>
+                                `}
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-xxl-9 col-lg-9 col-md-9 col-sm-8">
+                        <div class="mb-3">
+                            <label class="form-label">Examen</label>
+                            <select class="form-select examen-select">
+                                <option value="">Selectionner</option>
+                                ${examens.map(item => 
+                                    `<option value="${item.id}" 
+                                             data-cotation="${item.cotation}" 
+                                             data-valeur="${item.valeur}" 
+                                             data-prix="${item.prix}" 
+                                             data-montant="${item.montant}"
+                                             data-assurer="oui"
+                                             data-montantr="${item.montant.replace(/\./g, '')}">
+                                        ${item.nom}
+                                    </option>`).join('')}
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="row gx-3 mb-3">
+                    <div class="col-lg-4 col-md-4 col-sm-6">
+                        <div class="mb-3">
+                            <label class="form-label">Cotation</label>
+                            <input readonly type="tel" class="form-control cotation-field" placeholder="Cotation">
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-4 col-sm-6">
+                        <div class="mb-3">
+                            <label class="form-label">Prix</label>
+                            <div class="input-group mb-3">
+                                <input readonly type="tel" class="form-control prix-field" placeholder="Prix">
+                                <span class="input-group-text w-25">Fcfa</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-4 col-sm-6">
+                        <div class="mb-3">
+                            <label class="form-label">Montant Total</label>
+                            <div class="input-group mb-3">
+                                <input readonly type="tel" class="form-control montant-field" placeholder="Montant">
+                                <span class="input-group-text w-25">Fcfa</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 text-center" >
+                        <button class="btn btn-outline-danger suppr-btn">
+                            <i class="ri-delete-bin-line"></i>
+                        </button>
+                    </div>
                 </div>
             `;
 
@@ -1420,12 +1341,11 @@
                 const selectedOption = examenSelect.options[examenSelect.selectedIndex];
 
                 // Mettre à jour les champs en fonction de l'examen sélectionné
-                div.querySelector('.cotation-field').value = selectedOption.getAttribute('data-cotation') || '';
-                div.querySelector('.valeur-field').value = selectedOption.getAttribute('data-valeur') || '';
-                div.querySelector('.prix-field').value = selectedOption.getAttribute('data-prix') || '' + ' Fcfa';
-                div.querySelector('.montant-field').value = selectedOption.getAttribute('data-montant') || '' + ' Fcfa';
+                div.querySelector('.cotation-field').value = selectedOption.getAttribute('data-cotation')+selectedOption.getAttribute('data-valeur');
+                div.querySelector('.prix-field').value = selectedOption.getAttribute('data-prix');
+                div.querySelector('.montant-field').value = selectedOption.getAttribute('data-montant');
 
-                updateMontantTotalExamen(); // Mettre à jour le montant total après sélection
+                updateMontantTotalExamen();
             });
         }
 
@@ -1439,10 +1359,11 @@
             const preleve = parseInt(document.getElementById('montant_pre_examen').value.replace(/\./g, '')) || 0;
 
             selects.forEach(select => {
+
                 const selectedOption = select.options[select.selectedIndex];
                 const montant = selectedOption.getAttribute('data-montantr');
-                const assurerSelect = select.closest('.input-group').querySelector('.examen-select-assurer');
-                const assurance = assurerSelect.value; // Récupérer la valeur d'assurance
+                const assurerSelect = select.closest('.input_group').querySelector('.examen-select-assurer');
+                const assurance = assurerSelect.value;
 
                 if (montant) {
                     let montantExamen = parseInt(montant);
@@ -1518,11 +1439,11 @@
 
         function CalculMontant() {
 
-            const matricule_patient = document.getElementById('matricule_patient').value;
-            const typeacte_id_exd = document.getElementById('typeacte_id_exd').value;
+            const patient_id = $('#patient_id').val();
+            const typeacte_id_exd = $('#typeacte_id_exd').val();
 
             // 1. Vérifier si le matricule du patient est renseigné
-            if (matricule_patient === '') {
+            if (patient_id === '') {
                 showAlert("ALERT", "Veuillez sélectionner un Patient.", "warning");
                 return false;
             }
@@ -1607,11 +1528,11 @@
             });
 
             const auth_id = {{ Auth::user()->id }};
-            const matricule_patient = document.getElementById('matricule_patient').value;
-            const typeacte_id_exd = document.getElementById('typeacte_id_exd').value;
-            const medecin = document.getElementById('medecin').value;
+            const patient_id = $('#patient_id').val();
+            const typeacte_id_exd = $('#typeacte_id_exd').val();
+            const medecin = $('#medecin').val();
 
-            if (matricule_patient == '') {
+            if (patient_id == '') {
                 showAlert("ALERT", 'Veuillez sélectionner un Patient.', "warning");
                 return false;
             }
@@ -1676,7 +1597,7 @@
                     montantT: montant_total,
                     montantP: montant_patient,
                     montant_pre: montant_pre,
-                    matricule: matricule_patient,
+                    patient_id: patient_id,
                     acte_id: typeacte_id_exd,
                     medecin: medecin,
                     numcode: numcode || null,
@@ -1692,7 +1613,6 @@
                     if (response.success) {
 
                         document.getElementById('typeacte_id_exd').value = "";
-                        document.getElementById('patient').value = "";
                         document.getElementById('medecin').value = "";
                         document.getElementById('numcode').value = "";
                         document.getElementById('select_examen_div').style.display = "none";

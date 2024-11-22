@@ -471,16 +471,10 @@ class ApilistController extends Controller
                             )
                             ->orderBy('created_at', 'desc');
 
-        $examen = $examenQuery->paginate(15);
+        $examen = $examenQuery->get();
 
         return response()->json([
-            'examen' => $examen->items(),
-            'pagination' => [
-                'current_page' => $examen->currentPage(),
-                'last_page' => $examen->lastPage(),
-                'per_page' => $examen->perPage(),
-                'total' => $examen->total(),
-            ]
+            'data' => $examen,
         ]);
     }
 
