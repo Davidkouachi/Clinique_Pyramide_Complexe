@@ -483,7 +483,7 @@ class ApilistController extends Controller
         $date1 = Carbon::parse($date1)->startOfDay();
         $date2 = Carbon::parse($date2)->endOfDay();
 
-        $examenQuery = examen::join('patients', 'patients.id', '=', 'examens.patient_id')
+        $examen = examen::join('patients', 'patients.id', '=', 'examens.patient_id')
                             ->join('actes', 'actes.id', '=', 'examens.acte_id')
                             ->whereBetween('examens.created_at', [$date1, $date2])
                             ->select(
@@ -491,23 +491,16 @@ class ApilistController extends Controller
                                 'actes.nom as acte',
                                 'patients.np as patient',
                             )
-                            ->orderBy('examens.created_at', 'desc');
+                            ->orderBy('examens.created_at', 'desc')
+                            ->get();
 
-        $examen = $examenQuery->paginate(15);
-
-        foreach ($examen->items() as $value) {
+        foreach ($examen as $value) {
             $nbre = examenpatient::where('examen_id', '=', $value->id)->count();
             $value->nbre =  $nbre ?? 0;
         }
 
         return response()->json([
-            'examen' => $examen->items(),
-            'pagination' => [
-                'current_page' => $examen->currentPage(),
-                'last_page' => $examen->lastPage(),
-                'per_page' => $examen->perPage(),
-                'total' => $examen->total(),
-            ]
+            'data' => $examen,
         ]);
     }
 

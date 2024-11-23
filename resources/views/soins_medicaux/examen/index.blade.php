@@ -107,7 +107,8 @@
                                 <div class="row gx-3 justify-content-center align-items-center mb-5">
                                     <div class="col-xxl-4 col-lg-4 col-sm-6">
                                         <div class="mb-3 text-center">
-                                            <label class="form-label">Patient</label>                                            <select class="form-select select2" id="patient_id"></select>
+                                            <label class="form-label">Patient</label>
+                                            <select class="form-select select2" id="patient_id"></select>
                                         </div>
                                     </div>
                                 </div>
@@ -314,9 +315,9 @@
                                                 </div>
                                             </div>
                                             <div class="card-body">
-                                                <div class="table-outer" id="div_TableED" style="display: none;">
+                                                <div class="">
                                                     <div class="table-responsive">
-                                                        <table class="table align-middle table-hover m-0 truncate" id="TableED">
+                                                        <table id="Table_day" class="table table-hover table-sm Table_examend">
                                                             <thead>
                                                                 <tr>
                                                                     <th scope="col">N°</th>
@@ -335,18 +336,6 @@
                                                         </table>
                                                     </div>
                                                 </div>
-                                                <div id="message_TableED" style="display: none;">
-                                                    <p class="text-center" >
-                                                        Aucun examen demandé pour le moment
-                                                    </p>
-                                                </div>
-                                                <div id="div_Table_loaderED" style="display: none;">
-                                                    <div class="d-flex justify-content-center align-items-center">
-                                                        <div class="spinner-border text-warning me-2" role="status" aria-hidden="true"></div>
-                                                        <strong>Chargement des données...</strong>
-                                                    </div>
-                                                </div>
-                                                <div id="pagination-controlsED" ></div>
                                             </div>
                                         </div>
                                     </div>
@@ -568,7 +557,6 @@
         Statistique();
         select_patient();
         select_acte();
-        listED();
         montant_prelevement();
         Statistique();
 
@@ -577,7 +565,6 @@
         $("#btn_eng_pre").on("click", eng_pre);
         $("#add_select_examen").on("click", add_select);
         $("#btn_eng_exd").on("click", eng_exd);
-        $("#btn_search_table").on("click", listED);
 
         $('#searchDate1').on('change', function() {
             const date1 = $(this).val();
@@ -765,6 +752,230 @@
 
         $('#btn_refresh_tableE').on('click', function() {
             table_examen.ajax.reload(null, false);
+        });
+
+        const table_examend = $('.Table_examend').DataTable({
+
+            processing: true,
+            serverSide: false,
+            ajax: function(data, callback) {
+                const date1 = $('#searchDate1').val();
+                const date2 = $('#searchDate2').val();
+                
+                $.ajax({
+                    url: `/api/list_examend_all/${date1}/${date2}`,
+                    type: 'GET',
+                    success: function(response) {
+                        callback({ data: response.data });
+                    },
+                    error: function() {
+                        console.log('Error fetching data. Please check your API or network list_examend_all.');
+                    }
+                });
+            },
+            columns: [
+                { 
+                    data: null, 
+                    render: (data, type, row, meta) => meta.row + 1,
+                    searchable: false,
+                    orderable: false,
+                },
+                { 
+                    data: 'acte', 
+                    render: (data, type, row) => `
+                    <div class="d-flex align-items-center">
+                        <a class="d-flex align-items-center flex-column me-2">
+                            <img src="{{ asset('/assets/images/examen.jpg') }}" class="img-2x rounded-circle border border-1">
+                        </a>
+                        ${data}
+                    </div>`,
+                    searchable: true, 
+                },
+                { 
+                    data: 'patient',
+                    searchable: true,
+                },
+                { 
+                    data: 'medecin', 
+                    render: (data) => `Dr. ${data}`,
+                    searchable: true, 
+                },
+                { 
+                    data: 'nbre',
+                    searchable: true,
+                },
+                { 
+                    data: 'prelevement', 
+                    render: (data) => `${data} Fcfa`,
+                    searchable: true, 
+                },
+                { 
+                    data: 'montant', 
+                    render: (data) => `${data} Fcfa`,
+                    searchable: true, 
+                },
+                { 
+                    data: 'created_at', 
+                    render: (data) => `${formatDateHeure(data)}`,
+                    searchable: true, 
+                },
+                {
+                    data: null,
+                    render: (data, type, row) => `
+                        <div class="d-inline-flex gap-1" style="font-size:10px;">
+                            <a class="btn btn-outline-warning btn-sm" data-bs-toggle="modal" data-bs-target="#Detail" id="detail"
+                                data-id="${row.id}"
+                            >
+                                <i class="ri-archive-2-line"></i>
+                            </a>
+                            <a class="btn btn-outline-info btn-sm" id="fiche"
+                                data-id="${row.id}"
+                            >
+                                <i class="ri-file-line"></i>
+                            </a>
+                        </div>
+                    `,
+                    searchable: false,
+                    orderable: false,
+                }
+            ],
+            ...dataTableConfig,
+            initComplete: function(settings, json) {
+                initializeRowEventListenersExamend();
+            },
+        });
+
+        function initializeRowEventListenersExamend() {
+
+            $('.Table_examend').on('click', '#detail', function() {
+                const id = $(this).data('id');
+
+                const tableBodyP = document.querySelector('#TableP tbody');
+                const messageDivP = document.getElementById('message_TableP');
+                const tableDivP = document.getElementById('div_TableP');
+                const loaderDivP = document.getElementById('div_Table_loaderP');
+
+                messageDivP.style.display = 'none';
+                tableDivP.style.display = 'none';
+                loaderDivP.style.display = 'block';
+
+                fetch(`/api/list_facture_exam_d/${id}`) // API endpoint
+                    .then(response => response.json())
+                    .then(data => {
+                        // Access the 'chambre' array from the API response
+                        const factureds = data.factured;
+                        const sumMontantEx = data.sumMontantEx;
+
+                        // Clear any existing rows in the table body
+                        tableBodyP.innerHTML = '';
+
+                        if (factureds.length > 0) {
+
+                            loaderDivP.style.display = 'none';
+                            messageDivP.style.display = 'none';
+                            tableDivP.style.display = 'block';
+
+                            // Loop through each item in the chambre array
+                            factureds.forEach((item, index) => {
+                                // Create a new row
+                                const row = document.createElement('tr');
+                                // Create and append cells to the row based on your table's structure
+                                row.innerHTML = `
+                                    <td>
+                                        <h6>${item.nom_ex}</h6>
+                                    </td>
+                                    <td>
+                                        <h6>${item.cotation_ex}${item.valeur_ex}</h6>
+                                    </td>
+                                    <td>
+                                        <h6>${item.prix_ex} Fcfa</h6>
+                                    </td>
+                                    <td>
+                                        <h6>${item.accepte}</h6>
+                                    </td>
+                                    <td>
+                                        <h6>${item.montant_ex} Fcfa</h6>
+                                    </td>
+                                `;
+                                // Append the row to the table body
+                                tableBodyP.appendChild(row);
+
+                            });
+
+                            const row2 = document.createElement('tr');
+                            row2.innerHTML = `
+                                <td colspan="3">&nbsp;</td>
+                                <td colspan="2" >
+                                    <h5 class="mt-4 text-success">
+                                        Total : ${formatPriceT(sumMontantEx)} Fcfa
+                                    </h5>
+                                </td>
+                            `;
+                            tableBodyP.appendChild(row2);
+
+                            const row3 = document.createElement('tr');
+                            row3.innerHTML = `
+                                <td colspan="5">
+                                    <h6 class="text-danger">NOTE</h6>
+                                    <p class="small m-0">
+                                        Le Montant Total des examens  ajouter au montant du prélevement.
+                                    </p>
+                                </td>
+                            `;
+
+                            tableBodyP.appendChild(row3);
+
+                        } else {
+                            loaderDivP.style.display = 'none';
+                            messageDivP.style.display = 'block';
+                            tableDivP.style.display = 'none';
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Erreur lors du chargement des données:', error);
+                        loaderDivD.style.display = 'none';
+                        messageDivD.style.display = 'block';
+                        tableDivD.style.display = 'none';
+                    });  
+            });
+
+            $('.Table_examend').on('click', '#fiche', function() {
+                var preloader_ch = `
+                    <div id="preloader_ch">
+                        <div class="spinner_preloader_ch"></div>
+                    </div>
+                `;
+                // Add the preloader to the body
+                document.body.insertAdjacentHTML('beforeend', preloader_ch);
+
+                const id = $(this).data('id');
+
+                fetch(`/api/detail_examen/${id}`) // API endpoint
+                    .then(response => response.json())
+                    .then(data => {
+                        // Access the 'chambre' array from the API response
+                        const examen = data.examen;
+                        const facture = data.facture;
+                        const patient = data.patient;
+                        const acte = data.acte;
+                        const examenpatient = data.examenpatient;
+
+                        var preloader = document.getElementById('preloader_ch');
+                        if (preloader) {
+                            preloader.remove();
+                        }
+
+                        generatePDFInvoice(examen, facture, patient, acte, examenpatient);
+
+                    })
+                    .catch(error => {
+                        console.error('Erreur lors du chargement des données:', error);
+                    });
+            });
+        }
+
+        $('#btn_search_table').on('click', function() {
+            table_examend.ajax.reload(null, false);
         });
 
         function formatPrice(input) {
@@ -1619,7 +1830,9 @@
                         document.getElementById('div_Examen').style.display = "none";
                         document.getElementById('div_numcode').style.display = "none";
 
-                        listED();   
+                        select_patient();
+
+                        table_examend.ajax.reload(null, false);   
 
                         showAlert("ALERT", 'Enregistrement éffectué', "success");
 
@@ -1645,300 +1858,6 @@
                 }
             });
         };
-
-        function listED(page = 1) {
-
-            const tableBody = document.querySelector('#TableED tbody');
-            const messageDiv = document.getElementById('message_TableED');
-            const tableDiv = document.getElementById('div_TableED');
-            const loaderDiv = document.getElementById('div_Table_loaderED');
-
-            const date1 = document.getElementById('searchDate1').value;
-            const date2 = document.getElementById('searchDate2').value;
-
-            let allExamens = [];
-
-            messageDiv.style.display = 'none';
-            tableDiv.style.display = 'none';
-            loaderDiv.style.display = 'block';
-
-            const url = `/api/list_examend_all/${date1}/${date2}?page=${page}`;
-
-            fetch(url)
-                .then(response => response.json())
-                .then(data => {
-                    allExamens = data.examen || [] ;
-                    const pagination = data.pagination || {};
-
-                    const perPage = pagination.per_page || 10;
-                    const currentPage = pagination.current_page || 1;
-
-                    tableBody.innerHTML = '';
-
-                    if (allExamens.length > 0) {
-
-                        loaderDiv.style.display = 'none';
-                        messageDiv.style.display = 'none';
-                        tableDiv.style.display = 'block';
-
-                        function displayRows(filteredExamens) {
-                            tableBody.innerHTML = ''; 
-
-                            filteredExamens.forEach((item, index) => {
-                                const row = document.createElement('tr');
-                                row.innerHTML = `
-                                    <td>${((currentPage - 1) * perPage) + index + 1}</td>
-                                    <td>
-                                        <div class="d-flex align-items-center ">
-                                            <a class="d-flex align-items-center flex-column me-2">
-                                                <img src="{{asset('assets/images/examen.jpg')}}" class="img-2x rounded-circle border border-1">
-                                            </a>
-                                            ${item.acte}
-                                        </div>
-                                    </td>
-                                    <td>${item.patient}</td>
-                                    <td>Dr. ${item.medecin}</td>
-                                    <td>${item.nbre}</td>
-                                    <td>${item.prelevement} Fcfa</td>
-                                    <td>${item.montant} Fcfa</td>
-                                    <td>${formatDateHeure(item.created_at)}</td>
-                                    <td>
-                                        <div class="d-inline-flex gap-1">
-                                            <a class="btn btn-outline-warning btn-sm rounded-5" data-bs-toggle="modal" data-bs-target="#Detail" id="detail-${item.id}">
-                                                <i class="ri-archive-2-line"></i>
-                                            </a>
-                                            <a class="btn btn-outline-info btn-sm rounded-5" id="fiche-${item.id}">
-                                                <i class="ri-file-line"></i>
-                                            </a>
-                                        </div>
-                                    </td>
-                                `;
-                                tableBody.appendChild(row);
-
-                                document.getElementById(`fiche-${item.id}`).addEventListener('click', () =>
-                                {
-                                    fetch(`/api/detail_examen/${item.id}`) // API endpoint
-                                        .then(response => response.json())
-                                        .then(data => {
-                                            // Access the 'chambre' array from the API response
-                                            const examen = data.examen;
-                                            const facture = data.facture;
-                                            const patient = data.patient;
-                                            const acte = data.acte;
-                                            const examenpatient = data.examenpatient;
-
-                                            generatePDFInvoice(examen, facture, patient, acte, examenpatient);
-
-                                        })
-                                        .catch(error => {
-                                            console.error('Erreur lors du chargement des données:', error);
-                                        });
-                                });
-
-                                document.getElementById(`detail-${item.id}`).addEventListener('click',()=>
-                                {
-                                    const tableBodyP = document.querySelector('#TableP tbody');
-                                    const messageDivP = document.getElementById('message_TableP');
-                                    const tableDivP = document.getElementById('div_TableP');
-                                    const loaderDivP = document.getElementById('div_Table_loaderP');
-
-                                    messageDivP.style.display = 'none';
-                                    tableDivP.style.display = 'none';
-                                    loaderDivP.style.display = 'block';
-
-                                    fetch(`/api/list_facture_exam_d/${item.id}`) // API endpoint
-                                        .then(response => response.json())
-                                        .then(data => {
-                                            // Access the 'chambre' array from the API response
-                                            const factureds = data.factured;
-                                            const sumMontantEx = data.sumMontantEx;
-
-                                            // Clear any existing rows in the table body
-                                            tableBodyP.innerHTML = '';
-
-                                            if (factureds.length > 0) {
-
-                                                loaderDivP.style.display = 'none';
-                                                messageDivP.style.display = 'none';
-                                                tableDivP.style.display = 'block';
-
-                                                // Loop through each item in the chambre array
-                                                factureds.forEach((item, index) => {
-                                                    // Create a new row
-                                                    const row = document.createElement('tr');
-                                                    // Create and append cells to the row based on your table's structure
-                                                    row.innerHTML = `
-                                                        <td>
-                                                            <h6>${item.nom_ex}</h6>
-                                                        </td>
-                                                        <td>
-                                                            <h6>${item.cotation_ex}${item.valeur_ex}</h6>
-                                                        </td>
-                                                        <td>
-                                                            <h6>${item.prix_ex} Fcfa</h6>
-                                                        </td>
-                                                        <td>
-                                                            <h6>${item.accepte}</h6>
-                                                        </td>
-                                                        <td>
-                                                            <h6>${item.montant_ex} Fcfa</h6>
-                                                        </td>
-                                                    `;
-                                                    // Append the row to the table body
-                                                    tableBodyP.appendChild(row);
-
-                                                });
-
-                                                const row2 = document.createElement('tr');
-                                                row2.innerHTML = `
-                                                    <td colspan="3">&nbsp;</td>
-                                                    <td colspan="2" >
-                                                        <h5 class="mt-4 text-success">
-                                                            Total : ${formatPriceT(sumMontantEx)} Fcfa
-                                                        </h5>
-                                                    </td>
-                                                `;
-                                                tableBodyP.appendChild(row2);
-
-                                                const row3 = document.createElement('tr');
-                                                row3.innerHTML = `
-                                                    <td colspan="5">
-                                                        <h6 class="text-danger">NOTE</h6>
-                                                        <p class="small m-0">
-                                                            Le Montant Total des examens  ajouter au montant du prélevement.
-                                                        </p>
-                                                    </td>
-                                                `;
-
-                                                tableBodyP.appendChild(row3);
-
-                                            } else {
-                                                loaderDivP.style.display = 'none';
-                                                messageDivP.style.display = 'block';
-                                                tableDivP.style.display = 'none';
-                                            }
-                                        })
-                                        .catch(error => {
-                                            console.error('Erreur lors du chargement des données:', error);
-                                            loaderDivD.style.display = 'none';
-                                            messageDivD.style.display = 'block';
-                                            tableDivD.style.display = 'none';
-                                        });
-                                    
-                                });
-
-                            });
-                        };
-
-                        function applySearchFilter() {
-                            const searchTerm = searchInputd.value.toLowerCase();
-                            const filteredExamens = allExamens.filter(item =>
-                                item.patient.toLowerCase().includes(searchTerm) ||
-                                item.acte.toLowerCase().includes(searchTerm) ||
-                                item.medecin.toLowerCase().includes(searchTerm)
-                            );
-                            displayRows(filteredExamens);
-                        }
-
-                        searchInputd.addEventListener('input', applySearchFilter);
-
-                        displayRows(allExamens);
-
-                        updatePaginationControlsED(pagination);
-
-                    } else {
-                        tableDiv.style.display = 'none';
-                        loaderDiv.style.display = 'none';
-                        messageDiv.style.display = 'block';
-                    }
-                })
-                .catch(error => {
-                    console.error('Erreur lors du chargement des données:', error);
-                    loaderDiv.style.display = 'none';
-                    tableDiv.style.display = 'none';
-                    messageDiv.style.display = 'block';
-                });
-        }
-
-        function updatePaginationControlsED(pagination)
-        {
-            const paginationDiv = document.getElementById('pagination-controlsED');
-            paginationDiv.innerHTML = '';
-
-            // Bootstrap pagination wrapper
-            const paginationWrapper = document.createElement('ul');
-            paginationWrapper.className = 'pagination justify-content-center';
-
-            // Previous button
-            if (pagination.current_page > 1) {
-                const prevButton = document.createElement('li');
-                prevButton.className = 'page-item';
-                prevButton.innerHTML = `<a class="page-link" href="#">Precédent</a>`;
-                prevButton.onclick = () => listED(pagination.current_page - 1);
-                paginationWrapper.appendChild(prevButton);
-            } else {
-                // Disable the previous button if on the first page
-                const prevButton = document.createElement('li');
-                prevButton.className = 'page-item disabled';
-                prevButton.innerHTML = `<a class="page-link" href="#">Precédent</a>`;
-                paginationWrapper.appendChild(prevButton);
-            }
-
-            // Page number links (show a few around the current page)
-            const totalPages = pagination.last_page;
-            const currentPage = pagination.current_page;
-            const maxVisiblePages = 5; // Max number of page links to display
-
-            let startPage = Math.max(1, currentPage - Math.floor(maxVisiblePages / 2));
-            let endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
-
-            // Adjust start page if end page exceeds the total pages
-            if (endPage - startPage < maxVisiblePages - 1) {
-                startPage = Math.max(1, endPage - maxVisiblePages + 1);
-            }
-
-            // Loop through pages and create page links
-            for (let i = startPage; i <= endPage; i++) {
-                const pageItem = document.createElement('li');
-                pageItem.className = `page-item ${i === currentPage ? 'active' : ''}`;
-                pageItem.innerHTML = `<a class="page-link" href="#">${i}</a>`;
-                pageItem.onclick = () => listED(i);
-                paginationWrapper.appendChild(pageItem);
-            }
-
-            // Ellipsis (...) if not all pages are shown
-            if (endPage < totalPages) {
-                const ellipsis = document.createElement('li');
-                ellipsis.className = 'page-item disabled';
-                ellipsis.innerHTML = `<a class="page-link" href="#">...</a>`;
-                paginationWrapper.appendChild(ellipsis);
-
-                // Add the last page link
-                const lastPageItem = document.createElement('li');
-                lastPageItem.className = `page-item`;
-                lastPageItem.innerHTML = `<a class="page-link" href="#">${totalPages}</a>`;
-                lastPageItem.onclick = () => listED(totalPages);
-                paginationWrapper.appendChild(lastPageItem);
-            }
-
-            // Next button
-            if (pagination.current_page < pagination.last_page) {
-                const nextButton = document.createElement('li');
-                nextButton.className = 'page-item';
-                nextButton.innerHTML = `<a class="page-link" href="#">Suivant</a>`;
-                nextButton.onclick = () => listED(pagination.current_page + 1);
-                paginationWrapper.appendChild(nextButton);
-            } else {
-                // Disable the next button if on the last page
-                const nextButton = document.createElement('li');
-                nextButton.className = 'page-item disabled';
-                nextButton.innerHTML = `<a class="page-link" href="#">Suivant</a>`;
-                paginationWrapper.appendChild(nextButton);
-            }
-
-            // Append pagination controls to the DOM
-            paginationDiv.appendChild(paginationWrapper);
-        }
 
         function generatePDFInvoice(examen, facture, patient, acte, examenpatient) {
             const { jsPDF } = window.jspdf;

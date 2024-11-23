@@ -1024,10 +1024,12 @@ class ApiinsertController extends Controller
                 throw new \Exception('Erreur');
             }
 
-            $verf = examen::where('num_bon', '=', $request->numcode)->exists();
+            if ($request->numcode != null) {
+                $verf = examen::where('num_bon', '=', $request->numcode)->exists();
 
-            if ($verf) {
-                return response()->json(['existe' => true]);
+                if ($verf) {
+                    return response()->json(['existe' => true]);
+                }
             }
 
             $add = new examen();
