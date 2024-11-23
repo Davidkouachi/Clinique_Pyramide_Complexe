@@ -189,6 +189,19 @@ class ApisearchController extends Controller
         return response()->json(['name' => $name]);
     }
 
+    public function name_patient_examen()
+    {
+       $name = Patient::leftJoin('tauxes', 'tauxes.id', '=', 'patients.taux_id')
+                        ->select(
+                            'patients.id as id',
+                            'patients.np as np',
+                            'patients.assurer as assurer',
+                            'tauxes.taux as taux',
+                        )->get();
+                       
+        return response()->json(['name' => $name]); 
+    }
+
     public function lit_select($id)
     {
         $lit = lit::join('chambres', 'chambres.id', '=', 'lits.chambre_id')

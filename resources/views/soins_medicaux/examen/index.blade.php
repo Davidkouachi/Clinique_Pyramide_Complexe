@@ -1040,6 +1040,8 @@
             return `${day}/${month}/${year} à ${hours}:${minutes}:${seconds}`;
         }
 
+        let cachedExamens = {};
+
         function select_acte() {
 
             const selectElement = document.getElementById('acte_id_ex');
@@ -1087,38 +1089,95 @@
                 }
             });
 
+            // selectElementexd.addEventListener('change', function() {
+            //     const id = this.value;
+            //     if (id) {
+
+            //         const url = '/api/select_examen/' + id;
+            //         fetch(url)
+            //             .then(response => response.json())
+            //             .then(data => {
+
+            //                 const examens = data.examen;
+
+            //                 const contenuDiv = document.getElementById('contenu_examen');
+            //                 contenuDiv.innerHTML = '';
+
+            //                 document.getElementById('montant_total_examen').value ='';
+            //                 document.getElementById('montant_patient_examen').value ='';
+            //                 document.getElementById('montant_assurance_examen').value ='';
+                                                    
+            //                 addSelectExamen(contenuDiv, examens);
+
+            //                 document.getElementById('div_Examen').style.display = "block";
+            //             })
+            //             .catch(error => {
+            //                 console.error('Erreur lors du chargement des données:', error);
+            //             });
+            //     }else{
+            //         const contenuDiv = document.getElementById('contenu_examen');
+            //         contenuDiv.innerHTML = '';
+            //         document.getElementById('div_Examen').style.display = "none";
+            //     }
+                
+            // });
+
             selectElementexd.addEventListener('change', function() {
                 const id = this.value;
                 if (id) {
-
-                    const url = '/api/select_examen/' + id;
-                    fetch(url)
-                        .then(response => response.json())
-                        .then(data => {
-
-                            const examens = data.examen;
-
-                            const contenuDiv = document.getElementById('contenu_examen');
-                            contenuDiv.innerHTML = '';
-
-                            document.getElementById('montant_total_examen').value ='';
-                            document.getElementById('montant_patient_examen').value ='';
-                            document.getElementById('montant_assurance_examen').value ='';
-                                                    
-                            addSelectExamen(contenuDiv, examens);
-
-                            document.getElementById('div_Examen').style.display = "block";
-                        })
-                        .catch(error => {
-                            console.error('Erreur lors du chargement des données:', error);
-                        });
-                }else{
+                    // Vérifier si les données sont déjà en cache
+                    if (cachedExamens[id]) {
+                        afficherExamens(id); // Utiliser les données du cache
+                    } else {
+                        const url = '/api/select_examen/' + id;
+                        fetch(url)
+                            .then(response => response.json())
+                            .then(data => {
+                                // Stocker les données en cache
+                                cachedExamens[id] = data.examen;
+                                afficherExamens(id);
+                            })
+                            .catch(error => {
+                                console.error('Erreur lors du chargement des données:', error);
+                            });
+                    }
+                } else {
                     const contenuDiv = document.getElementById('contenu_examen');
                     contenuDiv.innerHTML = '';
                     document.getElementById('div_Examen').style.display = "none";
                 }
-                
             });
+        }
+
+        function add_select() {
+            const contenuDiv = document.getElementById('contenu_examen');
+            const id = document.getElementById('typeacte_id_exd').value;
+
+            if (id === '') {
+                showAlert("ALERT", "Selectionner un Type d'examen.", "warning");
+                return false;
+            }
+
+            // Vérifier si les données sont en cache
+            if (cachedExamens[id]) {
+                // Utiliser les données en cache
+                addSelectExamen(contenuDiv, cachedExamens[id]);
+            } else {
+                showAlert("Erreur", "Les examens ne sont pas disponibles. Veuillez sélectionner un type valide.", "danger");
+            }
+        }
+
+        function afficherExamens(id) {
+            const contenuDiv = document.getElementById('contenu_examen');
+            contenuDiv.innerHTML = '';
+            document.getElementById('montant_total_examen').value = '';
+            document.getElementById('montant_patient_examen').value = '';
+            document.getElementById('montant_assurance_examen').value = '';
+
+            // Utiliser les examens en cache
+            addSelectExamen(contenuDiv, cachedExamens[id]);
+
+            document.getElementById('div_Examen').style.display = "block";
         }
 
         function montant_prelevement() {
@@ -1358,19 +1417,23 @@
             // Ajouter l'option par défaut
             const defaultOption = $('<option>', {
                 value: '',
-                text: 'Selectionner'
+                text: 'Selectionner',
+                'data-taux': 0,
+                'data-assurer': 'non',
             });
             selectElement.append(defaultOption);
 
             $.ajax({
-                url: '/api/name_patient_reception',
+                url: '/api/name_patient_examen',
                 method: 'GET',
                 dataType: 'json',
                 success: function(data) {
                     data.name.forEach(item => {
                         const option = $('<option>', {
                             value: item.id,
-                            text: item.np
+                            text: item.np,
+                            'data-taux': item.taux || 0,
+                            'data-assurer': item.assurer,
                         });
                         selectElement.append(option);
                     });
@@ -1383,68 +1446,104 @@
 
         $('#patient_id').on('change', function() {
             document.getElementById('select_examen_div').style.display = "block";
-            rech_dosier($(this).val()); 
+            rech_dosier(); 
         });
 
-        function rech_dosier(id)
-        {
-            // Créer l'élément de préchargement
-            var preloader_ch = `
-                <div id="preloader_ch">
-                    <div class="spinner_preloader_ch"></div>
-                </div>
-            `;
+        // function rech_dosier(id)
+        // {
+        //     // Créer l'élément de préchargement
+        //     var preloader_ch = `
+        //         <div id="preloader_ch">
+        //             <div class="spinner_preloader_ch"></div>
+        //         </div>
+        //     `;
 
-            // Ajouter le préchargeur au body
-            document.body.insertAdjacentHTML('beforeend', preloader_ch);
+        //     // Ajouter le préchargeur au body
+        //     document.body.insertAdjacentHTML('beforeend', preloader_ch);
 
-            $.ajax({
-                url: '/api/rech_patient',
-                method: 'GET',  // Use 'POST' for data creation
-                data: { id: id },
-                success: function(response) {
-                    var preloader = document.getElementById('preloader_ch');
-                    if (preloader) {
-                        preloader.remove();
+        //     $.ajax({
+        //         url: '/api/rech_patient',
+        //         method: 'GET',  // Use 'POST' for data creation
+        //         data: { id: id },
+        //         success: function(response) {
+        //             var preloader = document.getElementById('preloader_ch');
+        //             if (preloader) {
+        //                 preloader.remove();
+        //             }
+
+        //             if(response.existep) {
+        //                 showAlert('Alert', 'Ce patient n\'existe pas.', 'error');
+        //             } else if (response.success) {
+
+        //                 const item = response.patient;
+
+        //                 const patient_taux = document.getElementById('patient_taux');
+
+        //                 patient_taux.value = item.taux ? item.taux : 0;
+
+        //                 document.getElementById('numcode').value = '';
+        //                 if (item.assurer == 'oui') {
+        //                     document.getElementById('div_numcode').style.display = 'block';
+        //                 }else{
+        //                     document.getElementById('div_numcode').style.display = 'none';
+        //                 }
+
+        //                 document.getElementById('contenu_examen').innerHTML = "";
+        //                 document.getElementById('div_btn_examen').style.display = "none";
+        //                 document.getElementById('div_Examen').style.display = "none";
+        //                 document.getElementById('typeacte_id_exd').value = "";
+
+        //                 updateMontantTotalExamen();
+
+        //             }
+        //         },
+        //         error: function() {
+        //             var preloader = document.getElementById('preloader_ch');
+        //             if (preloader) {
+        //                 preloader.remove();
+        //             }
+        //             showAlert('Alert', 'Une erreur est survenue lors de la recherche.', 'error');
+        //         }
+        //     });
+        // }
+
+        function rech_dosier() {
+            const selectElement = $('#patient_id');
+
+            if (selectElement.val() !== '') {
+                const selectedOption = selectElement.find('option:selected'); // Obtenir l'option sélectionnée
+                
+                // Récupérer le taux depuis l'attribut data-taux
+                const taux = selectedOption.data('taux') || 0;
+
+                // Mettre à jour le champ patient_taux
+                $('#patient_taux').val(taux);
+
+                // Réinitialiser d'autres champs
+                $('#numcode').val('');
+                if (selectedOption.val()) {
+                    const assurer = selectedOption.data('assurer'); // Récupérer data-assurer
+                    if (assurer === 'oui') {
+                        $('#div_numcode').show();
+                    } else {
+                        $('#div_numcode').hide();
                     }
-
-                    if(response.existep) {
-                        showAlert('Alert', 'Ce patient n\'existe pas.', 'error');
-                    } else if (response.success) {
-
-                        const item = response.patient;
-
-                        const patient_taux = document.getElementById('patient_taux');
-
-                        patient_taux.value = item.taux ? item.taux : 0;
-
-                        document.getElementById('numcode').value = '';
-                        if (item.assurer == 'oui') {
-                            document.getElementById('div_numcode').style.display = 'block';
-                        }else{
-                            document.getElementById('div_numcode').style.display = 'none';
-                        }
-
-                        document.getElementById('contenu_examen').innerHTML = "";
-                        document.getElementById('div_btn_examen').style.display = "none";
-                        document.getElementById('div_Examen').style.display = "none";
-                        document.getElementById('typeacte_id_exd').value = "";
-
-                        updateMontantTotalExamen();
-
-                    }
-                },
-                error: function() {
-                    var preloader = document.getElementById('preloader_ch');
-                    if (preloader) {
-                        preloader.remove();
-                    }
-                    showAlert('Alert', 'Une erreur est survenue lors de la recherche.', 'error');
                 }
-            });
+
+                // Réinitialiser le contenu examen et les champs associés
+                $('#contenu_examen').html('');
+                $('#div_btn_examen').hide();
+                $('#div_Examen').hide();
+                $('#typeacte_id_exd').val('');
+
+                // Appeler la fonction pour mettre à jour le montant total
+                updateMontantTotalExamen();
+            }
         }
 
         function addSelectExamen(contenuDiv, examens) {
+
+            const index = contenuDiv.childElementCount + 1;
 
             const patientTaux = document.getElementById('patient_taux').value;
 
@@ -1453,6 +1552,11 @@
 
             // Créer le groupe de contrôle contenant le select et le bouton supprimer
             div.innerHTML = `
+                <div class="card-header">
+                    <h5 class="card-title text-center Title_Examen">
+                        EXAMEN ${index}
+                    </h5>
+                </div>
                 <div class="row gx-3 mb-3 text-center input_group">
                     <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-4">
                         <div class="mb-3">
@@ -1529,6 +1633,7 @@
                 div.remove(); // Supprimer l'élément div parent
                 checkContenuExamen(); // Re-vérifier le contenu
                 updateMontantTotalExamen(); // Mettre à jour le montant total après la suppression
+                updateExamenIndexes(contenuDiv);
             });
 
             // Event listener pour le select 'examen-select-assurer'
@@ -1557,6 +1662,13 @@
                 div.querySelector('.montant-field').value = selectedOption.getAttribute('data-montant');
 
                 updateMontantTotalExamen();
+            });
+        }
+
+        function updateExamenIndexes(contenuDiv) {
+            const headers = contenuDiv.querySelectorAll('.Title_Examen');
+            headers.forEach((header, index) => {
+                header.textContent = `EXAMEN ${index + 1}`;
             });
         }
 
@@ -1625,28 +1737,28 @@
             }
         }
 
-        function add_select() {
-            const contenuDiv = document.getElementById('contenu_examen');
-            const id = document.getElementById('typeacte_id_exd').value;
+        // function add_select() {
+        //     const contenuDiv = document.getElementById('contenu_examen');
+        //     const id = document.getElementById('typeacte_id_exd').value;
 
-            if (id == '') {
-                showAlert("ALERT", "Selectionner un Type d'examen.", "warning");
-                return false;
-            }
+        //     if (id == '') {
+        //         showAlert("ALERT", "Selectionner un Type d'examen.", "warning");
+        //         return false;
+        //     }
 
-            const url = '/api/select_examen/' + id;
-                fetch(url)
-                    .then(response => response.json())
-                    .then(data => {
+        //     const url = '/api/select_examen/' + id;
+        //         fetch(url)
+        //             .then(response => response.json())
+        //             .then(data => {
 
-                        const examens = data.examen;
+        //                 const examens = data.examen;
                                                 
-                        addSelectExamen(contenuDiv, examens); // Ajouter le premier select
-                    })
-                    .catch(error => {
-                        console.error('Erreur lors du chargement des données:', error);
-                    });
-        }
+        //                 addSelectExamen(contenuDiv, examens); // Ajouter le premier select
+        //             })
+        //             .catch(error => {
+        //                 console.error('Erreur lors du chargement des données:', error);
+        //             });
+        // }
 
         function CalculMontant() {
 
@@ -1823,14 +1935,14 @@
                     
                     if (response.success) {
 
+                        $('#patient_id').val('').trigger('change');
+
                         document.getElementById('typeacte_id_exd').value = "";
                         document.getElementById('medecin').value = "";
                         document.getElementById('numcode').value = "";
                         document.getElementById('select_examen_div').style.display = "none";
                         document.getElementById('div_Examen').style.display = "none";
                         document.getElementById('div_numcode').style.display = "none";
-
-                        select_patient();
 
                         table_examend.ajax.reload(null, false);   
 

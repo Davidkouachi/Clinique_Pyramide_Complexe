@@ -85,6 +85,7 @@ Route::middleware(['statutchambre','dateRdv'])->group(function () {
 	Route::get('/select_specialite', [ApisearchController::class, 'select_specialite']);
 	Route::get('/select_typeacte/{id}', [ApisearchController::class, 'select_typeacte']);
 	Route::get('/name_patient_reception', [ApisearchController::class, 'name_patient_reception']);
+	Route::get('/name_patient_examen', [ApisearchController::class, 'name_patient_examen']);
 	Route::get('/name_patient', [ApisearchController::class, 'name_patient']);
 	Route::get('/lit_select/{id}', [ApisearchController::class, 'lit_select']);
 	Route::get('/natureadmission_select/{id}', [ApisearchController::class, 'natureadmission_select']);
