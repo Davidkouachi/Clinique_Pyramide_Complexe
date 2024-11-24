@@ -31,7 +31,7 @@
                         </a>
                     </div>
                 </div>
-                <div id="contenu_caisse" ></div>
+                <div id="contenu_caisse" class="mt-3 mb-3"></div>
             </div>
         </div>
         <div class="col-12">
@@ -1227,7 +1227,7 @@
                         // { label: "Montant Impayer", icon: "ri-hand-coin-line", colorClass: "text-danger", borderColor: "border-danger", bgColor: "bg-danger-subtle", data : formatPrice(statsCaisse.fac_impayer)+" Fcfa",},
                         // { label: "Montant Payer", icon: "ri-funds-fill", colorClass: "text-success", borderColor: "border-success", bgColor: "bg-success-subtle", data : formatPrice(statsCaisse.fac_payer)+" Fcfa",},
                         { label: "Part Assurance", icon: "ri-cash-fill", colorClass: "text-warning", borderColor: "border-warning", bgColor: "bg-warning-subtle", data : formatPrice(statsCaisse.fac_assurance)+" Fcfa",},
-                        { label: "Total Remise", icon: "ri-percent-line", colorClass: "text-danger", borderColor: "border-danger", bgColor: "bg-danger-subtle", data : formatPrice(statsCaisse.fac_remise)+" Fcfa",},
+                        { label: "Total Remise", icon: "ri-increase-decrease-line", colorClass: "text-danger", borderColor: "border-danger", bgColor: "bg-danger-subtle", data : formatPrice(statsCaisse.fac_remise)+" Fcfa",},
                     ];
 
                     cardData_caisse.forEach(card => {

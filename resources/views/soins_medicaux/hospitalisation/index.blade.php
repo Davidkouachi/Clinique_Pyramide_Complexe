@@ -511,6 +511,7 @@
         select_medecin();
         select_chambre();
         select_typeadmission();
+        select_produit();
 
         $("#id_chambre").on("change", select_lit);
         $("#id_typeadmission").on("change", select_natureadmission);
@@ -1720,6 +1721,22 @@
             });
         }
 
+        let cachedProduitsHos = {};
+
+        function select_produit()
+        {
+           $.ajax({
+                url: '/api/list_produit_all',
+                method: 'GET',
+                success: function (data) {
+                    cachedProduitsHos = data.produit;
+                },
+                error: function () {
+                    console.error('Erreur lors du chargement des produits.');
+                }
+            }); 
+        }
+
         function addSelect(parentDiv, produits) {
             const div = document.createElement('div');
             div.className = 'mb-3';
@@ -1812,17 +1829,7 @@
         document.getElementById('add_select').addEventListener('click', () => {
             const contenuDiv = document.getElementById('contenu');
 
-            // Récupérer les produits à partir de l'API
-            fetch(`/api/list_produit_all`)
-                .then(response => response.json())
-                .then(data => {
-                    const produits = data.produit;
-                    // Ajouter un nouveau select avec les produits
-                    addSelect(contenuDiv, produits);
-                })
-                .catch(error => {
-                    console.error('Erreur lors du chargement des produits:', error);
-                });
+            addSelect(contenuDiv, cachedProduitsHos);
         });
 
         function checkContenu() {

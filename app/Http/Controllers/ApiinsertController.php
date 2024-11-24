@@ -882,6 +882,14 @@ class ApiinsertController extends Controller
                 throw new \Exception('Erreur');
             }
 
+            if ($request->numcode != null) {
+                $verf = soinspatient::where('num_bon', '=', $request->numcode)->exists();
+
+                if ($verf) {
+                    return response()->json(['existe' => true]);
+                }
+            }
+
             $add = new soinspatient();
             $add->code = $code;
             $add->statut = 'en cours';

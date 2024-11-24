@@ -105,7 +105,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div id="div_selectSoins" class="border border-2 mb-3 p-2" >
+                                <div id="div_selectSoins" class="border border-2 mb-3 p-2 rounded-2">
                                     <div class="card-header">
                                         <h5 class="card-title text-center">
                                             Choix des Soins Infirmiers
@@ -137,7 +137,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div id="div_selectProduit" class="border border-2 mb-3 p-2" >
+                                <div id="div_selectProduit" class="border border-2 mb-3 p-2 rounded-2  " >
                                     <div class="card-header">
                                         <h5 class="card-title text-center">
                                             Choix des Produits Utilisés
@@ -148,7 +148,7 @@
                                             <div class="row gx-3 justify-content-center align-items-center">
                                                 <div id="div_alert_produit_qu" ></div>
                                                 <div class="col-12 mb-3 text-center">
-                                                    <button type="button" id="add_select_produit" class="btn btn-info">
+                                                    <button type="button" id="add_select_produit" class="btn btn-success">
                                                         <i class="ri-sticky-note-add-line"></i>
                                                         Ajouter un Produit
                                                     </button>
@@ -169,7 +169,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div id="div_btn_calcul" class="border border-2 mb-3 p-2" >
+                                <div id="div_btn_calcul" class="border border-2 mb-3 p-2 rounded-2 " >
                                     <div class="card-header">
                                         <h5 class="card-title text-center">
                                             Informations Montant
@@ -472,6 +472,7 @@
         Statistique();
         select_patient();
         select_typesoins();
+        select_produit();
 
         $("#btn_calcul").on("click", CalculMontant);
         $("#assurance_utiliser").on("change", CalculMontant);
@@ -862,19 +863,23 @@
             // Ajouter l'option par défaut
             const defaultOption = $('<option>', {
                 value: '',
-                text: 'Selectionner'
+                text: 'Selectionner',
+                'data-taux': 0,
+                'data-assurer': 'non',
             });
             selectElement.append(defaultOption);
 
             $.ajax({
-                url: '/api/name_patient_reception',
+                url: '/api/name_patient_examen',
                 method: 'GET',
                 dataType: 'json',
                 success: function(data) {
                     data.name.forEach(item => {
                         const option = $('<option>', {
                             value: item.id,
-                            text: item.np
+                            text: item.np,
+                            'data-taux': item.taux || 0,
+                            'data-assurer': item.assurer,
                         });
                         selectElement.append(option);
                     });
@@ -885,48 +890,49 @@
             });
         }
 
-        function rech_dosier(id)
-        {
-            $.ajax({
-                url: '/api/rech_patient',
-                method: 'GET',  // Use 'POST' for data creation
-                data: { id: id },
-                success: function(response) {
+        $('#patient_id').on('change', function() {
+            rech_dosier(); 
+        });
 
-                    if(response.existep) {
-                        showAlert('Alert', 'Ce patient n\'existe pas.', 'error');
-                    } else if (response.success) {
+        function rech_dosier() {
+            const selectElement = $('#patient_id');
 
-                        const item = response.patient;
+            if (selectElement.val() !== '') {
+                const selectedOption = selectElement.find('option:selected'); // Obtenir l'option sélectionnée
 
-                        const input = document.getElementById('patient');
-                        const patient_taux = document.getElementById('patient_taux');
-                        const appliq_remise = document.getElementById('appliq_remise');
+                // Récupérer les données depuis les attributs de l'option sélectionnée
+                const taux = selectedOption.data('taux') || 0;
+                const assurer = selectedOption.data('assurer');
 
-                        // Assign patient rate (taux)
-                        patient_taux.value = item.taux ? item.taux : 0;
+                // Mettre à jour le champ patient_taux
+                $('#patient_taux').val(taux);
 
-                        document.getElementById('numcode').value = '';
-                        if (item.assurer == 'oui') {
-                            document.getElementById('div_numcode').style.display = 'block';
-                        }else{
-                            document.getElementById('div_numcode').style.display = 'none';
-                        }
+                // Réinitialiser le champ numcode
+                $('#numcode').val('');
 
-                        if (patient_taux.value == 0) {
-                            document.getElementById('div_assurance_utiliser').style.display = 'none';
-                        }else{
-                           document.getElementById('div_assurance_utiliser').style.display = 'block'; 
-                        }
-
-                        document.getElementById('div_calcul').style.display = 'none';
-
-                    }
-                },
-                error: function() {
-                    showAlert('Alert', 'Une erreur est survenue lors de la recherche.', 'error');
+                // Afficher ou masquer div_numcode en fonction de l'assurance
+                if (assurer === 'oui') {
+                    $('#div_numcode').show();
+                } else {
+                    $('#div_numcode').hide();
                 }
-            });
+
+                // Afficher ou masquer div_assurance_utiliser en fonction du taux
+                if (taux == 0) {
+                    $('#div_assurance_utiliser').hide();
+                } else {
+                    $('#div_assurance_utiliser').show();
+                }
+
+                // Cacher la div_calcul
+                $('#div_calcul').hide();
+
+            } else {
+                $('#div_numcode').hide();
+                $('#div_calcul').hide(); 
+
+                $('#numcode').val('');
+            }
         }
 
         function showAlert(title, message, type) {
@@ -938,6 +944,8 @@
         }
 
         // -----------------------------------------------------
+
+        let cachedSoins = {};
 
         function select_typesoins() {
             const selectElement = $('#typesoins_id');
@@ -972,22 +980,15 @@
             selectElement.on('change', function() {
                 const id = $(this).val();
 
-                if (id) {
-                    const url = '/api/select_soinsIn/' + id;
-                    $.ajax({
-                        url: url,
-                        method: 'GET',
-                        success: function(data) {
-                            const soinsins = data.soinsin;
-                            const contenuDiv = $('#contenu_soins');
-                            contenuDiv.empty();
-                            $('#montant_total_soins').val('');
-                            addSelectSoins(contenuDiv, soinsins); // Ajouter le premier select
-                        },
-                        error: function() {
-                            console.error('Erreur lors du chargement des données.');
-                        }
-                    });
+                if (id !== '') {
+                    // Vérifier si les données sont déjà en cache
+                    if (cachedSoins[id]) {
+
+                        afficherSoins(id); // Utiliser les données du cache
+                    } else {
+
+                        rech_soinsin(id);
+                    }
                 } else {
                     $('#contenu_soins').empty();
                     checkContenuSoins();
@@ -1060,23 +1061,55 @@
             const id = $('#typesoins_id').val();
 
             if (id === '') {
+
                 showAlert("ALERT", "Selectionner un Type de Soins.", "warning");
                 return;
+            } else {
+
+                if (cachedSoins[id]) {
+                    addSelectSoins(contenuDiv, cachedSoins[id]);
+                } else {
+
+                    const url = '/api/select_soinsIn/' + id;
+                    $.ajax({
+                        url: url,
+                        method: 'GET',
+                        success: function(data) {
+                            const soinsins = data.soinsin;
+                            cachedSoins[id] = data.soinsin;
+                            addSelectSoins(contenuDiv, soinsins);
+                        },
+                        error: function() {
+                            console.error('Erreur lors du chargement des données.');
+                        }
+                    });
+                }
             }
 
-            const url = '/api/select_soinsIn/' + id;
-            $.ajax({
-                url: url,
-                method: 'GET',
-                success: function(data) {
-                    const soinsins = data.soinsin;
-                    addSelectSoins(contenuDiv, soinsins);
-                },
-                error: function() {
-                    console.error('Erreur lors du chargement des données.');
-                }
-            });
         });
+
+        function rech_soinsin(id)
+        {
+            const url = '/api/select_soinsIn/' + id;
+            fetch(url)
+                .then(response => response.json())
+                .then(data => {
+
+                    cachedSoins[id] = data.soinsin;
+                    afficherSoins(id);
+
+                })
+                .catch(error => {
+                    console.error('Erreur lors du chargement des données:', error);
+                });
+        }
+
+        function afficherSoins(id) {
+            const contenuDiv = $('#contenu_soins');
+            contenuDiv.empty();
+            $('#montant_total_soins').val('');
+            addSelectSoins(contenuDiv, cachedSoins[id]);
+        }
 
         // -------------------------------------------------------
 
@@ -1183,22 +1216,26 @@
             }
         }
 
-        $('#add_select_produit').on('click', function () {
-            const contenuDiv = $('#contenu_produit');
+        let cachedProduits = {};
 
-            // Récupérer les produits à partir de l'API
-            $.ajax({
+        function select_produit()
+        {
+           $.ajax({
                 url: '/api/list_produit_all',
                 method: 'GET',
                 success: function (data) {
-                    const produits = data.produit;
-                    // Ajouter un nouveau select avec les produits
-                    addSelect(contenuDiv, produits);
+                    cachedProduits = data.produit;
                 },
                 error: function () {
                     console.error('Erreur lors du chargement des produits.');
                 }
-            });
+            }); 
+        }
+
+        $('#add_select_produit').on('click', function () {
+            const contenuDiv = $('#contenu_produit');
+
+            addSelect(contenuDiv, cachedProduits);
         });
 
         function formatPrice(input) {
@@ -1605,9 +1642,9 @@
                     if (response.success) {
 
                         document.getElementById('div_calcul').style.display = 'none';
-                        document.getElementById('typesoins_id').value = "";
 
-                        select_patient();
+                        $('#typesoins_id').val('').trigger('change');
+                        $('#patient_id').val('').trigger('change');
 
                         const contenuDiv = document.getElementById('contenu_soins');
                         contenuDiv.innerHTML = "";
@@ -1629,6 +1666,8 @@
                         showAlert("ERREUR", 'Une erreur est survenue', "error");
                     } else if (response.json) {
                         showAlert("ERREUR", 'Invalid selections format', "error");
+                    } else if (response.existe) {
+                        showAlert("ALERT", 'Le numéro de bon saisie existe déjà', "warning");
                     }
 
                 },

@@ -1089,39 +1089,6 @@
                 }
             });
 
-            // selectElementexd.addEventListener('change', function() {
-            //     const id = this.value;
-            //     if (id) {
-
-            //         const url = '/api/select_examen/' + id;
-            //         fetch(url)
-            //             .then(response => response.json())
-            //             .then(data => {
-
-            //                 const examens = data.examen;
-
-            //                 const contenuDiv = document.getElementById('contenu_examen');
-            //                 contenuDiv.innerHTML = '';
-
-            //                 document.getElementById('montant_total_examen').value ='';
-            //                 document.getElementById('montant_patient_examen').value ='';
-            //                 document.getElementById('montant_assurance_examen').value ='';
-                                                    
-            //                 addSelectExamen(contenuDiv, examens);
-
-            //                 document.getElementById('div_Examen').style.display = "block";
-            //             })
-            //             .catch(error => {
-            //                 console.error('Erreur lors du chargement des données:', error);
-            //             });
-            //     }else{
-            //         const contenuDiv = document.getElementById('contenu_examen');
-            //         contenuDiv.innerHTML = '';
-            //         document.getElementById('div_Examen').style.display = "none";
-            //     }
-                
-            // });
-
             selectElementexd.addEventListener('change', function() {
                 const id = this.value;
                 if (id) {
@@ -1448,64 +1415,6 @@
             document.getElementById('select_examen_div').style.display = "block";
             rech_dosier(); 
         });
-
-        // function rech_dosier(id)
-        // {
-        //     // Créer l'élément de préchargement
-        //     var preloader_ch = `
-        //         <div id="preloader_ch">
-        //             <div class="spinner_preloader_ch"></div>
-        //         </div>
-        //     `;
-
-        //     // Ajouter le préchargeur au body
-        //     document.body.insertAdjacentHTML('beforeend', preloader_ch);
-
-        //     $.ajax({
-        //         url: '/api/rech_patient',
-        //         method: 'GET',  // Use 'POST' for data creation
-        //         data: { id: id },
-        //         success: function(response) {
-        //             var preloader = document.getElementById('preloader_ch');
-        //             if (preloader) {
-        //                 preloader.remove();
-        //             }
-
-        //             if(response.existep) {
-        //                 showAlert('Alert', 'Ce patient n\'existe pas.', 'error');
-        //             } else if (response.success) {
-
-        //                 const item = response.patient;
-
-        //                 const patient_taux = document.getElementById('patient_taux');
-
-        //                 patient_taux.value = item.taux ? item.taux : 0;
-
-        //                 document.getElementById('numcode').value = '';
-        //                 if (item.assurer == 'oui') {
-        //                     document.getElementById('div_numcode').style.display = 'block';
-        //                 }else{
-        //                     document.getElementById('div_numcode').style.display = 'none';
-        //                 }
-
-        //                 document.getElementById('contenu_examen').innerHTML = "";
-        //                 document.getElementById('div_btn_examen').style.display = "none";
-        //                 document.getElementById('div_Examen').style.display = "none";
-        //                 document.getElementById('typeacte_id_exd').value = "";
-
-        //                 updateMontantTotalExamen();
-
-        //             }
-        //         },
-        //         error: function() {
-        //             var preloader = document.getElementById('preloader_ch');
-        //             if (preloader) {
-        //                 preloader.remove();
-        //             }
-        //             showAlert('Alert', 'Une erreur est survenue lors de la recherche.', 'error');
-        //         }
-        //     });
-        // }
 
         function rech_dosier() {
             const selectElement = $('#patient_id');
