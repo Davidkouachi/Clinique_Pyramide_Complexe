@@ -186,7 +186,7 @@
                     <div class="col-12">
                         <div class="mb-3">
                             <label class="form-label">Message</label>
-                            <textarea style="resize: none;" class="form-control" id="messageSms" rows="5">Cher Patient, Vous avez un RDV au Centre Medico-Social la Pyramide le {{ \Carbon\Carbon::now()->addDays(2)->format('d/m/Y') }}. Arrivez 15 min en avance. Merci</textarea>
+                            <textarea style="resize: none;" class="form-control" id="messageSms" rows="5">Cher Patient, Vous avez un RDV au Centre Medico-Social la Pyramide le ${date}. Arrivez 15 min en avance. Merci</textarea>
                         </div>
                     </div>
                 </div>
@@ -285,7 +285,11 @@
 
                             rdvs.forEach((item, index) => {
 
-                                contacts.push(item.patient_tel);
+                                contacts.push({
+                                    nom: item.patient, // Nom du patient
+                                    tel: item.patient_tel, // Numéro de téléphone
+                                    date: formatDateHeure(item.date),     // Date du rendez-vous
+                                });
 
                                 let button = '';
 
@@ -314,7 +318,7 @@
                                     <td>+225 ${item.patient_tel}</td>
                                     <td>Dr. ${item.medecin}</td>
                                     <td>${item.specialite}</td>
-                                    <td>${formatDate(item.date)}</td>
+                                    <td>${formatDateHeure(item.date)}</td>
                                     <td>${formatDateHeure(item.created_at)}</td>
                                     <td>
                                         <div class="d-inline-flex gap-1">
@@ -634,7 +638,15 @@
                     .catch(error => console.error('Error fetching data:', error));
         }
 
+        console.log("Contacts : ", contacts);
+
         function smsSenderMultipleAsync(contacts, message) {
+
+            const replacePlaceholders = (message, item) => {
+                return message
+                    .replace('${date}', item.date)
+                    .replace('${nom}', item.nom);
+            };
             
             var preloader_ch = `
                 <div id="preloader_ch">
@@ -651,12 +663,14 @@
                 sender: '{{ env('API_SMS_SENDER') }}',
             };
 
-            const requests = contacts.map((contact) => {
+            const requests = contacts.map((item) => {
+
+                const personalizedMessage = replacePlaceholders(message, item);
 
                 const queryString = new URLSearchParams({
                     ...params,
-                    msisdn: `+225${contact}`,
-                    msg: message,
+                    msisdn: `+225${item.tel}`,
+                    msg: personalizedMessage,
                 }).toString();
 
                 const url = `https://api-public-2.mtarget.fr/messages?${queryString}`;
@@ -673,15 +687,16 @@
                         }
                         return response.json();
                     })
-                    .then((data) => ({ contact, success: true, data }))
+                    .then((data) => ({ item, success: true, data }))
                     .catch((error) => ({
-                        contact,
+                        item,
                         success: false,
                         error,
                     }));
             });
 
             Promise.all(requests).then((results) => {
+
                 var preloader = document.getElementById('preloader_ch');
                 if (preloader) {
                     preloader.remove();
@@ -714,6 +729,7 @@
                 if (preloader) {
                     preloader.remove();
                 }
+
                 console.error('Erreur globale:', error);
                 showAlert('Echec', 'Une erreur inattendue est survenue.', 'error');
             });

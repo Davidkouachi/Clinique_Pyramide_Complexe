@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('rdvpatients', function (Blueprint $table) {
             $table->id();
-            $table->string('date');
+            $table->dateTime('date');
             $table->string('motif');
             $table->string('statut')->index();
             $table->unsignedBigInteger('user_id');

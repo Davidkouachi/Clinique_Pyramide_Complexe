@@ -247,7 +247,7 @@
                     </div>
                     <div class="mb-3" id="div_date_rdv" style="display: none;">
                         <label class="form-label">Date</label>
-                        <input type="date" class="form-control" id="date_rdv" placeholder="Saisie Obligatoire" min="{{ date('Y-m-d') }}">
+                        <input type="datetime-local" class="form-control" id="date_rdv" placeholder="Saisie Obligatoire" min="{{ date('Y-m-d\TH:i') }}">
                     </div>
                     <div class="mb-3">
                         <label class="form-label">Motif</label>
@@ -957,7 +957,7 @@
                                     $('#patient_rdv').val('');
                                     $('#motif_rdv').val('');
 
-                                    const allowedDays = medecin.horaires.map(horaire => horaire.jour);
+                                    {{-- const allowedDays = medecin.horaires.map(horaire => horaire.jour);
 
                                     const dateInput = document.getElementById('date_rdv');
                                     let previousDate = dateInput.value; // Track previous date
@@ -985,7 +985,56 @@
                                         } else {
                                             previousDate = dateInput.value;
                                         }
-                                    });
+                                    }); --}}
+
+                                    const allowedDays = medecin.horaires.map(horaire => horaire.jour);
+const heureDays = medecin.horaires.reduce((map, horaire) => {
+    const dayMapping = {
+        'DIMANCHE': 0,
+        'LUNDI': 1,
+        'MARDI': 2,
+        'MERCREDI': 3,
+        'JEUDI': 4,
+        'VENDREDI': 5,
+        'SAMEDI': 6
+    };
+    map[dayMapping[horaire.jour]] = horaire.heure_debut;
+    return map;
+}, {});
+
+const dateInput = document.getElementById('date_rdv');
+let previousDate = dateInput.value; // Track previous date
+
+dateInput.addEventListener('change', function(event) {
+    const selectedDate = new Date(event.target.value);
+    const selectedDay = selectedDate.getDay(); // Numeric day of the week
+
+    // Check if the selected day is valid
+    const isValidDay = allowedDays.some(day => {
+        const dayMapping = {
+            'DIMANCHE': 0,
+            'LUNDI': 1,
+            'MARDI': 2,
+            'MERCREDI': 3,
+            'JEUDI': 4,
+            'VENDREDI': 5,
+            'SAMEDI': 6
+        };
+        return dayMapping[day] === selectedDay;
+    });
+
+    if (!isValidDay) {
+        dateInput.value = previousDate;
+        showAlert("ALERT", 'Veuillez sélectionner un jour valide selon les horaires du médecin.', "info");
+    } else {
+        // Add the hour to the selected date if valid
+        const selectedHour = heureDays[selectedDay];
+        const dateString = selectedDate.toISOString().split('T')[0];
+        dateInput.value = `${dateString} ${selectedHour}`;
+        previousDate = dateInput.value; // Update previous date
+    }
+});
+
 
                                 });
                             }
@@ -1107,7 +1156,7 @@
                 },
                 { 
                     data: 'date',
-                    render: formatDate,
+                    render: formatDateHeure,
                     searchable: true, 
                 },
                 {
