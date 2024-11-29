@@ -634,6 +634,7 @@
         }
 
         function smsSenderMultipleAsync(contacts, message) {
+            
             var preloader_ch = `
                 <div id="preloader_ch">
                     <div class="spinner_preloader_ch"></div>
@@ -643,10 +644,10 @@
             document.body.insertAdjacentHTML('beforeend', preloader_ch);
 
             const params = {
-                username: 'espacemedicosoc',
-                password: 'v8h2LAkNDoB3',
-                serviceid: '33783',
-                sender: 'ALERT INFO',
+                username: '{{ env('API_SMS_USERNANME') }}',
+                password: '{{ env('API_SMS_PASSWORD') }}',
+                serviceid: '{{ env('API_SMS_SERVICEID') }}',
+                sender: '{{ env('API_SMS_SENDER') }}',
             };
 
             const requests = contacts.map((contact) => {

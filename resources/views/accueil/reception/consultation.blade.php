@@ -66,7 +66,7 @@
                     <div class="w-100">
                         <div class="input-group">
                             <span class="input-group-text">Du</span>
-                            <input type="date" id="searchDate1" placeholder="Recherche" class="form-control me-1" value="{{ date('Y-m-d') }}" max="{{ date('Y-m-d') }}">
+                            <input type="date" id="searchDate1" placeholder="Recherche" class="form-control me-1" value="{{ date('Y-m-d', strtotime('-2 months')) }}" max="{{ date('Y-m-d') }}">
                             <span class="input-group-text">au</span>
                             <input type="date" id="searchDate2" placeholder="Recherche" class="form-control me-1" value="{{ date('Y-m-d') }}" max="{{ date('Y-m-d') }}">
                             <a id="btn_search_table" class="btn btn-outline-success ms-auto">
@@ -790,7 +790,7 @@
                     doc.text(info.label, leftMargin, yPoss);
                     doc.setFont("Helvetica", "normal");
                     doc.text(": " + info.value, leftMargin + 15, yPoss);
-                    yPoss += 7;
+                    yPoss += 10;
                 });
 
                 const pInfo2 = [
@@ -801,10 +801,10 @@
                 pInfo2.forEach(info => {
                     doc.setFontSize(10);
                     doc.setFont("Helvetica", "bold");
-                    doc.text(info.label, leftMargin + 40, yPoss - 14);
+                    doc.text(info.label, leftMargin + 40, yPoss - 20);
                     doc.setFont("Helvetica", "normal");
-                    doc.text(": " + info.value, leftMargin + 55, yPoss - 14);
-                    yPoss += 7;
+                    doc.text(": " + info.value, leftMargin + 55, yPoss - 20);
+                    yPoss += 10;
                 });
 
                 const pInfo3 = [
@@ -815,10 +815,10 @@
                 pInfo3.forEach(info => {
                     doc.setFontSize(10);
                     doc.setFont("Helvetica", "bold");
-                    doc.text(info.label, leftMargin + 75, yPoss - 28);
+                    doc.text(info.label, leftMargin + 75, yPoss - 40);
                     doc.setFont("Helvetica", "normal");
-                    doc.text(": " + info.value, leftMargin + 90, yPoss - 28);
-                    yPoss += 7;
+                    doc.text(": " + info.value, leftMargin + 90, yPoss - 40);
+                    yPoss += 10;
                 });
 
                 const pInfo4 = [
@@ -828,10 +828,10 @@
                 pInfo4.forEach(info => {
                     doc.setFontSize(10);
                     doc.setFont("Helvetica", "bold");
-                    doc.text(info.label, leftMargin + 110, yPoss - 42);
+                    doc.text(info.label, leftMargin + 110, yPoss - 60);
                     doc.setFont("Helvetica", "normal");
-                    doc.text(": " + info.value, leftMargin + 125, yPoss - 42);
-                    yPoss += 7;
+                    doc.text(": " + info.value, leftMargin + 125, yPoss - 60);
+                    yPoss += 10;
                 });
 
                 hPoss += 25;

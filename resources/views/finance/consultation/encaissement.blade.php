@@ -57,64 +57,103 @@
         
         @include('finance.btnFacNonRegle')
 
-        <div class="row justify-content-center">
-            <div class="col-12">
-                <div class="card mb-3">
-                    <div class="card-header d-flex align-items-center justify-content-between">
-                        <h5 class="card-title">
-                            Consultations factures non-réglées
-                        </h5>
-                        <div class="d-flex" >
-                            <input type="text" id="searchInput" placeholder="N° facture" class="form-control me-1" >
-                            <a id="btn_refresh_table" class="btn btn-outline-info ms-auto">
-                                <i class="ri-loop-left-line"></i>
-                            </a>
-                        </div>
-                    </div>
-                    <div class="card-body">
-                        <div class="table-outer" id="div_Table" style="display: none;">
-                            <div class="table-responsive">
-                                <table class="table align-middle table-hover m-0 truncate" id="Table">
-                                    <thead>
-                                        <tr>
-                                            <th scope="col">N°</th>
-                                            <th scope="col">Id facture</th>
-                                            <th scope="col">Nom et Prénoms</th>
-                                            <th scope="col">Contact</th>
-                                            <th scope="col">Part Assurance</th>
-                                            <th scope="col">Part Patient</th>
-                                            <th scope="col">Remise</th>
-                                            <th scope="col">Total</th>
-                                            <th scope="col">Date de création</th>
-                                            <th scope="col">Actions</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                    </tbody>
-                                </table>
+        <div class="row gx-3" >
+            <div class="col-sm-12">
+                <div class="card mb-3 mt-3">
+                    <div class="card-body" style="margin-top: -30px;">
+                        <div class="custom-tabs-container">
+                            <ul class="nav nav-tabs justify-content-center bg-primary bg-2" id="customTab4" role="tablist" style="background: rgba(0, 0, 0, 0.7);">
+                                <li class="nav-item" role="presentation">
+                                    <a class="nav-link active text-white" id="tab-twoA1" data-bs-toggle="tab" href="#twoA1" role="tab" aria-controls="twoA1" aria-selected="false" tabindex="-1">
+                                        <i class="ri-contacts-line me-2"></i>
+                                        Consulation(s)
+                                    </a>
+                                </li>
+                                <li class="nav-item" role="presentation">
+                                    <a class="nav-link text-white" id="tab-twoA2" data-bs-toggle="tab" href="#twoA2" role="tab" aria-controls="twoA2" aria-selected="false" tabindex="-1">
+                                        <i class="ri-contacts-line me-2"></i>
+                                        Examen(s)
+                                    </a>
+                                </li>
+                                <li class="nav-item" role="presentation">
+                                    <a class="nav-link text-white" id="tab-twoA3" data-bs-toggle="tab" href="#twoA3" role="tab" aria-controls="twoA3" aria-selected="false" tabindex="-1">
+                                        <i class="ri-contacts-line me-2"></i>
+                                        Hospitalisation(s)
+                                    </a>
+                                </li>
+                                <li class="nav-item" role="presentation">
+                                    <a class="nav-link text-white" id="tab-twoA4" data-bs-toggle="tab" href="#twoA4" role="tab" aria-controls="twoA4" aria-selected="false" tabindex="-1">
+                                        <i class="ri-contacts-line me-2"></i>
+                                        Soins Ambulatoire(s)
+                                    </a>
+                                </li>
+                            </ul>
+                            <div class="tab-content" id="customTabContent">
+                                <div class="tab-pane active show fade" id="twoA1" role="tabpanel" aria-labelledby="tab-twoA1">
+                                    <div class="card-header d-flex align-items-center justify-content-between">
+                                        <h5 class="card-title">
+                                            Consultations factures non-réglées
+                                        </h5>
+                                        <div class="d-flex" >
+                                            <input type="text" id="searchInput_Cons" placeholder="N° facture" class="form-control me-1" >
+                                            <a id="btn_refresh_table_Cons" class="btn btn-outline-info ms-auto">
+                                                <i class="ri-loop-left-line"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="table-outer" id="div_Table_Cons" style="display: none;">
+                                            <div class="table-responsive">
+                                                <table class="table align-middle table-hover m-0 truncate" id="Table_Cons">
+                                                    <thead>
+                                                        <tr>
+                                                            <th scope="col">N°</th>
+                                                            <th scope="col">Id facture</th>
+                                                            <th scope="col">Nom et Prénoms</th>
+                                                            <th scope="col">Contact</th>
+                                                            <th scope="col">Part Assurance</th>
+                                                            <th scope="col">Part Patient</th>
+                                                            <th scope="col">Remise</th>
+                                                            <th scope="col">Total</th>
+                                                            <th scope="col">Date de création</th>
+                                                            <th scope="col">Actions</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                        <div id="message_Table_Cons" style="display: none;">
+                                            <p class="text-center" >
+                                                Aucune facture disponible
+                                            </p>
+                                        </div>
+                                        <div id="div_Table_loader_Cons" style="display: none;">
+                                            <div class="d-flex justify-content-center align-items-center">
+                                                <div class="spinner-border text-warning me-2" role="status" aria-hidden="true"></div>
+                                                <strong>Chargement des données...</strong>
+                                            </div>
+                                        </div>
+                                        <div id="pagination-controls_Cons" ></div>
+                                    </div>
+                                </div>
+                                <div class="tab-pane fade" id="twoA2" role="tabpanel" aria-labelledby="tab-twoA2"> 
+                                </div>
+                                <div class="tab-pane fade" id="twoA3" role="tabpanel" aria-labelledby="tab-twoA3"> 
+                                </div>
+                                <div class="tab-pane fade" id="twoA4" role="tabpanel" aria-labelledby="tab-twoA4"> 
+                                </div>
                             </div>
                         </div>
-                        <div id="message_Table" style="display: none;">
-                            <p class="text-center" >
-                                Aucune facture disponible
-                            </p>
-                        </div>
-                        <div id="div_Table_loader" style="display: none;">
-                            <div class="d-flex justify-content-center align-items-center">
-                                <div class="spinner-border text-warning me-2" role="status" aria-hidden="true"></div>
-                                <strong>Chargement des données...</strong>
-                            </div>
-                        </div>
-                        <div id="pagination-controls" ></div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-
 </div>
 
-<div class="modal fade" id="Detail" tabindex="-1" aria-modal="true" role="dialog" >
+<div class="modal fade" id="Detail_Cons" tabindex="-1" aria-modal="true" role="dialog" >
     <div class="modal-dialog modal-xl modal-dialog-scrollable modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
@@ -130,8 +169,8 @@
                             <div class="card-body">
                                 <div class="row">
                                     <div class="col-12">
-                                        <div class="table-responsive" id="div_TableD" style="display: none;">
-                                            <table class="table table-bordered" id="TableD">
+                                        <div class="table-responsive" id="div_TableD_Cons" style="display: none;">
+                                            <table class="table table-bordered" id="TableD_Cons">
                                                 <thead>
                                                     <tr>
                                                         <th width="100px" >Code</th>
@@ -146,12 +185,12 @@
                                                 </tbody>
                                             </table>
                                         </div>
-                                        <div id="message_TableD" style="display: none;">
+                                        <div id="message_TableD_Cons" style="display: none;">
                                             <p class="text-center" >
                                                 Aucune facture disponible
                                             </p>
                                         </div>
-                                        <div id="div_Table_loaderD" style="display: none;">
+                                        <div id="div_Table_loaderD_Cons" style="display: none;">
                                             <div class="d-flex justify-content-center align-items-center">
                                                 <div class="spinner-border text-warning me-2" role="status" aria-hidden="true"></div>
                                                 <strong>Chargement des données...</strong>
@@ -168,11 +207,11 @@
     </div>
 </div>
 
-<div class="modal fade" id="Caisse" tabindex="-1" aria-modal="true" role="dialog">
+<div class="modal fade" id="Caisse_Cons" tabindex="-1" aria-modal="true" role="dialog">
     <div class="modal-dialog modal-dialog-centered modal-sm">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalToggleLabel">
+                <h5 class="modal-title">
                     Caisse
                 </h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -182,14 +221,14 @@
                     <div class="col-12">
                         <div class="mb-3">
                             <label class="form-label">A payer</label>
-                            <input readonly class="form-control" id="input_montant_payer">
+                            <input readonly class="form-control" id="input_montant_payer_Cons">
                         </div>
                     </div>
                     <div class="col-12">
                         <div class="mb-3">
                             <label class="form-label">Montant versé</label>
                             <div class="input-group">
-                                <input type="tel" class="form-control" id="input_montant_verser" placeholder="Saisie Obligatoire">
+                                <input type="tel" class="form-control" id="input_montant_verser_Cons" placeholder="Saisie Obligatoire">
                                 <span class="input-group-text">Fcfa</span>
                             </div>
                         </div>
@@ -198,16 +237,16 @@
                         <div class="mb-3">
                             <label class="form-label">Montant Remis</label>
                             <div class="input-group">
-                                <input readonly type="tel" class="form-control" id="input_montant_remis" placeholder="Saisie Obligatoire">
+                                <input readonly type="tel" class="form-control" id="input_montant_remis_Cons" placeholder="Saisie Obligatoire">
                                 <span class="input-group-text">Fcfa</span>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="modal-footer" id="div_btn_valider" style="display: none;">
-                <input type="hidden" id="id_code_fac">
-                <button data-bs-dismiss="modal" class="btn btn-success" id="btn_valider" >
+            <div class="modal-footer" id="div_btn_valider_Cons" style="display: none;">
+                <input type="hidden" id="id_code_fac_Cons">
+                <button data-bs-dismiss="modal" class="btn btn-success" id="btn_valider_Cons" >
                     Validé
                 </button>
             </div>
@@ -223,49 +262,8 @@
 
         caisse_verf();
 
-        document.getElementById("btn_refresh_table").addEventListener("click", list);
-        document.getElementById("btn_valider").addEventListener("click", payer);
-
         document.getElementById("btn_ouvert_C").addEventListener("click", caisse_ouvert);
         document.getElementById("btn_fermer_C").addEventListener("click", caisse_fermer);
-
-        // ->----------------------------
-
-        document.getElementById('input_montant_verser').addEventListener('input', function() {
-            // Nettoyer la valeur entrée en supprimant les caractères non numériques sauf le point
-            const rawValue = this.value.replace(/[^0-9]/g, ''); // Supprimer tous les caractères non numériques
-            
-            // Ajouter des points pour les milliers
-            const formattedValue = formatPrice(rawValue);
-            
-            // Mettre à jour la valeur du champ avec la valeur formatée
-            this.value = formattedValue;
-
-            // Convertir la valeur formatée en nombre pour les calculs
-            const montantPayer = parseFloat(document.getElementById('input_montant_payer').value.replace(/\./g, '')) || 0;
-            const montantVerser = parseFloat(rawValue) || 0;
-
-            // Calculer le montant remis
-            const montantRemis = montantVerser - montantPayer;
-            document.getElementById('input_montant_remis').value = `${formatPrice(montantRemis)}`;
-
-            const btnValider = document.getElementById('div_btn_valider');
-            if (montantRemis >= 0) {
-                btnValider.style.display = 'block';
-            } else {
-                btnValider.style.display = 'none';
-            }
-        });
-
-        document.getElementById('input_montant_verser').addEventListener('keypress', function(event) {
-            // Permettre uniquement les chiffres et le point
-            const key = event.key;
-            if (isNaN(key)) {
-                event.preventDefault();
-            }
-        });
-        
-        // -----------------------------------------
 
         function caisse_verf()
         {
@@ -278,7 +276,7 @@
                         document.getElementById('div_caisse_verf').style.display = 'block';
                         document.getElementById('btn_ouvert').style.display = 'none';
                         document.getElementById('btn_fermer').style.display = 'block';
-                        list();
+                        list_Cons();
                     }else{
                         document.getElementById('div_caisse').style.display = 'none';
                         document.getElementById('div_caisse_verf').style.display = 'block';
@@ -322,7 +320,7 @@
                         document.getElementById('btn_ouvert').style.display = 'none';
                         document.getElementById('btn_fermer').style.display = 'block';
 
-                        list();
+                        list_Cons();
 
                     } else if (response.error) {
                         showAlert('Alert', 'Une erreur est survenue lors de l\'ouverture de la caisse.','error');
@@ -431,12 +429,228 @@
             return `${day}/${month}/${year} à ${hours}:${minutes}:${seconds}`;
         }
 
-        function payer()
+    });
+</script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+
+        document.getElementById("btn_refresh_table_Cons").addEventListener("click", list_Cons);
+        document.getElementById("btn_valider_Cons").addEventListener("click", payer_Cons);
+
+        document.getElementById('input_montant_verser_Cons').addEventListener('input', function() {
+            // Nettoyer la valeur entrée en supprimant les caractères non numériques sauf le point
+            const rawValue = this.value.replace(/[^0-9]/g, ''); // Supprimer tous les caractères non numériques
+            
+            // Ajouter des points pour les milliers
+            const formattedValue = formatPrice(rawValue);
+            
+            // Mettre à jour la valeur du champ avec la valeur formatée
+            this.value = formattedValue;
+
+            // Convertir la valeur formatée en nombre pour les calculs
+            const montantPayer = parseFloat(document.getElementById('input_montant_payer_Cons').value.replace(/\./g, '')) || 0;
+            const montantVerser = parseFloat(rawValue) || 0;
+
+            // Calculer le montant remis
+            const montantRemis = montantVerser - montantPayer;
+            document.getElementById('input_montant_remis_Cons').value = `${formatPrice(montantRemis)}`;
+
+            const btnValider = document.getElementById('div_btn_valider_Cons');
+            if (montantRemis >= 0) {
+                btnValider.style.display = 'block';
+            } else {
+                btnValider.style.display = 'none';
+            }
+        });
+
+        document.getElementById('input_montant_verser_Cons').addEventListener('keypress', function(event) {
+            // Permettre uniquement les chiffres et le point
+            const key = event.key;
+            if (isNaN(key)) {
+                event.preventDefault();
+            }
+        });
+
+        //-----------------------------------------------------------------------
+
+        caisse_verf();
+
+        document.getElementById("btn_ouvert_C").addEventListener("click", caisse_ouvert);
+        document.getElementById("btn_fermer_C").addEventListener("click", caisse_fermer);
+
+        function caisse_verf()
+        {
+            fetch('/api/verf_caisse')
+                .then(response => response.json())
+                .then(data => {
+                    
+                    if (data.caisse.statut == 'ouvert') {
+                        document.getElementById('div_caisse').style.display = 'block';
+                        document.getElementById('div_caisse_verf').style.display = 'block';
+                        document.getElementById('btn_ouvert').style.display = 'none';
+                        document.getElementById('btn_fermer').style.display = 'block';
+                        list_Cons();
+                    }else{
+                        document.getElementById('div_caisse').style.display = 'none';
+                        document.getElementById('div_caisse_verf').style.display = 'block';
+                        document.getElementById('btn_ouvert').style.display = 'block';
+                        document.getElementById('btn_fermer').style.display = 'none';
+                    }
+
+                })
+                .catch(error => console.error('Erreur lors du chargement des donnée caisse:', error));
+        }
+
+        function caisse_ouvert()
         {
             const auth_id = {{ Auth::user()->id }};
-            const code_fac = document.getElementById("id_code_fac").value;
-            const montant_verser = document.getElementById("input_montant_verser");
-            const montant_remis = document.getElementById("input_montant_remis");
+
+            var preloader_ch = `
+                <div id="preloader_ch">
+                    <div class="spinner_preloader_ch"></div>
+                </div>
+            `;
+            // Add the preloader to the body
+            document.body.insertAdjacentHTML('beforeend', preloader_ch);
+
+            $.ajax({
+                url: '/api/caisse_ouvert',
+                method: 'GET',
+                data: { 
+                    auth_id: auth_id,
+                },
+                success: function(response) {
+
+                    var preloader = document.getElementById('preloader_ch');
+                    if (preloader) {
+                        preloader.remove();
+                    }
+
+                    if (response.success) {
+
+                        document.getElementById('div_caisse').style.display = 'block';
+                        document.getElementById('div_caisse_verf').style.display = 'block';
+                        document.getElementById('btn_ouvert').style.display = 'none';
+                        document.getElementById('btn_fermer').style.display = 'block';
+
+                        list_Cons();
+
+                    } else if (response.error) {
+                        showAlert('Alert', 'Une erreur est survenue lors de l\'ouverture de la caisse.','error');
+                    }
+
+                },
+                error: function(xhr, status, error) {
+                    var preloader = document.getElementById('preloader_ch');
+                    if (preloader) {
+                        preloader.remove();
+                    }
+                    showAlert('Alert', 'Une erreur est survenue.','error');
+                }
+            });
+        }
+
+        function caisse_fermer()
+        {
+            const auth_id = {{ Auth::user()->id }};
+
+            var preloader_ch = `
+                <div id="preloader_ch">
+                    <div class="spinner_preloader_ch"></div>
+                </div>
+            `;
+            // Add the preloader to the body
+            document.body.insertAdjacentHTML('beforeend', preloader_ch);
+
+            $.ajax({
+                url: '/api/caisse_fermer',
+                method: 'GET',
+                data: { 
+                    auth_id: auth_id,
+                },
+                success: function(response) {
+
+                    var preloader = document.getElementById('preloader_ch');
+                    if (preloader) {
+                        preloader.remove();
+                    }
+
+                    if (response.success) {
+
+                        document.getElementById('div_caisse').style.display = 'none';
+                        document.getElementById('div_caisse_verf').style.display = 'block';
+                        document.getElementById('btn_ouvert').style.display = 'block';
+                        document.getElementById('btn_fermer').style.display = 'none';
+
+                    } else if (response.error) {
+                        showAlert('Alert', 'Une erreur est survenue lors de la fermeture de la caisse.','error');
+                    }
+
+                },
+                error: function(xhr, status, error) {
+                    var preloader = document.getElementById('preloader_ch');
+                    if (preloader) {
+                        preloader.remove();
+                    }
+                    showAlert('Alert', 'Une erreur est survenue.','error');
+                }
+            });
+        }
+
+        function formatPrice(price) {
+
+            // Convert to float and round to the nearest whole number
+            let number = Math.round(parseFloat(price));
+            if (isNaN(number)) {
+                return '';
+            }
+
+            // Format the number with dot as thousands separator
+            return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+        }
+
+        function showAlert(title, message, type) {
+            Swal.fire({
+                title: title,
+                text: message,
+                icon: type,
+            });
+        }
+
+        function formatDate(dateString) {
+
+            const date = new Date(dateString);
+            const day = String(date.getDate()).padStart(2, '0');
+            const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are zero-based
+            const year = date.getFullYear();
+
+            return `${day}/${month}/${year}`; // Format as dd/mm/yyyy
+        }
+
+        function formatDateHeure(dateString) {
+
+            const date = new Date(dateString);
+                
+            const day = String(date.getDate()).padStart(2, '0');
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const year = date.getFullYear();
+
+            const hours = String(date.getHours()).padStart(2, '0');
+            const minutes = String(date.getMinutes()).padStart(2, '0');
+            const seconds = String(date.getSeconds()).padStart(2, '0');
+
+            return `${day}/${month}/${year} à ${hours}:${minutes}:${seconds}`;
+        }
+        
+        //-----------------------------------------------------------------------
+
+        function payer_Cons()
+        {
+            const auth_id = {{ Auth::user()->id }};
+            const code_fac = document.getElementById("id_code_fac_Cons").value;
+            const montant_verser = document.getElementById("input_montant_verser_Cons");
+            const montant_remis = document.getElementById("input_montant_remis_Cons");
 
             var preloader_ch = `
                 <div id="preloader_ch">
@@ -479,9 +693,9 @@
                         const user = response.user;
                         const consultation = response.consultation;
 
-                        list();
+                        list_Cons();
 
-                        generatePDFInvoice(patient, user, typeacte, consultation);
+                        generatePDFInvoice_Cons(patient, user, typeacte, consultation);
 
                         showAlert('Succès', 'Paiement éffectuée.','success');
 
@@ -502,12 +716,13 @@
             });
         }
 
-        function list(page = 1) {
-            const tableBody = document.querySelector('#Table tbody');
-            const messageDiv = document.getElementById('message_Table');
-            const tableDiv = document.getElementById('div_Table');
-            const loaderDiv = document.getElementById('div_Table_loader');
-            const searchInput = document.getElementById('searchInput');
+        function list_Cons(page = 1) 
+        {
+            const tableBody = document.querySelector('#Table_Cons tbody');
+            const messageDiv = document.getElementById('message_Table_Cons');
+            const tableDiv = document.getElementById('div_Table_Cons');
+            const loaderDiv = document.getElementById('div_Table_loader_Cons');
+            const searchInput = document.getElementById('searchInput_Cons');
 
             let allFactures = []; // Array to hold all factures data fetched from API
 
@@ -564,13 +779,13 @@
                                     <td>${formatDateHeure(item.created_at)}</td>
                                     <td>
                                         <div class="d-inline-flex gap-1">
-                                            <a class="btn btn-outline-success btn-sm rounded-5" data-bs-toggle="modal" data-bs-target="#Caisse" id="paye-${item.id}">
+                                            <a class="btn btn-outline-success btn-sm rounded-5" data-bs-toggle="modal" data-bs-target="#Caisse_Cons" id="paye_Cons-${item.id}">
                                                 <i class="ri-hand-coin-line"></i>
                                             </a>
-                                            <a class="btn btn-outline-warning btn-sm rounded-5" data-bs-toggle="modal" data-bs-target="#Detail" id="detail-${item.id}">
+                                            <a class="btn btn-outline-warning btn-sm rounded-5" data-bs-toggle="modal" data-bs-target="#Detail_Cons" id="detail_Cons-${item.id}">
                                                 <i class="ri-eye-line"></i>
                                             </a>
-                                            <a class="btn btn-outline-info btn-sm rounded-5" id="printer-${item.id}">
+                                            <a class="btn btn-outline-info btn-sm rounded-5" id="printer_Cons-${item.id}">
                                                 <i class="ri-printer-line"></i>
                                             </a>
                                         </div>
@@ -579,18 +794,18 @@
                                 tableBody.appendChild(row);
 
                                 // Add event listeners
-                                document.getElementById(`paye-${item.id}`).addEventListener('click', () => {
-                                    const payer = document.getElementById('input_montant_payer');
+                                document.getElementById(`paye_Cons-${item.id}`).addEventListener('click', () => {
+                                    const payer = document.getElementById('input_montant_payer_Cons');
                                     payer.value = `${formatPrice(item?.part_patient || 0)} Fcfa`;
 
-                                    const verser = document.getElementById('input_montant_verser');
+                                    const verser = document.getElementById('input_montant_verser_Cons');
                                     verser.value = '';
-                                    document.getElementById('input_montant_remis').value = '0 Fcfa';
+                                    document.getElementById('input_montant_remis_Cons').value = '0 Fcfa';
 
-                                    document.getElementById('id_code_fac').value = `${item.code_fac}`;
+                                    document.getElementById('id_code_fac_Cons').value = `${item.code_fac}`;
                                 });
 
-                                document.getElementById(`printer-${item.id}`).addEventListener('click', () => {
+                                document.getElementById(`printer_Cons-${item.id}`).addEventListener('click', () => {
                                     fetch(`/api/facture_inpayer_cons/${item.id}`)
                                         .then(response => response.json())
                                         .then(data => {
@@ -600,19 +815,19 @@
                                             const user = data.user;
                                             const consultation = data.consultation;
 
-                                            generatePDFInvoice(patient, user, typeacte, consultation);
+                                            generatePDFInvoice_Cons(patient, user, typeacte, consultation);
                                         })
                                         .catch(error => {
                                             console.error('Erreur lors du chargement des données:', error);
                                         });
                                 });
 
-                                document.getElementById(`detail-${item.id}`).addEventListener('click',()=>
+                                document.getElementById(`detail_Cons-${item.id}`).addEventListener('click',()=>
                                 {
-                                    const tableBodyD = document.querySelector('#TableD tbody');
-                                    const messageDivD = document.getElementById('message_TableD');
-                                    const tableDivD = document.getElementById('div_TableD');
-                                    const loaderDivD = document.getElementById('div_Table_loaderD');
+                                    const tableBodyD = document.querySelector('#TableD_Cons tbody');
+                                    const messageDivD = document.getElementById('message_TableD_Cons');
+                                    const tableDivD = document.getElementById('div_TableD_Cons');
+                                    const loaderDivD = document.getElementById('div_Table_loaderD_Cons');
 
                                     messageDivD.style.display = 'none';
                                     tableDivD.style.display = 'none';
@@ -747,8 +962,9 @@
                 });
         }
 
-        function updatePaginationControls(pagination) {
-            const paginationDiv = document.getElementById('pagination-controls');
+        function updatePaginationControls(pagination) 
+        {
+            const paginationDiv = document.getElementById('pagination-controls_Cons');
             paginationDiv.innerHTML = '';
 
             // Bootstrap pagination wrapper
@@ -838,7 +1054,8 @@
             paginationDiv.appendChild(paginationWrapper);
         }
 
-        function generatePDFInvoice(patient, user, typeacte, consultation) {
+        function generatePDFInvoice_Cons(patient, user, typeacte, consultation) 
+        {
             const { jsPDF } = window.jspdf;
             const doc = new jsPDF({ orientation: 'p', unit: 'mm', format: 'a4' });
 
