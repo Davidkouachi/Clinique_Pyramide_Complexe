@@ -186,7 +186,7 @@
                     <div class="col-12">
                         <div class="mb-3">
                             <label class="form-label">Message</label>
-                            <textarea style="resize: none;" class="form-control" id="messageSms" rows="5"></textarea>
+                            <textarea style="resize: none;" class="form-control" id="messageSms" rows="5">Cher Patient, Vous avez un RDV au Centre Medico-Social la Pyramide le {{ \Carbon\Carbon::now()->addDays(2)->format('d/m/Y') }}. Arrivez 15 min en avance. Merci</textarea>
                         </div>
                     </div>
                 </div>
@@ -284,7 +284,8 @@
                         tableDiv.style.display = 'block';
 
                             rdvs.forEach((item, index) => {
-                                contacts.push(`${item.patient_tel}`);
+
+                                contacts.push(item.patient_tel);
 
                                 let button = '';
 
