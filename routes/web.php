@@ -15,6 +15,9 @@ use App\Http\Controllers\tauxController;
 use App\Http\Controllers\typeproduitController;
 use App\Http\Controllers\receptionController;
 
+use Illuminate\Support\Facades\Http;
+use Illuminate\Http\Request;
+
 
 Route::get('/Login', [authController::class, 'login'])->name('login');
 Route::post('/trait_login', [authController::class, 'trait_login'])->name('trait_login');

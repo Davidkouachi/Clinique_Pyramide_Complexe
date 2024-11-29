@@ -245,7 +245,7 @@
                         <label class="form-label">Patient</label>
                         <select class="form-select select2" id="patient_id_rdv"></select>
                     </div>
-                    <div class="mb-3">
+                    <div class="mb-3" id="div_date_rdv" style="display: none;">
                         <label class="form-label">Date</label>
                         <input type="date" class="form-control" id="date_rdv" placeholder="Saisie Obligatoire" min="{{ date('Y-m-d') }}">
                     </div>
@@ -369,6 +369,17 @@
         });
 
         ["rech_medecin", "rech_specialite", "rech_jour", "rech_periode"].forEach(id => document.getElementById(id).addEventListener("change", list));
+
+        $('#patient_id_rdv').on('change', function () { 
+            const selectedValue = $(this).val(); // Récupère la valeur sélectionnée
+
+            if (selectedValue !== '') {
+                $('#div_date_rdv').show(); // Affiche le div si une valeur est sélectionnée
+            } else {
+                $('#div_date_rdv').hide(); // Cache le div si aucune valeur n'est sélectionnée
+            }
+        });
+
 
         function showAlert(title, message, type)
         {
@@ -951,8 +962,7 @@
                                     const dateInput = document.getElementById('date_rdv');
                                     let previousDate = dateInput.value; // Track previous date
 
-                                    dateInput.addEventListener('blur', (event) => {
-                                        if (!event.target.value) return;
+                                    dateInput.addEventListener('change', function(event) {
 
                                         const selectedDate = new Date(event.target.value);
                                         const selectedDay = selectedDate.getDay();
@@ -1039,8 +1049,8 @@
                         showAlert("ALERT", 'Enregistrement éffectué', "success");
                     } else if (response.error) {
                         showAlert("ERREUR", 'Une erreur est survenue', "error");
-                    } else if (response.json) {
-                        showAlert("ERREUR", 'Format de sélection invalide', "error");
+                    } else if (response.existe) {
+                        showAlert("Alert", 'Cet patient a déjà pris Rendez-Vous avec ce Médecin a la même Date. veuillez selectionner  une autre date SVP!!!', "info");
                     }
                 },
                 error: function() {
@@ -1183,7 +1193,7 @@
                         'MERCREDI': 3,
                         'JEUDI': 4,
                         'VENDREDI': 5,
-                        'SAMEDI': 6
+                        'SAMEDI': 6,
                     };
 
                     const isValidDay = allowedDays.some(day => dayMapping[day] === selectedDay);

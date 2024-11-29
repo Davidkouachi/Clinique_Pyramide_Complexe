@@ -1134,6 +1134,15 @@ class ApiinsertController extends Controller
             return response()->json(['error' => true]);
         }
 
+        $verf = rdvpatient::where('patient_id', '=', $patient->id)
+                        ->where('user_id', '=', $user->id)
+                        ->where('date','=', $request->date)
+                        ->exists();
+
+        if ($verf) {
+            return response()->json(['existe' => true]);
+        }
+
         $add = new rdvpatient();
         $add->user_id = $user->id;
         $add->patient_id = $patient->id;

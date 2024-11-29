@@ -186,13 +186,13 @@
                     <div class="col-12">
                         <div class="mb-3">
                             <label class="form-label">Message</label>
-                            <textarea style="resize: none;" class="form-control" id="libelle_ope" rows="5"></textarea>
+                            <textarea style="resize: none;" class="form-control" id="messageSms" rows="5"></textarea>
                         </div>
                     </div>
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" data-bs-dismiss="modal" class="btn btn-success" >
+                <button type="button" data-bs-dismiss="modal" class="btn btn-success" id="senderSms">
                     <span class="me-1" >Envoyer</span>
                     <i class="ri-send-plane-fill"></i>
                 </button>
@@ -214,7 +214,8 @@
         document.getElementById("btn_refresh_table_rdv").addEventListener("click", list_rdv);
         document.getElementById("btn_delete_rdv").addEventListener("click", delete_rdv);
 
-        function showAlert(title, message, type) {
+        function showAlert(title, message, type) 
+        {
             Swal.fire({
                 title: title,
                 text: message,
@@ -222,7 +223,8 @@
             });
         }
 
-        function formatDate(dateString) {
+        function formatDate(dateString) 
+        {
 
             const date = new Date(dateString);
             const day = String(date.getDate()).padStart(2, '0');
@@ -232,7 +234,8 @@
             return `${day}/${month}/${year}`; // Format as dd/mm/yyyy
         }
 
-        function formatDateHeure(dateString) {
+        function formatDateHeure(dateString) 
+        {
 
             const date = new Date(dateString);
                 
@@ -247,8 +250,10 @@
             return `${day}/${month}/${year} à ${hours}:${minutes}:${seconds}`;
         }
 
-        function list_rdv(page = 1) {
+        const contacts = [];
 
+        function list_rdv(page = 1) 
+        {
             const tableBody = document.querySelector('#Table_rdv tbody');
             const messageDiv = document.getElementById('message_Table_rdv');
             const tableDiv = document.getElementById('div_Table_rdv');
@@ -279,6 +284,7 @@
                         tableDiv.style.display = 'block';
 
                             rdvs.forEach((item, index) => {
+                                contacts.push(`${item.patient_tel}`);
 
                                 let button = '';
 
@@ -415,7 +421,8 @@
                 });
         }
 
-        function updatePaginationControlsRdv(pagination) {
+        function updatePaginationControlsRdv(pagination) 
+        {
             const paginationDiv = document.getElementById('pagination-controls_rdv');
             paginationDiv.innerHTML = '';
 
@@ -494,7 +501,8 @@
             paginationDiv.appendChild(paginationWrapper);
         }
 
-        function delete_rdv() {
+        function delete_rdv() 
+        {
 
             const id = document.getElementById('Iddelete').value;
 
@@ -597,7 +605,8 @@
             });
         }
 
-        function count_rdv_two_day() {
+        function count_rdv_two_day() 
+        {
 
                 fetch('/api/count_rdv_two_day')
                     .then(response => response.json())
@@ -623,6 +632,97 @@
                     })
                     .catch(error => console.error('Error fetching data:', error));
         }
+
+        function smsSenderMultipleAsync(contacts, message) {
+            var preloader_ch = `
+                <div id="preloader_ch">
+                    <div class="spinner_preloader_ch"></div>
+                </div>
+            `;
+            // Ajouter le préchargeur au body
+            document.body.insertAdjacentHTML('beforeend', preloader_ch);
+
+            const params = {
+                username: 'espacemedicosoc',
+                password: 'v8h2LAkNDoB3',
+                serviceid: '33783',
+                sender: 'ALERT INFO',
+            };
+
+            const requests = contacts.map((contact) => {
+
+                const queryString = new URLSearchParams({
+                    ...params,
+                    msisdn: `+225${contact}`,
+                    msg: message,
+                }).toString();
+
+                const url = `https://api-public-2.mtarget.fr/messages?${queryString}`;
+
+                return fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                })
+                    .then((response) => {
+                        if (!response.ok) {
+                            throw new Error(`HTTP error! Status: ${response.status}`);
+                        }
+                        return response.json();
+                    })
+                    .then((data) => ({ contact, success: true, data }))
+                    .catch((error) => ({
+                        contact,
+                        success: false,
+                        error,
+                    }));
+            });
+
+            Promise.all(requests).then((results) => {
+                var preloader = document.getElementById('preloader_ch');
+                if (preloader) {
+                    preloader.remove();
+                }
+
+                const successCount = results.filter((result) => result.success).length;
+                const failureCount = results.length - successCount;
+
+                if (successCount > 0) {
+                    console.log(`Succès : ${successCount} SMS envoyés avec succès.`);
+                    showAlert('Succès', `${successCount}/${results.length} SMS envoyés avec succès`, 'success');
+                }
+
+                if (failureCount > 0) {
+                    console.error(`Echec : ${failureCount} SMS n'ont pas été envoyés.`);
+                    showAlert('Echec', `${failureCount}/${results.length} SMS n'ont pas été envoyés`, 'error');
+                }
+
+                if (results.length === 0 || failureCount === results.length) {
+                    // Aucun SMS envoyé, probablement pas de connexion
+                    console.error('Aucune connexion ou tous les SMS ont échoué.');
+                    showAlert('Echec', 'Aucune connexion internet ou tous les envois ont échoué.', 'error');
+                }
+
+                console.log('Data:', JSON.stringify(results, null, 2));
+
+            }).catch((error) => {
+                // Gérer les erreurs globales (par exemple, problème réseau avant même de démarrer)
+                var preloader = document.getElementById('preloader_ch');
+                if (preloader) {
+                    preloader.remove();
+                }
+                console.error('Erreur globale:', error);
+                showAlert('Echec', 'Une erreur inattendue est survenue.', 'error');
+            });
+        }
+
+        $('#senderSms').on('click', function () {
+
+            const message = document.getElementById("messageSms").value;
+
+            smsSenderMultipleAsync(contacts, message);
+        });
 
     });
 </script>
