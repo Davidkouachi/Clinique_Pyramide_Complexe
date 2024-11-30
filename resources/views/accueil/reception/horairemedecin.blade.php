@@ -257,7 +257,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-outline-danger" id="close_M_rdv" data-bs-dismiss="modal">Fermer</button>
-                <button type="button" class="btn btn-success" id="btn_eng_rdv">Enregistrer</button>
+                <button style="display: none;" type="button" class="btn btn-success" id="btn_eng_rdv">Enregistrer</button>
             </div>
         </div>
     </div>
@@ -287,7 +287,7 @@
                     </div>
                     <div class="mb-3">
                         <label class="form-label">Date</label>
-                        <input type="date" class="form-control" id="date_rdvM" placeholder="Saisie Obligatoire" min="{{ date('Y-m-d') }}">
+                        <input type="datetime-local" class="form-control" id="date_rdvM" placeholder="Saisie Obligatoire" min="{{ date('Y-m-d\TH:i') }}">
                     </div>
                     <div class="mb-3">
                         <label class="form-label">Motif</label>
@@ -780,9 +780,31 @@
                         $('#medecin_id').val('').trigger('change');
                         document.getElementById('div_Horaire').style.display = "none";
 
-                        list();   
+                        list(); 
+                        $('#Table_day').DataTable().ajax.reload(null, false);  
 
-                        showAlert("ALERT", 'Enregistrement éffectué', "success");
+                        // showAlert("ALERT", 'Enregistrement éffectué', "success");
+
+                        let timerInterval;
+                        Swal.fire({
+                            title: "Opération éffectuée, Veuillez patienter un instant s'il vous plaît",
+                            timer: 2000,
+                            timerProgressBar: true,
+                            didOpen: () => {
+                                Swal.showLoading();
+                                const timer = Swal.getPopup().querySelector("b");
+                                timerInterval = setInterval(() => {
+                                    timer.textContent = `${Swal.getTimerLeft()}`;
+                                }, 100);
+                            },
+                            willClose: () => {
+                                clearInterval(timerInterval);
+                            }
+                        }).then((result) => {
+                            if (result.dismiss === Swal.DismissReason.timer) {
+                                location.reload(); // Rafraîchir la page après le timer
+                            }
+                        });
 
                     } else if (response.error) {
                         showAlert("ERREUR", 'Une erreur est survenue', "error");
@@ -948,9 +970,12 @@
                             const rdvButton = document.getElementById(`rdv-${medecin.id}`);
                             if (rdvButton) {
                                 rdvButton.addEventListener('click', () => {
+
                                     document.getElementById('medecin_id_rdv').value = `${medecin.id}`;
                                     document.getElementById('medecin_rdv').value = `Dr. ${medecin.name}`;
                                     document.getElementById('specialite_rdv').value = `${medecin.specialité}`;
+
+                                    document.getElementById('btn_eng_rdv').style.display = "none";
 
                                     $('#date_rdv').val('');
                                     $('#patient_id_rdv').val('').trigger('change');
@@ -988,53 +1013,55 @@
                                     }); --}}
 
                                     const allowedDays = medecin.horaires.map(horaire => horaire.jour);
-const heureDays = medecin.horaires.reduce((map, horaire) => {
-    const dayMapping = {
-        'DIMANCHE': 0,
-        'LUNDI': 1,
-        'MARDI': 2,
-        'MERCREDI': 3,
-        'JEUDI': 4,
-        'VENDREDI': 5,
-        'SAMEDI': 6
-    };
-    map[dayMapping[horaire.jour]] = horaire.heure_debut;
-    return map;
-}, {});
+                                    const heureDays = medecin.horaires.reduce((map, horaire) => {
+                                        const dayMapping = {
+                                            'DIMANCHE': 0,
+                                            'LUNDI': 1,
+                                            'MARDI': 2,
+                                            'MERCREDI': 3,
+                                            'JEUDI': 4,
+                                            'VENDREDI': 5,
+                                            'SAMEDI': 6
+                                        };
+                                        map[dayMapping[horaire.jour]] = horaire.heure_debut;
+                                        return map;
+                                    }, {});
 
-const dateInput = document.getElementById('date_rdv');
-let previousDate = dateInput.value; // Track previous date
+                                    const dateInput = document.getElementById('date_rdv');
+                                    let previousDate = dateInput.value; // Track previous date
 
-dateInput.addEventListener('change', function(event) {
-    const selectedDate = new Date(event.target.value);
-    const selectedDay = selectedDate.getDay(); // Numeric day of the week
+                                    dateInput.addEventListener('change', function(event) {
+                                        const selectedDate = new Date(event.target.value);
+                                        const selectedDay = selectedDate.getDay(); // Numeric day of the week
 
-    // Check if the selected day is valid
-    const isValidDay = allowedDays.some(day => {
-        const dayMapping = {
-            'DIMANCHE': 0,
-            'LUNDI': 1,
-            'MARDI': 2,
-            'MERCREDI': 3,
-            'JEUDI': 4,
-            'VENDREDI': 5,
-            'SAMEDI': 6
-        };
-        return dayMapping[day] === selectedDay;
-    });
+                                        // Check if the selected day is valid
+                                        const isValidDay = allowedDays.some(day => {
+                                            const dayMapping = {
+                                                'DIMANCHE': 0,
+                                                'LUNDI': 1,
+                                                'MARDI': 2,
+                                                'MERCREDI': 3,
+                                                'JEUDI': 4,
+                                                'VENDREDI': 5,
+                                                'SAMEDI': 6
+                                            };
+                                            return dayMapping[day] === selectedDay;
+                                        });
 
-    if (!isValidDay) {
-        dateInput.value = previousDate;
-        showAlert("ALERT", 'Veuillez sélectionner un jour valide selon les horaires du médecin.', "info");
-    } else {
-        // Add the hour to the selected date if valid
-        const selectedHour = heureDays[selectedDay];
-        const dateString = selectedDate.toISOString().split('T')[0];
-        dateInput.value = `${dateString} ${selectedHour}`;
-        previousDate = dateInput.value; // Update previous date
-    }
-});
+                                        if (!isValidDay) {
+                                            dateInput.value = "";
+                                            showAlert("ALERT", 'Veuillez sélectionner un jour valide selon les horaires du médecin.', "info");
+                                            document.getElementById('btn_eng_rdv').style.display = "none";
+                                        } else {
+                                            // Add the hour to the selected date if valid
+                                            const selectedHour = heureDays[selectedDay];
+                                            const dateString = selectedDate.toISOString().split('T')[0];
+                                            dateInput.value = `${dateString} ${selectedHour}`;
+                                            previousDate = dateInput.value; // Update previous date
 
+                                            document.getElementById('btn_eng_rdv').style.display = "block";
+                                        }
+                                    });
 
                                 });
                             }
@@ -1228,13 +1255,9 @@ dateInput.addEventListener('change', function(event) {
                 $('#medecin_rdvM').val(medecin);
                 $('#specialite_rdvM').val(specialite);
 
-                const horairesData = $(this).data('horaires');
-                const allowedDays = horairesData ? horairesData.map(horaire => horaire.jour) : [];
-
-                $('#date_rdvM').on('change', function(event) {
-                    const selectedDate = new Date(event.target.value);
-                    const selectedDay = selectedDate.getDay();
-
+                const horairesData = $(this).data('horaires') || [];
+                const allowedDays = horairesData.map(horaire => horaire.jour);
+                const heureDays = horairesData.reduce((map, horaire) => {
                     const dayMapping = {
                         'DIMANCHE': 0,
                         'LUNDI': 1,
@@ -1244,27 +1267,47 @@ dateInput.addEventListener('change', function(event) {
                         'VENDREDI': 5,
                         'SAMEDI': 6,
                     };
+                    map[dayMapping[horaire.jour]] = horaire.heure_debut;
+                    return map;
+                }, {});
 
-                    const isValidDay = allowedDays.some(day => dayMapping[day] === selectedDay);
+                const dateInput = document.getElementById('date_rdvM');
+                let previousDate = dateInput.value; // Track previous date
+
+                $('#date_rdvM').on('change', function (event) {
+                    const selectedDate = new Date(event.target.value); // Date sélectionnée
+                    const selectedDay = selectedDate.getDay(); // Jour de la semaine
+
+                    const isValidDay = allowedDays.some(day => {
+                        const dayMapping = {
+                            'DIMANCHE': 0,
+                            'LUNDI': 1,
+                            'MARDI': 2,
+                            'MERCREDI': 3,
+                            'JEUDI': 4,
+                            'VENDREDI': 5,
+                            'SAMEDI': 6
+                        };
+                        return dayMapping[day] === selectedDay;
+                    });
 
                     if (!isValidDay) {
-                        // Vérification si date_rdvM est une valeur valide
-                        let formattedDate = "";
-                        if (date_rdvM && !isNaN(new Date(date_rdvM).getTime())) {
-                            // Si date_rdvM est valide, formater la date
-                            formattedDate = new Date(date_rdvM).toISOString().split('T')[0];
-                        } else {
-                            // Si date_rdvM n'est pas valide, utilisez la date du jour comme fallback
-                            formattedDate = date;
-                        }
+                        // Restaurer une date valide
+                        $('#date_rdvM').val(date);
 
-                        // Remettre la date dans le champ de saisie
-                        $('#date_rdvM').val(formattedDate);
-                        
-                        // Afficher le message d'alerte
                         showAlert("ALERT", 'Veuillez sélectionner un jour valide selon les horaires du médecin.', "info");
+                    } else {
+                        const selectedHour = heureDays[selectedDay];
+                        if (selectedHour) {
+                            const formattedDate = selectedDate.toISOString().split('T')[0]; // yyyy-MM-dd
+                            const formattedTime = selectedHour.slice(0, 5); // HH:mm
+                            $('#date_rdvM').val(`${formattedDate}T${formattedTime}`); // yyyy-MM-ddTHH:mm
+                        } else {
+                            showAlert("ALERT", "L'heure de début n'est pas définie pour ce jour.", "info");
+                        }
                     }
                 });
+
             });
 
             $('#Table_day').on('click', '#motif', function() {
@@ -1303,7 +1346,8 @@ dateInput.addEventListener('change', function(event) {
             });
         }
 
-        function delete_rdv() {
+        function delete_rdv() 
+        {
 
             const id = document.getElementById('Iddelete').value;
 
@@ -1392,6 +1436,8 @@ dateInput.addEventListener('change', function(event) {
 
                     } else if (response.error) {
                         showAlert("ERREUR", 'Une erreur est survenue', "error");
+                    } else if (response.existe) {
+                        showAlert("Alert", 'Cet patient a déjà un RDV programmé a cette date', "info");
                     }
 
                 },
@@ -1406,7 +1452,8 @@ dateInput.addEventListener('change', function(event) {
             });
         }
 
-        function count_rdv_two_day() {
+        function count_rdv_two_day() 
+        {
 
                 fetch('/api/count_rdv_two_day')
                     .then(response => response.json())
@@ -1431,7 +1478,7 @@ dateInput.addEventListener('change', function(event) {
                         }
                     })
                     .catch(error => console.error('Error fetching data:', error));
-            }
+        }
 
     });
 </script>

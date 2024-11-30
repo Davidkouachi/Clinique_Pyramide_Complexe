@@ -133,7 +133,7 @@
                     </div>
                     <div class="mb-3">
                         <label class="form-label">Date</label>
-                        <input type="date" class="form-control" id="date_rdvM" placeholder="Saisie Obligatoire" min="{{ date('Y-m-d') }}">
+                        <input type="datetime-local" class="form-control" id="date_rdvM" placeholder="Saisie Obligatoire" min="{{ date('Y-m-d\TH:i') }}">
                     </div>
                     <div class="mb-3">
                         <label class="form-label">Motif</label>
@@ -295,10 +295,10 @@
 
                                 if (item.statut == 'en attente') {
                                     button = `
-                                        <a class="btn btn-outline-info btn-sm rounded-5" data-bs-toggle="modal" data-bs-target="#Modif_Rdv_modal" id="modif-${item.id}">
+                                        <a class="btn btn-outline-info btn-sm" data-bs-toggle="modal" data-bs-target="#Modif_Rdv_modal" id="modif-${item.id}">
                                             <i class="ri-edit-line"></i>
                                         </a>
-                                        <a class="btn btn-outline-danger btn-sm rounded-5" data-bs-toggle="modal" data-bs-target="#Mdelete" id="delete-${item.id}">
+                                        <a class="btn btn-outline-danger btn-sm" data-bs-toggle="modal" data-bs-target="#Mdelete" id="delete-${item.id}">
                                             <i class="ri-delete-bin-line"></i>
                                         </a>
                                     `;
@@ -322,7 +322,7 @@
                                     <td>${formatDateHeure(item.created_at)}</td>
                                     <td>
                                         <div class="d-inline-flex gap-1">
-                                            <a class="btn btn-outline-warning btn-sm rounded-5" data-bs-toggle="modal" data-bs-target="#Detail_motif" id="motif-${item.id}">
+                                            <a class="btn btn-outline-warning btn-sm" data-bs-toggle="modal" data-bs-target="#Detail_motif" id="motif-${item.id}">
                                                 <i class="ri-eye-line"></i>
                                             </a>
                                             ${button}
@@ -341,22 +341,17 @@
                                 const modifButton = document.getElementById(`modif-${item.id}`);
                                 if (modifButton) {
                                     modifButton.addEventListener('click', () => {
+
                                         document.getElementById('medecin_id_rdvM').value = item.id;
-                                        document.getElementById('date_rdvM').value = item.date;
-                                        document.getElementById('date_rdvM').min = item.date; 
+                                        document.getElementById('date_rdvM').value = item.date; 
                                         document.getElementById('patient_rdvM').value = item.patient;
                                         document.getElementById('motif_rdvM').value = item.motif;
                                         document.getElementById('medecin_rdvM').value = item.medecin;
                                         document.getElementById('specialite_rdvM').value = item.specialite;
 
-                                        const allowedDays = item.horaires.map(horaire => horaire.jour);
-
-                                        const dateInput = document.getElementById('date_rdvM');
-                                        dateInput.addEventListener('blur', (event) => {
-
-                                            const selectedDate = new Date(event.target.value);
-                                            const selectedDay = selectedDate.getDay();
-
+                                        const horairesData = item.horaires;
+                                        const allowedDays = horairesData.map(horaire => horaire.jour);
+                                        const heureDays = horairesData.reduce((map, horaire) => {
                                             const dayMapping = {
                                                 'DIMANCHE': 0,
                                                 'LUNDI': 1,
@@ -364,14 +359,46 @@
                                                 'MERCREDI': 3,
                                                 'JEUDI': 4,
                                                 'VENDREDI': 5,
-                                                'SAMEDI': 6
+                                                'SAMEDI': 6,
                                             };
+                                            map[dayMapping[horaire.jour]] = horaire.heure_debut;
+                                            return map;
+                                        }, {});
 
-                                            const isValidDay = allowedDays.some(day => dayMapping[day] === selectedDay);
+                                        const dateInput = document.getElementById('date_rdvM');
+                                        let previousDate = dateInput.value; // Track previous date
+
+                                        $('#date_rdvM').on('change', function (event) {
+                                            const selectedDate = new Date(event.target.value); // Date sélectionnée
+                                            const selectedDay = selectedDate.getDay(); // Jour de la semaine
+
+                                            const isValidDay = allowedDays.some(day => {
+                                                const dayMapping = {
+                                                    'DIMANCHE': 0,
+                                                    'LUNDI': 1,
+                                                    'MARDI': 2,
+                                                    'MERCREDI': 3,
+                                                    'JEUDI': 4,
+                                                    'VENDREDI': 5,
+                                                    'SAMEDI': 6
+                                                };
+                                                return dayMapping[day] === selectedDay;
+                                            });
 
                                             if (!isValidDay) {
-                                                dateInput.value = item.date;
+                                                // Restaurer une date valide
+                                                $('#date_rdvM').val(date);
+
                                                 showAlert("ALERT", 'Veuillez sélectionner un jour valide selon les horaires du médecin.', "info");
+                                            } else {
+                                                const selectedHour = heureDays[selectedDay];
+                                                if (selectedHour) {
+                                                    const formattedDate = selectedDate.toISOString().split('T')[0]; // yyyy-MM-dd
+                                                    const formattedTime = selectedHour.slice(0, 5); // HH:mm
+                                                    $('#date_rdvM').val(`${formattedDate}T${formattedTime}`); // yyyy-MM-ddTHH:mm
+                                                } else {
+                                                    showAlert("ALERT", "L'heure de début n'est pas définie pour ce jour.", "info");
+                                                }
                                             }
                                         });
 
@@ -596,6 +623,8 @@
 
                     } else if (response.error) {
                         showAlert("ERREUR", 'Une erreur est survenue', "error");
+                    } else if (response.existe) {
+                        showAlert("Alert", 'Cet patient a déjà un RDV programmé a cette date', "info");
                     }
 
                 },
@@ -637,8 +666,6 @@
                     })
                     .catch(error => console.error('Error fetching data:', error));
         }
-
-        console.log("Contacts : ", contacts);
 
         function smsSenderMultipleAsync(contacts, message) {
 

@@ -419,6 +419,15 @@ class ApiupdateController extends Controller
     public function update_rdv(Request $request, $id)
     {
         $add = rdvpatient::find($id);
+
+        $verf = rdvpatient::where('date', '=', $request->date)
+                        ->where('patient_id', '=', $add->patient_id)
+                        ->where('user_id', '=', $add->user_id)
+                        ->exists();
+
+        if ($verf) {
+            return response()->json(['existe' => true]);
+        }
         
         $add->date = $request->date;
         $add->motif = $request->motif;
