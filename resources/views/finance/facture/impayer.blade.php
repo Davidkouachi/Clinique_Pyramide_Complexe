@@ -63,25 +63,25 @@
                             <ul class="nav nav-tabs justify-content-center bg-primary bg-2" id="customTab4" role="tablist" style="background: rgba(0, 0, 0, 0.7);">
                                 <li class="nav-item" role="presentation">
                                     <a class="nav-link active text-white" id="tab-twoA1" data-bs-toggle="tab" href="#twoA1" role="tab" aria-controls="twoA1" aria-selected="false" tabindex="-1">
-                                        <i class="ri-contacts-line me-2"></i>
+                                        <i class="ri-article-line me-2"></i>
                                         Consulation(s)
                                     </a>
                                 </li>
                                 <li class="nav-item" role="presentation">
                                     <a class="nav-link text-white" id="tab-twoA2" data-bs-toggle="tab" href="#twoA2" role="tab" aria-controls="twoA2" aria-selected="false" tabindex="-1">
-                                        <i class="ri-contacts-line me-2"></i>
+                                        <i class="ri-article-line me-2"></i>
                                         Examen(s)
                                     </a>
                                 </li>
                                 <li class="nav-item" role="presentation">
                                     <a class="nav-link text-white" id="tab-twoA3" data-bs-toggle="tab" href="#twoA3" role="tab" aria-controls="twoA3" aria-selected="false" tabindex="-1">
-                                        <i class="ri-contacts-line me-2"></i>
+                                        <i class="ri-article-line me-2"></i>
                                         Hospitalisation(s)
                                     </a>
                                 </li>
                                 <li class="nav-item" role="presentation">
                                     <a class="nav-link text-white" id="tab-twoA4" data-bs-toggle="tab" href="#twoA4" role="tab" aria-controls="twoA4" aria-selected="false" tabindex="-1">
-                                        <i class="ri-contacts-line me-2"></i>
+                                        <i class="ri-article-line me-2"></i>
                                         Soins Ambulatoire(s)
                                     </a>
                                 </li>
@@ -101,7 +101,7 @@
                                     <div class="card-body">
                                         <div class="">
                                             <div class="table-responsive">
-                                                <table id="Table_day" class="table table-hover table-sm Table_Cons">
+                                                <table id="Table_day" class="table align-middle table-hover m-0 truncate Table_Cons">
                                                     <thead>
                                                         <tr>
                                                             <th scope="col">N°</th>
@@ -129,16 +129,15 @@
                                             Examen(s)
                                         </h5>
                                         <div class="d-flex" >
-                                            <input type="text" id="searchInput_Exam" placeholder="N° facture" class="form-control me-1" >
                                             <a id="btn_refresh_table_Exam" class="btn btn-outline-info ms-auto">
                                                 <i class="ri-loop-left-line"></i>
                                             </a>
                                         </div>
                                     </div>
                                     <div class="card-body">
-                                        <div class="table-outer" id="div_Table_Exam" style="display: none;">
+                                        <div class="">
                                             <div class="table-responsive">
-                                                <table class="table align-middle table-hover m-0 truncate" id="Table_Exam">
+                                                <table id="Table_day" class="table align-middle table-hover m-0 truncate Table_Exam">
                                                     <thead>
                                                         <tr>
                                                             <th scope="col">N°</th>
@@ -146,6 +145,7 @@
                                                             <th scope="col">Type d'examen</th>
                                                             <th scope="col">Part Assurance</th>
                                                             <th scope="col">Part Patient</th>
+                                                            <th scope="col">Prélevement</th>
                                                             <th scope="col">Montant Total</th>
                                                             <th scope="col">Montant a payer</th>
                                                             <th scope="col">Date de création</th>
@@ -157,18 +157,6 @@
                                                 </table>
                                             </div>
                                         </div>
-                                        <div id="message_Table_Exam" style="display: none;">
-                                            <p class="text-center" >
-                                                Aucune facture disponible
-                                            </p>
-                                        </div>
-                                        <div id="div_Table_loader_Exam" style="display: none;">
-                                            <div class="d-flex justify-content-center align-items-center">
-                                                <div class="spinner-border text-warning me-2" role="status" aria-hidden="true"></div>
-                                                <strong>Chargement des données...</strong>
-                                            </div>
-                                        </div>
-                                        <div id="pagination-controls_Exam" ></div>
                                     </div>
                                 </div>
                                 <div class="tab-pane fade" id="twoA3" role="tabpanel" aria-labelledby="tab-twoA3">
@@ -177,16 +165,15 @@
                                             Hospitalisation(s)
                                         </h5>
                                         <div class="d-flex" >
-                                            <input type="text" id="searchInput_Hos" placeholder="N° facture" class="form-control me-1" >
                                             <a id="btn_refresh_table_Hos" class="btn btn-outline-info ms-auto">
                                                 <i class="ri-loop-left-line"></i>
                                             </a>
                                         </div>
                                     </div>
                                     <div class="card-body">
-                                        <div class="table-outer" id="div_Table_Hos" style="display: none;">
+                                        <div class="">
                                             <div class="table-responsive">
-                                                <table class="table align-middle table-hover m-0 truncate" id="Table_Hos">
+                                                <table id="Table_day" class="table align-middle table-hover m-0 truncate Table_Hos">
                                                     <thead>
                                                         <tr>
                                                             <th scope="col">N°</th>
@@ -206,18 +193,6 @@
                                                 </table>
                                             </div>
                                         </div>
-                                        <div id="message_Table_Hos" style="display: none;">
-                                            <p class="text-center" >
-                                                Aucune facture disponible
-                                            </p>
-                                        </div>
-                                        <div id="div_Table_loader_Hos" style="display: none;">
-                                            <div class="d-flex justify-content-center align-items-center">
-                                                <div class="spinner-border text-warning me-2" role="status" aria-hidden="true"></div>
-                                                <strong>Chargement des données...</strong>
-                                            </div>
-                                        </div>
-                                        <div id="pagination-controls_Hos" ></div>
                                     </div>
                                 </div>
                                 <div class="tab-pane fade" id="twoA4" role="tabpanel" aria-labelledby="tab-twoA4">
@@ -226,16 +201,15 @@
                                             Soins Amulatoire(s)
                                         </h5>
                                         <div class="d-flex" >
-                                            <input type="text" id="searchInput_Soinsam" placeholder="N° facture" class="form-control me-1" >
                                             <a id="btn_refresh_table_Soinsam" class="btn btn-outline-info ms-auto">
                                                 <i class="ri-loop-left-line"></i>
                                             </a>
                                         </div>
                                     </div>
                                     <div class="card-body">
-                                        <div class="table-outer" id="div_Table_Soinsam" style="display: none;">
+                                        <div class="">
                                             <div class="table-responsive">
-                                                <table class="table align-middle table-hover m-0 truncate" id="Table_Soinsam">
+                                                <table id="Table_day" class="table align-middle table-hover m-0 truncate Table_Soinsam">
                                                     <thead>
                                                         <tr>
                                                             <th scope="col">N°</th>
@@ -255,18 +229,6 @@
                                                 </table>
                                             </div>
                                         </div>
-                                        <div id="message_Table_Soinsam" style="display: none;">
-                                            <p class="text-center" >
-                                                Aucune facture disponible
-                                            </p>
-                                        </div>
-                                        <div id="div_Table_loader_Soinsam" style="display: none;">
-                                            <div class="d-flex justify-content-center align-items-center">
-                                                <div class="spinner-border text-warning me-2" role="status" aria-hidden="true"></div>
-                                                <strong>Chargement des données...</strong>
-                                            </div>
-                                        </div>
-                                        <div id="pagination-controls_Soinsam" ></div>
                                     </div>
                                 </div>
                             </div>
@@ -721,14 +683,8 @@
     document.addEventListener("DOMContentLoaded", function() {
 
         document.getElementById("btn_valider_Cons").addEventListener("click", payer_Cons);
-
-        document.getElementById("btn_refresh_table_Exam").addEventListener("click", list_Exam);
         document.getElementById("btn_valider_Exam").addEventListener("click", payer_Exam);
-
-        document.getElementById("btn_refresh_table_Hos").addEventListener("click", list_Hos);
         document.getElementById("btn_valider_Hos").addEventListener("click", payer_Hos);
-
-        document.getElementById("btn_refresh_table_Soinsam").addEventListener("click", list_Soinsam);
         document.getElementById("btn_valider_Soinsam").addEventListener("click", payer_Soinsam);
 
         document.getElementById('input_montant_verser_Cons').addEventListener('input', function() 
@@ -911,31 +867,39 @@
                     },
                     searchable: true,
                 },
-                { 
+                {
                     data: 'part_assurance',
                     render: (data, type, row) => {
-                        return data ? `${formatPrice(data)} Fcfa` : '0 Fcfa';
+                        const value = data ? formatPrice(data) : 0;
+                        const color = 'text-warning';
+                        return `<span class="${color}">${value} Fcfa</span>`;
                     },
                     searchable: true,
                 },
-                { 
+                {
                     data: 'part_patient',
                     render: (data, type, row) => {
-                        return data ? `${formatPrice(data)} Fcfa` : '0 Fcfa';
+                        const value = data ? formatPrice(data) : 0;
+                        const color = 'text-success';
+                        return `<span class="${color}">${value} Fcfa</span>`;
                     },
                     searchable: true,
                 },
-                { 
+                {
                     data: 'remise',
                     render: (data, type, row) => {
-                        return data ? `${formatPrice(data)} Fcfa` : '0 Fcfa';
+                        const value = data ? formatPrice(data) : 0;
+                        const color = 'text-danger';
+                        return `<span class="${color}">${value} Fcfa</span>`;
                     },
                     searchable: true,
                 },
-                { 
+                {
                     data: 'montant',
                     render: (data, type, row) => {
-                        return data ? `${formatPrice(data)} Fcfa` : '0 Fcfa';
+                        const value = data ? formatPrice(data) : 0;
+                        const color = 'text-primary';
+                        return `<span class="${color}">${value} Fcfa</span>`;
                     },
                     searchable: true,
                 },
@@ -978,6 +942,375 @@
             },
         });
 
+        const table_exam = $('.Table_Exam').DataTable({
+
+            processing: true,
+            serverSide: false,
+            ajax: {
+                url: `/api/list_facture_examen`,
+                type: 'GET',
+                dataSrc: 'data',
+            },
+            columns: [
+                { 
+                    data: null, 
+                    render: (data, type, row, meta) => meta.row + 1,
+                    searchable: false,
+                    orderable: false,
+                },
+                { 
+                    data: 'code_fac', 
+                    render: (data, type, row) => `
+                    <div class="d-flex align-items-center">
+                        <a class="d-flex align-items-center flex-column me-2">
+                            <img src="{{asset('assets/images/facture.webp')}}" class="img-2x rounded-circle border border-1">
+                        </a>
+                        ${data}
+                    </div>`,
+                    searchable: true, 
+                },
+                { 
+                    data: 'acte',
+                    searchable: true,
+                },
+                {
+                    data: 'part_assurance',
+                    render: (data, type, row) => {
+                        const value = data ? data : 0;
+                        const color = 'text-warning';
+                        return `<span class="${color}">${value} Fcfa</span>`;
+                    },
+                    searchable: true,
+                },
+                {
+                    data: 'part_patient',
+                    render: (data, type, row) => {
+                        const value = data ? formatPrice(data) : 0;
+                        const color = 'text-warning';
+                        return `<span class="${color}">${value} Fcfa</span>`;
+                    },
+                    searchable: true,
+                },
+                {
+                    data: 'prelevement',
+                    render: (data, type, row) => {
+                        const value = data ? data : 0;
+                        const color = 'text-warning';
+                        return `<span class="${color}">${value} Fcfa</span>`;
+                    },
+                    searchable: true,
+                },
+                {
+                    data: 'montant',
+                    render: (data, type, row) => {
+                        const value = data ? data : 0;
+                        const color = 'text-primary';
+                        return `<span class="${color}">${value} Fcfa</span>`;
+                    },
+                    searchable: true,
+                },
+                {
+                    data: 'total_patient',
+                    render: (data, type, row) => {
+                        const value = data ? formatPrice(data) : 0;
+                        const color = 'text-success';
+                        return `<span class="${color}">${value} Fcfa</span>`;
+                    },
+                    searchable: true,
+                },
+                { 
+                    data: 'created_at',
+                    render: (data, type, row) => {
+                        return data ? `${formatDateHeure(data)}` : 'Néant';
+                    },
+                    searchable: true,
+                },
+                {
+                    data: null,
+                    render: (data, type, row) => `
+                        <div class="d-inline-flex gap-1" style="font-size:10px;">
+                            <a class="btn btn-outline-success btn-sm" data-bs-toggle="modal" data-bs-target="#Caisse_Exam" id="paye_Exam"
+                                data-code_fac="${row.code_fac}"
+                                data-total_patient="${row.total_patient}"
+                            >
+                                <i class="ri-hand-coin-line"></i>
+                            </a>
+                            <a class="btn btn-outline-warning btn-sm" data-bs-toggle="modal" data-bs-target="#Detail_Exam" id="detail_Exam"
+                                data-id="${row.id}"
+                            >
+                                <i class="ri-archive-2-line"></i>
+                            </a>
+                            <a class="btn btn-outline-info btn-sm" id="fiche_Exam"
+                                data-id="${row.id}"
+                            >
+                                <i class="ri-file-line"></i>
+                            </a>
+                        </div>
+                    `,
+                    searchable: false,
+                    orderable: false,
+                },
+            ],
+            ...dataTableConfig,
+            initComplete: function(settings, json) {
+                initExam();
+            },
+        });
+
+        const table_hos = $('.Table_Hos').DataTable({
+
+            processing: true,
+            serverSide: false,
+            ajax: {
+                url: `/api/list_facture_hos`,
+                type: 'GET',
+                dataSrc: 'data',
+            },
+            columns: [
+                { 
+                    data: null, 
+                    render: (data, type, row, meta) => meta.row + 1,
+                    searchable: false,
+                    orderable: false,
+                },
+                { 
+                    data: 'code_fac', 
+                    render: (data, type, row) => `
+                    <div class="d-flex align-items-center">
+                        <a class="d-flex align-items-center flex-column me-2">
+                            <img src="{{asset('assets/images/facture.webp')}}" class="img-2x rounded-circle border border-1">
+                        </a>
+                        ${data}
+                    </div>`,
+                    searchable: true, 
+                },
+                {
+                    data: 'montant',
+                    render: (data, type, row) => {
+                        const value = data ? data : 0;
+                        const color = 'text-primary';
+                        return `<span class="${color}">${value} Fcfa</span>`;
+                    },
+                    searchable: true,
+                },
+                {
+                    data: 'montant_chambre',
+                    render: (data, type, row) => {
+                        const value = data ? data : 0;
+                        const color = 'text-warning';
+                        return `<span class="${color}">${value} Fcfa</span>`;
+                    },
+                    searchable: true,
+                },
+                {
+                    data: 'montant_soins',
+                    render: (data, type, row) => {
+                        const value = data ? data : 0;
+                        const color = 'text-warning';
+                        return `<span class="${color}">${value} Fcfa</span>`;
+                    },
+                    searchable: true,
+                },
+                {
+                    data: 'part_patient',
+                    render: (data, type, row) => {
+                        const value = data ? data : 0;
+                        const color = 'text-success';
+                        return `<span class="${color}">${value} Fcfa</span>`;
+                    },
+                    searchable: true,
+                },
+                {
+                    data: 'part_assurance',
+                    render: (data, type, row) => {
+                        const value = data ? data : 0;
+                        const color = 'text-warning';
+                        return `<span class="${color}">${value} Fcfa</span>`;
+                    },
+                    searchable: true,
+                },
+                {
+                    data: 'remise',
+                    render: (data, type, row) => {
+                        const value = data ? data : 0;
+                        const color = 'text-danger';
+                        return `<span class="${color}">${value} Fcfa</span>`;
+                    },
+                    searchable: true,
+                },
+                { 
+                    data: 'created_at',
+                    render: (data, type, row) => {
+                        return data ? `${formatDateHeure(data)}` : 'Néant';
+                    },
+                    searchable: true,
+                },
+                {
+                    data: null,
+                    render: (data, type, row) => `
+                        <div class="d-inline-flex gap-1" style="font-size:10px;">
+                            <a class="btn btn-outline-success btn-sm" data-bs-toggle="modal" data-bs-target="#Caisse_Hos" id="paye_Hos"
+                                data-code_fac="${row.code_fac}"
+                                data-part_patient="${row.part_patient}"
+                            >
+                                <i class="ri-hand-coin-line"></i>
+                            </a>
+                            <a class="btn btn-outline-warning btn-sm" id="detail_Hos" data-bs-toggle="modal" data-bs-target="#Detail_Hos"
+                                data-id="${row.id}"
+                            >
+                                <i class="ri-eye-line"></i>
+                            </a>
+                            <a class="btn btn-outline-danger btn-sm" id="detail_produit_Hos" data-bs-toggle="modal" data-bs-target="#Detail_produit_Hos"
+                                data-id="${row.id}"
+                                data-montant_soins="${row.montant_soins}"
+                            >
+                                <i class="ri-archive-2-fill"></i>
+                            </a>
+                            <a class="btn btn-outline-info btn-sm" id="printer_Hos"
+                                data-id="${row.id}"
+                            >
+                                <i class="ri-printer-line"></i>
+                            </a>
+                        </div>
+                    `,
+                    searchable: false,
+                    orderable: false,
+                },
+            ],
+            ...dataTableConfig,
+            initComplete: function(settings, json) {
+                initHos();
+            },
+        });
+
+        const table_soinsam = $('.Table_Soinsam').DataTable({
+
+            processing: true,
+            serverSide: false,
+            ajax: {
+                url: `/api/list_facture_soinsam`,
+                type: 'GET',
+                dataSrc: 'data',
+            },
+            columns: [
+                { 
+                    data: null, 
+                    render: (data, type, row, meta) => meta.row + 1,
+                    searchable: false,
+                    orderable: false,
+                },
+                { 
+                    data: 'code_fac', 
+                    render: (data, type, row) => `
+                    <div class="d-flex align-items-center">
+                        <a class="d-flex align-items-center flex-column me-2">
+                            <img src="{{asset('assets/images/facture.webp')}}" class="img-2x rounded-circle border border-1">
+                        </a>
+                        ${data}
+                    </div>`,
+                    searchable: true, 
+                },
+                {
+                    data: 'montant',
+                    render: (data, type, row) => {
+                        const value = data ? data : 0;
+                        const color = 'text-primary';
+                        return `<span class="${color}">${value} Fcfa</span>`;
+                    },
+                    searchable: true,
+                },
+                {
+                    data: 'prototal',
+                    render: (data, type, row) => {
+                        const value = data ? formatPrice(data) : 0;
+                        const color = 'text-warning';
+                        return `<span class="${color}">${value} Fcfa</span>`;
+                    },
+                    searchable: true,
+                },
+                {
+                    data: 'stotal',
+                    render: (data, type, row) => {
+                        const value = data ? formatPrice(data) : 0;
+                        const color = 'text-warning';
+                        return `<span class="${color}">${value} Fcfa</span>`;
+                    },
+                    searchable: true,
+                },
+                {
+                    data: 'part_patient',
+                    render: (data, type, row) => {
+                        const value = data ? data : 0;
+                        const color = 'text-success';
+                        return `<span class="${color}">${value} Fcfa</span>`;
+                    },
+                    searchable: true,
+                },
+                {
+                    data: 'part_assurance',
+                    render: (data, type, row) => {
+                        const value = data ? data : 0;
+                        const color = 'text-warning';
+                        return `<span class="${color}">${value} Fcfa</span>`;
+                    },
+                    searchable: true,
+                },
+                {
+                    data: 'remise',
+                    render: (data, type, row) => {
+                        const value = data ? data : 0;
+                        const color = 'text-danger';
+                        return `<span class="${color}">${value} Fcfa</span>`;
+                    },
+                    searchable: true,
+                },
+                { 
+                    data: 'created_at',
+                    render: (data, type, row) => {
+                        return data ? `${formatDateHeure(data)}` : 'Néant';
+                    },
+                    searchable: true,
+                },
+                {
+                    data: null,
+                    render: (data, type, row) => `
+                        <div class="d-inline-flex gap-1" style="font-size:10px;">
+                            <a class="btn btn-outline-success btn-sm" data-bs-toggle="modal" data-bs-target="#Caisse_Soinsam" 
+                                id="paye_Soinsam"
+                                data-code_fac="${row.code_fac}"
+                                data-part_patient="${row.part_patient}"
+                            >
+                                <i class="ri-hand-coin-line"></i>
+                            </a>
+                            <a class="btn btn-outline-warning btn-sm" id="detail_Soinsam" data-bs-toggle="modal" data-bs-target="#Detail_Soinsam"
+                                data-id="${row.id}"
+                            >
+                                <i class="ri-eye-line"></i>
+                            </a>
+                            <a class="btn btn-outline-danger btn-sm" id="detail_produit_Soinsam" data-bs-toggle="modal" data-bs-target="#Detail_produit_Soinsam"
+                                data-id="${row.id}"
+                                data-stotal="${row.stotal}"
+                                data-prototal="${row.prototal}"
+                            >
+                                <i class="ri-archive-2-fill"></i>
+                            </a>
+                            <a class="btn btn-outline-info btn-sm" id="printer_Soinsam"
+                                data-id="${row.id}"
+                            >
+                                <i class="ri-printer-line"></i>
+                            </a>
+                        </div>
+                    `,
+                    searchable: false,
+                    orderable: false,
+                },
+            ],
+            ...dataTableConfig,
+            initComplete: function(settings, json) {
+                initSoinsam();
+            },
+        });
+
         //-----------------------------------------------------------------------
 
         caisse_verf();
@@ -996,10 +1329,12 @@
                         document.getElementById('div_caisse_verf').style.display = 'block';
                         document.getElementById('btn_ouvert').style.display = 'none';
                         document.getElementById('btn_fermer').style.display = 'block';
-                        table_cons.ajax.reload(null, false);
-                        list_Exam();
-                        list_Hos();
-                        list_Soinsam();
+
+                        // table_cons.ajax.reload(null, false);
+                        // table_exam.ajax.reload(null, false);
+                        // table_hos.ajax.reload(null, false);
+                        // table_soinsam.ajax.reload(null, false);
+
                     }else{
                         document.getElementById('div_caisse').style.display = 'none';
                         document.getElementById('div_caisse_verf').style.display = 'block';
@@ -1044,9 +1379,9 @@
                         document.getElementById('btn_fermer').style.display = 'block';
 
                         table_cons.ajax.reload(null, false);
-                        list_Exam();
-                        list_Hos();
-                        list_Soinsam();
+                        table_exam.ajax.reload(null, false);
+                        table_hos.ajax.reload(null, false);
+                        table_soinsam.ajax.reload(null, false);
 
                     } else if (response.error) {
                         showAlert('Alert', 'Une erreur est survenue lors de l\'ouverture de la caisse.','error');
@@ -1508,8 +1843,15 @@
                 doc.setFont("Helvetica", "bold");
                 doc.setLineWidth(0.5);
                 doc.setTextColor(0, 0, 0);
-                // doc.line(10, 35, 200, 35); 
-                const titleR = "RECU DE PAIEMENT";
+                // doc.line(10, 35, 200, 35);
+
+                let titleR;
+
+                if (consultation.statut_fac === 'payer') {
+                    titleR = "RECU DE PAIEMENT";
+                } else {
+                    titleR = "FACTURE CONSULTATION";
+                }
                 const titleRWidth = doc.getTextWidth(titleR);
                 const titleRX = (doc.internal.pageSize.getWidth() - titleRWidth) / 2;
                 // Définir le padding
@@ -1733,7 +2075,7 @@
                         const acte = response.acte;
                         const examenpatient = response.examenpatient;
 
-                        list_Exam();
+                        table_exam.ajax.reload(null, false);
 
                         generatePDFInvoice_Exam(examen, facture, patient, acte, examenpatient);
 
@@ -1756,322 +2098,149 @@
             });
         }
 
-        function list_Exam(page = 1) 
-        {
-            const tableBody = document.querySelector('#Table_Exam tbody');
-            const messageDiv = document.getElementById('message_Table_Exam');
-            const tableDiv = document.getElementById('div_Table_Exam');
-            const loaderDiv = document.getElementById('div_Table_loader_Exam');
+        function initExam() {
 
-            let allExamens = [];
+            $('.Table_Exam').on('click', '#paye_Exam', function() {
+                const code_fac = $(this).data('code_fac');
+                const total_patient = $(this).data('total_patient');
 
-            messageDiv.style.display = 'none';
-            tableDiv.style.display = 'none';
-            loaderDiv.style.display = 'block';
+                document.getElementById('input_montant_payer_Exam').value = `${formatPrice(total_patient)} Fcfa`;
+                document.getElementById('input_montant_verser_Exam').value = '';
+                document.getElementById('input_montant_remis_Exam').value = '0 Fcfa';
+                document.getElementById('id_code_fac_Exam').value = `${code_fac}`;
+            });
 
-            const url = `/api/list_facture_examen?page=${page}`;
+            $('.Table_Exam').on('click', '#detail_Exam', function() {
+                const id = $(this).data('id');
 
-            fetch(url)
-                .then(response => response.json())
-                .then(data => {
-                    allExamens = data.examen || [] ;
-                    const pagination = data.pagination || {};
+                const tableBodyP = document.querySelector('#TableP_Exam tbody');
+                const messageDivP = document.getElementById('message_TableP_Exam');
+                const tableDivP = document.getElementById('div_TableP_Exam');
+                const loaderDivP = document.getElementById('div_Table_loaderP_Exam');
 
-                    const perPage = pagination.per_page || 10;
-                    const currentPage = pagination.current_page || 1;
+                messageDivP.style.display = 'none';
+                tableDivP.style.display = 'none';
+                loaderDivP.style.display = 'block';
 
-                    tableBody.innerHTML = '';
+                fetch(`/api/list_facture_exam_d/${id}`) // API endpoint
+                    .then(response => response.json())
+                    .then(data => {
+                        // Access the 'chambre' array from the API response
+                        const factureds = data.factured;
+                        const sumMontantEx = data.sumMontantEx;
 
-                    if (allExamens.length > 0) {
+                        // Clear any existing rows in the table body
+                        tableBodyP.innerHTML = '';
 
-                        loaderDiv.style.display = 'none';
-                        messageDiv.style.display = 'none';
-                        tableDiv.style.display = 'block';
+                        if (factureds.length > 0) {
 
-                        function displayRows(filteredExamens) {
-                            tableBody.innerHTML = ''; 
+                            loaderDivP.style.display = 'none';
+                            messageDivP.style.display = 'none';
+                            tableDivP.style.display = 'block';
 
-                            filteredExamens.forEach((item, index) => {
+                            // Loop through each item in the chambre array
+                            factureds.forEach((item, index) => {
+                                // Create a new row
                                 const row = document.createElement('tr');
+                                // Create and append cells to the row based on your table's structure
                                 row.innerHTML = `
-                                    <td>${((currentPage - 1) * perPage) + index + 1}</td>
                                     <td>
-                                        <div class="d-flex align-items-center ">
-                                            <a class="d-flex align-items-center flex-column me-2">
-                                                <img src="{{asset('assets/images/facture.webp')}}" class="img-2x rounded-circle border border-1">
-                                            </a>
-                                            ${item.code_fac}
-                                        </div>
+                                        <h6>${item.nom_ex}</h6>
                                     </td>
-                                    <td>${item.acte}</td>
-                                    <td class="text-warning" >${item.part_assurance} Fcfa</td>
-                                    <td>${item.part_patient} Fcfa</td>
-                                    <td class="text-primary" >${item.montant} Fcfa</td>
-                                    <td class="text-success" >
-                                        ${formatPrice(item.total_patient)} Fcfa
-                                    </td>
-                                    <td>${formatDateHeure(item.created_at)}</td>
                                     <td>
-                                        <div class="d-inline-flex gap-1">
-                                            <a class="btn btn-outline-success btn-sm" data-bs-toggle="modal" data-bs-target="#Caisse_Exam" id="paye_Exam-${item.id}">
-                                                <i class="ri-hand-coin-line"></i>
-                                            </a>
-                                            <a class="btn btn-outline-warning btn-sm" data-bs-toggle="modal" data-bs-target="#Detail_Exam" id="detail_Exam-${item.id}">
-                                                <i class="ri-archive-2-line"></i>
-                                            </a>
-                                            <a class="btn btn-outline-info btn-sm" id="fiche_Exam-${item.id}">
-                                                <i class="ri-file-line"></i>
-                                            </a>
-                                        </div>
+                                        <h6>${item.cotation_ex}${item.valeur_ex}</h6>
+                                    </td>
+                                    <td>
+                                        <h6>${item.prix_ex} Fcfa</h6>
+                                    </td>
+                                    <td>
+                                        <h6>${item.accepte}</h6>
+                                    </td>
+                                    <td>
+                                        <h6>${item.montant_ex} Fcfa</h6>
                                     </td>
                                 `;
-                                tableBody.appendChild(row);
-
-                                document.getElementById(`paye_Exam-${item.id}`).addEventListener('click', () => {
-                                    const payer = document.getElementById('input_montant_payer_Exam');
-                                    payer.value = `${formatPrice(item.total_patient)} Fcfa`;
-
-                                    const verser = document.getElementById('input_montant_verser_Exam');
-                                    verser.value = '';
-                                    document.getElementById('input_montant_remis_Exam').value = '0 Fcfa';
-
-                                    document.getElementById('id_code_fac_Exam').value = `${item.code_fac}`;
-                                });
-
-                                document.getElementById(`fiche_Exam-${item.id}`).addEventListener('click', () =>
-                                {
-                                    fetch(`/api/detail_examen/${item.id}`) // API endpoint
-                                        .then(response => response.json())
-                                        .then(data => {
-                                            // Access the 'chambre' array from the API response
-                                            const examen = data.examen;
-                                            const facture = data.facture;
-                                            const patient = data.patient;
-                                            const acte = data.acte;
-                                            const examenpatient = data.examenpatient;
-
-                                            generatePDFInvoice_Exam(examen, facture, patient, acte, examenpatient);
-
-                                        })
-                                        .catch(error => {
-                                            console.error('Erreur lors du chargement des données:', error);
-                                        });
-                                });
-
-                                document.getElementById(`detail_Exam-${item.id}`).addEventListener('click',()=>
-                                {
-                                    const tableBodyP = document.querySelector('#TableP_Exam tbody');
-                                    const messageDivP = document.getElementById('message_TableP_Exam');
-                                    const tableDivP = document.getElementById('div_TableP_Exam');
-                                    const loaderDivP = document.getElementById('div_Table_loaderP_Exam');
-
-                                    messageDivP.style.display = 'none';
-                                    tableDivP.style.display = 'none';
-                                    loaderDivP.style.display = 'block';
-
-                                    fetch(`/api/list_facture_exam_d/${item.id}`) // API endpoint
-                                        .then(response => response.json())
-                                        .then(data => {
-                                            // Access the 'chambre' array from the API response
-                                            const factureds = data.factured;
-                                            const sumMontantEx = data.sumMontantEx;
-
-                                            // Clear any existing rows in the table body
-                                            tableBodyP.innerHTML = '';
-
-                                            if (factureds.length > 0) {
-
-                                                loaderDivP.style.display = 'none';
-                                                messageDivP.style.display = 'none';
-                                                tableDivP.style.display = 'block';
-
-                                                // Loop through each item in the chambre array
-                                                factureds.forEach((item, index) => {
-                                                    // Create a new row
-                                                    const row = document.createElement('tr');
-                                                    // Create and append cells to the row based on your table's structure
-                                                    row.innerHTML = `
-                                                        <td>
-                                                            <h6>${item.nom_ex}</h6>
-                                                        </td>
-                                                        <td>
-                                                            <h6>${item.cotation_ex}${item.valeur_ex}</h6>
-                                                        </td>
-                                                        <td>
-                                                            <h6>${item.prix_ex} Fcfa</h6>
-                                                        </td>
-                                                        <td>
-                                                            <h6>${item.accepte}</h6>
-                                                        </td>
-                                                        <td>
-                                                            <h6>${item.montant_ex} Fcfa</h6>
-                                                        </td>
-                                                    `;
-                                                    // Append the row to the table body
-                                                    tableBodyP.appendChild(row);
-
-                                                });
-
-                                                const row2 = document.createElement('tr');
-                                                row2.innerHTML = `
-                                                    <td colspan="3">&nbsp;</td>
-                                                    <td colspan="2" >
-                                                        <h5 class="mt-4 text-success">
-                                                            Total : ${formatPriceT(sumMontantEx)} Fcfa
-                                                        </h5>
-                                                    </td>
-                                                `;
-                                                tableBodyP.appendChild(row2);
-
-                                                const row3 = document.createElement('tr');
-                                                row3.innerHTML = `
-                                                    <td colspan="5">
-                                                        <h6 class="text-danger">NOTE</h6>
-                                                        <p class="small m-0">
-                                                            Le Montant Total des examens  ajouter au montant du prélevement.
-                                                        </p>
-                                                    </td>
-                                                `;
-
-                                                tableBodyP.appendChild(row3);
-
-                                            } else {
-                                                loaderDivP.style.display = 'none';
-                                                messageDivP.style.display = 'block';
-                                                tableDivP.style.display = 'none';
-                                            }
-                                        })
-                                        .catch(error => {
-                                            console.error('Erreur lors du chargement des données:', error);
-                                            loaderDivD.style.display = 'none';
-                                            messageDivD.style.display = 'block';
-                                            tableDivD.style.display = 'none';
-                                        });
-                                    
-                                });
+                                // Append the row to the table body
+                                tableBodyP.appendChild(row);
 
                             });
-                        };
 
-                        function applySearchFilter() {
-                            const searchTerm = document.getElementById('searchInput_Exam').value.toLowerCase();
-                            const filteredExamens = allExamens.filter(item =>
-                                item.code_fac.toLowerCase().includes(searchTerm)
-                            );
-                            displayRows(filteredExamens);
+                            const row2 = document.createElement('tr');
+                            row2.innerHTML = `
+                                <td colspan="3">&nbsp;</td>
+                                <td colspan="2" >
+                                    <h5 class="mt-4 text-success">
+                                        Total : ${formatPriceT(sumMontantEx)} Fcfa
+                                    </h5>
+                                </td>
+                            `;
+                            tableBodyP.appendChild(row2);
+
+                            const row3 = document.createElement('tr');
+                            row3.innerHTML = `
+                                <td colspan="5">
+                                    <h6 class="text-danger">NOTE</h6>
+                                    <p class="small m-0">
+                                        Le Montant Total des examens  ajouter au montant du prélevement.
+                                    </p>
+                                </td>
+                            `;
+
+                            tableBodyP.appendChild(row3);
+
+                        } else {
+                            loaderDivP.style.display = 'none';
+                            messageDivP.style.display = 'block';
+                            tableDivP.style.display = 'none';
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Erreur lors du chargement des données:', error);
+                        loaderDivD.style.display = 'none';
+                        messageDivD.style.display = 'block';
+                        tableDivD.style.display = 'none';
+                    });
+            });
+
+            $('.Table_Exam').on('click', '#fiche_Exam', function() {
+
+                var preloader_ch = `
+                    <div id="preloader_ch">
+                        <div class="spinner_preloader_ch"></div>
+                    </div>
+                `;
+                // Add the preloader to the body
+                document.body.insertAdjacentHTML('beforeend', preloader_ch);
+
+                const id = $(this).data('id');
+
+                fetch(`/api/detail_examen/${id}`) // API endpoint
+                    .then(response => response.json())
+                    .then(data => {
+                        // Access the 'chambre' array from the API response
+                        const examen = data.examen;
+                        const facture = data.facture;
+                        const patient = data.patient;
+                        const acte = data.acte;
+                        const examenpatient = data.examenpatient;
+
+                        var preloader = document.getElementById('preloader_ch');
+                        if (preloader) {
+                            preloader.remove();
                         }
 
-                        document.getElementById('searchInput_Exam').addEventListener('input', applySearchFilter);
+                        generatePDFInvoice_Exam(examen, facture, patient, acte, examenpatient);
 
-                        displayRows(allExamens);
-
-                        updatePaginationControls_Exam(pagination);
-
-                    } else {
-                        tableDiv.style.display = 'none';
-                        loaderDiv.style.display = 'none';
-                        messageDiv.style.display = 'block';
-                    }
-                })
-                .catch(error => {
-                    console.error('Erreur lors du chargement des données:', error);
-                    loaderDiv.style.display = 'none';
-                    tableDiv.style.display = 'none';
-                    messageDiv.style.display = 'block';
-                });
+                    })
+                    .catch(error => {
+                        console.error('Erreur lors du chargement des données:', error);
+                    });
+            });
         }
 
-        function updatePaginationControls_Exam(pagination) 
-        {
-            const paginationDiv = document.getElementById('pagination-controls_Exam');
-            paginationDiv.innerHTML = '';
-
-            // Bootstrap pagination wrapper
-            const paginationWrapper = document.createElement('ul');
-            paginationWrapper.className = 'pagination justify-content-center';
-
-            // Previous button
-            if (pagination.current_page > 1) {
-                const prevButton = document.createElement('li');
-                prevButton.className = 'page-item';
-                prevButton.innerHTML = `<a class="page-link" href="#">Precédent</a>`;
-                prevButton.onclick = (event) => {
-                    event.preventDefault(); // Empêche le défilement en haut de la page
-                    list(pagination.current_page - 1);
-                };
-                paginationWrapper.appendChild(prevButton);
-            } else {
-                // Disable the previous button if on the first page
-                const prevButton = document.createElement('li');
-                prevButton.className = 'page-item disabled';
-                prevButton.innerHTML = `<a class="page-link" href="#">Precédent</a>`;
-                paginationWrapper.appendChild(prevButton);
-            }
-
-            // Page number links (show a few around the current page)
-            const totalPages = pagination.last_page;
-            const currentPage = pagination.current_page;
-            const maxVisiblePages = 5; // Max number of page links to display
-
-            let startPage = Math.max(1, currentPage - Math.floor(maxVisiblePages / 2));
-            let endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
-
-            // Adjust start page if end page exceeds the total pages
-            if (endPage - startPage < maxVisiblePages - 1) {
-                startPage = Math.max(1, endPage - maxVisiblePages + 1);
-            }
-
-            // Loop through pages and create page links
-            for (let i = startPage; i <= endPage; i++) {
-                const pageItem = document.createElement('li');
-                pageItem.className = `page-item ${i === currentPage ? 'active' : ''}`;
-                pageItem.innerHTML = `<a class="page-link" href="#">${i}</a>`;
-                pageItem.onclick = (event) => {
-                    event.preventDefault(); // Empêche le défilement en haut de la page
-                    list(i);
-                };
-                paginationWrapper.appendChild(pageItem);
-            }
-
-            // Ellipsis (...) if not all pages are shown
-            if (endPage < totalPages) {
-                const ellipsis = document.createElement('li');
-                ellipsis.className = 'page-item disabled';
-                ellipsis.innerHTML = `<a class="page-link" href="#">...</a>`;
-                paginationWrapper.appendChild(ellipsis);
-
-                // Add the last page link
-                const lastPageItem = document.createElement('li');
-                lastPageItem.className = `page-item`;
-                lastPageItem.innerHTML = `<a class="page-link" href="#">${totalPages}</a>`;
-                lastPageItem.onclick = (event) => {
-                    event.preventDefault(); // Empêche le défilement en haut de la page
-                    list(totalPages);
-                };
-                paginationWrapper.appendChild(lastPageItem);
-            }
-
-            // Next button
-            if (pagination.current_page < pagination.last_page) {
-                const nextButton = document.createElement('li');
-                nextButton.className = 'page-item';
-                nextButton.innerHTML = `<a class="page-link" href="#">Suivant</a>`;
-                nextButton.onclick = (event) => {
-                    event.preventDefault(); // Empêche le défilement en haut de la page
-                    list(pagination.current_page + 1);
-                };
-                paginationWrapper.appendChild(nextButton);
-            } else {
-                // Disable the next button if on the last page
-                const nextButton = document.createElement('li');
-                nextButton.className = 'page-item disabled';
-                nextButton.innerHTML = `<a class="page-link" href="#">Suivant</a>`;
-                paginationWrapper.appendChild(nextButton);
-            }
-
-            // Append pagination controls to the DOM
-            paginationDiv.appendChild(paginationWrapper);
-        }
+        $('#btn_refresh_table_Exam').on('click', function () {
+            table_exam.ajax.reload(null, false); 
+        });
 
         function generatePDFInvoice_Exam(examen, facture, patient, acte, examenpatient) 
         {
@@ -2144,7 +2313,14 @@
                 doc.setLineWidth(0.5);
                 doc.setTextColor(0, 0, 0);
                 // doc.line(10, 35, 200, 35); 
-                const titleR = "FACTURE EXAMEN";
+                let titleR;
+
+                if (facture.statut == 'payer') {
+                    titleR = "RECU DE PAIEMENT";
+                } else {
+                    titleR = "FACTURE EXAMEN";
+                }
+
                 const titleRWidth = doc.getTextWidth(titleR);
                 const titleRX = (doc.internal.pageSize.getWidth() - titleRWidth) / 2;
                 // Définir le padding
@@ -2161,7 +2337,7 @@
                 // Ajouter le texte centré en gras
                 doc.setFontSize(15);
                 doc.setFont("Helvetica", "bold");
-                doc.setTextColor(255, 0, 0); // Couleur du texte rouge
+                doc.setTextColor(0, 0, 0); // Couleur du texte rouge
                 doc.text(titleR, titleRX, (yPos + 25)); // Positionner le texte
                 const titleN = "N° "+facture.code;
                 doc.text(titleN, (doc.internal.pageSize.getWidth() - doc.getTextWidth(titleN)) / 2, (yPos + 31));
@@ -2382,7 +2558,7 @@
                         const user = response.user;
                         const produit = response.produit;
 
-                        list_Hos();
+                        table_hos.ajax.reload(null, false);
 
                         generatePDFInvoice_Hos(hopital, facture, patient, nature, type, lit, chambre, user, produit);
 
@@ -2403,433 +2579,247 @@
             });
         }
 
-        function list_Hos(page = 1) 
-        {
-            const tableBody = document.querySelector('#Table_Hos tbody');
-            const messageDiv = document.getElementById('message_Table_Hos');
-            const tableDiv = document.getElementById('div_Table_Hos');
-            const loaderDiv = document.getElementById('div_Table_loader_Hos');
-            const searchInput = document.getElementById('searchInput_Hos');
+        function initHos() {
 
-            let allFactures = []; // Array to hold all factures data fetched from API
+            $('.Table_Hos').on('click', '#paye_Hos', function() {
+                const code_fac = $(this).data('code_fac');
+                const part_patient = $(this).data('part_patient');
 
-            messageDiv.style.display = 'none';
-            tableDiv.style.display = 'none';
-            loaderDiv.style.display = 'block';
+                document.getElementById('input_montant_payer_Hos').value = `${part_patient || 0} Fcfa`;
+                document.getElementById('input_montant_verser_Hos').value = '';
+                document.getElementById('input_montant_remis_Hos').value = '0 Fcfa';
+                document.getElementById('id_code_fac_Hos').value = `${code_fac}`;
+            });
 
-            // Fetch data from the API
-            const url = `/api/list_facture_hos?page=${page}`;
-            fetch(url)
-                .then(response => response.json())
-                .then(data => {
-                    allFactures = data.hopital || [];
-                    const pagination = data.pagination || {};
+            $('.Table_Hos').on('click', '#detail_Hos', function() {
+                const id = $(this).data('id');
 
-                    const perPage = pagination.per_page || 10;
-                    const currentPage = pagination.current_page || 1;
+                fetch(`/api/detail_hos/${id}`) // API endpoint
+                    .then(response => response.json())
+                    .then(data => {
+                        // Access the 'chambre' array from the API response
+                        const modalD = document.getElementById('modal_detail_Hos');
+                        modalD.innerHTML = '';
 
-                    if (allFactures.length > 0) {
+                        const hopital = data.hopital;
+                        const facture = data.facture;
+                        const patient = data.patient;
+                        const nature = data.natureadmission;
+                        const type = data.typeadmission;
+                        const lit = data.lit;
+                        const chambre = data.chambre;
+                        const user = data.user;
 
-                        loaderDiv.style.display = 'none';
-                        messageDiv.style.display = 'none';
-                        tableDiv.style.display = 'block';
+                        const div = document.createElement('div');
+                        div.innerHTML = `
+                            <div class="row">
+                                <div class="col-xl-12">
+                                    <div class="">
+                                        <div class="card-body">
+                                            <div class="row justify-content-between">
+                                                <div class="col-12 text-center">                  
+                                                    <h6 class="fw-semibold">Docteur :</h6>
+                                                    <p>${user.name}</p>
+                                                    <h6 class="fw-semibold">Spécialité :</h6>
+                                                    <p>${user.typeacte}</p>
+                                                    <h6 class="fw-semibold">Chambre Occupé :</h6>
+                                                    <p>CH-${chambre.code}</p>
+                                                    <h6 class="fw-semibold">Lit Occupé :</h6>
+                                                    <p>LIT-${lit.code}/${lit.type}</p>
+                                                    <h6 class="fw-semibold">Prix :</h6>
+                                                    <p>${chambre.prix} Fcfa</p>
+                                                </div>
+                                                <div class="col-12 text-center mt-4">
+                                                    <h6 class="fw-semibold">Type d'admission :</h6>
+                                                    <p>${type.nom}</p>
+                                                    <h6 class="fw-semibold">Nature d'admission :</h6>
+                                                    <p>${nature.nom}</p>
+                                                    <h6 class="fw-semibold">Date d'entrer :</h6>
+                                                    <p>${formatDate(hopital.date_debut)}</p>
+                                                    <h6 class="fw-semibold">Date de sortie Probable :</h6>
+                                                    <p>${formatDate(hopital.date_fin)}</p>
+                                                    <h6 class="fw-semibold">Nombre de jours :</h6>
+                                                    <p>${calculateDaysBetween(hopital.date_debut, hopital.date_fin)}</p>
+                                                </div>
+                                                <div class="col-12 text-center mt-4">
+                                                    <h6 class="fw-semibold">N° Dossier :</h6>
+                                                    <p>${patient.matricule}</p>
+                                                    <h6 class="fw-semibold">Nom du patient :</h6>
+                                                    <p>${patient.np}</p>
+                                                    <h6 class="fw-semibold">contact :</h6>
+                                                    <p>${patient.tel}</p>
+                                                    <h6 class="fw-semibold">Assurer :</h6>
+                                                    <p>${patient.assurer}</p>
+                                                    ${patient.assurer === 'oui' ? `
+                                                        <h6 class="fw-semibold">Taux :</h6>
+                                                        <p>${patient.taux}%</p>
 
-                        // Display rows function with optional filtering
-                        function displayRows(filteredFactures) {
-                            tableBody.innerHTML = ''; // Clear existing rows
+                                                        <h6 class="fw-semibold">Assurance :</h6>
+                                                        <p>${patient.assurance}</p> 
 
-                            filteredFactures.forEach((item, index) => {
+                                                        <h6 class="fw-semibold">Matricule :</h6>
+                                                        <p>${patient.matricule_assurance}</p>
+                                                    ` : ''}
+                                                </div>
+                                                <div class="col-12 text-center mt-4">
+                                                    <h6 class="fw-semibold">Part Patient :</h6>
+                                                    <p>${hopital.part_patient} Fcfa</p>
+                                                    <h6 class="fw-semibold">Part Assurance :</h6>
+                                                    <p>${hopital.part_assurance} Fcfa</p>
+                                                    <h6 class="fw-semibold">Remise :</h6>
+                                                    <p>${hopital.remise ? hopital.remise : '0'} Fcfa</p>
+                                                    <h6 class="fw-semibold">Montant Total :</h6>
+                                                    <p>${hopital.montant} Fcfa</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+
+                        modalD.appendChild(div);
+
+                    })
+                    .catch(error => {
+                        console.error('Erreur lors du chargement des données:', error);
+                    });
+            });
+
+            $('.Table_Hos').on('click', '#detail_produit_Hos', function() {
+                const id = $(this).data('id');
+                const montant_soins = $(this).data('montant_soins');
+
+                const tableBodyP = document.querySelector('#TableP_Hos tbody');
+                const messageDivP = document.getElementById('message_TableP_Hos');
+                const tableDivP = document.getElementById('div_TableP_Hos');
+                const loaderDivP = document.getElementById('div_Table_loaderP_Hos');
+
+                messageDivP.style.display = 'none';
+                tableDivP.style.display = 'none';
+                loaderDivP.style.display = 'block';
+
+                fetch(`/api/list_facture_hos_d/${id}`) // API endpoint
+                    .then(response => response.json())
+                    .then(data => {
+                        // Access the 'chambre' array from the API response
+                        const factureds = data.factured;
+
+                        // Clear any existing rows in the table body
+                        tableBodyP.innerHTML = '';
+
+                        if (factureds.length > 0) {
+
+                            loaderDivP.style.display = 'none';
+                            messageDivP.style.display = 'none';
+                            tableDivP.style.display = 'block';
+
+                            // Loop through each item in the chambre array
+                            factureds.forEach((item, index) => {
+                                // Create a new row
                                 const row = document.createElement('tr');
+                                // Create and append cells to the row based on your table's structure
                                 row.innerHTML = `
-                                    <td>${((currentPage - 1) * perPage) + index + 1}</td>
                                     <td>
-                                        <div class="d-flex align-items-center ">
-                                            <a class="d-flex align-items-center flex-column me-2">
-                                                <img src="{{asset('assets/images/facture.webp')}}" class="img-2x rounded-circle border border-1">
-                                            </a>
-                                            ${item.code_fac}
-                                        </div>
+                                        <h6>${item.nom_produit}</h6>
                                     </td>
-                                    <td class="text-warning">
-                                        ${item.montant ?? 0} Fcfa
-                                    </td>
-                                    <td class="text-primary">
-                                        ${item.montant_chambre ?? 0} Fcfa
-                                    </td>
-                                    <td class="text-primary">
-                                        ${item.montant_soins ?? 0} Fcfa
-                                    </td>
-                                    <td class="text-success">
-                                        ${item.part_patient ?? 0} Fcfa
-                                    </td>
-                                    <td class="text-primary">
-                                        ${item.part_assurance ?? 0} Fcfa
-                                    </td>
-                                    <td class="text-primary">
-                                        ${item.remise ?? 0} Fcfa
-                                    </td>
-                                    <td>${formatDateHeure(item.created_at)}</td>
                                     <td>
-                                        <div class="d-inline-flex gap-1">
-                                            <a class="btn btn-outline-success btn-sm" data-bs-toggle="modal" data-bs-target="#Caisse_Hos" id="paye_Hos-${item.id}">
-                                                <i class="ri-hand-coin-line"></i>
-                                            </a>
-                                            <a class="btn btn-outline-warning btn-sm" id="detail_Hos-${item.id}" data-bs-toggle="modal" data-bs-target="#Detail_Hos">
-                                                <i class="ri-eye-line"></i>
-                                            </a>
-                                            <a class="btn btn-outline-danger btn-sm" id="detail_produit_Hos-${item.id}" data-bs-toggle="modal" data-bs-target="#Detail_produit_Hos">
-                                                <i class="ri-archive-2-fill"></i>
-                                            </a>
-                                            <a class="btn btn-outline-info btn-sm" id="printer_Hos-${item.id}">
-                                                <i class="ri-printer-line"></i>
-                                            </a>
-                                        </div>
+                                        <h6>${item.prix_produit} Fcfa</h6>
+                                    </td>
+                                    <td>
+                                        <h6>${item.quantite}</h6>
+                                    </td>
+                                    <td>
+                                        <h6>${item.montant} Fcfa</h6>
                                     </td>
                                 `;
-                                tableBody.appendChild(row);
+                                // Append the row to the table body
+                                tableBodyP.appendChild(row);
 
-                                // Add event listeners
-                                document.getElementById(`paye_Hos-${item.id}`).addEventListener('click', () => {
-                                    const payer = document.getElementById('input_montant_payer_Hos');
-                                    payer.value = `${item?.part_patient || 0} Fcfa`;
-
-                                    const verser = document.getElementById('input_montant_verser_Hos');
-                                    verser.value = '';
-                                    document.getElementById('input_montant_remis_Hos').value = '0 Fcfa';
-
-                                    document.getElementById('id_code_fac_Hos').value = `${item.code_fac}`;
-                                });
-
-                                document.getElementById(`detail_Hos-${item.id}`).addEventListener('click', () =>
-                                {
-                                    fetch(`/api/detail_hos/${item.id}`) // API endpoint
-                                        .then(response => response.json())
-                                        .then(data => {
-                                            // Access the 'chambre' array from the API response
-                                            const modalD = document.getElementById('modal_detail_Hos');
-                                            modalD.innerHTML = '';
-
-                                            const hopital = data.hopital;
-                                            const facture = data.facture;
-                                            const patient = data.patient;
-                                            const nature = data.natureadmission;
-                                            const type = data.typeadmission;
-                                            const lit = data.lit;
-                                            const chambre = data.chambre;
-                                            const user = data.user;
-
-                                            const div = document.createElement('div');
-                                            div.innerHTML = `
-                                                <div class="row">
-                                                    <div class="col-xl-12">
-                                                        <div class="">
-                                                            <div class="card-body">
-                                                                <div class="row justify-content-between">
-                                                                    <div class="col-12 text-center">                  
-                                                                        <h6 class="fw-semibold">Docteur :</h6>
-                                                                        <p>${user.name}</p>
-                                                                        <h6 class="fw-semibold">Spécialité :</h6>
-                                                                        <p>${user.typeacte}</p>
-                                                                        <h6 class="fw-semibold">Chambre Occupé :</h6>
-                                                                        <p>CH-${chambre.code}</p>
-                                                                        <h6 class="fw-semibold">Lit Occupé :</h6>
-                                                                        <p>LIT-${lit.code}/${lit.type}</p>
-                                                                        <h6 class="fw-semibold">Prix :</h6>
-                                                                        <p>${chambre.prix} Fcfa</p>
-                                                                    </div>
-                                                                    <div class="col-12 text-center mt-4">
-                                                                        <h6 class="fw-semibold">Type d'admission :</h6>
-                                                                        <p>${type.nom}</p>
-                                                                        <h6 class="fw-semibold">Nature d'admission :</h6>
-                                                                        <p>${nature.nom}</p>
-                                                                        <h6 class="fw-semibold">Date d'entrer :</h6>
-                                                                        <p>${formatDate(hopital.date_debut)}</p>
-                                                                        <h6 class="fw-semibold">Date de sortie Probable :</h6>
-                                                                        <p>${formatDate(hopital.date_fin)}</p>
-                                                                        <h6 class="fw-semibold">Nombre de jours :</h6>
-                                                                        <p>${calculateDaysBetween(hopital.date_debut, hopital.date_fin)}</p>
-                                                                    </div>
-                                                                    <div class="col-12 text-center mt-4">
-                                                                        <h6 class="fw-semibold">N° Dossier :</h6>
-                                                                        <p>${patient.matricule}</p>
-                                                                        <h6 class="fw-semibold">Nom du patient :</h6>
-                                                                        <p>${patient.np}</p>
-                                                                        <h6 class="fw-semibold">contact :</h6>
-                                                                        <p>${patient.tel}</p>
-                                                                        <h6 class="fw-semibold">Assurer :</h6>
-                                                                        <p>${patient.assurer}</p>
-                                                                        ${patient.assurer === 'oui' ? `
-                                                                            <h6 class="fw-semibold">Taux :</h6>
-                                                                            <p>${patient.taux}%</p>
-
-                                                                            <h6 class="fw-semibold">Assurance :</h6>
-                                                                            <p>${patient.assurance}</p> 
-
-                                                                            <h6 class="fw-semibold">Matricule :</h6>
-                                                                            <p>${patient.matricule_assurance}</p>
-                                                                        ` : ''}
-                                                                    </div>
-                                                                    <div class="col-12 text-center mt-4">
-                                                                        <h6 class="fw-semibold">Part Patient :</h6>
-                                                                        <p>${hopital.part_patient} Fcfa</p>
-                                                                        <h6 class="fw-semibold">Part Assurance :</h6>
-                                                                        <p>${hopital.part_assurance} Fcfa</p>
-                                                                        <h6 class="fw-semibold">Remise :</h6>
-                                                                        <p>${hopital.remise ? hopital.remise : '0'} Fcfa</p>
-                                                                        <h6 class="fw-semibold">Montant Total :</h6>
-                                                                        <p>${hopital.montant} Fcfa</p>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            `;
-
-                                            modalD.appendChild(div);
-
-                                        })
-                                        .catch(error => {
-                                            console.error('Erreur lors du chargement des données:', error);
-                                        });
-                                });
-
-                                document.getElementById(`detail_produit_Hos-${item.id}`).addEventListener('click',()=>
-                                {
-                                    const tableBodyP = document.querySelector('#TableP_Hos tbody');
-                                    const messageDivP = document.getElementById('message_TableP_Hos');
-                                    const tableDivP = document.getElementById('div_TableP_Hos');
-                                    const loaderDivP = document.getElementById('div_Table_loaderP_Hos');
-
-                                    messageDivP.style.display = 'none';
-                                    tableDivP.style.display = 'none';
-                                    loaderDivP.style.display = 'block';
-
-                                    fetch(`/api/list_facture_hos_d/${item.id}`) // API endpoint
-                                        .then(response => response.json())
-                                        .then(data => {
-                                            // Access the 'chambre' array from the API response
-                                            const factureds = data.factured;
-
-                                            // Clear any existing rows in the table body
-                                            tableBodyP.innerHTML = '';
-
-                                            if (factureds.length > 0) {
-
-                                                loaderDivP.style.display = 'none';
-                                                messageDivP.style.display = 'none';
-                                                tableDivP.style.display = 'block';
-
-                                                // Loop through each item in the chambre array
-                                                factureds.forEach((item, index) => {
-                                                    // Create a new row
-                                                    const row = document.createElement('tr');
-                                                    // Create and append cells to the row based on your table's structure
-                                                    row.innerHTML = `
-                                                        <td>
-                                                            <h6>${item.nom_produit}</h6>
-                                                        </td>
-                                                        <td>
-                                                            <h6>${item.prix_produit} Fcfa</h6>
-                                                        </td>
-                                                        <td>
-                                                            <h6>${item.quantite}</h6>
-                                                        </td>
-                                                        <td>
-                                                            <h6>${item.montant} Fcfa</h6>
-                                                        </td>
-                                                    `;
-                                                    // Append the row to the table body
-                                                    tableBodyP.appendChild(row);
-
-                                                });
-
-                                                const row2 = document.createElement('tr');
-                                                row2.innerHTML = `
-                                                    <td colspan="2">&nbsp;</td>
-                                                    <td colspan="2" >
-                                                        <h5 class="mt-4 text-success">
-                                                            Total : ${item.montant_soins} Fcfa
-                                                        </h5>
-                                                    </td>
-                                                `;
-                                                tableBodyP.appendChild(row2);
-
-                                                const row3 = document.createElement('tr');
-                                                row3.innerHTML = `
-                                                    <td colspan="4">
-                                                        <h6 class="text-danger">NOTE</h6>
-                                                        <p class="small m-0">
-                                                            Le Montant Total des produits utilisés
-                                                            seront ajouter au montant total de la
-                                                            chambre occupé par le patient.
-                                                        </p>
-                                                    </td>
-                                                `;
-
-                                                tableBodyP.appendChild(row3);
-
-                                            } else {
-                                                loaderDivP.style.display = 'none';
-                                                messageDivP.style.display = 'block';
-                                                tableDivP.style.display = 'none';
-                                            }
-                                        })
-                                        .catch(error => {
-                                            console.error('Erreur lors du chargement des données:', error);
-                                            loaderDivD.style.display = 'none';
-                                            messageDivD.style.display = 'block';
-                                            tableDivD.style.display = 'none';
-                                        });
-                                    
-                                });
-
-                                document.getElementById(`printer_Hos-${item.id}`).addEventListener('click', () =>
-                                {
-                                    fetch(`/api/detail_hos/${item.id}`) // API endpoint
-                                        .then(response => response.json())
-                                        .then(data => {
-                                            // Access the 'chambre' array from the API response
-                                            const hopital = data.hopital;
-                                            const facture = data.facture;
-                                            const patient = data.patient;
-                                            const nature = data.natureadmission;
-                                            const type = data.typeadmission;
-                                            const lit = data.lit;
-                                            const chambre = data.chambre;
-                                            const user = data.user;
-                                            const produit = data.produit;
-
-                                            generatePDFInvoice_Hos(hopital, facture, patient, nature, type, lit, chambre, user, produit);
-
-                                        })
-                                        .catch(error => {
-                                            console.error('Erreur lors du chargement des données:', error);
-                                        });
-                                });
                             });
+
+                            const row2 = document.createElement('tr');
+                            row2.innerHTML = `
+                                <td colspan="2">&nbsp;</td>
+                                <td colspan="2" >
+                                    <h5 class="mt-4 text-success">
+                                        Total : ${montant_soins} Fcfa
+                                    </h5>
+                                </td>
+                            `;
+                            tableBodyP.appendChild(row2);
+
+                            const row3 = document.createElement('tr');
+                            row3.innerHTML = `
+                                <td colspan="4">
+                                    <h6 class="text-danger">NOTE</h6>
+                                    <p class="small m-0">
+                                        Le Montant Total des produits utilisés
+                                        seront ajouter au montant total de la
+                                        chambre occupé par le patient.
+                                    </p>
+                                </td>
+                            `;
+
+                            tableBodyP.appendChild(row3);
+
+                        } else {
+                            loaderDivP.style.display = 'none';
+                            messageDivP.style.display = 'block';
+                            tableDivP.style.display = 'none';
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Erreur lors du chargement des données:', error);
+                        loaderDivD.style.display = 'none';
+                        messageDivD.style.display = 'block';
+                        tableDivD.style.display = 'none';
+                    });
+            });
+
+            $('.Table_Hos').on('click', '#printer_Hos', function() {
+
+                var preloader_ch = `
+                    <div id="preloader_ch">
+                        <div class="spinner_preloader_ch"></div>
+                    </div>
+                `;
+                // Add the preloader to the body
+                document.body.insertAdjacentHTML('beforeend', preloader_ch);
+
+                const id = $(this).data('id');
+
+                fetch(`/api/detail_hos/${id}`) // API endpoint
+                    .then(response => response.json())
+                    .then(data => {
+                        // Access the 'chambre' array from the API response
+                        const hopital = data.hopital;
+                        const facture = data.facture;
+                        const patient = data.patient;
+                        const nature = data.natureadmission;
+                        const type = data.typeadmission;
+                        const lit = data.lit;
+                        const chambre = data.chambre;
+                        const user = data.user;
+                        const produit = data.produit;
+
+                        var preloader = document.getElementById('preloader_ch');
+                        if (preloader) {
+                            preloader.remove();
                         }
 
-                        // Update table with filtered factures
-                        function applySearchFilter() {
-                            const searchTerm = searchInput.value.toLowerCase();
-                            const filteredFactures = allFactures.filter(facture =>
-                                facture.code_fac.toLowerCase().includes(searchTerm)
-                            );
-                            displayRows(filteredFactures); // Display only filtered factures
-                        }
+                        generatePDFInvoice_Hos(hopital, facture, patient, nature, type, lit, chambre, user, produit);
 
-                        searchInput.addEventListener('input', applySearchFilter);
-
-                        displayRows(allFactures);
-
-                        updatePaginationControls_Hos(pagination);
-
-                    } else {
-                        loaderDiv.style.display = 'none';
-                        messageDiv.style.display = 'block';
-                        tableDiv.style.display = 'none';
-                    }
-                })
-                .catch(error => {
-                    console.error('Erreur lors du chargement des données:', error);
-                    loaderDiv.style.display = 'none';
-                    messageDiv.style.display = 'block';
-                    tableDiv.style.display = 'none';
-                });
+                    })
+                    .catch(error => {
+                        console.error('Erreur lors du chargement des données:', error);
+                    });
+            });
         }
 
-        function updatePaginationControls_Hos(pagination) 
-        {
-            const paginationDiv = document.getElementById('pagination-controls_Hos');
-            paginationDiv.innerHTML = '';
-
-            // Bootstrap pagination wrapper
-            const paginationWrapper = document.createElement('ul');
-            paginationWrapper.className = 'pagination justify-content-center';
-
-            // Previous button
-            if (pagination.current_page > 1) {
-                const prevButton = document.createElement('li');
-                prevButton.className = 'page-item';
-                prevButton.innerHTML = `<a class="page-link" href="#">Precédent</a>`;
-                prevButton.onclick = (event) => {
-                    event.preventDefault(); // Empêche le défilement en haut de la page
-                    list(pagination.current_page - 1);
-                };
-                paginationWrapper.appendChild(prevButton);
-            } else {
-                // Disable the previous button if on the first page
-                const prevButton = document.createElement('li');
-                prevButton.className = 'page-item disabled';
-                prevButton.innerHTML = `<a class="page-link" href="#">Precédent</a>`;
-                paginationWrapper.appendChild(prevButton);
-            }
-
-            // Page number links (show a few around the current page)
-            const totalPages = pagination.last_page;
-            const currentPage = pagination.current_page;
-            const maxVisiblePages = 5; // Max number of page links to display
-
-            let startPage = Math.max(1, currentPage - Math.floor(maxVisiblePages / 2));
-            let endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
-
-            // Adjust start page if end page exceeds the total pages
-            if (endPage - startPage < maxVisiblePages - 1) {
-                startPage = Math.max(1, endPage - maxVisiblePages + 1);
-            }
-
-            // Loop through pages and create page links
-            for (let i = startPage; i <= endPage; i++) {
-                const pageItem = document.createElement('li');
-                pageItem.className = `page-item ${i === currentPage ? 'active' : ''}`;
-                pageItem.innerHTML = `<a class="page-link" href="#">${i}</a>`;
-                pageItem.onclick = (event) => {
-                    event.preventDefault(); // Empêche le défilement en haut de la page
-                    list(i);
-                };
-                paginationWrapper.appendChild(pageItem);
-            }
-
-            // Ellipsis (...) if not all pages are shown
-            if (endPage < totalPages) {
-                const ellipsis = document.createElement('li');
-                ellipsis.className = 'page-item disabled';
-                ellipsis.innerHTML = `<a class="page-link" href="#">...</a>`;
-                paginationWrapper.appendChild(ellipsis);
-
-                // Add the last page link
-                const lastPageItem = document.createElement('li');
-                lastPageItem.className = `page-item`;
-                lastPageItem.innerHTML = `<a class="page-link" href="#">${totalPages}</a>`;
-                lastPageItem.onclick = (event) => {
-                    event.preventDefault(); // Empêche le défilement en haut de la page
-                    list(totalPages);
-                };
-                paginationWrapper.appendChild(lastPageItem);
-            }
-
-            // Next button
-            if (pagination.current_page < pagination.last_page) {
-                const nextButton = document.createElement('li');
-                nextButton.className = 'page-item';
-                nextButton.innerHTML = `<a class="page-link" href="#">Suivant</a>`;
-                nextButton.onclick = (event) => {
-                    event.preventDefault(); // Empêche le défilement en haut de la page
-                    list(pagination.current_page + 1);
-                };
-                paginationWrapper.appendChild(nextButton);
-            } else {
-                // Disable the next button if on the last page
-                const nextButton = document.createElement('li');
-                nextButton.className = 'page-item disabled';
-                nextButton.innerHTML = `<a class="page-link" href="#">Suivant</a>`;
-                paginationWrapper.appendChild(nextButton);
-            }
-
-            // Append pagination controls to the DOM
-            paginationDiv.appendChild(paginationWrapper);
-        }
+        $('#btn_refresh_table_Hos').on('click', function () {
+            table_hos.ajax.reload(null, false); 
+        });
 
         function generatePDFInvoice_Hos(hopital, facture, patient, nature, type, lit, chambre, user, produit) 
         {
@@ -2901,8 +2891,16 @@
                 doc.setFont("Helvetica", "bold");
                 doc.setLineWidth(0.5);
                 doc.setTextColor(0, 0, 0);
-                // doc.line(10, 35, 200, 35); 
-                const titleR = "FACTURE HOSPITALISATION";
+                // doc.line(10, 35, 200, 35);
+
+                let titleR;
+
+                if (facture.statut == 'payer') {
+                    titleR = "RECU PAIEMENT";
+                }else{
+                    titleR = "FACTURE HOSPITALISATION";
+                }
+
                 const titleRWidth = doc.getTextWidth(titleR);
                 const titleRX = (doc.internal.pageSize.getWidth() - titleRWidth) / 2;
                 // Définir le padding
@@ -3233,7 +3231,7 @@
 
                         showAlert("ALERT", "Paiement éffectuée.", "success");
 
-                        list_Soinsam();
+                        table_soinsam.ajax.reload(null, false);
 
                         generatePDFInvoice_Soinsam(soinspatient, facture, patient, typesoins, soins, produit);
 
@@ -3254,433 +3252,249 @@
             });
         }
 
-        function list_Soinsam(page = 1) 
-        {
-            const tableBody = document.querySelector('#Table_Soinsam tbody');
-            const messageDiv = document.getElementById('message_Table_Soinsam');
-            const tableDiv = document.getElementById('div_Table_Soinsam');
-            const loaderDiv = document.getElementById('div_Table_loader_Soinsam');
-            const searchInput = document.getElementById('searchInput_Soinsam');
+        function initSoinsam() {
 
-            let allFactures = []; // Array to hold all factures data fetched from API
+            $('.Table_Soinsam').on('click', '#paye_Soinsam', function() {
+                const code_fac = $(this).data('code_fac');
+                const part_patient = $(this).data('part_patient');
 
-            messageDiv.style.display = 'none';
-            tableDiv.style.display = 'none';
-            loaderDiv.style.display = 'block';
+                document.getElementById('input_montant_payer_Soinsam').value = `${part_patient || 0} Fcfa`;
+                document.getElementById('input_montant_verser_Soinsam').value = '';
+                document.getElementById('input_montant_remis_Soinsam').value = '0 Fcfa';
+                document.getElementById('id_code_fac_Soinsam').value = `${code_fac}`;
+            });
 
-            // Fetch data from the API
-            const url = `/api/list_facture_soinsam?page=${page}`;
-            fetch(url)
-                .then(response => response.json())
-                .then(data => {
-                    allFactures = data.soinspatient || [];
-                    const pagination = data.pagination || {};
+            $('.Table_Soinsam').on('click', '#detail_Soinsam', function() {
+                const id = $(this).data('id');
 
-                    const perPage = pagination.per_page || 10;
-                    const currentPage = pagination.current_page || 1;
+                fetch(`/api/detail_soinam/${id}`) // API endpoint
+                    .then(response => response.json())
+                    .then(data => {
+                        // Access the 'chambre' array from the API response
+                        const modal = document.getElementById('modal_detail_Soinsam');
+                        modal.innerHTML = '';
 
-                    if (allFactures.length > 0) {
+                        const soinspatient = data.soinspatient;
+                        const facture = data.facture;
+                        const patient = data.patient;
+                        const typesoins = data.typesoins;
+                        const soins = data.soins;
+                        const produit = data.produit;
 
-                        loaderDiv.style.display = 'none';
-                        messageDiv.style.display = 'none';
-                        tableDiv.style.display = 'block';
+                        const div = document.createElement('div');
+                        div.innerHTML = `
+                            <div class="row">
+                                <div class="col-xl-12">
+                                    <div class="">
+                                        <div class="card-body">
+                                            <div class="row justify-content-between">
+                                                <div class="col-12 text-center mt-4">
+                                                    <h6 class="fw-semibold">Type de Soins :</h6>
+                                                    <p>${typesoins.nom}</p>
+                                                    <h6 class="fw-semibold">N° Dossier :</h6>
+                                                    <p>${patient.matricule}</p>
+                                                    <h6 class="fw-semibold">Nom du patient :</h6>
+                                                    <p>${patient.np}</p>
+                                                    <h6 class="fw-semibold">contact :</h6>
+                                                    <p>${patient.tel}</p>
+                                                    <h6 class="fw-semibold">Assurer :</h6>
+                                                    <p>${patient.assurer}</p>
+                                                    ${patient.assurer === 'oui' ? `
+                                                        <h6 class="fw-semibold">Taux :</h6>
+                                                        <p>${patient.taux}%</p>
 
-                        // Display rows function with optional filtering
-                        function displayRows(filteredFactures) {
-                            tableBody.innerHTML = ''; // Clear existing rows
+                                                        <h6 class="fw-semibold">Assurance :</h6>
+                                                        <p>${patient.assurance}</p> 
 
-                            filteredFactures.forEach((item, index) => {
+                                                        <h6 class="fw-semibold">Matricule :</h6>
+                                                        <p>${patient.matricule_assurance}</p>
+                                                    ` : ''}
+                                                </div>
+                                                <div class="col-12 text-center mt-4">
+                                                    <h6 class="fw-semibold">Part Patient :</h6>
+                                                    <p>${soinspatient.part_patient} Fcfa</p>
+                                                    <h6 class="fw-semibold">Part Assurance :</h6>
+                                                    <p>${soinspatient.part_assurance} Fcfa</p>
+                                                    <h6 class="fw-semibold">Remise :</h6>
+                                                    <p>${soinspatient.remise ? soinspatient.remise : '0'} Fcfa</p>
+                                                    <h6 class="fw-semibold">Montant Total :</h6>
+                                                    <p>${soinspatient.montant} Fcfa</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+
+                        modal.appendChild(div);
+
+                    })
+                    .catch(error => {
+                        console.error('Erreur lors du chargement des données:', error);
+                    });
+            });
+
+            $('.Table_Soinsam').on('click', '#detail_produit_Soinsam', function() {
+                const id = $(this).data('id');
+                const stotal = $(this).data('stotal');
+                const prototal = $(this).data('prototal');
+
+                const tableBodyP = document.querySelector('#TableP_Soinsam tbody');
+                const tableBodyProdP=document.querySelector('#TableProdP_Soinsam tbody');
+                const messageDivP = document.getElementById('message_TableP_Soinsam');
+                const tableDivP = document.getElementById('div_TableP_Soinsam');
+                const tableDivProdP = document.getElementById('div_TableProdP_Soinsam');
+                const loaderDivP = document.getElementById('div_Table_loaderP_Soinsam');
+
+                messageDivP.style.display = 'none';
+                tableDivP.style.display = 'none';
+                tableDivProdP.style.display = 'none';
+                loaderDivP.style.display = 'block';
+
+                fetch(`/api/detail_soinam/${id}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        const soinspatient = data.soinspatient;
+                        const soins = data.soins;
+                        const produit = data.produit;
+
+                        // Clear existing rows
+                        tableBodyP.innerHTML = '';
+                        tableBodyProdP.innerHTML = ''; // Pour les produits
+
+                        if (soins.length > 0 || produits.length > 0) {
+
+                            loaderDivP.style.display = 'none';
+                            messageDivP.style.display = 'none';
+                            tableDivP.style.display = 'block';
+                            tableDivProdP.style.display = 'block';
+
+                            // Remplir le tableau des soins
+                            soins.forEach((item, index) => {
                                 const row = document.createElement('tr');
                                 row.innerHTML = `
-                                    <td>${((currentPage - 1) * perPage) + index + 1}</td>
                                     <td>
-                                        <div class="d-flex align-items-center ">
-                                            <a class="d-flex align-items-center flex-column me-2">
-                                                <img src="{{asset('assets/images/facture.webp')}}" class="img-2x rounded-circle border border-1">
-                                            </a>
-                                            ${item.code_fac}
-                                        </div>
+                                        <h6>${item.nom_si}</h6>
                                     </td>
-                                    <td class="text-warning">
-                                        ${item.montant ?? 0} Fcfa
-                                    </td>
-                                    <td class="text-primary">
-                                        ${formatPrice(item.prototal) ?? 0} Fcfa
-                                    </td>
-                                    <td class="text-primary">
-                                        ${formatPrice(item.stotal) ?? 0} Fcfa
-                                    </td>
-                                    <td class="text-success">
-                                        ${item.part_patient ?? 0} Fcfa
-                                    </td>
-                                    <td class="text-primary">
-                                        ${item.part_assurance ?? 0} Fcfa
-                                    </td>
-                                    <td class="text-primary">
-                                        ${item.remise ?? 0} Fcfa
-                                    </td>
-                                    <td>${formatDateHeure(item.created_at)}</td>
                                     <td>
-                                        <div class="d-inline-flex gap-1">
-                                            <a class="btn btn-outline-success btn-sm" data-bs-toggle="modal" data-bs-target="#Caisse_Soinsam" id="paye_Soinsam-${item.id}">
-                                                <i class="ri-hand-coin-line"></i>
-                                            </a>
-                                            <a class="btn btn-outline-warning btn-sm" id="detail_Soinsam-${item.id}" data-bs-toggle="modal" data-bs-target="#Detail_Soinsam">
-                                                <i class="ri-eye-line"></i>
-                                            </a>
-                                            <a class="btn btn-outline-danger btn-sm" id="detail_produit_Soinsam-${item.id}" data-bs-toggle="modal" data-bs-target="#Detail_produit_Soinsam">
-                                                <i class="ri-archive-2-fill"></i>
-                                            </a>
-                                            <a class="btn btn-outline-info btn-sm" id="printer_Soinsam-${item.id}">
-                                                <i class="ri-printer-line"></i>
-                                            </a>
-                                        </div>
+                                        <h6>${item.prix_si} Fcfa</h6>
                                     </td>
                                 `;
-                                tableBody.appendChild(row);
-
-                                // Add event listeners
-                                document.getElementById(`paye_Soinsam-${item.id}`).addEventListener('click', () => {
-                                    const payer = document.getElementById('input_montant_payer_Soinsam');
-                                    payer.value = `${item?.part_patient || 0} Fcfa`;
-
-                                    const verser = document.getElementById('input_montant_verser_Soinsam');
-                                    verser.value = '';
-                                    document.getElementById('input_montant_remis_Soinsam').value = '0 Fcfa';
-
-                                    document.getElementById('id_code_fac_Soinsam').value = `${item.code_fac}`;
-                                });
-
-                                document.getElementById(`detail_Soinsam-${item.id}`).addEventListener('click', () =>
-                                {
-                                    fetch(`/api/detail_soinam/${item.id}`) // API endpoint
-                                        .then(response => response.json())
-                                        .then(data => {
-                                            // Access the 'chambre' array from the API response
-                                            const modal = document.getElementById('modal_detail_Soinsam');
-                                            modal.innerHTML = '';
-
-                                            const soinspatient = data.soinspatient;
-                                            const facture = data.facture;
-                                            const patient = data.patient;
-                                            const typesoins = data.typesoins;
-                                            const soins = data.soins;
-                                            const produit = data.produit;
-
-                                            const div = document.createElement('div');
-                                            div.innerHTML = `
-                                                <div class="row">
-                                                    <div class="col-xl-12">
-                                                        <div class="">
-                                                            <div class="card-body">
-                                                                <div class="row justify-content-between">
-                                                                    <div class="col-12 text-center mt-4">
-                                                                        <h6 class="fw-semibold">Type de Soins :</h6>
-                                                                        <p>${typesoins.nom}</p>
-                                                                        <h6 class="fw-semibold">N° Dossier :</h6>
-                                                                        <p>${patient.matricule}</p>
-                                                                        <h6 class="fw-semibold">Nom du patient :</h6>
-                                                                        <p>${patient.np}</p>
-                                                                        <h6 class="fw-semibold">contact :</h6>
-                                                                        <p>${patient.tel}</p>
-                                                                        <h6 class="fw-semibold">Assurer :</h6>
-                                                                        <p>${patient.assurer}</p>
-                                                                        ${patient.assurer === 'oui' ? `
-                                                                            <h6 class="fw-semibold">Taux :</h6>
-                                                                            <p>${patient.taux}%</p>
-
-                                                                            <h6 class="fw-semibold">Assurance :</h6>
-                                                                            <p>${patient.assurance}</p> 
-
-                                                                            <h6 class="fw-semibold">Matricule :</h6>
-                                                                            <p>${patient.matricule_assurance}</p>
-                                                                        ` : ''}
-                                                                    </div>
-                                                                    <div class="col-12 text-center mt-4">
-                                                                        <h6 class="fw-semibold">Part Patient :</h6>
-                                                                        <p>${soinspatient.part_patient} Fcfa</p>
-                                                                        <h6 class="fw-semibold">Part Assurance :</h6>
-                                                                        <p>${soinspatient.part_assurance} Fcfa</p>
-                                                                        <h6 class="fw-semibold">Remise :</h6>
-                                                                        <p>${soinspatient.remise ? soinspatient.remise : '0'} Fcfa</p>
-                                                                        <h6 class="fw-semibold">Montant Total :</h6>
-                                                                        <p>${soinspatient.montant} Fcfa</p>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            `;
-
-                                            modal.appendChild(div);
-
-                                        })
-                                        .catch(error => {
-                                            console.error('Erreur lors du chargement des données:', error);
-                                        });
-                                });
-
-                                document.getElementById(`detail_produit_Soinsam-${item.id}`).addEventListener('click',()=>
-                                {
-                                    const tableBodyP = document.querySelector('#TableP_Soinsam tbody');
-                                    const tableBodyProdP=document.querySelector('#TableProdP_Soinsam tbody');
-                                    const messageDivP = document.getElementById('message_TableP_Soinsam');
-                                    const tableDivP = document.getElementById('div_TableP_Soinsam');
-                                    const tableDivProdP = document.getElementById('div_TableProdP_Soinsam');
-                                    const loaderDivP = document.getElementById('div_Table_loaderP_Soinsam');
-
-                                    messageDivP.style.display = 'none';
-                                    tableDivP.style.display = 'none';
-                                    tableDivProdP.style.display = 'none';
-                                    loaderDivP.style.display = 'block';
-
-                                    fetch(`/api/detail_soinam/${item.id}`)
-                                        .then(response => response.json())
-                                        .then(data => {
-                                            const soinspatient = data.soinspatient;
-                                            const soins = data.soins;
-                                            const produit = data.produit;
-
-                                            // Clear existing rows
-                                            tableBodyP.innerHTML = '';
-                                            tableBodyProdP.innerHTML = ''; // Pour les produits
-
-                                            if (soins.length > 0 || produits.length > 0) {
-
-                                                loaderDivP.style.display = 'none';
-                                                messageDivP.style.display = 'none';
-                                                tableDivP.style.display = 'block';
-                                                tableDivProdP.style.display = 'block';
-
-                                                // Remplir le tableau des soins
-                                                soins.forEach((item, index) => {
-                                                    const row = document.createElement('tr');
-                                                    row.innerHTML = `
-                                                        <td>
-                                                            <h6>${item.nom_si}</h6>
-                                                        </td>
-                                                        <td>
-                                                            <h6>${item.prix_si} Fcfa</h6>
-                                                        </td>
-                                                    `;
-                                                    tableBodyP.appendChild(row);
-                                                });
-
-                                                const rowTotalSoin = document.createElement('tr');
-                                                rowTotalSoin.innerHTML = `
-                                                    <td >&nbsp;</td>
-                                                    <td >
-                                                        <h5 class="mt-4 text-success">
-                                                            Total Soins : ${formatPriceT(soinspatient.stotal)} Fcfa
-                                                        </h5>
-                                                    </td>
-                                                `;
-                                                tableBodyP.appendChild(rowTotalSoin);
-
-                                                // Remplir le tableau des produits
-                                                produit.forEach((item, index) => {
-                                                    const rowProd = document.createElement('tr');
-                                                    rowProd.innerHTML = `
-                                                        <td>
-                                                            <h6>${item.nom_pro}</h6>
-                                                        </td>
-                                                        <td>
-                                                            <h6>${item.prix_pro} Fcfa</h6>
-                                                        </td>
-                                                        <td>
-                                                            <h6>${item.quantite}</h6>
-                                                        </td>
-                                                        <td>
-                                                            <h6>${item.montant} Fcfa</h6>
-                                                        </td>
-                                                    `;
-                                                    tableBodyProdP.appendChild(rowProd);
-                                                });
-
-                                                const rowTotalProd = document.createElement('tr');
-                                                rowTotalProd.innerHTML = `
-                                                    <td colspan="2" >&nbsp;</td>
-                                                    <td colspan="2">
-                                                        <h5 class="mt-4 text-success">
-                                                            Total Produits : ${formatPriceT(soinspatient.prototal)} Fcfa
-                                                        </h5>
-                                                    </td>
-                                                `;
-                                                tableBodyProdP.appendChild(rowTotalProd);
-
-                                                const rowNote = document.createElement('tr');
-                                                rowNote.innerHTML = `
-                                                    <td colspan="4">
-                                                        <h6 class="text-danger">NOTE</h6>
-                                                        <p class="small m-0">
-                                                            Le Montant Total des produits utilisés
-                                                            seront ajoutés au montant total des soins.
-                                                        </p>
-                                                    </td>
-                                                `;
-
-                                                tableBodyProdP.appendChild(rowNote);
-
-                                            } else {
-                                                loaderDivP.style.display = 'none';
-                                                messageDivP.style.display = 'block';
-                                                tableDivP.style.display = 'none';
-                                                tableDivProdP.style.display = 'none';
-                                            }
-                                        })
-                                        .catch(error => {
-                                            console.error('Erreur lors du chargement des données:', error);
-                                            loaderDivP.style.display = 'none';
-                                            messageDivP.style.display = 'block';
-                                            tableDivP.style.display = 'none';
-                                            tableDivProdP.style.display = 'none';
-                                        });
-                                });
-
-                                document.getElementById(`printer_Soinsam-${item.id}`).addEventListener('click', () =>
-                                {
-                                    fetch(`/api/detail_soinam/${item.id}`) // API endpoint
-                                        .then(response => response.json())
-                                        .then(data => {
-                                            // Access the 'chambre' array from the API response
-                                            const soinspatient = data.soinspatient;
-                                            const facture = data.facture;
-                                            const patient = data.patient;
-                                            const typesoins = data.typesoins;
-                                            const soins = data.soins;
-                                            const produit = data.produit;
-
-                                            generatePDFInvoice_Soinsam(soinspatient, facture, patient, typesoins, soins, produit);
-
-                                        })
-                                        .catch(error => {
-                                            console.error('Erreur lors du chargement des données:', error);
-                                        });
-                                });
+                                tableBodyP.appendChild(row);
                             });
+
+                            const rowTotalSoin = document.createElement('tr');
+                            rowTotalSoin.innerHTML = `
+                                <td >&nbsp;</td>
+                                <td >
+                                    <h5 class="mt-4 text-success">
+                                        Total Soins : ${formatPriceT(stotal)} Fcfa
+                                    </h5>
+                                </td>
+                            `;
+                            tableBodyP.appendChild(rowTotalSoin);
+
+                            // Remplir le tableau des produits
+                            produit.forEach((item, index) => {
+                                const rowProd = document.createElement('tr');
+                                rowProd.innerHTML = `
+                                    <td>
+                                        <h6>${item.nom_pro}</h6>
+                                    </td>
+                                    <td>
+                                        <h6>${item.prix_pro} Fcfa</h6>
+                                    </td>
+                                    <td>
+                                        <h6>${item.quantite}</h6>
+                                    </td>
+                                    <td>
+                                        <h6>${item.montant} Fcfa</h6>
+                                    </td>
+                                `;
+                                tableBodyProdP.appendChild(rowProd);
+                            });
+
+                            const rowTotalProd = document.createElement('tr');
+                            rowTotalProd.innerHTML = `
+                                <td colspan="2" >&nbsp;</td>
+                                <td colspan="2">
+                                    <h5 class="mt-4 text-success">
+                                        Total Produits : ${formatPriceT(prototal)} Fcfa
+                                    </h5>
+                                </td>
+                            `;
+                            tableBodyProdP.appendChild(rowTotalProd);
+
+                            const rowNote = document.createElement('tr');
+                            rowNote.innerHTML = `
+                                <td colspan="4">
+                                    <h6 class="text-danger">NOTE</h6>
+                                    <p class="small m-0">
+                                        Le Montant Total des produits utilisés
+                                        seront ajoutés au montant total des soins.
+                                    </p>
+                                </td>
+                            `;
+
+                            tableBodyProdP.appendChild(rowNote);
+
+                        } else {
+                            loaderDivP.style.display = 'none';
+                            messageDivP.style.display = 'block';
+                            tableDivP.style.display = 'none';
+                            tableDivProdP.style.display = 'none';
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Erreur lors du chargement des données:', error);
+                        loaderDivP.style.display = 'none';
+                        messageDivP.style.display = 'block';
+                        tableDivP.style.display = 'none';
+                        tableDivProdP.style.display = 'none';
+                    });
+            });
+
+            $('.Table_Soinsam').on('click', '#printer_Soinsam', function() {
+
+                var preloader_ch = `
+                    <div id="preloader_ch">
+                        <div class="spinner_preloader_ch"></div>
+                    </div>
+                `;
+                // Add the preloader to the body
+                document.body.insertAdjacentHTML('beforeend', preloader_ch);
+
+                const id = $(this).data('id');
+
+                fetch(`/api/detail_soinam/${id}`) // API endpoint
+                    .then(response => response.json())
+                    .then(data => {
+                        // Access the 'chambre' array from the API response
+                        const soinspatient = data.soinspatient;
+                        const facture = data.facture;
+                        const patient = data.patient;
+                        const typesoins = data.typesoins;
+                        const soins = data.soins;
+                        const produit = data.produit;
+
+                        var preloader = document.getElementById('preloader_ch');
+                        if (preloader) {
+                            preloader.remove();
                         }
 
-                        // Update table with filtered factures
-                        function applySearchFilter() {
-                            const searchTerm = searchInput.value.toLowerCase();
-                            const filteredFactures = allFactures.filter(facture =>
-                                facture.code_fac.toLowerCase().includes(searchTerm)
-                            );
-                            displayRows(filteredFactures); // Display only filtered factures
-                        }
+                        generatePDFInvoice_Soinsam(soinspatient, facture, patient, typesoins, soins, produit);
 
-                        searchInput.addEventListener('input', applySearchFilter);
-
-                        displayRows(allFactures);
-
-                        updatePaginationControls_Soinsam(pagination);
-
-                    } else {
-                        loaderDiv.style.display = 'none';
-                        messageDiv.style.display = 'block';
-                        tableDiv.style.display = 'none';
-                    }
-                })
-                .catch(error => {
-                    console.error('Erreur lors du chargement des données:', error);
-                    loaderDiv.style.display = 'none';
-                    messageDiv.style.display = 'block';
-                    tableDiv.style.display = 'none';
-                });
+                    })
+                    .catch(error => {
+                        console.error('Erreur lors du chargement des données:', error);
+                    });
+            });
         }
 
-        function updatePaginationControls_Soinsam(pagination) 
-        {
-            const paginationDiv = document.getElementById('pagination-controls_Soinsam');
-            paginationDiv.innerHTML = '';
-
-            // Bootstrap pagination wrapper
-            const paginationWrapper = document.createElement('ul');
-            paginationWrapper.className = 'pagination justify-content-center';
-
-            // Previous button
-            if (pagination.current_page > 1) {
-                const prevButton = document.createElement('li');
-                prevButton.className = 'page-item';
-                prevButton.innerHTML = `<a class="page-link" href="#">Precédent</a>`;
-                prevButton.onclick = (event) => {
-                    event.preventDefault(); // Empêche le défilement en haut de la page
-                    list(pagination.current_page - 1);
-                };
-                paginationWrapper.appendChild(prevButton);
-            } else {
-                // Disable the previous button if on the first page
-                const prevButton = document.createElement('li');
-                prevButton.className = 'page-item disabled';
-                prevButton.innerHTML = `<a class="page-link" href="#">Precédent</a>`;
-                paginationWrapper.appendChild(prevButton);
-            }
-
-            // Page number links (show a few around the current page)
-            const totalPages = pagination.last_page;
-            const currentPage = pagination.current_page;
-            const maxVisiblePages = 5; // Max number of page links to display
-
-            let startPage = Math.max(1, currentPage - Math.floor(maxVisiblePages / 2));
-            let endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
-
-            // Adjust start page if end page exceeds the total pages
-            if (endPage - startPage < maxVisiblePages - 1) {
-                startPage = Math.max(1, endPage - maxVisiblePages + 1);
-            }
-
-            // Loop through pages and create page links
-            for (let i = startPage; i <= endPage; i++) {
-                const pageItem = document.createElement('li');
-                pageItem.className = `page-item ${i === currentPage ? 'active' : ''}`;
-                pageItem.innerHTML = `<a class="page-link" href="#">${i}</a>`;
-                pageItem.onclick = (event) => {
-                    event.preventDefault(); // Empêche le défilement en haut de la page
-                    list(i);
-                };
-                paginationWrapper.appendChild(pageItem);
-            }
-
-            // Ellipsis (...) if not all pages are shown
-            if (endPage < totalPages) {
-                const ellipsis = document.createElement('li');
-                ellipsis.className = 'page-item disabled';
-                ellipsis.innerHTML = `<a class="page-link" href="#">...</a>`;
-                paginationWrapper.appendChild(ellipsis);
-
-                // Add the last page link
-                const lastPageItem = document.createElement('li');
-                lastPageItem.className = `page-item`;
-                lastPageItem.innerHTML = `<a class="page-link" href="#">${totalPages}</a>`;
-                lastPageItem.onclick = (event) => {
-                    event.preventDefault(); // Empêche le défilement en haut de la page
-                    list(totalPages);
-                };
-                paginationWrapper.appendChild(lastPageItem);
-            }
-
-            // Next button
-            if (pagination.current_page < pagination.last_page) {
-                const nextButton = document.createElement('li');
-                nextButton.className = 'page-item';
-                nextButton.innerHTML = `<a class="page-link" href="#">Suivant</a>`;
-                nextButton.onclick = (event) => {
-                    event.preventDefault(); // Empêche le défilement en haut de la page
-                    list(pagination.current_page + 1);
-                };
-                paginationWrapper.appendChild(nextButton);
-            } else {
-                // Disable the next button if on the last page
-                const nextButton = document.createElement('li');
-                nextButton.className = 'page-item disabled';
-                nextButton.innerHTML = `<a class="page-link" href="#">Suivant</a>`;
-                paginationWrapper.appendChild(nextButton);
-            }
-
-            // Append pagination controls to the DOM
-            paginationDiv.appendChild(paginationWrapper);
-        }
+        $('#btn_refresh_table_Soinsam').on('click', function () {
+            table_soinsam.ajax.reload(null, false); 
+        });
 
         function generatePDFInvoice_Soinsam(soinspatient, facture, patient, typesoins, soins, produit) 
         {
@@ -3753,7 +3567,15 @@
                 doc.setLineWidth(0.5);
                 doc.setTextColor(0, 0, 0);
                 // doc.line(10, 35, 200, 35); 
-                const titleR = "FACTURE SOINS AMBULATOIRES";
+
+                let titleR;
+
+                if (facture.statut == 'payer') {
+                    titleR = "RECU DE PAIEMENT";
+                }else{
+                    titleR = "FACTURE SOINS AMBULATOIRES";
+                }
+
                 const titleRWidth = doc.getTextWidth(titleR);
                 const titleRX = (doc.internal.pageSize.getWidth() - titleRWidth) / 2;
                 // Définir le padding

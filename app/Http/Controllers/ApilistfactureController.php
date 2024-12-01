@@ -153,23 +153,16 @@ class ApilistfactureController extends Controller
 
     public function list_facture_hos()
     {
-        $hopitalQuery = detailhopital::join('factures', 'factures.id','=','detailhopitals.facture_id')
+        $hopital = detailhopital::join('factures', 'factures.id','=','detailhopitals.facture_id')
                                 ->where('factures.statut', '=', 'impayer')
                                 ->select(
                                     'detailhopitals.*',
                                     'factures.code as code_fac',
-                                )->orderBy('detailhopitals.created_at', 'desc');
-
-        $hopital = $hopitalQuery->paginate(15);
+                                )->orderBy('detailhopitals.created_at', 'desc')
+                                ->get();
 
         return response()->json([
-            'hopital' => $hopital->items(), // Paginated data
-            'pagination' => [
-                'current_page' => $hopital->currentPage(),
-                'last_page' => $hopital->lastPage(),
-                'per_page' => $hopital->perPage(),
-                'total' => $hopital->total(),
-            ]
+            'data' => $hopital,
         ]);
     }
 
@@ -205,24 +198,22 @@ class ApilistfactureController extends Controller
 
     public function list_facture_soinsam()
     {
-        $spatientQuery = soinspatient::join('factures', 'factures.id','=','soinspatients.facture_id')
+        $soinspatient = soinspatient::join('factures', 'factures.id','=','soinspatients.facture_id')
                                 ->where('factures.statut', '=', 'impayer')
                                 ->select(
                                     'soinspatients.*',
                                     'factures.code as code_fac',
                                     'factures.statut as statut_fac',
-                                )->orderBy('soinspatients.created_at', 'desc');
+                                )->orderBy('soinspatients.created_at', 'desc')
+                                ->get();
 
-        $soinspatient = $spatientQuery->paginate(15);
-
-        foreach ($soinspatient->items() as $value) {
+        foreach ($soinspatient as $value) {
             $produittotal = sp_produit::where('soinspatient_id', '=', $value->id)
                 ->select(DB::raw('COALESCE(SUM(REPLACE(montant, ".", "") + 0), 0) as total'))
                 ->first();
 
             $value->prototal = $produittotal->total ?? 0;
 
-            // Total des soins
             $soinstotal = sp_soins::where('soinspatient_id', '=', $value->id)
                 ->select(DB::raw('COALESCE(SUM(REPLACE(montant, ".", "") + 0), 0) as total'))
                 ->first();
@@ -231,13 +222,7 @@ class ApilistfactureController extends Controller
         }
 
         return response()->json([
-            'soinspatient' => $soinspatient->items(), // Paginated data
-            'pagination' => [
-                'current_page' => $soinspatient->currentPage(),
-                'last_page' => $soinspatient->lastPage(),
-                'per_page' => $soinspatient->perPage(),
-                'total' => $soinspatient->total(),
-            ]
+            'data' => $soinspatient,
         ]);
     }
 
@@ -290,7 +275,7 @@ class ApilistfactureController extends Controller
 
     public function list_facture_examen()
     {
-        $examenQuery = examen::join('factures', 'factures.id', '=', 'examens.facture_id')
+        $examen = examen::join('factures', 'factures.id', '=', 'examens.facture_id')
                             ->join('actes', 'actes.id', '=', 'examens.acte_id')
                             ->where('factures.statut', '=', 'impayer')
                             ->select(
@@ -299,11 +284,10 @@ class ApilistfactureController extends Controller
                                 'factures.code as code_fac',
                                 'factures.statut as statut_fac',
                             )
-                            ->orderBy('created_at', 'desc');
+                            ->orderBy('created_at', 'desc')
+                            ->get();
 
-        $examen = $examenQuery->paginate(15);
-
-        foreach ($examen->items() as $value) {
+        foreach ($examen as $value) {
             $nbre = examenpatient::where('examen_id', '=', $value->id)->count();
             $value->nbre =  $nbre ?? 0;
 
@@ -314,18 +298,13 @@ class ApilistfactureController extends Controller
             $partPatient = (int)$partPatient;
             $prelevement = (int)$prelevement;
 
-            // Calcul de la somme
-            $value->total_patient = $partPatient + $prelevement;
+            $value->total_patient = $partPatient;
+
+            $value->part_patient = $partPatient - $prelevement;
         }
 
         return response()->json([
-            'examen' => $examen->items(),
-            'pagination' => [
-                'current_page' => $examen->currentPage(),
-                'last_page' => $examen->lastPage(),
-                'per_page' => $examen->perPage(),
-                'total' => $examen->total(),
-            ]
+            'data' => $examen,
         ]);
     }
 
