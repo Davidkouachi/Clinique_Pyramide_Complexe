@@ -132,6 +132,7 @@ Route::middleware(['statutchambre','dateRdv'])->group(function () {
 	Route::get('/update_depot_fac/{id}', [ApiupdateController::class, 'update_depot_fac']);
 	Route::get('/update_assurance/{id}', [ApiupdateController::class, 'update_assurance']);
 	Route::get('/update_date_hos/{id}', [ApiupdateController::class, 'update_date_hos']);
+	Route::get('/patient_modif/{id}', [ApiupdateController::class, 'patient_modif']);
 	// update debut
 
 	// delete debut

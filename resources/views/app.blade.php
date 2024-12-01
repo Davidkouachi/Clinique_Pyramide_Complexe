@@ -210,7 +210,7 @@
                                 </li>
                             </ul>
                         </li>
-                        <li @if(request()->routeIs('comptable','encaissement_cons','liste_caisse_cons','encaissement_hos','liste_caisse_hos','encaissement_soinsam','liste_caisse_soinsam','encaissement_examen','liste_caisse_examen','caisse','operation_caisse')) class="active current-page treeview" @else class="treeview" @endif >
+                        <li @if(request()->routeIs('comptable','facture_impayer','liste_caisse_cons','liste_caisse_hos','liste_caisse_soinsam','liste_caisse_examen','caisse','operation_caisse')) class="active current-page treeview" @else class="treeview" @endif >
                             <a href="#!">
                                 <i class="ri-line-chart-fill"></i>
                                 <span class="menu-text text-primary">
@@ -234,7 +234,7 @@
                                     </a>
                                 </li> --}}
                                 <li>
-                                    <a @if(request()->routeIs('encaissement_cons','encaissement_hos','encaissement_soinsam','encaissement_examen')) class="text-primary" @endif href="{{route('encaissement_cons')}}">
+                                    <a @if(request()->routeIs('facture_impayer')) class="text-primary" @endif href="{{route('facture_impayer')}}">
                                         <b>Facture Impayer</b>
                                     </a>
                                 </li>

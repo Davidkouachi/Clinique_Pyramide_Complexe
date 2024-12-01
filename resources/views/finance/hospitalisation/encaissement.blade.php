@@ -855,7 +855,6 @@
                 });
         }
 
-
         function updatePaginationControls(pagination) {
             const paginationDiv = document.getElementById('pagination-controls');
             paginationDiv.innerHTML = '';

@@ -14,20 +14,20 @@ class Controller
         return view('grille.typeacte');
     }
 
-    public function encaissement_cons()
-    {
-        return view('finance.consultation.encaissement');
-    }
+    // public function encaissement_cons()
+    // {
+    //     return view('finance.consultation.encaissement');
+    // }
 
     public function liste_caisse_cons()
     {
         return view('finance.consultation.liste_caisse');
     }
 
-    public function encaissement_hos()
-    {
-        return view('finance.hospitalisation.encaissement');
-    }
+    // public function encaissement_hos()
+    // {
+    //     return view('finance.hospitalisation.encaissement');
+    // }
 
     public function liste_caisse_hos()
     {
@@ -85,10 +85,10 @@ class Controller
         return view('soins_medicaux.soinsam.index');
     }
 
-    public function encaissement_soinsam()
-    {
-        return view('finance.soinsam.encaissement');
-    }
+    // public function encaissement_soinsam()
+    // {
+    //     return view('finance.soinsam.encaissement');
+    // }
 
     public function liste_caisse_soinsam()
     {
@@ -112,10 +112,10 @@ class Controller
         return view('soins_medicaux.examen.index');
     }
 
-    public function encaissement_examen()
-    {
-        return view('finance.examen.encaissement');
-    }
+    // public function encaissement_examen()
+    // {
+    //     return view('finance.examen.encaissement');
+    // }
 
     public function liste_caisse_examen()
     {
@@ -195,5 +195,12 @@ class Controller
     public function rdv_two_day()
     {
         return view('accueil.reception.rdv_two_day');
+    }
+
+    // -----------------------------------------------------------
+
+    public function facture_impayer()
+    {
+        return view('finance.facture.impayer');
     }
 }

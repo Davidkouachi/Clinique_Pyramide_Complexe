@@ -68,10 +68,12 @@ Route::middleware(['auth','statutchambre','dateRdv'])->group(function () {
 	Route::post('/insert typeproduit', [typeproduitController::class, 'insert_typeproduit'])->name('insert_typeproduit');
 	Route::post('/update typeproduit/{id}', [typeproduitController::class, 'update_typeproduit'])->name('update_typeproduit');
 
+	Route::get('/Facture Impayer', [Controller::class, 'facture_impayer'])->name('facture_impayer');
+
 	Route::get('/Acte', [Controller::class, 'acte_new'])->name('acte_new');
 	Route::get('/Type Acte', [Controller::class, 'typeacte_new'])->name('typeacte_new');
 	Route::get('/Nouvel Medecin', [utilisateurController::class, 'medecin_new'])->name('medecin_new');
-	Route::get('/Consultation Caisse', [Controller::class, 'encaissement_cons'])->name('encaissement_cons');
+	// Route::get('/Consultation Caisse', [Controller::class, 'encaissement_cons'])->name('encaissement_cons');
 	Route::get('/Consultation Liste Caisse', [Controller::class, 'liste_caisse_cons'])->name('liste_caisse_cons');
 	Route::get('/Consultation', [Controller::class,'consultation_liste'])->name('consultation_liste');
 
@@ -81,7 +83,7 @@ Route::middleware(['auth','statutchambre','dateRdv'])->group(function () {
 	Route::get('/Hospitalisation', [Controller::class, 'hospitalisation'])->name('hospitalisation');
 	Route::get('/Type Admission', [Controller::class, 'typeadmission_new'])->name('typeadmission_new');
 	Route::get('/Nature Admission', [Controller::class, 'natureadmission_new'])->name('natureadmission_new');
-	Route::get('/Hospitalisation Caisse', [Controller::class, 'encaissement_hos'])->name('encaissement_hos');
+	// Route::get('/Hospitalisation Caisse', [Controller::class, 'encaissement_hos'])->name('encaissement_hos');
 	Route::get('/Hospitalisation Liste Caisse', [Controller::class, 'liste_caisse_hos'])->name('liste_caisse_hos');
 
 	Route::get('/Produit Pharmacie', [Controller::class, 'produit_new'])->name('produit_new');
@@ -89,14 +91,14 @@ Route::middleware(['auth','statutchambre','dateRdv'])->group(function () {
 	Route::get('/Spécialité', [utilisateurController::class, 'specialite'])->name('specialite');
 
 	Route::get('/Soins Ambulantoires', [Controller::class, 'soinsam'])->name('soinsam');
-	Route::get('/Soins Ambulatoire Caisse', [Controller::class, 'encaissement_soinsam'])->name('encaissement_soinsam');
+	// Route::get('/Soins Ambulatoire Caisse', [Controller::class, 'encaissement_soinsam'])->name('encaissement_soinsam');
 	Route::get('/Soins Ambulatoire Liste Caisse', [Controller::class, 'liste_caisse_soinsam'])->name('liste_caisse_soinsam');
 
 	Route::get('/Type de soins',[Controller::class,'typesoins_new'])->name('typesoins_new');
 	Route::get('/Soins Infirmiers', [Controller::class, 'soinsinfirmier_new'])->name('soinsinfirmier_new');
 
 	Route::get('/Examens', [Controller::class, 'examen'])->name('examen');
-	Route::get('/Examens Caisse', [Controller::class, 'encaissement_examen'])->name('encaissement_examen');
+	// Route::get('/Examens Caisse', [Controller::class, 'encaissement_examen'])->name('encaissement_examen');
 	Route::get('/Examens Liste Caisse', [Controller::class, 'liste_caisse_examen'])->name('liste_caisse_examen');
 
 	Route::get('/Horaires Médecin', [Controller::class, 'horaire_medecin'])->name('horaire_medecin');

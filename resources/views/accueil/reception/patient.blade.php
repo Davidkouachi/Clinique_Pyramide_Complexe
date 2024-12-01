@@ -518,6 +518,67 @@
     </div>
 </div>
 
+<div class="modal fade" id="ModifP" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Mise à jour</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="updateForm">
+                    <input type="hidden" id="patient_idM">
+                    <div class="mb-3">
+                        <label class="form-label">Nom et Prenoms</label>
+                        <input type="text" class="form-control" id="nameM" placeholder="Saisie Obligatoire">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Sexe</label>
+                        <select class="form-select" id="sexeM">
+                            <option value="Mr">Homme</option>
+                            <option value="Mme">Femme</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Email</label>
+                        <input type="email" class="form-control" id="emailM" placeholder="facultatif">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Contact 1</label>
+                        <input type="tel" class="form-control" id="telM" placeholder="Saisie Obligatoire" maxlength="10">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Contact 2</label>
+                        <input type="tel" class="form-control" id="tel2M" placeholder="facultatif" maxlength="10">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">
+                            Date de naissance
+                        </label>
+                        <input type="date" class="form-control" placeholder="Selectionner une date" id="datenaisM" max="{{ date('Y-m-d') }}">
+                    </div>
+                    <div class="mb-3" id="div_filiationM" style="display: none;">
+                        <label class="form-label">Filiation</label>
+                        <select class="form-select" id="filiationM">
+                            <option value="Adhérent(e)">Adhérent(e)</option>
+                            <option value="Bénéficiaire">Bénéficiaire</option>
+                            <option value="Conjoint(e)">Conjoint(e)</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Adresse</label>
+                        <input type="text" class="form-control" id="adresseM" placeholder="facultatif">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <a class="btn btn-outline-danger" data-bs-dismiss="modal">Fermer</a>
+                <button type="button" class="btn btn-success" id="btn_eng_modif">Enregistrer</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script src="{{asset('assets/js/app/js/jspdfinvoicetemplate/dist/index.js')}}" ></script>
 <script src="{{asset('jsPDF-master/dist/jspdf.umd.js')}}"></script>
 <script src="{{asset('assets/vendor/apex/apexcharts.min.js')}}"></script>
@@ -533,6 +594,7 @@
         select_patient();
 
         $("#btn_eng_patient").on("click", eng_patient);
+        $("#btn_eng_modif").on("click", eng_patient_modif);
 
         $('#btn_refresh_table').on('click', function () {
             $('#Table_day').DataTable().ajax.reload(null, false);
@@ -560,7 +622,7 @@
             rech_dosier(id);
         });
 
-        var inputs = ['patient_tel_new', 'patient_tel2_new',]; // Array of element IDs
+        var inputs = ['patient_tel_new', 'patient_tel2_new','telM','tel2M']; // Array of element IDs
         inputs.forEach(function(id) {
             var inputElement = document.getElementById(id); // Get each element by its ID
 
@@ -1014,6 +1076,24 @@
                                 <i class="ri-eye-line"></i>
                             </a>
                         </div>
+                        <div class="d-inline-flex gap-1" style="font-size:10px;">
+                            <a class="btn btn-outline-info btn-sm" 
+                               data-id="${row.id}" 
+                               data-name="${row.np}" 
+                               data-email="${row.email}" 
+                               data-tel="${row.tel}" 
+                               data-tel2="${row.tel2}" 
+                               data-adresse="${row.adresse}" 
+                               data-sexe="${row.sexe}" 
+                               data-datenais="${row.datenais}"
+                               data-filiation="${row.filiation}"
+                               data-assurer="${row.assurer}"
+                               data-bs-toggle="modal" 
+                               data-bs-target="#ModifP" 
+                               id="modifP">
+                                <i class="ri-edit-line"></i>
+                            </a>
+                        </div>
                     `,
                     searchable: false,
                     orderable: false,
@@ -1161,6 +1241,118 @@
                 `;
 
                 modal.appendChild(div);
+            });
+
+            $('#Table_day').on('click', '#modifP', function() {
+
+                const row = {
+                    id: $(this).data('id'),
+                    name: $(this).data('name'),
+                    email: $(this).data('email'),
+                    tel: $(this).data('tel'),
+                    tel2: $(this).data('tel2'),
+                    adresse: $(this).data('adresse'),
+                    sexe: $(this).data('sexe'),
+                    datenais: $(this).data('datenais'),
+                    filiation: $(this).data('filiation'),
+                    assurer: $(this).data('assurer'),
+                };
+
+                $('#patient_idM').val(row.id);
+                $('#nameM').val(row.name);
+                $('#emailM').val(row.email);
+                $('#telM').val(row.tel);
+                $('#tel2M').val(row.tel2);
+                $('#adresseM').val(row.adresse);
+                $('#sexeM').val(row.sexe).trigger('change');
+                $('#datenaisM').val(row.datenais);
+
+                if (row.assurer === 'oui') {
+                    $('#div_filiationM').show();
+                    $('#filiationM').val(row.filiation).trigger('change');
+                } else {
+                    $('#div_filiationM').hide();
+                }
+
+            });
+        }
+
+        function eng_patient_modif()
+        {
+            var id = document.getElementById("patient_idM").value;
+            var nom = document.getElementById("nameM");
+            var email = document.getElementById("emailM");
+            var phone = document.getElementById("telM");
+            var phone2 = document.getElementById("tel2M");
+            var adresse = document.getElementById("adresseM");
+            var datenais = document.getElementById("datenaisM");
+            var sexe = document.getElementById("sexeM");
+            var filiation = document.getElementById("filiationM");
+
+            if (!nom.value.trim() || !phone.value.trim() || !datenais.value.trim()) {
+                showAlert('Alert', 'Tous les champs sont obligatoires.','warning');
+                return false; 
+            }
+
+            var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (email.value.trim() && !emailRegex.test(email.value.trim())) {
+                showAlert('Alert', 'Email incorrect.','warning');
+                return false;
+            }
+
+            if (phone.value.length !== 10 || (phone2.value !== '' && phone2.value.length !== 10)) {
+                showAlert('Alert', 'Contact incomplet.','warning');
+                return false;
+            }
+
+            var modal = bootstrap.Modal.getInstance(document.getElementById('ModifP'));
+            modal.hide();
+
+            var preloader_ch = `
+                <div id="preloader_ch">
+                    <div class="spinner_preloader_ch"></div>
+                </div>
+            `;
+            // Add the preloader to the body
+            document.body.insertAdjacentHTML('beforeend', preloader_ch);
+
+            $.ajax({
+                url: '/api/patient_modif/'+id,
+                method: 'GET',  // Use 'POST' for data creation
+                data: {nom: nom.value, email: email.value || null , tel: phone.value, tel2: phone2.value || null, adresse: adresse.value || null, datenais: datenais.value, sexe: sexe.value, filiation: filiation.value || null,
+                },
+                success: function(response) {
+                    var preloader = document.getElementById('preloader_ch');
+                    if (preloader) {
+                        preloader.remove();
+                    }
+                    
+                    if (response.tel_existe) {
+                        showAlert('Alert', 'Ce numéro de téléphone appartient déjà a un patient.','warning');
+                    }else if (response.email_existe) {
+                        showAlert('Alert', 'Cet email appartient déjà a un patient.','warning');
+                    }else if (response.nom_existe) {
+                        showAlert('Alert', 'Cet patient existe déjà.','warning');
+                    } else if (response.success) {
+
+                        $('#Table_day').DataTable().ajax.reload(null, false);
+                        select_patient();
+
+                        showAlert('Succès', 'Opératin éffectuée.','success');
+                    } else if (response.error) {
+                        showAlert('Alert', 'Une erreur est survenue lors de la mise à jour.','error');
+                    }
+
+                },
+                error: function() {
+
+                    var preloader = document.getElementById('preloader_ch');
+                    if (preloader) {
+                        preloader.remove();
+                    }
+
+                    showAlert('Alert', 'Une erreur est survenue.','error');
+                }
             });
         }
 

@@ -669,4 +669,62 @@ class ApiupdateController extends Controller
         }
     }
 
+    public function patient_modif(Request $request, $id)
+    {
+        $verifications = [
+            'tel' => $request->tel,
+            'tel2' => $request->tel2 ?? null, // Allow tel2 to be null
+            'email' => $request->email ?? null,
+            'nom' => $request->nom,
+        ];
+
+        $patientExist = patient::where('id', '!=', $id)->where(function($query) use ($verifications) {
+            $query->where('tel', $verifications['tel'])
+                  ->orWhere(function($query) use ($verifications) {
+                      if (!is_null($verifications['tel2'])) {
+                          $query->where('tel2', $verifications['tel2']);
+                      }
+                  })
+                  ->orWhere(function($query) use ($verifications) {
+                      if (!is_null($verifications['email'])) {
+                          $query->where('email', $verifications['email']);
+                      }
+                  })
+                  ->orWhere(function($query) use ($verifications) {
+                      if (!is_null($verifications['nom'])) {
+                          $query->where('np', $verifications['nom']);
+                      }
+                  });
+        })->first();
+
+        if ($patientExist) {
+            if ($patientExist->tel === $verifications['tel'] || (!is_null($verifications['tel2']) && $patientExist->tel2 === $verifications['tel2'])) {
+                return response()->json(['tel_existe' => true]);
+            } elseif ($patientExist->email === $verifications['email']) {
+                return response()->json(['email_existe' => true]);
+            } elseif ($patientExist->nom === $verifications['nom']) {
+                return response()->json(['nom_existe' => true]);
+            }
+        }
+
+        $add = patient::find($id);
+        $add->np = $request->nom;
+        $add->email = $request->email;
+        $add->tel = $request->tel;
+        $add->tel2 = $request->tel2;
+        $add->adresse = $request->adresse;
+        $add->datenais = $request->datenais;
+        $add->sexe = $request->sexe;
+
+        if($request->filiation !== null){
+            $add->filiation = $request->filiation;
+        }
+
+        if($add->save()){
+            return response()->json(['success' => true]);
+        } else {
+            return response()->json(['error' => true]);
+        }
+    }
+
 }

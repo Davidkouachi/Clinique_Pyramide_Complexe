@@ -48,7 +48,7 @@ class ApilistfactureController extends Controller
 {
     public function list_facture_inpayer()
     {
-        $factureQuery = consultation::join('factures', 'factures.id', '=', 'consultations.facture_id')
+        $facture = consultation::join('factures', 'factures.id', '=', 'consultations.facture_id')
                             ->join('patients', 'patients.id', '=', 'consultations.patient_id')
                             ->where('factures.statut', '=', 'impayer')
                             ->select(
@@ -57,11 +57,10 @@ class ApilistfactureController extends Controller
                                 'patients.np as name',
                                 'patients.tel as tel',
                             )
-                            ->orderBy('factures.created_at', 'desc');
+                            ->orderBy('factures.created_at', 'desc')
+                            ->get();               
 
-        $facture = $factureQuery->paginate(15);               
-
-        foreach ($facture->items() as $value) {
+        foreach ($facture as $value) {
 
             $part_patient = detailconsultation::where('consultation_id', '=', $value->id)
                     ->select(DB::raw('COALESCE(SUM(REPLACE(part_patient, ".", "") + 0), 0) as total_sum'))
@@ -86,13 +85,7 @@ class ApilistfactureController extends Controller
         }
 
         return response()->json([
-            'facture' => $facture->items(), // Paginated data
-            'pagination' => [
-                'current_page' => $facture->currentPage(),
-                'last_page' => $facture->lastPage(),
-                'per_page' => $facture->perPage(),
-                'total' => $facture->total(),
-            ]
+            'data' => $facture,
         ]);
     }
 
